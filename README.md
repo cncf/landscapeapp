@@ -1,2 +1,1 @@
-# landscapeapp
-Upstream landscape generation application
+Landscape App
