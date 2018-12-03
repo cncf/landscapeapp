@@ -20,7 +20,7 @@ browserSync({
     port: 3001
   },
   server: {
-    baseDir: 'src',
+    baseDir: ['src', 'cached_logos'],
 
     middleware: [
       historyApiFallback(),
