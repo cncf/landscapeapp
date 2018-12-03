@@ -1,5 +1,5 @@
 {
-  "name": "cncf-interactive-landscape",
+  "name": "interactive-landscape",
   "version": "1.0.0",
   "description": "Interactive visualization of cloud native projects and products",
   "engines": {
