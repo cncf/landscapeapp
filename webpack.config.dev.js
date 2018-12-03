@@ -2,10 +2,13 @@ import webpack from 'webpack';
 import HtmlWebpackPlugin from 'html-webpack-plugin';
 import path from 'path';
 
+const parentPath = path.dirname(process.argv[1]) + '/../../..';
+const projectPath = path.resolve(parentPath, 'src');
+
 export default {
   resolve: {
     extensions: ['*', '.js', '.jsx', '.json'],
-    modules: ['src', 'node_modules'],
+    modules: [projectPath, 'src', 'node_modules'],
     alias: {
       '@material-ui/core': '@material-ui/core/es'
     }

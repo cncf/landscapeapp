@@ -1,4 +1,4 @@
-import preview from '../preview.json';
+import preview from 'preview.json';
 import unpack from '../utils/unpackArray';
 export async function loadData() {
   const data = await (await fetch('/data.json')).json();

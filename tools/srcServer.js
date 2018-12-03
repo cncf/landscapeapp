@@ -20,7 +20,7 @@ browserSync({
     port: 3001
   },
   server: {
-    baseDir: ['src', 'cached_logos'],
+    baseDir: ['src', 'node_modules/interactive-landscape/src'], // paths are relative to the app root
 
     middleware: [
       historyApiFallback(),
