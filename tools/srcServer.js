@@ -10,6 +10,7 @@ import webpack from 'webpack';
 import webpackDevMiddleware from 'webpack-dev-middleware';
 import webpackHotMiddleware from 'webpack-hot-middleware';
 import config from '../webpack.config.dev';
+import { projectPath } from './settings';
 
 const bundler = webpack(config);
 
@@ -20,10 +21,17 @@ browserSync({
     port: 3001
   },
   server: {
-    baseDir: ['src'], // paths are relative to the app root
+    baseDir: [projectPath, 'src'], // project first, library second
 
     middleware: [
       historyApiFallback(),
+      function(req, res, next) {
+        if (req.url.match(/^\/logos/)) {
+          req.url = req.url.replace('/logos', '/cached_logos');
+        }
+        next();
+
+      },
 
       webpackDevMiddleware(bundler, {
         // Dev middleware can't access config, so we provide publicPath
