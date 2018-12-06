@@ -29,6 +29,9 @@ browserSync({
         if (req.url.match(/^\/logos/)) {
           req.url = req.url.replace('/logos', '/cached_logos');
         }
+        if (req.url === '/favicon.png') {
+          req.url = '/images/favicon.png';
+        }
         next();
 
       },

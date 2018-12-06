@@ -14,9 +14,11 @@ import ReactGA from 'react-ga';
 import isIphone from './utils/isIphone';
 import iframeResizerContentWindow from 'iframe-resizer/js/iframeResizer.contentWindow';
 console.info(iframeResizerContentWindow);
-require('./favicon.png'); // Tell webpack to load favicon.png
+require('favicon.png'); // Tell webpack to load favicon.png
 const store = configureStore();
 window.__MUI_USE_NEXT_TYPOGRAPHY_VARIANTS__ = true;
+
+console.info(window.projectSettings);
 
 import "./styles/roboto.css";
 render(

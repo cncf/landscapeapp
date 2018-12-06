@@ -10,6 +10,7 @@ export default {
     alias: {
       '@material-ui/core': '@material-ui/core/es',
       'project': projectPath,
+      'favicon.png': path.resolve(projectPath, 'images/favicon.png')
     }
   },
   devtool: 'cheap-module-eval-source-map', // more info:https://webpack.js.org/guides/development/#using-source-maps and https://webpack.js.org/configuration/devtool/
@@ -30,12 +31,13 @@ export default {
   plugins: [
     new webpack.DefinePlugin({
       'process.env.NODE_ENV': JSON.stringify('development'), // Tells React to build in either dev or prod modes. https://facebook.github.io/react/downloads.html (See bottom)
-      __DEV__: true
+      __DEV__: true,
+      'window.projectSettings': JSON.stringify(require('js-yaml').safeLoad(require('fs').readFileSync(`${projectPath}/settings.yml`)))
     }),
     new webpack.HotModuleReplacementPlugin(),
     new webpack.NoEmitOnErrorsPlugin(),
     new HtmlWebpackPlugin({     // Create HTML file that includes references to bundled CSS and JS.
-      favicon: path.resolve(__dirname, './src/favicon.png'),
+      favicon: path.resolve(projectPath, './images/favicon.png'),
       template: path.resolve(__dirname, './src/index.ejs'),
       minify: {
         removeComments: true,
