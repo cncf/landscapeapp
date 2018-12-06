@@ -1,16 +1,15 @@
 import webpack from 'webpack';
 import HtmlWebpackPlugin from 'html-webpack-plugin';
 import path from 'path';
-
-const parentPath = path.dirname(process.argv[1]) + '/../../..';
-const projectPath = path.resolve(parentPath, 'src');
+import {projectPath} from './tools/settings';
 
 export default {
   resolve: {
     extensions: ['*', '.js', '.jsx', '.json'],
-    modules: [projectPath, 'src', 'node_modules'],
+    modules: ['node_modules'],
     alias: {
-      '@material-ui/core': '@material-ui/core/es'
+      '@material-ui/core': '@material-ui/core/es',
+      'project': projectPath,
     }
   },
   devtool: 'cheap-module-eval-source-map', // more info:https://webpack.js.org/guides/development/#using-source-maps and https://webpack.js.org/configuration/devtool/

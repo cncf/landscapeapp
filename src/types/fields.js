@@ -10,7 +10,7 @@
 //     sortOrder(element index by default): sort order when grouping
 //     match: function
 import _ from 'lodash';
-import lookups from 'lookup.json';
+import lookups from 'project/lookup.json';
 import unpack from '../utils/unpackArray';
 const fields = {
   cncfRelation: {

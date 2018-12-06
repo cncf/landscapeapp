@@ -1,6 +1,9 @@
-const source = require('js-yaml').safeLoad(require('fs').readFileSync('processed_landscape.yml'));
+import { projectPath } from './settings';
+console.info('pf', projectPath);
+const source = require('js-yaml').safeLoad(require('fs').readFileSync(`${projectPath}/processed_landscape.yml`));
 const traverse = require('traverse');
 const _ = require('lodash');
+
 import actualTwitter from './actualTwitter';
 import saneName from '../src/utils/saneName';
 import formatCity from '../src/utils/formatCity';
@@ -301,7 +304,7 @@ _.each(itemsWithExtraFields, function(item) {
     console.info(`FATAL ERROR: Item ${item.name} has no image_data`);
     hasBadImages = true;
   } else {
-    const imageFileName = './cached_logos/' + item.image_data.fileName;
+    const imageFileName = `${projectPath}/cached_logos/` + item.image_data.fileName;
     if (!require('fs').existsSync(imageFileName)) {
       console.info(`FATAL ERROR: Item ${item.name} does not have a file ${imageFileName} on the disk`);
       hasBadImages = true;
@@ -320,7 +323,7 @@ if(hasBadImages) {
 
 var hasBadSvgImages = false;
 _.each(itemsWithExtraFields, function(item) {
-  const imageFileName = './cached_logos/' + item.image_data.fileName;
+  const imageFileName = `${projectPath}/cached_logos/` + item.image_data.fileName;
   const  content = require('fs').readFileSync(imageFileName, 'utf-8');
   if (content.indexOf('base64,') !== -1) {
     hasBadSvgImages = true;
@@ -342,12 +345,12 @@ if(hasBadSvgImages) {
 
 function removeNonReferencedImages() {
   const fs = require('fs');
-  const existingFiles = fs.readdirSync('./hosted_logos');
+  const existingFiles = fs.readdirSync(`${projectPath}/hosted_logos`);
   const allowedFiles = itemsWithExtraFields.map( (e) => e.logo ).filter( (e) => !!e);
   _.each(existingFiles, function(existingFile) {
     const fileName = './hosted_logos/' + existingFile;
     if (allowedFiles.indexOf(fileName) === -1){
-      fs.unlinkSync('./hosted_logos/' + existingFile);
+      fs.unlinkSync(`${projectPath}/hosted_logos/` + existingFile);
     }
   })
 }
@@ -464,6 +467,6 @@ const lookups = {
 const previewData = itemsWithExtraFields.filter(function(x) {
   return !!x.cncfProject && x.cncfProject !== 'sandbox';
 });
-require('fs').writeFileSync('src/data.json', JSON.stringify(itemsWithExtraFields, null, 2));
-require('fs').writeFileSync('src/preview.json', JSON.stringify(pack(previewData), null, 2));
-require('fs').writeFileSync('src/lookup.json', JSON.stringify(lookups, null, 2));
+require('fs').writeFileSync(`${projectPath}/data.json`, JSON.stringify(itemsWithExtraFields, null, 2));
+require('fs').writeFileSync(`${projectPath}/preview.json`, JSON.stringify(pack(previewData), null, 2));
+require('fs').writeFileSync(`${projectPath}/lookup.json`, JSON.stringify(lookups, null, 2));

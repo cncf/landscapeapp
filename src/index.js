@@ -6,19 +6,19 @@ import 'babel-polyfill';
 import React from 'react';
 import { render } from 'react-dom';
 import { AppContainer } from 'react-hot-loader';
-import configureStore, { history } from 'store/configureStore';
-import Root from 'components/Root';
-import {loadMainData} from 'reducers/mainReducer.js';
-import 'styles/theme.scss';
+import configureStore, { history } from './store/configureStore';
+import Root from './components/Root';
+import {loadMainData} from './reducers/mainReducer.js';
+import './styles/theme.scss';
 import ReactGA from 'react-ga';
-import isIphone from 'utils/isIphone';
+import isIphone from './utils/isIphone';
 import iframeResizerContentWindow from 'iframe-resizer/js/iframeResizer.contentWindow';
 console.info(iframeResizerContentWindow);
-require('favicon.png'); // Tell webpack to load favicon.png
+require('./favicon.png'); // Tell webpack to load favicon.png
 const store = configureStore();
 window.__MUI_USE_NEXT_TYPOGRAPHY_VARIANTS__ = true;
 
-import "styles/roboto.css";
+import "./styles/roboto.css";
 render(
   <AppContainer>
     <Root store={store} history={history} />
