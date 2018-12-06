@@ -24,7 +24,6 @@
     "fetchAll": "LEVEL=complete npm run fetch",
     "clean-dist": "npm run remove-dist && mkdir dist",
     "remove-dist": "rimraf ./dist",
-    "prepare": "patch-package",
     "precommit": "npm run fetch",
     "prebuild": "npm config set scripts-prepend-node-path true && npm run fetch && npm run clean-dist",
     "start-ci": "(babel-node tools/ciServer &) & sleep 10",
@@ -169,7 +168,8 @@
     "webpack-hot-middleware": "2.24.3",
     "webpack-md5-hash": "0.0.6",
     "xml2js": "0.4.19",
-    "yahoo-finance": "0.3.5"
+    "yahoo-finance": "0.3.5",
+    "yaml-loader": "0.5.0"
   },
   "keywords": [],
   "repository": {
@@ -186,7 +186,6 @@
     ]
   },
   "devDependencies": {
-    "patch-package": "5.1.1",
     "postinstall-prepare": "1.0.1"
   }
 }

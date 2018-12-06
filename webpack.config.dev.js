@@ -64,6 +64,14 @@ export default {
         }]
       },
       {
+        test: /\.yml$/,
+        use: [{
+          loader: 'json-loader'
+        }, {
+          loader: 'yaml-loader'
+        }]
+      },
+      {
         test: /\.ejs$/, loader: 'ejs-loader',
       },
       {
