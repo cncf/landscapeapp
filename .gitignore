@@ -40,6 +40,3 @@ dist
 
 errors.csv
 tmp
-src/data.json
-src/preview.json
-src/lookup.json
