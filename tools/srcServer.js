@@ -20,7 +20,7 @@ browserSync({
     port: 3001
   },
   server: {
-    baseDir: ['src', 'node_modules/interactive-landscape/src'], // paths are relative to the app root
+    baseDir: ['src'], // paths are relative to the app root
 
     middleware: [
       historyApiFallback(),
