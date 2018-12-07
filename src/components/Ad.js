@@ -1,26 +1,22 @@
 import React from 'react';
 import { OutboundLink } from 'react-ga';
+import settings from 'project/settings.yml';
 
 const Ad = () => {
 
-  const url = "https://events.linuxfoundation.org/events/kubecon-cloudnativecon-north-america-2018/?utm_source=interactive_landscape&utm_medium=web&utm_campaign=kccncna18";
-  const imgsrc = "/images/ad0.jpg";
-  const url2 = "https://events.linuxfoundation.org/events/kubecon-cloudnativecon-europe-2019//?utm_source=interactive_landscape&utm_medium=web&utm_campaign=kccnceu19";
-  const imgsrc2 = "/images/ad1.jpg";
+  const entries = settings.ads;
+
 
   return <div id="kubecon">
-  <OutboundLink className="sidebar-event"
-    eventLabel={url}
-    to={url}
-    target="_blank">
-    <img src={imgsrc} />
-  </OutboundLink>
-  <OutboundLink className="sidebar-event"
-    eventLabel={url2}
-    to={url2}
-    target="_blank">
-    <img src={imgsrc2} />
-  </OutboundLink>
+    { entries.map( (entry) => (
+        <OutboundLink className="sidebar-event"
+            key={entry.image}
+            eventLabel={entry.url}
+            to={entry.url}
+            target="_blank">
+            <img src={entry.image} />
+        </OutboundLink>
+    )) }
   </div>
 }
 export default Ad;
