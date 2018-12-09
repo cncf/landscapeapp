@@ -1,5 +1,7 @@
 import Promise from 'bluebird';
 import { getLastCommit } from 'git-last-commit';
+import { projectPath } from './settings';
+import path from 'path';
 const getLastCommitSync = function() {
   return new Promise(function(resolve) {
     getLastCommit(function(err, commit) {
@@ -57,7 +59,7 @@ async function main() {
       }
       await browser.close();
     });
-    require('child_process').execSync('cp -r src/images ./dist');
+    require('child_process').execSync(`cp -r src/images '${path.resolve(projectPath, 'dist')}'`);
   });
 }
 main().catch(console.info);

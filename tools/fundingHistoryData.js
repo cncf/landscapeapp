@@ -1,18 +1,19 @@
 // Calculates a json file which shows changes in funding of different companies
 import _ from 'lodash';
 import saneName from '../src/utils/saneName'
-import { settings } from './settings'
+import { settings, projectPath } from './settings'
+import path from 'path';
 const base = settings.global.website;
 // sync should go from a proper place!!!
 function getFileFromHistory(days) {
-  const commit = require('child_process').execSync(`git rev-list -n 1 --before='{${days} days ago}' master`).toString('utf-8').trim();
-  const content = require('child_process').execSync(`git show ${commit}:processed_landscape.yml`).toString('utf-8');
+  const commit = require('child_process').execSync(`cd '${projectPath}' && git rev-list -n 1 --before='{${days} days ago}' master`).toString('utf-8').trim();
+  const content = require('child_process').execSync(`cd '${projectPath}' && git show ${commit}:processed_landscape.yml`).toString('utf-8');
   const source = require('js-yaml').safeLoad(content);
   return source;
 }
 
 function getFileFromHead() {
-  const content = require('child_process').execSync('git show HEAD:processed_landscape.yml').toString('utf-8');
+  const content = require('child_process').execSync(`cd '${projectPath}' && git show HEAD:processed_landscape.yml`).toString('utf-8');
   const source = require('js-yaml').safeLoad(content);
   return source;
 }
@@ -65,7 +66,7 @@ _.range(1, 100).forEach(function(i) {
 });
 
 
-require('fs').writeFileSync('dist/funding.json', JSON.stringify(result, null, 4));
+require('fs').writeFileSync(path.resolve(projectPath, 'dist/funding.json'), JSON.stringify(result, null, 4));
 
 
 

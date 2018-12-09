@@ -1,7 +1,8 @@
 // generates html and atom pages from dist/funding.json
 import millify from 'millify';
-const result = JSON.parse(require('fs').readFileSync('dist/funding.json', 'utf-8'));
-import { settings } from './settings'
+import { settings, projectPath } from './settings'
+import path from 'path';
+const result = JSON.parse(require('fs').readFileSync(path.resolve(projectPath, 'dist/funding.json'), 'utf-8'));
 const base = settings.global.website;
 
 const membership = {
@@ -53,7 +54,7 @@ const page = `
       </table>
 </body>
 `;
-require('fs').writeFileSync('dist/funding.html', page);
+require('fs').writeFileSync(path.resolve(projectPath, 'dist/funding.html'), page);
 
 
 import { Feed } from "feed";
@@ -66,9 +67,9 @@ const feed = new Feed({
   favicon: `${base}/favicon.png`,
   updated: new Date(),
   author: {
-    name: "CNCF",
-    email: "info@cncf.io",
-    link: "https://cncf.io"
+    name: settings.global.short_name,
+    email: settings.global.email,
+    link: settings.global.company_url
   }
 });
 
@@ -86,6 +87,6 @@ result.forEach(item => {
   });
 });
 
-require('fs').writeFileSync('dist/funding.atom', feed.atom1());
+require('fs').writeFileSync(path.resolve(projectPath, 'dist/funding.atom'), feed.atom1());
 
 
