@@ -1,7 +1,8 @@
 import puppeteer from "puppeteer";
 import devices from 'puppeteer/DeviceDescriptors';
+import { settings } from '../tools/settings'
 const port = process.env.PORT || '4000';
-const appUrl = `http://localhost:${PORT}`;
+const appUrl = `http://localhost:${port}`;
 const width = 1920;
 const height = 1080;
 let page;
@@ -14,16 +15,16 @@ function mainTest() {
       await page.goto(appUrl);
       console.info('page is open');
       //header
-      await page.waitForXPath("//h1[text() = 'CNCF Cloud Native Interactive Landscape']");
+      await page.waitForXPath(`//h1[text() = '${settings.test.header}']`);
       console.info('header is present');
       //group headers
-      await page.waitForXPath("//a[contains(text(), 'Graduated CNCF Projects')]");
+      await page.waitForXPath(`//a[contains(text(), '${settings.test.section}')]`);
       console.info('group headers are ok');
       //card
-      await page.waitForSelector(".mosaic img[src='/logos/kubernetes.svg']");
+      await page.waitForSelector(`.mosaic img[src='/logos/${settings.test.logo}']`);
       console.info('there is a kubernetes card');
       //click on a card
-      await page.click(".mosaic img[src='/logos/kubernetes.svg']");
+      await page.click(`.mosaic img[src='/logos/${settings.test.logo}']`);
       console.info('it is clickable');
       //await for a modal
       await page.waitForSelector(".modal-content");
