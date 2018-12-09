@@ -8,12 +8,14 @@ import path from 'path';
 import WebappWebpackPlugin from 'webapp-webpack-plugin';
 // const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
 const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
+import {projectPath, settings} from './tools/settings';
 
 const GLOBALS = {
   'process.env.NODE_ENV': JSON.stringify('production'),
   'process.env.GA': require('process').env['GA'],
   __DEV__: false
 };
+console.info(projectPath);
 
 export default {
   performance: {
@@ -27,6 +29,7 @@ export default {
   resolve: {
     extensions: ['*', '.js', '.jsx', '.json'],
     alias: {
+      // for a smaller bundle size
       '@material-ui/core': '@material-ui/core/es',
       'lodash.clonedeep': 'lodash/cloneDeep.js',
       'lodash.set': 'lodash/set.js',
@@ -37,6 +40,10 @@ export default {
       'react-router-redux': 'react-router-redux/es',
       'redux-thunk': 'redux-thunk/es',
       'reselect': 'reselect/es'
+
+      // for an upstream/downastream setup
+      'project': projectPath,
+      'favicon.png': path.resolve(projectPath, 'images/favicon.png'),
     }
   },
   devtool: 'source-map', // more info:https://webpack.js.org/guides/production/#source-mapping and https://webpack.js.org/configuration/devtool/
@@ -44,7 +51,7 @@ export default {
   target: 'web',
   mode: 'production',
   output: {
-    path: path.resolve(__dirname, 'dist'),
+    path: path.resolve(projectPath, 'dist'),
     publicPath: '/',
     filename: '[name].[contenthash].js'
   },
@@ -60,10 +67,12 @@ export default {
     new MiniCssExtractPlugin({
       filename: '[name].[contenthash].css'
     }),
+    new webpack.NoEmitOnErrorsPlugin(),
 
     // Generate HTML file that contains references to generated bundles. See here for how this works: https://github.com/ampedandwired/html-webpack-plugin#basic-usage
     new HtmlWebpackPlugin({
-      template: 'src/index.ejs',
+      template: path.resolve(__dirname, './src/index.ejs'),
+      favicon: path.resolve(projectPath, './images/favicon.png'),
       minify: {
         removeComments: true,
         collapseWhitespace: true,
@@ -82,18 +91,14 @@ export default {
       lastUpdated: new Date().toISOString().substring(0, 19).replace('T', ' ') + 'Z'
     }),
     new WebappWebpackPlugin({
-        logo: './src/favicon.png',
+        logo: path.resolve(projectPath, 'images/favicon.png'),
         favicons: {
-          appName: 'CNCF Interactive Landscape',
+          appName: settings.global.name,
           icons: {
             yandex: false
           }
         }
-      })
-    // new UglifyJsPlugin({
-      // parallel: true,
-      // sourceMap: true
-    // })
+    })
   ],
   module: {
     rules: [
@@ -120,6 +125,14 @@ export default {
               "@babel/plugin-proposal-export-default-from",
             ]
           }
+        }]
+      },
+      {
+        test: /\.yml$/,
+        use: [{
+          loader: 'json-loader'
+        }, {
+          loader: 'yaml-loader'
         }]
       },
       {

@@ -6,9 +6,7 @@ import {projectPath} from './tools/settings';
 export default {
   resolve: {
     extensions: ['*', '.js', '.jsx', '.json'],
-    modules: ['node_modules'],
     alias: {
-      '@material-ui/core': '@material-ui/core/es',
       'project': projectPath,
       'favicon.png': path.resolve(projectPath, 'images/favicon.png')
     }
@@ -31,8 +29,7 @@ export default {
   plugins: [
     new webpack.DefinePlugin({
       'process.env.NODE_ENV': JSON.stringify('development'), // Tells React to build in either dev or prod modes. https://facebook.github.io/react/downloads.html (See bottom)
-      __DEV__: true,
-      'window.projectSettings': JSON.stringify(require('js-yaml').safeLoad(require('fs').readFileSync(`${projectPath}/settings.yml`)))
+      __DEV__: true
     }),
     new webpack.HotModuleReplacementPlugin(),
     new webpack.NoEmitOnErrorsPlugin(),
@@ -43,8 +40,7 @@ export default {
         removeComments: true,
         collapseWhitespace: true
       },
-      inject: true,
-      useRootcause: process.env['DEBUG_RC'],
+      inject: true
     })
   ],
   module: {
