@@ -3,7 +3,7 @@ const traverse = require('traverse');
 import fs from 'fs';
 import path from 'path'
 import _ from 'lodash';
-import { settings } from './settings';
+import { settings, projectPath } from './settings';
 import { addWarning } from './reporter';
 import getRepositoryInfo from './getRepositoryInfo';
 const debug = require('debug')('github');

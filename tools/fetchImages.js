@@ -5,7 +5,7 @@ import saneName from '../src/utils/saneName';
 import fs from 'fs';
 import path from 'path';
 import _ from 'lodash';
-import { settings } from './settings';
+import { settings, projectPath } from './settings';
 import { addError, addWarning } from './reporter';
 import { ensureViewBoxExists, autoCropSvg } from './processSvg';
 const debug = require('debug')('images');

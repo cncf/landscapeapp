@@ -4,7 +4,7 @@ import retry from './retry';
 import Promise from 'bluebird';
 import _ from 'lodash';
 import { addWarning } from './reporter';
-import { settings } from './settings';
+import { settings, projectPath } from './settings';
 import path from 'path';
 const debug = require('debug')('bestPractices');
 

@@ -1,12 +1,13 @@
 import colors from 'colors';
-import path from 'path'
+import path from 'path';
+import fs from 'fs';
 const Promise = require('bluebird');
 const traverse = require('traverse');
 import _ from 'lodash';
 import rp from './rpRetry';
 import { JSDOM } from 'jsdom';
 import { addError, addWarning } from './reporter';
-import { settings } from './settings';
+import { settings, projectPath } from './settings';
 const debug = require('debug')('github');
 import shortRepoName from '../src/utils/shortRepoName';
 import getRepositoryInfo from './getRepositoryInfo';
