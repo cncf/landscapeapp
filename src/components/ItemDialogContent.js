@@ -41,18 +41,18 @@ const iconGithub = <svg viewBox="0 0 24 24">
     14.5,21C14.5,21.27 14.66,21.59 15.17,21.5C19.14,20.16 22,16.42 22,12A10,10 0 0,0 12,2Z" />
     </svg>
 
-const cncfTag = function({cncfRelation, cncfMember, project}) {
-  const text = _.find(fields.cncfRelation.values, {id: cncfRelation}).tag;
-  if (cncfRelation === false) {
+const projectTag = function({relation, member, project}) {
+  const text = _.find(fields.relation.values, {id: relation}).tag;
+  if (relation === false) {
     return null;
   }
   if (project === 'sandbox') {
-    return (<InternalLink to={filtersToUrl({filters:{cncfRelation: project}})} className="tag tag-blue">
+    return (<InternalLink to={filtersToUrl({filters:{relation: project}})} className="tag tag-blue">
       <span className="tag-name">Cloud Native</span>
       <span className="tag-value">Sandbox Project</span>
     </InternalLink>)
   }
-  if (cncfRelation === 'member') {
+  if (relation === 'member') {
     const name = {
       platinum: 'CNCF',
       gold: 'CNCF',
@@ -61,7 +61,7 @@ const cncfTag = function({cncfRelation, cncfMember, project}) {
       nonprofit: 'CNCF',
       linux_foundation: 'LF',
       cncf: 'CNCF'
-    }[cncfMember];
+    }[member];
     const label = {
       platinum: 'Platinum Member',
       gold: 'Gold Member',
@@ -70,14 +70,14 @@ const cncfTag = function({cncfRelation, cncfMember, project}) {
       nonprofit: 'Nonprofit Member',
       linux_foundation: 'Project',
       cncf: 'Project'
-    }[cncfMember];
-    return (<InternalLink to={filtersToUrl({filters:{cncfRelation: cncfRelation}})} className="tag tag-blue">
+    }[member];
+    return (<InternalLink to={filtersToUrl({filters:{relation: relation}})} className="tag tag-blue">
       <span className="tag-name">{name}</span>
       <span className="tag-value">{label}</span>
     </InternalLink>)
   }
-  return (<InternalLink to={filtersToUrl({filters:{cncfRelation: cncfRelation}})} className="tag tag-blue">
-    <span className="tag-name">{ cncfRelation === 'sandbox' ? 'Cloud Native' : 'CNCF Project' }</span>
+  return (<InternalLink to={filtersToUrl({filters:{relation: relation}})} className="tag tag-blue">
+    <span className="tag-name">{ relation === 'sandbox' ? 'Cloud Native' : 'CNCF Project' }</span>
     <span className="tag-value">{text}</span>
   </InternalLink>)
 };
@@ -252,7 +252,7 @@ const ItemDialogContent = ({itemInfo}) => {
             </div>
 
             <div className="product-tags">
-              <div>{cncfTag(itemInfo)}</div>
+              <div>{projectTag(itemInfo)}</div>
               <div>{openSourceTag(itemInfo.oss)}</div>
               <div>{licenseTag(itemInfo.license)}</div>
               <div>{badgeTag(itemInfo)}</div>
