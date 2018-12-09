@@ -13,8 +13,8 @@ import _ from 'lodash';
 import lookups from 'project/lookup.json';
 import unpack from '../utils/unpackArray';
 const fields = {
-  cncfRelation: {
-    id: 'cncfRelation',
+  relation: {
+    id: 'relation',
     url: 'cncf',
     label: 'CNCF Relation',
     isArray: true,

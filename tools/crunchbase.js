@@ -6,6 +6,8 @@ import Promise from 'bluebird'
 import _ from 'lodash';
 import ensureHttps from './ensureHttps';
 import { addError, addWarning } from './reporter';
+import { projectPath } from './settings';
+import path from 'path';
 const error = colors.red;
 const fatal = (x) => colors.red(colors.inverse(x));
 const cacheMiss = colors.green;
@@ -17,7 +19,7 @@ if (!key) {
 
 export async function getCrunchbaseOrganizationsList() {
   const traverse = require('traverse');
-  const source = require('js-yaml').safeLoad(require('fs').readFileSync('landscape.yml'));
+  const source = require('js-yaml').safeLoad(require('fs').readFileSync(path.resolve(projectPath, 'landscape.yml')));
   var organizations = [];
   const tree = traverse(source);
   tree.map(function(node) {
@@ -43,7 +45,7 @@ export async function extractSavedCrunchbaseEntries() {
   const traverse = require('traverse');
   let source = [];
   try {
-    source =  require('js-yaml').safeLoad(require('fs').readFileSync('processed_landscape.yml'));
+    source =  require('js-yaml').safeLoad(require('fs').readFileSync(path.resolve(projectPath, 'processed_landscape.yml')));
   } catch(_ex) {
     console.info(_ex.message.substring(0,100));
     console.info('Can not extract crunchbase entries from the processed_landscape.yml');

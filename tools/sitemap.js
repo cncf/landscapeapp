@@ -1,9 +1,11 @@
 import {createSitemap} from 'sitemap';
-const items = JSON.parse(require('fs').readFileSync('src/data.json'));
+import { projectPath, settings } from './settings';
+import path from 'path';
+const items = JSON.parse(require('fs').readFileSync(path.resolve(projectPath, '.data.json')));
 import _ from 'lodash';
 
 const sitemap = createSitemap({
-  hostname: 'https://landscape.cncf.io',
+  hostname: settings.global.website,
   cacheTime: 600 * 1000,
   urls: _.flatten([
     { url: '/' },
@@ -18,4 +20,4 @@ const sitemap = createSitemap({
     })
   ])
 });
-require('fs').writeFileSync('dist/sitemap.xml', sitemap);
+require('fs').writeFileSync(path.resolve(projectPath, 'dist/sitemap.xml'), sitemap);

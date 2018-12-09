@@ -32,6 +32,7 @@ import isIphone from '../utils/isIphone';
 import isMobile from '../utils/isMobile';
 import isGoogle from '../utils/isGoogle';
 import bus from '../reducers/bus';
+import settings from 'project/settings.yml'
 
 const state = {
   lastScrollPosition: 0
@@ -186,19 +187,10 @@ const HomePage = ({isEmbed, mainContentMode, ready, hasSelectedItem, filtersVisi
         <div className={classNames('main', {'embed': isEmbed})}>
           { isMobile && <SwitchButtonContainer /> }
           { !hideTopPart && <div className="disclaimer">
-            <h1>MODIFIED CNCF Cloud Native Interactive Landscape</h1>
-            The Cloud Native Trail Map (<a target="_blank"
-            href="https://raw.githubusercontent.com/cncf/trailmap/master/CNCF_TrailMap_latest.png">png</a>, <a
-            target="_blank" href="https://raw.githubusercontent.com/cncf/trailmap/master/CNCF_TrailMap_latest.pdf">pdf</a>)
-            is CNCF&apos;s recommended path through the cloud native landscape. The cloud native landscape
-            (<a target="_blank" href="/images/landscape.png">png</a>, <a
-            target="_blank" href="/images/landscape.pdf">pdf</a>) and serverless landscape
-            (<a target="_blank" href="/images/serverless.png">png</a>, <a
-            target="_blank" href="/images/serverless.pdf">pdf</a>) are dynamically generated below.
+            <div  dangerouslySetInnerHTML={settings.home.header} />
             Please <a target="_blank" href="https://github.com/cncf/landscape">open</a> a pull request to
             correct any issues. Greyed logos are not open source. Last Updated: {window.lastUpdated}
-          </div>
-          }
+          </div> }
           { !hideTopPart && <SummaryContainer /> }
           { !isMobile && <SwitchButtonContainer /> }
           { isBigPicture &&

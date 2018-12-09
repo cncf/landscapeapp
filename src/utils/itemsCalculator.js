@@ -14,10 +14,10 @@ export const getFilteredItems = createSelector(
   (state) => state.main.filters
   ],
   function(data, filters) {
-    var filterCncfHostedProject = function(x) {
-      const oldValue = filterFn({field: 'cncfRelation', filters})(x);
-      if (filters.cncfRelation.indexOf('sandbox') !== -1) {
-        return oldValue || x.cncfProject === 'sandbox';
+    var filterHostedProject = function(x) {
+      const oldValue = filterFn({field: 'relation', filters})(x);
+      if (filters.relation.indexOf('sandbox') !== -1) {
+        return oldValue || x.project === 'sandbox';
       } else {
         return oldValue;
       }
@@ -28,7 +28,7 @@ export const getFilteredItems = createSelector(
     var filterByLandscape = filterFn({field: 'landscape', filters});
     var filterByBestPractices = filterFn({field: 'bestPracticeBadgeId', filters});
     return data.filter(function(x) {
-      return filterCncfHostedProject(x) && filterByLicense(x) && filterByOrganization(x) && filterByHeadquarters(x) && filterByLandscape(x) && filterByBestPractices(x);
+      return filterHostedProject(x) && filterByLicense(x) && filterByOrganization(x) && filterByHeadquarters(x) && filterByLandscape(x) && filterByBestPractices(x);
     });
   }
 );
@@ -51,10 +51,10 @@ const getFilteredItemsForBigPicture = createSelector(
   (state) => state.main.filters
   ],
   function(data, filters) {
-    var filterCncfHostedProject = function(x) {
-      const oldValue = filterFn({field: 'cncfRelation', filters})(x);
-      if (filters.cncfRelation.indexOf('sandbox') !== -1) {
-        return oldValue || x.cncfProject === 'sandbox';
+    var filterHostedProject = function(x) {
+      const oldValue = filterFn({field: 'relation', filters})(x);
+      if (filters.relation.indexOf('sandbox') !== -1) {
+        return oldValue || x.project === 'sandbox';
       } else {
         return oldValue;
       }
@@ -64,7 +64,7 @@ const getFilteredItemsForBigPicture = createSelector(
     var filterByHeadquarters = filterFn({field: 'headquarters', filters});
     var filterByBestPractices = filterFn({field: 'bestPracticeBadgeId', filters});
     return addExtraFields(data.filter(function(x) {
-      return filterCncfHostedProject(x) && filterByLicense(x) && filterByOrganization(x) && filterByHeadquarters(x) && filterByBestPractices(x);
+      return filterHostedProject(x) && filterByLicense(x) && filterByOrganization(x) && filterByHeadquarters(x) && filterByBestPractices(x);
     }));
   }
 );
@@ -136,10 +136,10 @@ const getGroupedItems = createSelector(
       return getGroupingValue({item: item, grouping: grouping});
     });
 
-    if (grouping === 'cncfRelation' && filters.cncfRelation.indexOf('sandbox') !== -1) {
+    if (grouping === 'relation' && filters.relation.indexOf('sandbox') !== -1) {
       grouped = _.groupBy(items, function(item) {
         const oldValue = getGroupingValue({item: item, grouping: grouping});
-        if (item.cncfProject === 'sandbox') {
+        if (item.project === 'sandbox') {
           return 'sandbox'
         } else {
           return oldValue;
@@ -168,7 +168,7 @@ const bigPictureSortOrder = [
       "graduated": 1,
       "incubating": 2,
       "sandbox" : 99
-    }[item.cncfProject] || 99;
+    }[item.project] || 99;
     return result;
   },
   function orderByProjectName(item) {

@@ -11,7 +11,7 @@ export default async function getRepositoryInfo(url) {
     url: apiUrl,
     json: true,
     headers: {
-      'User-Agent': 'cncf updater'
+      'User-Agent': 'landscapeapp updater'
     }
   });
   cache[url] = apiInfo;

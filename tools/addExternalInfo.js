@@ -1,5 +1,7 @@
 import process from 'process';
-const source = require('js-yaml').safeLoad(require('fs').readFileSync('landscape.yml'));
+import path from 'path';
+import { projectPath } from './settings';
+const source = require('js-yaml').safeLoad(require('fs').readFileSync(path.resolve(projectPath, 'landscape.yml')));
 const traverse = require('traverse');
 const _ = require('lodash');
 import actualTwitter from './actualTwitter';
@@ -56,7 +58,7 @@ else if (key.toLowerCase() === 'complete') {
   useGithubStartDatesCache=false;
   useBestPracticesCache=false;
   try {
-    require('fs').unlinkSync('processed_landscape.yml');
+    require('fs').unlinkSync(path.resolve(projectPath, 'processed_landscape.yml'));
   } catch (_ex) { //eslint-disable no-empty
 
   }
@@ -120,7 +122,7 @@ async function main() {
   });
 
   console.info('Fetching yaml members');
-  const cncfMembers = require('js-yaml').safeLoad(require('fs').readFileSync('members.yml'));
+  const members = require('js-yaml').safeLoad(require('fs').readFileSync(path.resolve(projectPath, 'members.yml')));
 
   console.info('Fetching best practices');
   const savedBestPracticeEntries = await extractSavedBestPracticeEntries();
@@ -154,10 +156,10 @@ async function main() {
         delete node.github_start_commit_data.url;
         delete node.github_start_commit_data.branch;
       }
-      //cncf membership
-      const membership = _.findKey(cncfMembers, (v) => v && v.indexOf(node.crunchbase) !== -1);
-      node.cncf_membership_data = {
-        cncf_member: membership || false
+      //membership
+      const membership = _.findKey(members, (v) => v && v.indexOf(node.crunchbase) !== -1);
+      node.membership_data = {
+        member: membership || false
       }
       //yahoo finance. we will just extract it
       if (node.crunchbase_data && node.crunchbase_data.effective_ticker) {
@@ -207,7 +209,7 @@ async function main() {
   });
 
   const newContent = "# THIS FILE IS GENERATED AUTOMATICALLY!\n" + dump(newSource);
-  require('fs').writeFileSync('processed_landscape.yml', newContent);
+  require('fs').writeFileSync(path.resolve(projectPath, 'processed_landscape.yml'), newContent);
 }
 main().catch(function(x) {
   console.info(x);

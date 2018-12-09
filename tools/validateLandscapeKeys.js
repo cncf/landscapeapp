@@ -1,5 +1,7 @@
 import process from 'process';
-const source = require('js-yaml').safeLoad(require('fs').readFileSync('landscape.yml'));
+import path from 'path';
+import { projectPath } from './settings';
+const source = require('js-yaml').safeLoad(require('fs').readFileSync(path.resolve(projectPath,'landscape.yml')));
 const traverse = require('traverse');
 const _ = require('lodash');
 
@@ -16,7 +18,7 @@ const allowedKeys = [
   'stock_ticker',
   'description',
   'branch',
-  'cncf_project',
+  'project',
   'url_for_bestpractices'
 ];
 tree.map(function(node) {

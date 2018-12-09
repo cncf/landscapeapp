@@ -1,10 +1,12 @@
 import colors from 'colors';
+import path from 'path'
 const Promise = require('bluebird');
 const traverse = require('traverse');
 import _ from 'lodash';
 import rp from './rpRetry';
 import { JSDOM } from 'jsdom';
 import { addError, addWarning } from './reporter';
+import { settings } from './settings';
 const debug = require('debug')('github');
 import shortRepoName from '../src/utils/shortRepoName';
 import getRepositoryInfo from './getRepositoryInfo';
@@ -20,7 +22,7 @@ export async function extractSavedGithubEntries() {
   const traverse = require('traverse');
   let source = [];
   try {
-    source =  require('js-yaml').safeLoad(require('fs').readFileSync('processed_landscape.yml'));
+    source =  require('js-yaml').safeLoad(fs.readFileSync(path.resolve(projectPath, 'processed_landscape.yml')));
   } catch(_ex) {
     console.info('Can not extract github entries from the processed_landscape.yml');
   }
@@ -37,7 +39,7 @@ export async function extractSavedGithubEntries() {
 }
 
 async function getGithubRepos() {
-  const source =  require('js-yaml').safeLoad(require('fs').readFileSync('landscape.yml'));
+  const source =  require('js-yaml').safeLoad(fs.readFileSync(path.resolve(projectPath, 'landscape.yml')));
   const tree = traverse(source);
   const repos = [];
   tree.map(function(node) {

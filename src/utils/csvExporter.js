@@ -30,11 +30,11 @@ export default function exportItems(groupedItems) {
     label: 'Funding',
     value: 'crunchbaseData.funding'
   }, {
-    label: 'CNCF Member',
-    value: 'cncfMember'
+    label: 'Member',
+    value: 'member'
   }, {
-    label: 'CNCF Relation',
-    value: 'cncfRelation'
+    label: 'Relation',
+    value: 'relation'
   }, {
     label: 'License',
     value: 'license'

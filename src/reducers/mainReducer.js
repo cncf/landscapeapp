@@ -16,7 +16,7 @@ export const initialState = {
   data: null,
   ready: false,
   filters: {
-    cncfRelation: [],
+    relation: [],
     stars: null,
     license: [],
     marketCap: null,
@@ -25,7 +25,7 @@ export const initialState = {
     landscape: [],
     bestPracticeBadgeId: null
   },
-  grouping: 'cncfRelation',
+  grouping: 'relation',
   sortField: 'name',
   sortDirection: 'asc',
   selectedItemId: null,

@@ -1,6 +1,8 @@
 import colors from 'colors';
 import Promise from 'bluebird';
 import _ from 'lodash';
+import path from 'path';
+import { projectPath } from './settings';
 import { addError, addWarning } from './reporter';
 import actualTwitter from './actualTwitter';
 const debug = require('debug')('twitter');
@@ -12,7 +14,7 @@ const fatal = (x) => colors.red(colors.inverse(x));
 const cacheMiss = colors.green;
 
 async function getLandscapeItems(crunchbaseEntries) {
-  const source = require('js-yaml').safeLoad(require('fs').readFileSync('landscape.yml'));
+  const source = require('js-yaml').safeLoad(require('fs').readFileSync(path.resolve(projectPath, 'landscape.yml')));
   const traverse = require('traverse');
   const tree = traverse(source);
   const items = [];
@@ -40,7 +42,7 @@ export async function extractSavedTwitterEntries() {
   const traverse = require('traverse');
   let source = [];
   try {
-    source =  require('js-yaml').safeLoad(require('fs').readFileSync('processed_landscape.yml'));
+    source =  require('js-yaml').safeLoad(require('fs').readFileSync(path.resolve(projectPath, 'processed_landscape.yml')));
   } catch(_ex) {
     console.info('Cannot extract twitter entries from the processed_landscape.yml');
   }

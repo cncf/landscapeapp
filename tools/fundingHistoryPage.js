@@ -1,7 +1,8 @@
 // generates html and atom pages from dist/funding.json
 import millify from 'millify';
 const result = JSON.parse(require('fs').readFileSync('dist/funding.json', 'utf-8'));
-const base = `https://landscape.cncf.io`;
+import { settings } from './settings'
+const base = settings.global.website;
 
 const membership = {
   false: 'No',

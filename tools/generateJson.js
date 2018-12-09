@@ -140,9 +140,9 @@ tree.map(function(node) {
     }
 
     items.push({...node,
-      cncfProject: node.cncf_project,
-      cncfMember: node.cncf_membership_data.cncf_member,
-      cncfRelation: (node.cncf_project === 'sandbox' ? 'member' : node.cncf_project) || ( node.cncf_membership_data.cncf_member ? 'member' : false ),
+      project: node.project,
+      member: node.membership_data.member,
+      relation: (node.project === 'sandbox' ? 'member' : node.project) || ( node.membership_data.member ? 'member' : false ),
       firstCommitDate: formatDate((node.github_start_commit_data || {}).start_date),
       firstCommitLink: getCommitLink((node.github_start_commit_data || {}).start_commit_link),
       latestCommitDate: formatDate((node.github_data || {}).latest_commit_date),
@@ -186,8 +186,8 @@ const itemsWithExtraFields = items.map(function(item) {
     delete item.crunchbaseData.ticker_symbol;
   }
   delete item.best_practice_data;
-  delete item.cncf_project;
-  delete item.cncf_member;
+  delete item.project;
+  delete item.member;
   delete item.market_cap;
   delete item.first_commit_date;
   delete item.latest_commit_date;
@@ -465,7 +465,7 @@ const lookups = {
   headquarters: pack(generateHeadquarters())
 }
 const previewData = itemsWithExtraFields.filter(function(x) {
-  return !!x.cncfProject && x.cncfProject !== 'sandbox';
+  return !!x.project && x.project !== 'sandbox';
 });
 require('fs').writeFileSync(`${projectPath}/data.json`, JSON.stringify(itemsWithExtraFields, null, 2));
 require('fs').writeFileSync(`${projectPath}/preview.json`, JSON.stringify(pack(previewData), null, 2));

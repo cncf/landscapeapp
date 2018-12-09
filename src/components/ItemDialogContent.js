@@ -41,13 +41,13 @@ const iconGithub = <svg viewBox="0 0 24 24">
     14.5,21C14.5,21.27 14.66,21.59 15.17,21.5C19.14,20.16 22,16.42 22,12A10,10 0 0,0 12,2Z" />
     </svg>
 
-const cncfTag = function({cncfRelation, cncfMember, cncfProject}) {
+const cncfTag = function({cncfRelation, cncfMember, project}) {
   const text = _.find(fields.cncfRelation.values, {id: cncfRelation}).tag;
   if (cncfRelation === false) {
     return null;
   }
-  if (cncfProject === 'sandbox') {
-    return (<InternalLink to={filtersToUrl({filters:{cncfRelation: cncfProject}})} className="tag tag-blue">
+  if (project === 'sandbox') {
+    return (<InternalLink to={filtersToUrl({filters:{cncfRelation: project}})} className="tag tag-blue">
       <span className="tag-name">Cloud Native</span>
       <span className="tag-value">Sandbox Project</span>
     </InternalLink>)

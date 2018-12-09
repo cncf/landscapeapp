@@ -1,7 +1,9 @@
 // Calculates a json file which shows changes in funding of different companies
 import _ from 'lodash';
 import saneName from '../src/utils/saneName'
-const base = `https://landscape.cncf.io`;
+import { settings } from './settings'
+const base = settings.global.website;
+// sync should go from a proper place!!!
 function getFileFromHistory(days) {
   const commit = require('child_process').execSync(`git rev-list -n 1 --before='{${days} days ago}' master`).toString('utf-8').trim();
   const content = require('child_process').execSync(`git show ${commit}:processed_landscape.yml`).toString('utf-8');
@@ -38,7 +40,7 @@ function buildDiff({currentItems, prevItems, date, result}) {
         currentAmount: item.crunchbase_data.funding,
         previousAmount: previousEntry.crunchbase_data.funding,
         date: date,
-        membership: item.cncf_membership_data.cncf_member,
+        membership: item.membership_data.member,
         link: `${base}/grouping=organization&organization=${saneName(item.crunchbase_data.name)}`,
         url: item.crunchbase + '#section-funding-rounds'
       });

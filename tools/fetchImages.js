@@ -3,7 +3,9 @@ import rp from './rpRetry';
 import Promise from 'bluebird';
 import saneName from '../src/utils/saneName';
 import fs from 'fs';
+import path from 'path';
 import _ from 'lodash';
+import { settings } from './settings';
 import { addError, addWarning } from './reporter';
 import { ensureViewBoxExists, autoCropSvg } from './processSvg';
 const debug = require('debug')('images');
@@ -15,7 +17,7 @@ const cacheMiss = colors.green;
 const traverse = require('traverse');
 
 async function getLandscapeItems() {
-  const source = require('js-yaml').safeLoad(require('fs').readFileSync('landscape.yml'));
+  const source =  require('js-yaml').safeLoad(fs.readFileSync(path.resolve(projectPath, 'landscape.yml')));
   const tree = traverse(source);
   const items = [];
   tree.map(function(node) {
@@ -38,7 +40,7 @@ export async function extractSavedImageEntries() {
   const traverse = require('traverse');
   let source = [];
   try {
-    source =  require('js-yaml').safeLoad(require('fs').readFileSync('processed_landscape.yml'));
+    source =  require('js-yaml').safeLoad(fs.readFileSync(path.resolve(projectPath, 'processed_landscape.yml')));
   } catch(_ex) {
     console.info('Cannot extract image entries from the processed_landscape.yml');
   }
@@ -60,14 +62,14 @@ export async function extractSavedImageEntries() {
 
 
 function imageExist(entry) {
-  const fileName = './cached_logos/' + entry.fileName ;
+  const fileName = path.resolve(projectPath,  './cached_logos/' + entry.fileName) ;
   return require('fs').existsSync(fileName);
 }
 
 function getItemHash(item) {
   if (item.logo && item.logo.indexOf('.') === 0) {
     // console.info(item.logo);
-    const response = fs.readFileSync(item.logo);
+    const response = fs.readFileSync(path.resolve(projectPath,  item.logo));
     return require('crypto').createHash('sha256').update(response).digest('base64');
   }
   return;
@@ -118,7 +120,7 @@ export async function fetchImageEntries({cache, preferCache}) {
           if (url.indexOf('./hosted_logos') !== 0) {
             throw new Error('local files should always start from ./hosted_logos');
           }
-          response = fs.readFileSync(url);
+          response = fs.readFileSync(path.resolve(projectPath, url));
         } else {
           response = await rp({
             encoding: null,
@@ -131,7 +133,7 @@ export async function fetchImageEntries({cache, preferCache}) {
         }
         const processedSvg = await ensureViewBoxExists(response);
         const croppedSvg = await autoCropSvg(processedSvg);
-        require('fs').writeFileSync(`cached_logos/${fileName}`, croppedSvg);
+        require('fs').writeFileSync(path.resolve(projectPath, `cached_logos/${fileName}`), croppedSvg);
         require('process').stdout.write(cacheMiss("*"));
         return {
           fileName: fileName,
@@ -166,11 +168,11 @@ export async function fetchImageEntries({cache, preferCache}) {
 }
 
 export function removeNonReferencedImages(imageEntries) {
-  const existingFiles = fs.readdirSync('./cached_logos');
+  const existingFiles = fs.readdirSync(path.resolve(projectPath, 'cached_logos'));
   const allowedFiles = imageEntries.filter( (e) => !!e).map( (e) => e.fileName );
   _.each(existingFiles, function(existingFile) {
     if (allowedFiles.indexOf(existingFile) === -1){
-      fs.unlinkSync('./cached_logos/' + existingFile);
+      fs.unlinkSync(path.resolve(projectPath,  './cached_logos/' + existingFile));
     }
   })
 }

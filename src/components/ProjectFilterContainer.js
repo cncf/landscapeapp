@@ -4,11 +4,11 @@ import { changeFilter } from '../reducers/mainReducer';
 import { options } from '../types/fields';
 
 const mapStateToProps = (state) => ({
-  value: state.main.filters.cncfRelation,
-  options: options('cncfRelation')
+  value: state.main.filters.relation,
+  options: options('relation')
 });
 const onChange = function(newValue) {
-  return changeFilter('cncfRelation', newValue);
+  return changeFilter('relation', newValue);
 }
 const mapDispatchToProps = {
   onChange: onChange

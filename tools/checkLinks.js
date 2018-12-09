@@ -3,7 +3,9 @@ import colors from 'colors';
 import rp from 'request-promise';
 import Promise from 'bluebird';
 const traverse = require('traverse');
+import path from 'path';
 import retry from './retry';
+import { projectPath } from './settings';
 
 const fatal = (x) => colors.red(colors.inverse(x));
 const rpWithRetry = async function(args) {
@@ -15,7 +17,7 @@ process.setMaxListeners(0);
 
 
 async function getLandscapeItems() {
-  const source = require('js-yaml').safeLoad(require('fs').readFileSync('landscape.yml'));
+  const source = require('js-yaml').safeLoad(require('fs').readFileSync(path.resolve(projectPath, 'landscape.yml')));
   const tree = traverse(source);
   const items = [];
   tree.map(function(node) {

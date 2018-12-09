@@ -1,6 +1,7 @@
 import puppeteer from "puppeteer";
 import devices from 'puppeteer/DeviceDescriptors';
-const appUrl = "http://localhost:4000";
+const port = process.env.PORT || '4000';
+const appUrl = `http://localhost:${PORT}`;
 const width = 1920;
 const height = 1080;
 let page;
