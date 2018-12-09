@@ -8,16 +8,12 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="google-site-verification" content="8l35EQriJXntsib5sBdRu4gmDV1nAP9PSoHccJC8ABQ" />
   <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
-    <!--
-    The htmlWebpackPlugin will parse the logic below so that trackJS is only added to the production version of index.html (since only webpack.config.prod.js provides the trackJS token)
-    This is an example of how to add features to index.html for only one environment.
-    To track JavaScript errors via TrackJS, sign up for a free trial at TrackJS.com and enter your token in /webpack.config.prod.js on line 55.
-   -->
   <script>
     window.GA = "<%= htmlWebpackPlugin.options.GA %>";
     window.lastUpdated = "<%= htmlWebpackPlugin.options.lastUpdated %>";
   </script>
 
+  // TODO: adjust to a project
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta charset="utf-8"/>
   <meta property="og:locale" content="en_US" />

@@ -39,10 +39,10 @@ export default {
       'react-router-dom': 'react-router-dom/es',
       'react-router-redux': 'react-router-redux/es',
       'redux-thunk': 'redux-thunk/es',
-      'reselect': 'reselect/es'
+      'reselect': 'reselect/es',
 
       // for an upstream/downastream setup
-      'project': projectPath,
+      'project': path.resolve(projectPath),
       'favicon.png': path.resolve(projectPath, 'images/favicon.png'),
     }
   },
