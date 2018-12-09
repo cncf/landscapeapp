@@ -187,7 +187,7 @@ const HomePage = ({isEmbed, mainContentMode, ready, hasSelectedItem, filtersVisi
         <div className={classNames('main', {'embed': isEmbed})}>
           { isMobile && <SwitchButtonContainer /> }
           { !hideTopPart && <div className="disclaimer">
-            <div  dangerouslySetInnerHTML={settings.home.header} />
+            <div  dangerouslySetInnerHTML={{__html: settings.home.header}} />
             Please <a target="_blank" href="https://github.com/cncf/landscape">open</a> a pull request to
             correct any issues. Greyed logos are not open source. Last Updated: {window.lastUpdated}
           </div> }

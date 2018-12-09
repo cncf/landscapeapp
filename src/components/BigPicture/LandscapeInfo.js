@@ -37,13 +37,13 @@ const LandscapeInfo = ({zoom, width, height, top, left, children}) => (
       }}>
       {children}
       </div>
-      <img src="/images/cncf-landscape.svg" style={{
+      <img src="/images/right-logo.svg" style={{
         position: 'absolute',
         width: 110 * zoom,
         right: 5 * zoom,
         top: 20 * zoom
       }}></img>
-      <img src="/images/cncf.svg" style={{
+      <img src="/images/left-logo.svg" style={{
         position: 'absolute',
         width: 109 * zoom,
         right: 5 * zoom,
