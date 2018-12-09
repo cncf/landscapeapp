@@ -186,7 +186,6 @@ const itemsWithExtraFields = items.map(function(item) {
     delete item.crunchbaseData.ticker_symbol;
   }
   delete item.best_practice_data;
-  delete item.project;
   delete item.member;
   delete item.market_cap;
   delete item.first_commit_date;
