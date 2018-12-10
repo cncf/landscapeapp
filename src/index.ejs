@@ -6,7 +6,7 @@
   -->
 <head>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="google-site-verification" content="8l35EQriJXntsib5sBdRu4gmDV1nAP9PSoHccJC8ABQ" />
+  <meta name="google-site-verification" content="<%= htmlWebpackPlugin.options.settings.global.meta.google_site_veryfication %>" />
   <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
   <script>
     window.GA = "<%= htmlWebpackPlugin.options.GA %>";
@@ -17,21 +17,21 @@
   <meta charset="utf-8"/>
   <meta property="og:locale" content="en_US" />
   <meta property="og:type" content="website" />
-  <meta property="og:title" content="CNCF Cloud Native Interactive Landscape" />
-  <meta property="og:url" content="https://landscape.cncf.io/" />
-  <meta property="og:site_name" content="CNCF Cloud Native Interactive Landscape" />
-  <meta property="fb:admins" content="alex.contini.94" />
-  <meta property="og:image" content="https://landscape.cncf.io/favicon.png" />
-  <meta property="og:image:secure_url" content="https://landscape.cncf.io/favicon.png" />
+  <meta property="og:title" content="<%= htmlWebpackPlugin.options.settings.global.meta.title %>" />
+  <meta property="og:url" content="<%= htmlWebpackPlugin.options.settings.global.website %>" />
+  <meta property="og:site_name" content="<%= htmlWebpackPlugin.options.settings.global.meta.title %>" />
+  <meta property="fb:admins" content="<%= htmlWebpackPlugin.options.settings.global.meta.fb_admin %>" />
+  <meta property="og:image" content="<%= htmlWebpackPlugin.options.settings.global.website %>/favicon.png" />
+  <meta property="og:image:secure_url" content="<%= htmlWebpackPlugin.options.settings.global.website %>/favicon.png" />
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="CNCF Cloud Native Interactive Landscape" />
-  <meta name="twitter:description" content="Filter and sort by GitHub stars, funding, commits, contributors, hq location, and tweets.  Updated: <%= htmlWebpackPlugin.options.lastUpdated %>" />
-  <meta name="twitter:site" content="@CloudNativeFdn" />
-  <meta name="twitter:image" content="https://landscape.cncf.io/favicon.png" />
-  <meta name="twitter:creator" content="@CloudNativeFdn" />
-  <meta name="description" content="Filter and sort hundreds of cloud native projects and products, and review details including GitHub stars, funding or market cap, first and last commits, contributor counts, headquarters location, and recent tweets. Last Updated: <%= htmlWebpackPlugin.options.lastUpdated %>">
-  <meta name="msvalidate.01" content="3AF9FFA12CCC3C49C0ABA71CCA222665" />
-  <title>CNCF Cloud Native Interactive Landscape</title>
+  <meta name="twitter:title" content="<%= htmlWebpackPlugin.options.settings.global.meta.title %>" />
+  <meta name="twitter:description" content="<%= htmlWebpackPlugin.options.settings.global.meta.description %>. Updated: <%= htmlWebpackPlugin.options.lastUpdated %>" />
+  <meta name="twitter:site" content="<%= htmlWebpackPlugin.option.settings.global.meta.facebook %>" />
+  <meta name="twitter:image" content="<%= htmlWebpackPlugin.options.settings.global.website %>/favicon.png" />
+  <meta name="twitter:creator" content="<%= htmlWebpackPlugin.option.settings.global.meta.facebook %>" />
+  <meta name="description" content="<%= htmlWebpackPlugin.options.settings.global.meta.description %>. Updated: <%= htmlWebpackPlugin.options.lastUpdated %>" />
+  <meta name="msvalidate.01" content="<%= htmlWebpackPlugin.option.settings.global.meta.ms_validate %>" />
+  <title><%= htmlWebpackPlugin.options.settings.global.meta.title %></title>
 </head>
 <body>
 <div id="app"></div>

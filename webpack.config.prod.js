@@ -88,7 +88,8 @@ export default {
       inject: true,
       // custom properties
       GA :require('process').env['GA'],
-      lastUpdated: new Date().toISOString().substring(0, 19).replace('T', ' ') + 'Z'
+      lastUpdated: new Date().toISOString().substring(0, 19).replace('T', ' ') + 'Z',
+      settings: settings
     }),
     new WebappWebpackPlugin({
         logo: path.resolve(projectPath, 'images/favicon.png'),

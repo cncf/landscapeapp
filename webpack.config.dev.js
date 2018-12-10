@@ -1,7 +1,7 @@
 import webpack from 'webpack';
 import HtmlWebpackPlugin from 'html-webpack-plugin';
 import path from 'path';
-import {projectPath} from './tools/settings';
+import {projectPath, settings} from './tools/settings';
 
 console.info({
       'project': path.resolve(projectPath),
@@ -33,7 +33,7 @@ export default {
   plugins: [
     new webpack.DefinePlugin({
       'process.env.NODE_ENV': JSON.stringify('development'), // Tells React to build in either dev or prod modes. https://facebook.github.io/react/downloads.html (See bottom)
-      __DEV__: true
+      __DEV__: true,
     }),
     new webpack.HotModuleReplacementPlugin(),
     new webpack.NoEmitOnErrorsPlugin(),
@@ -44,7 +44,8 @@ export default {
         removeComments: true,
         collapseWhitespace: true
       },
-      inject: true
+      inject: true,
+      settings: settings
     })
   ],
   module: {
