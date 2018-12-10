@@ -3,11 +3,15 @@ import HtmlWebpackPlugin from 'html-webpack-plugin';
 import path from 'path';
 import {projectPath} from './tools/settings';
 
+console.info({
+      'project': path.resolve(projectPath),
+      'favicon.png': path.resolve(projectPath, 'images/favicon.png')
+});
 export default {
   resolve: {
     extensions: ['*', '.js', '.jsx', '.json'],
     alias: {
-      'project': projectPath,
+      'project': path.resolve(projectPath),
       'favicon.png': path.resolve(projectPath, 'images/favicon.png')
     }
   },
