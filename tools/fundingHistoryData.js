@@ -5,15 +5,25 @@ import { settings, projectPath } from './settings'
 import path from 'path';
 const base = settings.global.website;
 // sync should go from a proper place!!!
+console.info(require('child_process').execSync(`cd '${projectPath}'; git remote add origin ${process.env.REPOSITORY_URL} || true`).toString('utf-8'));
+console.info(require('child_process').execSync(`cd '${projectPath}'; git fetch origin`).toString('utf-8'));
+
 function getFileFromHistory(days) {
-  const commit = require('child_process').execSync(`cd '${projectPath}' && git rev-list -n 1 --before='{${days} days ago}' master`).toString('utf-8').trim();
-  const content = require('child_process').execSync(`cd '${projectPath}' && git show ${commit}:processed_landscape.yml`).toString('utf-8');
+  const commit = getCommitFromHistory(days);
+  const content = require('child_process').execSync(`cd '${projectPath}'; git show ${commit}:processed_landscape.yml`).toString('utf-8');
   const source = require('js-yaml').safeLoad(content);
   return source;
 }
 
-function getFileFromHead() {
-  const content = require('child_process').execSync(`cd '${projectPath}' && git show HEAD:processed_landscape.yml`).toString('utf-8');
+function getCommitFromHistory(days) {
+  const commit = require('child_process').execSync(`cd '${projectPath}'; git log --format='%H' -n 1 --before='{${days} days ago}' --author='CNCF-bot' origin/master`).toString('utf-8').trim();
+  return commit;
+}
+
+
+
+function getFileFromFs() {
+  const content = require('fs').readFileSync(path.resolve(projectPath, 'processed_landscape.yml'), 'utf-8');
   const source = require('js-yaml').safeLoad(content);
   return source;
 }
