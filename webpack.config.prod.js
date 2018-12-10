@@ -112,7 +112,7 @@ export default {
             babelrc: false,
             presets: [
               ['@babel/preset-env', {modules: false, targets: '>1%'}],
-              '@babel/preset-react'
+               '@babel/preset-react'
             ],
             plugins: [
               "lodash",
