@@ -24,6 +24,9 @@ async function getLandscapeItems() {
     if (node.item !== null) {
       return;
     }
+    if (node.repo_url === null) {
+      return;
+    }
     items.push({repo_url: node.url_for_bestpractices || node.repo_url});
   });
   return items;
@@ -46,14 +49,17 @@ async function fetchEntriesNoRetry() {
 }
 
 async function fetchEntryNoRetry(url) {
-  const result = await rp({
+  let result = await rp({
     json: true,
     url: `https://bestpractices.coreinfrastructure.org/en/projects.json?pq=${encodeURIComponent(url)}`
   });
+  if (result[0]) {
+    result = result[0];
+  }
   return {
     id: result.id,
     repo_url: result.repo_url,
-    percentage: result.badge_percantage_0
+    percentage: result.badge_percentage_0
   };
 }
 
@@ -70,6 +76,9 @@ export async function fetchBestPracticeEntriesWithFullScan({cache, preferCache})
   const errors = [];
   var fetchedEntries = null;
   const result = await Promise.mapSeries(items, async function(item) {
+    if (!item.repo_url) {
+      return null;
+    }
     const cachedEntry = _.find(cache, {repo_url: item.repo_url});
     if (cachedEntry && preferCache) {
       debug(`Full scan: Cache found for ${item.repo_url}`);
@@ -104,6 +113,9 @@ export async function fetchBestPracticeEntriesWithIndividualUrls({cache, preferC
   const items = await getLandscapeItems();
   const errors = [];
   const result = await Promise.mapSeries(items, async function(item) {
+    if (!item.repo_url) {
+      return null;
+    }
     const cachedEntry = _.find(cache, {repo_url: item.repo_url});
     if (cachedEntry && preferCache) {
       debug(`Individual scan: Cache found for ${item.repo_url}`);
@@ -150,7 +162,7 @@ export async function extractSavedBestPracticeEntries() {
     if (!node) {
       return;
     }
-    if (node.best_practice_data) {
+    if (node.best_practice_data && node.repo_url) {
       entries.push({...node.best_practice_data, repo_url: node.url_for_bestpractices || node.repo_url});
     }
   });
