@@ -7,7 +7,16 @@ import path from 'path';
 const content = isMainBranch ?
   `
 User-agent: *
-Disallow:
+Disallow: *grouping=
+Disallow: *sort=
+Disallow: *landscape=
+Disallow: *cncf=
+Disallow: *license=
+Disallow: *organization=
+Disallow: *headquarters=
+Disallow: *format=
+Disallow: /landscape$
+Disallow: /serverless$
 
 Sitemap: ${settings.global.website}/sitemap.xml
   `
