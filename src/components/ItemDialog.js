@@ -1,6 +1,7 @@
 import React from 'react';
 import Dialog from '@material-ui/core/Dialog';
 import classNames from 'classnames'
+import _ from 'lodash';
 import ItemDialogContent from './ItemDialogContent';
 import ItemDialogButtonsContainer from './ItemDialogButtonsContainer';
 

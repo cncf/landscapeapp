@@ -9,14 +9,12 @@ import WebappWebpackPlugin from 'webapp-webpack-plugin';
 // const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
 const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 import {projectPath, settings} from './tools/settings';
-console.info(settings);
 
 const GLOBALS = {
   'process.env.NODE_ENV': JSON.stringify('production'),
   'process.env.GA': require('process').env['GA'],
   __DEV__: false
 };
-console.info(projectPath);
 
 export default {
   performance: {
