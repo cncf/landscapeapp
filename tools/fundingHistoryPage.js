@@ -5,17 +5,6 @@ import path from 'path';
 const result = JSON.parse(require('fs').readFileSync(path.resolve(projectPath, 'dist/funding.json'), 'utf-8'));
 const base = settings.global.website;
 
-const membership = {
-  false: 'No',
-  silver: 'Silver',
-  gold: 'Gold',
-  platinum: 'Platinum',
-  linux_foundation: 'Linux Foundation',
-  academic: 'Academic',
-  nonprofit: 'Nonprofit',
-  cncf: 'CNCF'
-};
-
 const page = `
 <head>
   <title>Changes in funding</title>
@@ -45,7 +34,7 @@ const page = `
                  <td><a href="${item.link}" target="_blank">${item.name}</a></td>
                  <td>$${millify(item.currentAmount)}</td>
                  <td style="color: ${delta > 0 ? 'green' : 'red'}">$${millify(delta)}</td>
-                 <td>${membership[item.membership]}</td>
+                 <td>${settings.membership[item.membership].funding}</td>
                  <td>${item.date}</td>
                  <td><a href="${item.url}" target="_blank">${item.name}</a></td>
                </tr>
