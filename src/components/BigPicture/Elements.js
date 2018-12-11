@@ -46,7 +46,7 @@ const LargeItem = function({zoom, item, x, y, onSelectItem}) {
     return Math.round(x * zoom * 2) / 2;
   };
   const relationInfo = _.find(fields.relation.values, {id: item.relation});
-  const color = relationInfo.color;
+  const color = relationInfo.big_picture_color;
   const label = relationInfo.big_picture_label;
   return <div style={{
     cursor: 'pointer',
