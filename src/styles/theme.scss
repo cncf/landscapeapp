@@ -239,9 +239,6 @@ a {text-decoration: none; transition: all 0.5s; color: $blue;
     }
   }
 
-  &.sandbox {border: 4px solid #d1f7ff;}
-  &.incubating {border: 4px solid #00cbff;}
-  &.graduated {border: 4px solid #3570a8;}
   &.nonoss {background: #eee;}
 
   .logo_wrapper{padding: 2px; width: 100%; cursor: pointer;

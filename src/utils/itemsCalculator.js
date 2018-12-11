@@ -7,6 +7,7 @@ import formatAmount from '../utils/formatAmount';
 import formatNumber from 'format-number';
 import { filtersToUrl } from '../utils/syncToUrl';
 import stringOrSpecial from '../utils/stringOrSpecial';
+import { settings } from 'project/settings.yml';
 const landscape = fields.landscape.values;
 
 export const getFilteredItems = createSelector(
@@ -14,12 +15,15 @@ export const getFilteredItems = createSelector(
   (state) => state.main.filters
   ],
   function(data, filters) {
-    var filterHostedProject = function(x) {
-      const oldValue = filterFn({field: 'relation', filters})(x);
-      if (filters.relation.indexOf('sandbox') !== -1) {
-        return oldValue || x.project === 'sandbox';
-      } else {
-        return oldValue;
+    var filterHostedProject = filterFn({field: 'relation', filters});
+    if (settings.global.flags.cncf_sandbox) {
+      filterHostedProject = function(x) {
+        const oldValue = filterFn({field: 'relation', filters})(x);
+        if (filters.relation.indexOf('sandbox') !== -1) {
+          return oldValue || x.project === 'sandbox';
+        } else {
+          return oldValue;
+        }
       }
     }
     var filterByLicense = filterFn({field: 'license', filters});
@@ -51,12 +55,15 @@ const getFilteredItemsForBigPicture = createSelector(
   (state) => state.main.filters
   ],
   function(data, filters) {
-    var filterHostedProject = function(x) {
-      const oldValue = filterFn({field: 'relation', filters})(x);
-      if (filters.relation.indexOf('sandbox') !== -1) {
-        return oldValue || x.project === 'sandbox';
-      } else {
-        return oldValue;
+    var filterHostedProject = filterFn({field: 'relation', filters});
+    if (settings.global.flags.cncf_sandbox) {
+      filterHostedProject = function(x) {
+        const oldValue = filterFn({field: 'relation', filters})(x);
+        if (filters.relation.indexOf('sandbox') !== -1) {
+          return oldValue || x.project === 'sandbox';
+        } else {
+          return oldValue;
+        }
       }
     }
     var filterByLicense = filterFn({field: 'license', filters});
@@ -136,17 +143,18 @@ const getGroupedItems = createSelector(
       return getGroupingValue({item: item, grouping: grouping});
     });
 
-    if (grouping === 'relation' && filters.relation.indexOf('sandbox') !== -1) {
-      grouped = _.groupBy(items, function(item) {
-        const oldValue = getGroupingValue({item: item, grouping: grouping});
-        if (item.project === 'sandbox') {
-          return 'sandbox'
-        } else {
-          return oldValue;
-        }
-      });
+    if (settings.global.flags.cncf_sandbox) {
+      if (grouping === 'relation' && filters.relation.indexOf('sandbox') !== -1) {
+        grouped = _.groupBy(items, function(item) {
+          const oldValue = getGroupingValue({item: item, grouping: grouping});
+          if (item.project === 'sandbox') {
+            return 'sandbox'
+          } else {
+            return oldValue;
+          }
+        });
+      }
     }
-
 
     const fieldInfo = fields[grouping];
     return _.orderBy(_.map(grouped, function(value, key) {
@@ -164,12 +172,8 @@ const getGroupedItems = createSelector(
 
 const bigPictureSortOrder = [
   function orderByProjectKind(item) {
-    const result = {
-      "graduated": 1,
-      "incubating": 2,
-      "sandbox" : 99
-    }[item.project] || 99;
-    return result;
+    const result = _.find(fields.relation.values, {id: item.project});
+    return result.big_picture_order || 99;
   },
   function orderByProjectName(item) {
     return item.name.toLowerCase();

@@ -2,11 +2,15 @@ import React from 'react';
 import _ from 'lodash'
 import InternalLink from '../InternalLink';
 import Fade from '@material-ui/core/Fade';
+import fields from '../../types/fields';
 
 const itemWidth = 36;
 const itemHeight = 32;
 
-const isLargeFn = (x) => x.relation && x.relation !== 'member';
+const isLargeFn = function(x) {
+  const relationInfo = _.find(fields.relation.values, {id: x.relation});
+  return !!relationInfo.big_picture_order;
+}
 
 const Item = function({zoom, item, x, y, isLarge, onSelectItem}) {
   if (isLarge) {
@@ -41,16 +45,9 @@ const LargeItem = function({zoom, item, x, y, onSelectItem}) {
   const z = function(x) {
     return Math.round(x * zoom * 2) / 2;
   };
-  const color = {
-    'sandbox': 'rgb(108, 165, 209)',
-    'incubating': 'rgb(83, 113, 189)',
-    'graduated': 'rgb(24, 54, 114)'
-  }[item.relation];
-  const label = {
-    'sandbox': 'Cloud Native Sandbox',
-    'incubating': 'CNCF Incubating',
-    'graduated': 'CNCF Graduated'
-  }[item.relation];
+  const relationInfo = _.find(fields.relation.values, {id: item.relation});
+  const color = relationInfo.color;
+  const label = relationInfo.big_picture_label;
   return <div style={{
     cursor: 'pointer',
     position: 'absolute',

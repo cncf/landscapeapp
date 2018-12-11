@@ -1,4 +1,4 @@
-import { projectPath } from './settings';
+import { projectPath, settings } from './settings';
 console.info('pf', projectPath);
 const source = require('js-yaml').safeLoad(require('fs').readFileSync(`${projectPath}/processed_landscape.yml`));
 const traverse = require('traverse');
@@ -142,7 +142,7 @@ tree.map(function(node) {
     items.push({...node,
       project: node.project,
       member: node.membership_data.member,
-      relation: (node.project === 'sandbox' ? 'member' : node.project) || ( node.membership_data.member ? 'member' : false ),
+      relation: (node.project === 'sandbox' && settings.global.flags.cncf_sandbox ? 'member' : node.project) || ( node.membership_data.member ? 'member' : false ),
       firstCommitDate: formatDate((node.github_start_commit_data || {}).start_date),
       firstCommitLink: getCommitLink((node.github_start_commit_data || {}).start_commit_link),
       latestCommitDate: formatDate((node.github_data || {}).latest_commit_date),
@@ -464,8 +464,9 @@ const lookups = {
   headquarters: pack(generateHeadquarters())
 }
 const previewData = itemsWithExtraFields.filter(function(x) {
-  return !!x.project && x.project !== 'sandbox';
+  return !!x.project && (x.project !== 'sandbox' || !settings.global.flags.cncf_sandbox);
 });
+
 require('fs').writeFileSync(`${projectPath}/data.json`, JSON.stringify(itemsWithExtraFields, null, 2));
 require('fs').writeFileSync(`${projectPath}/preview.json`, JSON.stringify(pack(previewData), null, 2));
 require('fs').writeFileSync(`${projectPath}/lookup.json`, JSON.stringify(lookups, null, 2));

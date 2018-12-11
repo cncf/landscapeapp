@@ -14,6 +14,7 @@ import InternalLink from './InternalLink';
 import '../styles/itemModal.scss';
 import fields from '../types/fields';
 import isGoogle from '../utils/isGoogle';
+import { settings } from 'project/settings.yml';
 
 let productScrollEl = null;
 const formatDate = function(x) {
@@ -42,45 +43,34 @@ const iconGithub = <svg viewBox="0 0 24 24">
     </svg>
 
 const projectTag = function({relation, member, project}) {
-  const text = _.find(fields.relation.values, {id: relation}).tag;
   if (relation === false) {
     return null;
   }
-  if (project === 'sandbox') {
-    return (<InternalLink to={filtersToUrl({filters:{relation: project}})} className="tag tag-blue">
-      <span className="tag-name">Cloud Native</span>
-      <span className="tag-value">Sandbox Project</span>
-    </InternalLink>)
+  const { prefix, tag } = _.find(fields.relation.values, {id: relation});
+
+  if (settings.global.flags.cncf_sandbox) {
+    if (project === 'sandbox') {
+      return (<InternalLink to={filtersToUrl({filters:{relation: project}})} className="tag tag-blue">
+        <span className="tag-name">Cloud Native</span>
+        <span className="tag-value">Sandbox Project</span>
+      </InternalLink>)
+    }
   }
+
   if (relation === 'member') {
-    const name = {
-      platinum: 'CNCF',
-      gold: 'CNCF',
-      silver: 'CNCF',
-      academic: 'CNCF',
-      nonprofit: 'CNCF',
-      linux_foundation: 'LF',
-      cncf: 'CNCF'
-    }[member];
-    const label = {
-      platinum: 'Platinum Member',
-      gold: 'Gold Member',
-      silver: 'Silver Member',
-      academic: 'Academic Member',
-      nonprofit: 'Nonprofit Member',
-      linux_foundation: 'Project',
-      cncf: 'Project'
-    }[member];
+    const { name, label } = settings.membership[member];
     return (<InternalLink to={filtersToUrl({filters:{relation: relation}})} className="tag tag-blue">
       <span className="tag-name">{name}</span>
       <span className="tag-value">{label}</span>
     </InternalLink>)
   }
+
   return (<InternalLink to={filtersToUrl({filters:{relation: relation}})} className="tag tag-blue">
-    <span className="tag-name">{ relation === 'sandbox' ? 'Cloud Native' : 'CNCF Project' }</span>
+    <span className="tag-name">{prefix}</span>
     <span className="tag-value">{text}</span>
   </InternalLink>)
 };
+
 const openSourceTag = function(oss) {
   if (!oss) {
     return null;
