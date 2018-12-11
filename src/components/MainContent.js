@@ -8,18 +8,27 @@ import InternalLink from './InternalLink';
 import isEmbed from '../utils/isEmbed';
 import isMobile from '../utils/isMobile';
 import Delay from './DelayRender';
+import fields from '../types/fields';
 
 let oldItems = null;
 const maxAnimatedElements = 100;
 const timeout = 1000;
 
+function getRelationStyle(relation) {
+  const relationInfo = _.find(fields.relation.values, {id: relation});
+  if (relationInfo && relationInfo.color) {
+    return {
+      border: '4px solid ' + relationInfo.color
+    };
+  } else {
+    return {};
+  }
+}
+
 const Card = ({item, handler, itemRef, ...props}) => {
   return (
             <div ref={itemRef} className="mosaic-wrap" key={item.id} {...props}>
-            <div className={classNames('mosaic',{sandbox : item.relation ==='sandbox'},
-              {incubating : item.relation ==='incubating'},
-              {graduated : item.relation ==='graduated'},
-              {nonoss : item.oss === false})}
+            <div className={classNames('mosaic', {nonoss : item.oss === false})} style={getRelationStyle(item.relation)}
               onClick={() => handler(item.id)} >
               <div className="logo_wrapper">
                 <img src={item.href} className='logo' max-height='100%' max-width='100%' />

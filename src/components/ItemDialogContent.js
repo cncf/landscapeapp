@@ -14,7 +14,7 @@ import InternalLink from './InternalLink';
 import '../styles/itemModal.scss';
 import fields from '../types/fields';
 import isGoogle from '../utils/isGoogle';
-import { settings } from 'project/settings.yml';
+import settings from 'project/settings.yml';
 
 let productScrollEl = null;
 const formatDate = function(x) {
@@ -26,6 +26,17 @@ const formatDate = function(x) {
 const formatTwitter = function(x) {
   const name = x.split('/').slice(-1)[0];
   return '@' + name;
+}
+
+function getRelationStyle(relation) {
+  const relationInfo = _.find(fields.relation.values, {id: relation});
+  if (relationInfo && relationInfo.color) {
+    return {
+      border: '4px solid ' + relationInfo.color
+    };
+  } else {
+    return {};
+  }
 }
 
 
@@ -58,6 +69,7 @@ const projectTag = function({relation, member, project}) {
   }
 
   if (relation === 'member') {
+    console.info(settings.membership, member);
     const { name, label } = settings.membership[member];
     return (<InternalLink to={filtersToUrl({filters:{relation: relation}})} className="tag tag-blue">
       <span className="tag-name">{name}</span>
@@ -67,7 +79,7 @@ const projectTag = function({relation, member, project}) {
 
   return (<InternalLink to={filtersToUrl({filters:{relation: relation}})} className="tag tag-blue">
     <span className="tag-name">{prefix}</span>
-    <span className="tag-value">{text}</span>
+    <span className="tag-value">{tag}</span>
   </InternalLink>)
 };
 
@@ -237,7 +249,7 @@ const ItemDialogContent = ({itemInfo}) => {
         <div className="modal-content">
             <KeyHandler keyEventName="keydown" keyValue="ArrowUp" onKeyHandle={handleUp} />
             <KeyHandler keyEventName="keydown" keyValue="ArrowDown" onKeyHandle={handleDown} />
-            <div className="product-logo">
+            <div className="product-logo" style={getRelationStyle(itemInfo.relation)}>
               <img src={itemInfo.href} className='product-logo-img'/>
             </div>
 

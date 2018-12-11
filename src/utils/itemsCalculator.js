@@ -7,7 +7,7 @@ import formatAmount from '../utils/formatAmount';
 import formatNumber from 'format-number';
 import { filtersToUrl } from '../utils/syncToUrl';
 import stringOrSpecial from '../utils/stringOrSpecial';
-import { settings } from 'project/settings.yml';
+import settings from 'project/settings.yml';
 const landscape = fields.landscape.values;
 
 export const getFilteredItems = createSelector(
@@ -173,6 +173,9 @@ const getGroupedItems = createSelector(
 const bigPictureSortOrder = [
   function orderByProjectKind(item) {
     const result = _.find(fields.relation.values, {id: item.project});
+    if (!result) {
+      return 99;
+    }
     return result.big_picture_order || 99;
   },
   function orderByProjectName(item) {

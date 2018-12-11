@@ -6,8 +6,20 @@ import ItemDialogButtonsContainer from './ItemDialogButtonsContainer';
 
 import '../styles/itemModal.scss';
 import isIphone from '../utils/isIphone';
+import fields from '../types/fields';
 
 let lastItemInfo;
+function getRelationStyle(relation) {
+  const relationInfo = _.find(fields.relation.values, {id: relation});
+  if (relationInfo && relationInfo.color) {
+    return {
+      border: '4px solid ' + relationInfo.color
+    };
+  } else {
+    return {};
+  }
+}
+
 const ItemDialog = ({onClose, itemInfo}) => {
   const recentItemInfo = itemInfo || lastItemInfo || {};
   if (itemInfo) {
@@ -18,11 +30,7 @@ const ItemDialog = ({onClose, itemInfo}) => {
       return null;
     }
     return (
-      <div className={classNames('modal', 'product', {sandbox : recentItemInfo.cncfRelation ==='sandbox'},
-          {incubating : recentItemInfo.cncfRelation ==='incubating'},
-          {graduated : recentItemInfo.cncfRelation ==='graduated'},
-          {nonoss : recentItemInfo.oss === false})}
-        >
+      <div className={classNames('modal', 'product', {nonoss : recentItemInfo.oss === false})} style={getRelationStyle(recentItemInfo.relation)} >
           { /* Note - we move buttons away from here to the HomePage because of Safari Issues */ }
           { <ItemDialogContent itemInfo={itemInfo || lastItemInfo}/> }
         </div>
@@ -31,11 +39,7 @@ const ItemDialog = ({onClose, itemInfo}) => {
   return (
       <Dialog open={!!itemInfo} onClose={() => onClose() } transitionDuration={400}
         classes={{paper:'modal-body'}}
-        className={classNames('modal', 'product', {sandbox : recentItemInfo.cncfRelation ==='sandbox'},
-                                                  {incubating : recentItemInfo.cncfRelation ==='incubating'},
-                                                  {graduated : recentItemInfo.cncfRelation ==='graduated'},
-          {nonoss : recentItemInfo.oss === false})}
-        >
+        className={classNames('modal', 'product', {nonoss : recentItemInfo.oss === false})}>
           { itemInfo && <ItemDialogButtonsContainer/> }
           { (itemInfo || lastItemInfo) && <ItemDialogContent itemInfo={itemInfo || lastItemInfo}/> }
       </Dialog>

@@ -12,54 +12,48 @@
 import _ from 'lodash';
 import lookups from 'project/lookup.json';
 import unpack from '../utils/unpackArray';
-const fields = {
-  relation: {
+import settings from 'project/settings.yml';
+
+const relationField = (function() {
+  const rootEntry = {
     id: 'relation',
-    url: 'cncf',
-    label: 'CNCF Relation',
-    isArray: true,
-    values: [{
-      id: 'hosted',
-      label: 'CNCF Projects',
-      url: 'hosted',
-      level: 1,
-      children: ['graduated', 'incubating', 'sandbox']
-    }, {
-      id: 'graduated',
-      label: 'Graduated CNCF Projects',
-      tag: 'Graduated',
-      url: 'graduated',
+    url: settings.relation.url,
+    label: settings.relation.label,
+    isArray: true
+  }
+  const firstEntry = settings.relation.values[0];
+  if (!firstEntry.children) {
+    throw new Error('First entry of relation settings should have children!');
+  }
+  const values = [{
+    id: firstEntry.id,
+    label: firstEntry.label,
+    tag: firstEntry.tag,
+    url: firstEntry.url || firstEntry.id,
+    level: 1,
+    children: firstEntry.children.map( (x) => x.id)
+  }].concat(firstEntry.children.map(function(child) {
+    return {
+      ...child,
+      url: child.url || child.id,
       level: 2,
-      parentId: 'hosted'
-    }, {
-      id: 'incubating',
-      label: 'Incubating CNCF Projects',
-      tag: 'Incubating',
-      url: 'incubating',
-      level: 2,
-      parentId: 'hosted'
-    }, {
-      id: 'sandbox',
-      label: 'Cloud Native Sandbox Projects',
-      tag: 'Sandbox',
-      url: 'sandbox',
-      level: 2,
-      parentId: 'hosted'
-    }, {
-      id: 'member',
-      label: 'CNCF Member Products/Projects',
-      tag: 'CNCF Member',
-      url: 'member',
+      parentId: firstEntry.id
+    };
+  })).concat(settings.relation.values.slice(1).map(function(entry) {
+    return {
+      ...entry,
+      url: entry.url || entry.id,
       level: 1,
       children: []
-    }, {
-      id: false,
-      label: 'Non-CNCF Member Products/Projects',
-      url: 'no',
-      level: 1,
-      children: []
-    }]
-  },
+    }
+  }));
+
+  return { ...rootEntry, values: values};
+
+})();
+
+const fields = {
+  relation: relationField,
   stars: {
     id: 'stars',
     label: 'Stars',
