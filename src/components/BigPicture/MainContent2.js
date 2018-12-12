@@ -1,7 +1,6 @@
 import React from 'react';
 import _ from 'lodash';
 
-import settings from 'project/settings.yml'
 
 import {HorizontalCategory, VerticalCategory } from './Elements';
 import LandscapeInfo from './LandscapeInfo';
@@ -9,8 +8,8 @@ import ServerlessLink from './ServerlessLink';
 
 
 
-const MainContent2 = ({groupedItems, onSelectItem, style, showPreview, switchToServerless, zoom }) => {
-  const elements = settings.big_picture.main.elements.map(function(element) {
+const MainContent2 = ({groupedItems, onSelectItem, style, showPreview, switchToServerless, zoom, landscapeSettings }) => {
+  const elements = landscapeSettings.elements.map(function(element) {
     if (element.type === 'HorizontalCategory') {
       const cat = _.find(groupedItems, {key: element.category});
       return <HorizontalCategory {...cat} {..._.pick(element, ['rows','width','height','top','left','color']) }
@@ -39,7 +38,7 @@ const MainContent2 = ({groupedItems, onSelectItem, style, showPreview, switchToS
     }
     return null;
   });
-  return (<div style={{...style, position: 'relative', ...settings.big_picture.main.size }}>
+  return (<div style={{...style, position: 'relative', ...landscapeSettings.size }}>
     {elements}
   </div>);
   return <div style={{...style, position: 'relative', width: 1620, height: 900 }}>

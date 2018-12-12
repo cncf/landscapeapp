@@ -5,7 +5,7 @@ import {
 import HomePageUrlContainer from '../HomePageUrlContainer';
 import qs from 'query-string';
 
-const FullscreenServerless = ({ready}) => {
+const Fullscreen = ({ready, landscapeSettings}) => {
   if (!ready) {
     return (
       <div>
@@ -19,8 +19,11 @@ const FullscreenServerless = ({ready}) => {
   return (
     <div style={{zoom: 4, fontFamily: 'roboto'}}>
         <HomePageUrlContainer />
-        <div className="gradient-bg" style={{width: 1640, height: 990, position: 'relative'}}>
-          <MainContentContainer2 style={{top: 50, left: 20}} showPreview={showPreview}/>
+        <div className="gradient-bg" style={{
+          width: landscapeSettings.fullscreen_size.width,
+          height: landscapeSettings.fullscreen_size.height,
+          position: 'relative'}}>
+          <MainContentContainer2 style={{top: 50, left: 20}} showPreview={showPreview} landscapeSettings={landscapeSettings} />
           <div style={{
             position: 'absolute',
             top: 15,
@@ -33,7 +36,7 @@ const FullscreenServerless = ({ready}) => {
             paddingTop: 3,
             paddingBottom: 3,
             borderRadius: 5
-          }}>See the interactive landscape at l.cncf.io</div>
+          }}>{landscapeSettings.fullscreen_header}</div>
           <div style={{
             position: 'absolute',
             top: 15,
@@ -53,7 +56,7 @@ const FullscreenServerless = ({ready}) => {
             left: 15,
             fontSize: 14,
             color: 'white',
-          }}>Cloud Native Landscape </div>
+          }}>{landscapeSettings.title} </div>
           <div style={{
             position: 'absolute',
             top: 30,
@@ -66,4 +69,4 @@ const FullscreenServerless = ({ready}) => {
   );
 };
 
-export default FullscreenServerless;
+export default Fullscreen;
