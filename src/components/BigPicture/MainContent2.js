@@ -1,22 +1,47 @@
 import React from 'react';
 import _ from 'lodash';
-import LandscapeInfo from './LandscapeInfo';
-import ServerlessLink from './ServerlessLink';
+
+import settings from 'project/settings.yml'
 
 import {HorizontalCategory, VerticalCategory } from './Elements';
+import LandscapeInfo from './LandscapeInfo';
+import ServerlessLink from './ServerlessLink';
 
 
 
 const MainContent2 = ({groupedItems, onSelectItem, style, showPreview, switchToServerless, zoom }) => {
-  console.info(groupedItems);
-  const cat1 = _.find(groupedItems, {key: 'App Definition and Development'});
-  const cat2 = _.find(groupedItems, {key: 'Orchestration & Management'});
-  const cat3 = _.find(groupedItems, {key: 'Runtime'});
-  const cat4 = _.find(groupedItems, {key: 'Provisioning'});
-  const cat5 = _.find(groupedItems, {key: 'Cloud'});
-  const cat6 = _.find(groupedItems, {key: 'Platform'});
-  const cat7 = _.find(groupedItems, {key: 'Observability and Analysis'});
-  const cat8 = _.find(groupedItems, {key: 'Special'});
+  const elements = settings.big_picture.main.elements.map(function(element) {
+    if (element.type === 'HorizontalCategory') {
+      const cat = _.find(groupedItems, {key: element.category});
+      return <HorizontalCategory {...cat} {..._.pick(element, ['rows','width','height','top','left','color']) }
+        zoom={zoom}
+        onSelectItem={onSelectItem}
+      />
+    }
+    if (element.type === 'VerticalCategory') {
+      const cat = _.find(groupedItems, {key: element.category});
+      return <VerticalCategory {...cat} {..._.pick(element, ['cols','width','height','top','left','color']) }
+        zoom={zoom}
+        onSelectItem={onSelectItem}
+      />
+    }
+    if (element.type === 'SecondLandscapeLink') {
+      return <ServerlessLink {..._.pick(element, ['width','height','top','left','color']) }
+        zoom={zoom}
+        showPreview={showPreview}
+        onClick={switchToServerless}
+      />
+    }
+    if (element.type === 'LandscapeInfo') {
+      return <LandscapeInfo {..._.pick(element, ['width', 'height', 'top', 'left']) } childrenInfo={element.children}
+        zoom={zoom}
+      />
+    }
+    return null;
+  });
+  return (<div style={{...style, position: 'relative', ...settings.big_picture.main.size }}>
+    {elements}
+  </div>);
   return <div style={{...style, position: 'relative', width: 1620, height: 900 }}>
     <HorizontalCategory {...cat1} rows={6} width={1050} height={230} top={0} left={0} zoom={zoom} color="rgb(78, 171, 207)" onSelectItem={onSelectItem} />
     <HorizontalCategory {...cat2} rows={3} width={1050} height={140} top={240} left={0} zoom={zoom} color="rgb(104, 145, 145)" onSelectItem={onSelectItem} />
