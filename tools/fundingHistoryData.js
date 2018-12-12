@@ -66,7 +66,7 @@ _.range(1, 100).forEach(function(i) {
     return false;
   }
   const prev = getItems(getFileFromHistory(i));
-  const current = getItems(getFileFromHead());
+  const current = getItems(getFileFromFs());
   buildDiff({
     currentItems: current,
     prevItems: prev,
