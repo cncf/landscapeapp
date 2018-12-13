@@ -92,6 +92,7 @@
     "cssnano": "4.1.7",
     "current-device": "0.7.8",
     "debug": "4.1.0",
+    "ejs": "2.6.1",
     "ejs-loader": "0.3.1",
     "eslint": "5.9.0",
     "eslint-plugin-import": "2.14.0",
