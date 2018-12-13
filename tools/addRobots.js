@@ -15,8 +15,8 @@ Disallow: *license=
 Disallow: *organization=
 Disallow: *headquarters=
 Disallow: *format=
-Disallow: /landscape$
-Disallow: /serverless$
+Disallow: /${settings.big_picture.main.url}$
+${settings.big_picture.extra ? `Disallow: /${settings.big_picture.extra.url}$` : '' }
 
 Sitemap: ${settings.global.website}/sitemap.xml
   `

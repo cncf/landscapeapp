@@ -1,19 +1,19 @@
-import MainContentContainer2 from './MainContentContainer2';
+import MainLandscapeContentContainer from './MainLandscapeContentContainer';
+import ExtraLandscapeContentContainer from './ExtraLandscapeContentContainer';
 import SwitchButtonContainer from './SwitchButtonContainer';
 import ZoomContainer from './ZoomContainer';
 import ZoomButtonsContainer from './ZoomButtonsContainer';
-import ServerlessContentContainer from './ServerlessContentContainer';
-import FullscreenServerlessContainer from './FullscreenServerlessContainer';
-import FullscreenLandscapeContainer from './FullscreenLandscapeContainer';
+import MainFullscreenLandscapeContainer from './MainFullscreenLandscapeContainer';
+import ExtraFullscreenLandscapeContainer from './ExtraLandscapeContentContainer';
 import FullscreenButtonContainer from './FullscreenButtonContainer';
 
 export {
-  MainContentContainer2,
-  ServerlessContentContainer,
+  MainLandscapeContentContainer,
+  ExtraLandscapeContentContainer,
   SwitchButtonContainer,
   ZoomContainer,
   ZoomButtonsContainer,
-  FullscreenServerlessContainer,
-  FullscreenLandscapeContainer,
+  MainFullscreenLandscapeContainer,
+  ExtraFullscreenLandscapeContainer,
   FullscreenButtonContainer
 }

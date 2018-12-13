@@ -1,11 +1,13 @@
 import Promise from 'bluebird';
+import { settings } from './settings';
+const urls = _.map(settings.big_picture, (section) => section.url);
 const port = process.env.PORT || '4000';
 async function main() {
   const puppeteer = require('puppeteer');
   const browser = await puppeteer.launch({args: ['--no-sandbox', '--disable-setuid-sandbox']});
   const page = await browser.newPage();
   var hasErrors = false;
-  for (var format of ['landscape', 'serverless']) {
+  for (var format of urls) {
     await page.goto(`http://localhost:${port}/format=${format}`);
     await Promise.delay(10000);
     const errors = await page.evaluate( function() {

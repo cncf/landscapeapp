@@ -183,7 +183,16 @@ const bigPictureSortOrder = [
   }
 ];
 
-export const getGroupedItemsForBigPicture = createSelector(
+export const getGroupedItemsForBigPicture = function(state) {
+  if (state.main.mainContentMode === 'card') {
+    return [];
+  }
+  const bigPictureSettings = _.values(settings.big_picture);
+  const currentSettings = _.find(bigPictureSettings, {url: state.main.mainContentMode});
+  return bigPictureMethods[currentSettings.method](state);
+}
+
+const getGroupedItemsForCncfBigPicture = createSelector(
   [ getFilteredItemsForBigPicture,
     (state) => state.main.data,
     (state) => state.main.grouping,
@@ -217,7 +226,7 @@ export const getGroupedItemsForBigPicture = createSelector(
 );
 
 
-export const getGroupedItemsForServerlessBigPicture = createSelector([
+const getGroupedItemsForServerlessBigPicture = createSelector([
      getFilteredItemsForBigPicture,
     (state) => state.main.data,
     (state) => state.main.grouping,
@@ -295,5 +304,10 @@ export const getGroupedItemsForServerlessBigPicture = createSelector([
 
   }
 );
+
+export const bigPictureMethods = {
+  getGroupedItemsForCncfBigPicture,
+  getGroupedItemsForServerlessBigPicture
+};
 
 export default getGroupedItems;

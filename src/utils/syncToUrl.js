@@ -10,6 +10,10 @@ const sortOptions = options.map(function(x) {
   }
 });
 
+import settings from 'project/settings.yml';
+const mainSettings = settings.big_picture.main;
+const extraSettings = settings.big_picture.extra || {};
+
 export function filtersToUrl({filters, grouping, sortField, selectedItemId, zoom, mainContentMode = 'card', isFullscreen}) {
   const params = {};
   var fieldNames = _.keys(fields);
@@ -106,11 +110,11 @@ function addSortFieldToParams({sortField, params}) {
 
 function addMainContentModeToParams({mainContentMode, params}) {
   if (mainContentMode !== initialState.mainContentMode) {
-    if (mainContentMode === 'landscape') {
-      params['format'] = 'landscape';
+    if (mainContentMode === mainSettings.url) {
+      params['format'] = mainSettings.url;
     }
-    if (mainContentMode === 'serverless') {
-      params['format'] = 'serverless';
+    if (mainContentMode === extraSettings.url && extraSettings.url) {
+      params['format'] = extraSettings.url;
     }
   }
 }
@@ -192,10 +196,10 @@ function setMainContentModeFromParams({ newParameters, params}) {
   const format = params.format;
   if (!format) {
     newParameters.mainContentMode = 'card';
-  } else if (format === 'serverless') {
-    newParameters.mainContentMode = 'serverless';
-  } else if (format === 'landscape') {
-    newParameters.mainContentMode = 'landscape';
+  } else if (format === extraSettings.url && extraSettings.url) {
+    newParameters.mainContentMode = extraSettings.url;
+  } else if (format === mainSettings.url) {
+    newParameters.mainContentMode = mainSettings.url;
   }
 }
 

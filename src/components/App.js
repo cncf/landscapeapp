@@ -4,9 +4,12 @@ import PropTypes from 'prop-types';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import { Switch, Route } from 'react-router-dom';
 
-import { FullscreenServerlessContainer, FullscreenLandscapeContainer } from "./BigPicture";
+import { MainFullscreenLandscapeContainer, ExtraFullscreenLandscapeContainer } from "./BigPicture";
 import HomePageContainer from './HomePageContainer';
 import NotFoundPage from './NotFoundPage';
+import settings from 'project/settings.yml';
+const mainSettings = settings.big_picture.main;
+const extraSettings = settings.big_picture.extra;
 
 // This is a class-based component because the current
 // version of hot reloading won't hot reload a stateless
@@ -19,8 +22,8 @@ class App extends React.Component {
         <CssBaseline />
         <Switch>
           <Route exact path="/" component={HomePageContainer} />
-          <Route exact path="/serverless" component={FullscreenServerlessContainer}/>
-          <Route exact path="/landscape" component={FullscreenLandscapeContainer}/>
+          { extraSettings && <Route exact path={`/${extraSettings.url}`} component={ExtraFullscreenLandscapeContainer}/> }
+          <Route exact path={`/${mainSettings.url}`} component={MainFullscreenLandscapeContainer}/>
           <Route path="/" component={HomePageContainer} />
           <Route component={NotFoundPage} />
         </Switch>

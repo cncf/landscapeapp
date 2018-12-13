@@ -10,8 +10,8 @@ import Presets from './Presets';
 import Ad from './Ad';
 import AutoSizer from './CustomAutoSizer';
 import {
-  MainContentContainer2,
-  ServerlessContentContainer,
+  MainLandscapeContentContainer,
+  ExtraLandscapeContentContainer,
   SwitchButtonContainer,
   ZoomButtonsContainer,
   FullscreenButtonContainer
@@ -33,6 +33,9 @@ import isMobile from '../utils/isMobile';
 import isGoogle from '../utils/isGoogle';
 import bus from '../reducers/bus';
 import settings from 'project/settings.yml'
+
+const mainSettings = settings.big_picture.main;
+const extraSettings = settings.big_picture.extra || {};
 
 const state = {
   lastScrollPosition: 0
@@ -200,8 +203,8 @@ const HomePage = ({isEmbed, mainContentMode, ready, hasSelectedItem, filtersVisi
                     <ZoomButtonsContainer />
                     <FullscreenButtonContainer />
                     <div style={{width: '100%', height: '100%', position: 'relative', overflow: 'scroll', padding: 10}}>
-                      { mainContentMode === 'landscape' && <MainContentContainer2/> }
-                      { mainContentMode === 'serverless' && <ServerlessContentContainer/> }
+                      { mainContentMode === mainSettings.url && <MainLandscapeContentContainer /> }
+                      { mainContentMode === extraSettings.url && <ExtraLandscapeContentContainer /> }
                     </div>
                   </div>
                 )}

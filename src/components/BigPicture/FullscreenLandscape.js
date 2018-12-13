@@ -1,11 +1,9 @@
 import React from 'react';
-import {
-  MainContentContainer2,
-} from '.';
+import LandscapeContent from './LandscapeContent';
 import HomePageUrlContainer from '../HomePageUrlContainer';
 import qs from 'query-string';
 
-const Fullscreen = ({ready, landscapeSettings}) => {
+const Fullscreen = ({ready, groupedItems, landscapeSettings, showPreview, version}) => {
   if (!ready) {
     return (
       <div>
@@ -13,8 +11,6 @@ const Fullscreen = ({ready, landscapeSettings}) => {
       </div>
     )
   }
-  const showPreview = location.search.indexOf('preview') === -1;
-  const version = qs.parse(location.search).version;
 
   return (
     <div style={{zoom: 4, fontFamily: 'roboto'}}>
@@ -23,11 +19,12 @@ const Fullscreen = ({ready, landscapeSettings}) => {
           width: landscapeSettings.fullscreen_size.width,
           height: landscapeSettings.fullscreen_size.height,
           position: 'relative'}}>
-          <MainContentContainer2 style={{top: 50, left: 20}} showPreview={showPreview} landscapeSettings={landscapeSettings} />
+          <LandscapeContent style={{top: 50, left: 20}} showPreview={showPreview} landscapeSettings={landscapeSettings} />
           <div style={{
             position: 'absolute',
             top: 15,
-            left: 600,
+            left: '50%',
+            transform: 'translateX(-50%)',
             fontSize: 18,
             background: 'rgb(64,89,163)',
             color: 'white',
