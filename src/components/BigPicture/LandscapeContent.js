@@ -10,6 +10,7 @@ const LandscapeContent = ({groupedItems, onSelectItem, style, showPreview, switc
     if (element.type === 'HorizontalCategory') {
       const cat = _.find(groupedItems, {key: element.category});
       return <HorizontalCategory {...cat} {..._.pick(element, ['rows','width','height','top','left','color']) }
+        fitWidth={element.fit_width}
         zoom={zoom}
         onSelectItem={onSelectItem}
       />

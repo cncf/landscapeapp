@@ -3,6 +3,7 @@ import SwitchButton from './SwitchButton';
 import { changeMainContentMode } from '../../reducers/mainReducer.js';
 import { filtersToUrl } from '../../utils/syncToUrl';
 import settings from 'project/settings.yml';
+import _ from 'lodash';
 
 const mainCard = [{ title: 'Card Mode', mode: 'card'}];
 const landscapes = _.map(settings.big_picture, function(section) {
