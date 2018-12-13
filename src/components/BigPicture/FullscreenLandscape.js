@@ -19,7 +19,7 @@ const Fullscreen = ({ready, groupedItems, landscapeSettings, showPreview, versio
           width: landscapeSettings.fullscreen_size.width,
           height: landscapeSettings.fullscreen_size.height,
           position: 'relative'}}>
-          <LandscapeContent style={{top: 50, left: 20}} showPreview={showPreview} landscapeSettings={landscapeSettings} />
+          <LandscapeContent style={{top: 50, left: 20}} groupedItems={groupedItems} zoom={1} showPreview={showPreview} landscapeSettings={landscapeSettings} />
           <div style={{
             position: 'absolute',
             top: 15,

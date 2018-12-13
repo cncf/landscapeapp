@@ -7,7 +7,7 @@ const mainSettings = settings.big_picture.main;
 
 const mapStateToProps = (state) => ({
   ready: state.main.ready,
-  groupedItems: bigPictureMethods[mainSettings.method](state),
+  groupedItems: state.main.ready && bigPictureMethods[mainSettings.method](state),
   landscapeSettings: settings.big_picture.main,
   showPreview:location.search.indexOf('preview') === -1,
   version:qs.parse(location.search).version

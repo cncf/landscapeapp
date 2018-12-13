@@ -1,3 +1,4 @@
+import _ from 'lodash';
 import Promise from 'bluebird';
 import { settings } from './settings';
 const urls = _.map(settings.big_picture, (section) => section.url);

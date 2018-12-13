@@ -1,7 +1,11 @@
 import Promise from 'bluebird';
 import { getLastCommit } from 'git-last-commit';
-import { projectPath } from './settings';
+import { projectPath, settings } from './settings';
 import path from 'path';
+
+const mainSettings = settings.big_picture.main;
+const extraSettings = settings.big_picture.extra;
+
 const getLastCommitSync = function() {
   return new Promise(function(resolve) {
     getLastCommit(function(err, commit) {
@@ -16,34 +20,41 @@ async function main() {
   const version = `${time} ${commit.shortHash}`;
   const puppeteer = require('puppeteer');
   const previewScaleFactor = 0.5;
-  const pagesInPairs = [
+
+  const pagesInPairs = extraSettings ? [
     [{
-    url: `/landscape?preview&version=${version}`,
-    size: {width: 6560, height: 3960, deviceScaleFactor: previewScaleFactor},
-    fileName: 'src/images/landscape_preview.png'
+    url: `/${mainSettings.url}?preview&version=${version}`,
+    size: {width: mainSettings.fullscreen_size.width * 4, height: mainSettings.fullscreen_size.height * 4, deviceScaleFactor: previewScaleFactor},
+    fileName: `${mainSettings.url}_preview.png`
   }, {
-    url: `/serverless?preview&version=${version}`,
-    size: {width: 3450, height: 2100, deviceScaleFactor: previewScaleFactor},
-    fileName: 'src/images/serverless_preview.png'
+    url: `/${extraSettings.url}?preview&version=${version}`,
+    size: {width: extraSettings.fullscreen_size.width * 4, height: extraSettings.fullscreen_size.height * 4, deviceScaleFactor: previewScaleFactor},
+    fileName: `${extraSettings.url}_preview.png`
   }], [{
-    url: `/landscape?preview&version=${version}`,
-    size: {width: 6560, height: 3960, deviceScaleFactor: previewScaleFactor},
-    fileName: 'src/images/landscape_preview.png'
+    url: `/${mainSettings.url}?preview&version=${version}`,
+    size: {width: mainSettings.fullscreen_size.width * 4, height: mainSettings.fullscreen_size.height * 4, deviceScaleFactor: previewScaleFactor},
+    fileName: `${mainSettings.url}_preview.png`
   }, {
-    url: `/serverless?preview&version=${version}`,
-    size: {width: 3450, height: 2100, deviceScaleFactor: previewScaleFactor},
-    fileName: 'src/images/serverless_preview.png'
+    url: `/${extraSettings.url}?preview&version=${version}`,
+    size: {width: extraSettings.fullscreen_size.width * 4, height: extraSettings.fullscreen_size.height * 4, deviceScaleFactor: previewScaleFactor},
+    fileName: `${extraSettings.url}_preview.png`
   }], [{
-    url: `/landscape?version=${version}`,
-    size: {width: 6560, height: 3960, deviceScaleFactor: 1},
-    fileName: 'src/images/landscape.png',
-    pdfFileName: 'src/images/landscape.pdf'
+    url: `/${mainSettings.url}?version=${version}`,
+    size: {width: mainSettings.fullscreen_size.width * 4, height: mainSettings.fullscreen_size.height * 4, deviceScaleFactor: 1},
+    fileName: `${mainSettings.url}.png`,
+    pdfFileName: `${mainSettings.url}.pdf`
   }], [{
-    url: `/serverless?version=${version}`,
-    size: {width: 3450, height: 2100, deviceScaleFactor: 1},
-    fileName: 'src/images/serverless.png',
-    pdfFileName: 'src/images/serverless.pdf'
+    url: `/${extraSettings.url}?version=${version}`,
+    size: {width: extraSettings.fullscreen_size.width * 4, height: extraSettings.fullscreen_size.height * 4, deviceScaleFactor: 1},
+    fileName: `${extraSettings.url}.png`,
+    pdfFileName: `${extraSettings.url}.pdf`
+  }]] : [[{
+    url: `/${mainSettings.url}?version=${version}`,
+    size: {width: mainSettings.fullscreen_size.width * 4, height: mainSettings.fullscreen_size.height * 4, deviceScaleFactor: 1},
+    fileName: `${mainSettings.url}.png`,
+    pdfFileName: `${mainSettings.url}.pdf`
   }]];
+
   await Promise.mapSeries(pagesInPairs, async function(pair) {
     await Promise.map(pair, async function(pageInfo) {
       const browser = await puppeteer.launch({args: ['--no-sandbox', '--disable-setuid-sandbox']});
@@ -52,14 +63,13 @@ async function main() {
       console.info(`visiting http://localhost:${port}${pageInfo.url}`);
       await page.goto(`http://localhost:${port}${pageInfo.url}`);
       await Promise.delay(10000);
-      await page.screenshot({ path: pageInfo.fileName, fullPage: false });
+      await page.screenshot({ path: path.resolve(projectPath, 'dist/images/' + pageInfo.fileName), fullPage: false });
       if (pageInfo.pdfFileName) {
         await page.emulateMedia('screen');
-        await page.pdf({path: pageInfo.pdfFileName, ...pageInfo.size, printBackground: true, pageRanges: '1' });
+        await page.pdf({path: path.resolve(projectPath, 'dist/images/' + pageInfo.pdfFileName), ...pageInfo.size, printBackground: true, pageRanges: '1' });
       }
       await browser.close();
     });
-    require('child_process').execSync(`cp -r src/images '${path.resolve(projectPath, 'dist')}'`);
   });
 }
 main().catch(console.info);

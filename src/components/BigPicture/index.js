@@ -4,7 +4,7 @@ import SwitchButtonContainer from './SwitchButtonContainer';
 import ZoomContainer from './ZoomContainer';
 import ZoomButtonsContainer from './ZoomButtonsContainer';
 import MainFullscreenLandscapeContainer from './MainFullscreenLandscapeContainer';
-import ExtraFullscreenLandscapeContainer from './ExtraLandscapeContentContainer';
+import ExtraFullscreenLandscapeContainer from './ExtraFullscreenLandscapeContainer';
 import FullscreenButtonContainer from './FullscreenButtonContainer';
 
 export {

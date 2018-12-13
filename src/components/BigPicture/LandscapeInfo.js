@@ -1,4 +1,5 @@
 import React from 'react';
+import _ from 'lodash';
 
 const LandscapeInfo = ({zoom, width, height, top, left, childrenInfo}) => {
   const children = childrenInfo.map(function(info) {
