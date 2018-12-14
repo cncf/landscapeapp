@@ -1,23 +1,18 @@
 import Promise from 'bluebird';
-import { getLastCommit } from 'git-last-commit';
 import { projectPath, settings } from './settings';
 import path from 'path';
 
 const mainSettings = settings.big_picture.main;
 const extraSettings = settings.big_picture.extra;
 
-const getLastCommitSync = function() {
-  return new Promise(function(resolve) {
-    getLastCommit(function(err, commit) {
-      resolve(commit);
-    });
-  });
+const getLastCommitSha = function() {
+  return require('child_process').execSync(`cd '${projectPath}' && git log -n 1 --format=format:%h`).toString('utf-8').trim();
 }
 const port = process.env.PORT || '4000';
 async function main() {
-  const commit = await getLastCommitSync();
+  const sha = await getLastCommitSha();
   const time = new Date().toISOString().slice(0, 19) + 'Z';
-  const version = `${time} ${commit.shortHash}`;
+  const version = `${time} ${sha}`;
   const puppeteer = require('puppeteer');
   const previewScaleFactor = 0.5;
 
