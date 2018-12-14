@@ -68,7 +68,7 @@ const projectTag = function({relation, member, project}) {
     }
   }
 
-  if (relation === 'member') {
+  if (relation === 'member' || relation === 'company') {
     console.info(settings.membership, member);
     const { name, label } = settings.membership[member];
     return (<InternalLink to={filtersToUrl({filters:{relation: relation}})} className="tag tag-blue">
@@ -91,7 +91,11 @@ const openSourceTag = function(oss) {
     <span className="tag-value">Open Source Software</span>
   </InternalLink>)
 }
-const licenseTag = function(license) {
+const licenseTag = function({relation, license}) {
+  if (relation === 'company') {
+    return null;
+  }
+
   const text = _.find(fields.license.values, {id: license}).label;
   return (<InternalLink to={filtersToUrl({grouping: 'license', filters:{license: license}})} className="tag tag-purple">
     <span className="tag-name">License</span>
@@ -256,7 +260,7 @@ const ItemDialogContent = ({itemInfo}) => {
             <div className="product-tags">
               <div>{projectTag(itemInfo)}</div>
               <div>{openSourceTag(itemInfo.oss)}</div>
-              <div>{licenseTag(itemInfo.license)}</div>
+              <div>{licenseTag(itemInfo)}</div>
               <div>{badgeTag(itemInfo)}</div>
             </div>
 
