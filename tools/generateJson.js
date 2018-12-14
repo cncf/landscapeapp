@@ -202,6 +202,31 @@ const itemsWithExtraFields = items.map(function(item) {
   }
 });
 
+if (settings.global.flags.companies) {
+// Handle companies in a special way
+  const hasCompanyCategory = (function() {
+    var result = false;
+    tree.map(function(node) {
+      if (node && node.category === null && node.name === settings.global.flags.companies) {
+        result = true;
+      }
+    });
+    return result;
+  })();
+  if (!hasCompanyCategory) {
+    console.info(`FATAL: can not find a category with name: "${settings.global.flags.companies}". We use that category to get a list of member companies`);
+    process.exit(1);
+  }
+
+  _.each(itemsWithExtraFields, function(item) {
+    if (item.category === settings.global.flags.companies) {
+      item.project = 'company';
+      item.relation = 'company';
+    }
+  });
+}
+
+
 // protect us from duplicates
 var hasDuplicates = false;
 _.values(_.groupBy(itemsWithExtraFields, 'name')).forEach(function(duplicates) {
