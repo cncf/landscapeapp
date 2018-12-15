@@ -16,7 +16,8 @@ const LandscapeInfo = ({zoom, width, height, top, left, childrenInfo}) => {
       return <div style={{
         ...positionProps,
         fontSize: info.font_size * zoom,
-        fontStyle: 'italic'
+        fontStyle: 'italic',
+        textAlign: 'justify'
       }}> {info.text} </div>
     }
     if (info.type === 'title') {
