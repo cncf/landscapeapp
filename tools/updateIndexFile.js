@@ -1,12 +1,27 @@
 // update generated files so they reference a proper location
-//
-const filesLocation = process.argv[2];
+import fs from 'fs';
+import path from 'path';
+import minimatch from 'minimatch';
+import _ from 'lodash';
+import replace from 'string-replace-all';
 
-replace('/main', '/cncf/main', 'index.html'); // - in index.html
-replace('/favicon', '/cncf/favicon', 'index.html'); // - in index.html
-replace('/assets', '/cncf/assets', 'index.html'); // - in index.html
-replace('url(/', 'url(/cncf/', 'main.css'); // - in main.css
-replace('/images', '/cncf/images', 'main.js'); // - in  main.js
-replace('/logos', '/cncf/logos', 'main.js'); // - in main.js
-replace('/data.json', '/cncf/data.json', 'main.js') // - in main.js
-replace('/logos', '/cncf/logos', 'data.json') // - in data.json
+const projectName = process.argv[2];
+const filesLocation = path.resolve('dist', projectName);
+const files = fs.readdirSync(filesLocation);
+function update(original, updated, file) {
+  const realFile = _.find(files, (x) => minimatch(x, file));
+  console.info(`replacing ${original} to ${updated} in ${realFile}`);
+  const content = require('fs').readFileSync(path.resolve(filesLocation, realFile), 'utf-8');
+  const updatedContent = replace(content, original, updated);
+  require('fs').writeFileSync(path.resolve(filesLocation, realFile), updatedContent);
+}
+
+
+update('/main', `/${projectName}/main`, 'index.html'); // - in index.html
+update('/favicon', `/${projectName}/favicon`, 'index.html'); // - in index.html
+update('/assets', `/${projectName}/assets`, 'index.html'); // - in index.html
+update('url(/', `url(/${projectName}/`, 'main.*.css'); // - in main.css
+update('/images', `/${projectName}/images`, 'main.*.js'); // - in  main.js
+update('/logos', `/${projectName}/logos`, 'main.*.js'); // - in main.js
+update('/data.json', `/${projectName}/data.json`, 'main.*.js') // - in main.js
+update('/logos', `/${projectName}/logos`, 'data.json') // - in data.json
