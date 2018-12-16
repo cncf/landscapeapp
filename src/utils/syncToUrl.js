@@ -13,6 +13,7 @@ const sortOptions = options.map(function(x) {
 import settings from 'project/settings.yml';
 const mainSettings = settings.big_picture.main;
 const extraSettings = settings.big_picture.extra || {};
+const prefix = window.prefix || '';
 
 export function filtersToUrl({filters, grouping, sortField, selectedItemId, zoom, mainContentMode = 'card', isFullscreen}) {
   const params = {};
@@ -28,14 +29,14 @@ export function filtersToUrl({filters, grouping, sortField, selectedItemId, zoom
   addZoomToParams({zoom: zoom, mainContentMode: mainContentMode, params: params});
   addFullscreenToParams({isFullscreen: isFullscreen, params: params});
   if (_.isEmpty(params)) {
-    return '/';
+    return `/${prefix}`;
   }
   const filtersPart = qs.stringify(params, {encode: false});
 
-  return '/' + filtersPart;
+  return `/${prefix}` + filtersPart;
 }
 export function parseUrl(url) {
-  const args = qs.parse(url);
+  const args = qs.parse(url.replace(prefix, ''));
   const newParameters = {
     filters: {
 

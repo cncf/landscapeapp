@@ -14,6 +14,7 @@ const extraSettings = settings.big_picture.extra;
 // This is a class-based component because the current
 // version of hot reloading won't hot reload a stateless
 // component at the top-level.
+const prefix = window.prefix || '';
 
 class App extends React.Component {
   render() {
@@ -21,10 +22,10 @@ class App extends React.Component {
       <div>
         <CssBaseline />
         <Switch>
-          <Route exact path="/" component={HomePageContainer} />
-          { extraSettings && <Route exact path={`/${extraSettings.url}`} component={ExtraFullscreenLandscapeContainer}/> }
-          <Route exact path={`/${mainSettings.url}`} component={MainFullscreenLandscapeContainer}/>
-          <Route path="/" component={HomePageContainer} />
+          <Route exact path={`/${prefix}`} component={HomePageContainer} />
+          { extraSettings && <Route exact path={`/${prefix}${extraSettings.url}`} component={ExtraFullscreenLandscapeContainer}/> }
+          <Route exact path={`/${prefix}${mainSettings.url}`} component={MainFullscreenLandscapeContainer}/>
+          <Route path={`/${prefix}`} component={HomePageContainer} />
           <Route component={NotFoundPage} />
         </Switch>
       </div>

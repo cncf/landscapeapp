@@ -87,7 +87,7 @@ const openSourceTag = function(oss) {
   if (!oss) {
     return null;
   }
-  return (<InternalLink to="/grouping=license&license=open-source" className="tag tag-orange">
+  return (<InternalLink to={filtersToUrl({grouping: 'license', filters: {license: 'Open Source'}})} className="tag tag-orange">
     <span className="tag-value">Open Source Software</span>
   </InternalLink>)
 }
@@ -143,7 +143,7 @@ const ItemDialogContent = ({itemInfo}) => {
     var subcategory = _.find(fields.landscape.values,{id: path});
     var category = _.find(fields.landscape.values, {id: subcategory.parentId});
     var categoryMarkup = (
-      <InternalLink key="category" to={`/grouping=landscape&landscape=${category.url}`}>{category.label}</InternalLink>
+      <InternalLink key="category" to={filtersToUrl({grouping: 'landscape', filters: {landscape: category.id}})}>{category.label}</InternalLink>
     )
     var subcategoryMarkup = (
       <InternalLink key="subcategory" to={filtersToUrl({grouping: 'landscape', filters: {landscape: path}})}>{subcategory.label}</InternalLink>
