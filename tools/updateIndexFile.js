@@ -25,4 +25,4 @@ update('/images', `/${projectName}/images`, 'main.*.js');
 update('/logos', `/${projectName}/logos`, 'main.*.js');
 update('/data.json', `/${projectName}/data.json`, 'main.*.js');
 update('/logos', `/${projectName}/logos`, 'data.json');
-update('window.prefix=""', `window.prefix="/${projectName}"`, 'index.html');
+update('window.prefix=""', `window.prefix="${projectName}/"`, 'index.html');
