@@ -38,5 +38,5 @@ dist
 # Mac files
 .DS_Store
 
-errors.csv
-tmp
+/cncf
+/lfdl
