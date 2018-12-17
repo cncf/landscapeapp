@@ -166,7 +166,7 @@ tree.map(function(node) {
       amount: getAmount(),
       ticker: getTicker(),
       oss: getLicense() !== 'NotOpenSource',
-      href: `/logos/${(node.image_data || {}).fileName}`,
+      href: `./logos/${(node.image_data || {}).fileName}`,
       bestPracticeBadgeId: (node.best_practice_data || {}).badge,
       bestPracticePercentage: (node.best_practice_data || {}).percentage
     });

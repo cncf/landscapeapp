@@ -6,9 +6,9 @@ const Header = ({reset}) => {
   return (
     <div className="header_container">
       <div className="header">
-        <span className="landscape-logo"><img  onClick={reset} src="/images/left-logo.svg" /></span>
+        <span className="landscape-logo"><img  onClick={reset} src="./images/left-logo.svg" /></span>
           <OutboundLink eventLabel="projet" to={settings.global.company_url} target="_blank" rel="noopener noreferrer" className="landscapeapp-logo">
-    <img src="/images/right-logo.svg" />
+    <img src="./images/right-logo.svg" />
   </OutboundLink>
 
       </div>
