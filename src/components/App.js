@@ -11,11 +11,14 @@ import settings from 'project/settings.yml';
 const mainSettings = settings.big_picture.main;
 const extraSettings = settings.big_picture.extra;
 
+// detect an initial prefix, like /cncf/ or /lfdl/ , but it can be just /
+const possiblePrefix = window.possiblePrefix || '';
+const prefix = (possiblePrefix && location.pathname.indexOf(possiblePrefix) === 1) ? (possiblePrefix + '/') : '';
+window.prefix = prefix;
+
 // This is a class-based component because the current
 // version of hot reloading won't hot reload a stateless
 // component at the top-level.
-const prefix = window.prefix || '';
-
 class App extends React.Component {
   render() {
     return (

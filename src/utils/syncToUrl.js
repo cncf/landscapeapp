@@ -13,9 +13,9 @@ const sortOptions = options.map(function(x) {
 import settings from 'project/settings.yml';
 const mainSettings = settings.big_picture.main;
 const extraSettings = settings.big_picture.extra || {};
-const prefix = window.prefix || '';
 
 export function filtersToUrl({filters, grouping, sortField, selectedItemId, zoom, mainContentMode = 'card', isFullscreen}) {
+  const prefix = window.prefix;
   const params = {};
   var fieldNames = _.keys(fields);
   _.each(fieldNames, function(field) {
@@ -36,6 +36,7 @@ export function filtersToUrl({filters, grouping, sortField, selectedItemId, zoom
   return `/${prefix}` + filtersPart;
 }
 export function parseUrl(url) {
+  const prefix = window.prefix;
   const args = qs.parse(url.replace(prefix, ''));
   const newParameters = {
     filters: {

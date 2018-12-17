@@ -13,7 +13,7 @@ import {projectPath, settings} from './tools/settings';
 const GLOBALS = {
   'process.env.NODE_ENV': JSON.stringify('production'),
   'process.env.GA': require('process').env['GA'],
-  'window.prefix': JSON.stringify(process.env.PROJECT_NAME || ''),
+  'window.possiblePrefix': JSON.stringify(process.env.PROJECT_NAME || ''),
   __DEV__: false
 };
 
