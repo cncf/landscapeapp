@@ -13,6 +13,7 @@ import {projectPath, settings} from './tools/settings';
 const GLOBALS = {
   'process.env.NODE_ENV': JSON.stringify('production'),
   'process.env.GA': require('process').env['GA'],
+  'window.prefix': JSON.stringify(process.env.PROJECT_NAME || '')
   __DEV__: false
 };
 
@@ -51,7 +52,7 @@ export default {
   mode: 'production',
   output: {
     path: path.resolve(projectPath, 'dist'),
-    publicPath: '/',
+    publicPath: './',
     filename: '[name].[contenthash].js'
   },
   optimization: {
