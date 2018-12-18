@@ -6,7 +6,9 @@ mkdir -p dist
 cd /tmp
 git clone "https://$GITHUB_USER:$GITHUB_TOKEN@github.com/cncf/landscapeapp"
 cd landscapeapp
+git branch
 git config --global user.email "info@cncf.io"
 git config --global user.name "Netlify Publisher"
 git commit -m 'lets test! [skip ci]' --allow-empty
+git push origin HEAD
 git push origin HEAD --tags
