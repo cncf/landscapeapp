@@ -5,10 +5,7 @@ import { settings, projectPath } from './settings'
 import path from 'path';
 const base = settings.global.website;
 // sync should go from a proper place!!!
-console.info('ensure we have a proper origin');
 console.info(require('child_process').execSync(`cd '${projectPath}'; git remote add origin ${process.env.REPOSITORY_URL} || true`).toString('utf-8'));
-
-console.info('fetching origin repo');
 console.info(require('child_process').execSync(`cd '${projectPath}'; git fetch origin`).toString('utf-8'));
 
 function getFileFromHistory(days) {
@@ -62,7 +59,6 @@ function buildDiff({currentItems, prevItems, date, result}) {
   });
 }
 
-console.info('about to fetch entries');
 const result = [];
 const maxEntries = 20;
 _.range(1, 100).forEach(function(i) {
@@ -82,7 +78,6 @@ _.range(1, 100).forEach(function(i) {
 
 require('fs').writeFileSync(path.resolve(projectPath, 'dist/funding.json'), JSON.stringify(result, null, 4));
 
-console.info('funding.json is ready');
 
 
 
