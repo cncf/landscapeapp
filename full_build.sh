@@ -1,8 +1,10 @@
 set -e
 rm -rf dist || true
 mkdir -p dist
-bash build.sh cncf/landscape cncf 1015-try-upstream
+git config --global user.email "info@cncf.io"
+git config --global user.name "Netlify Publisher"
 bash build.sh LFDLFoundation/landscape lfdl 33-switch-to-upstream
+bash build.sh cncf/landscape cncf 1015-try-upstream
 
 # This will increase a version and publish to an npm
 # If there is an existing package
@@ -14,9 +16,7 @@ if [ $BRANCH = "master" ]; then
   echo 2
   git fetch github
   echo 3
-  git config user.email "info@cncf.io"
   echo 4
-  git config user.name "Netlify Publisher"
   echo 5
   yarn version --patch
   echo 6
