@@ -10,5 +10,6 @@ git config --global user.email "info@cncf.io"
 git config --global user.name "Netlify Publisher"
 yarn version --patch
 git commit -m 'lets test! [skip ci]' --allow-empty --amend
+git branch -D tmp || true
 git checkout -b tmp
 git push github HEAD:master  --tags
