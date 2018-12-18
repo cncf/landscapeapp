@@ -6,6 +6,7 @@ bash build.sh LFDLFoundation/landscape lfdl 33-switch-to-upstream
 
 # This will increase a version and publish to an npm
 # If there is an existing package
+
 git remote rm github || true
 git remote add github "https://$GITHUB_USER:$GITHUB_TOKEN@github.com/cncf/landscapeapp"
 git fetch github
