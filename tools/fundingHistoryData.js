@@ -62,6 +62,7 @@ function buildDiff({currentItems, prevItems, date, result}) {
   });
 }
 
+console.info('about to fetch entries');
 const result = [];
 const maxEntries = 20;
 _.range(1, 100).forEach(function(i) {
@@ -81,6 +82,7 @@ _.range(1, 100).forEach(function(i) {
 
 require('fs').writeFileSync(path.resolve(projectPath, 'dist/funding.json'), JSON.stringify(result, null, 4));
 
+console.info('funding.json is ready');
 
 
 
