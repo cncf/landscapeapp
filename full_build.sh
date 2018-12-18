@@ -13,9 +13,9 @@ git remote add github "https://$GITHUB_USER:$GITHUB_TOKEN@github.com/cncf/landsc
 echo 2
 git fetch github
 echo 3
-git config --global user.email "info@cncf.io"
+git config user.email "info@cncf.io"
 echo 4
-git config --global user.name "Netlify Publisher"
+git config user.name "Netlify Publisher"
 echo 5
 yarn version --patch
 echo 6
