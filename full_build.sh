@@ -3,13 +3,17 @@ rm -rf dist || true
 mkdir -p dist
 # bash build.sh cncf/landscape cncf 1015-try-upstream
 # bash build.sh LFDLFoundation/landscape lfdl 33-switch-to-upstream
+
+# This will increase a version and publish to an npm
+# If there is an existing package
 git remote rm github || true
 git remote add github "https://$GITHUB_USER:$GITHUB_TOKEN@github.com/cncf/landscapeapp"
 git fetch github
 git config --global user.email "info@cncf.io"
 git config --global user.name "Netlify Publisher"
 yarn version --patch
-git commit -m 'lets test! [skip ci]' --allow-empty --amend
+git commit -m 'Update to a new version [skip ci]' --allow-empty --amend
 git branch -D tmp || true
 git checkout -b tmp
 git push github HEAD:master  --tags
+yarn publish
