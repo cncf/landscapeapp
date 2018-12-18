@@ -9,4 +9,5 @@ git fetch github
 git config --global user.email "info@cncf.io"
 git config --global user.name "Netlify Publisher"
 git commit -m 'lets test! [skip ci]' --allow-empty
-git push github HEAD --tags
+git checkout -b tmp
+git push github HEAD:master  --tags
