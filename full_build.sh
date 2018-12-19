@@ -18,7 +18,7 @@ if [ $BRANCH = "master" ]; then
   git branch -D tmp || true
   git checkout -b tmp
   git push github HEAD:master
-  git push --tags --force
+  git push github HEAD:master --tags --force
   echo "//registry.npmjs.org/:_authToken=$NPM_TOKEN" > ~/.npmrc
   yarn publish
 fi
