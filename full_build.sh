@@ -17,7 +17,8 @@ if [ $BRANCH = "master" ]; then
   git commit -m 'Update to a new version [skip ci]' --allow-empty --amend
   git branch -D tmp || true
   git checkout -b tmp
-  git push github HEAD:master  --tags
+  git push github HEAD:master
+  git push --tags --force
   echo "//registry.npmjs.org/:_authToken=$NPM_TOKEN" > ~/.npmrc
   yarn publish
 fi
