@@ -15,6 +15,7 @@ Disallow: *license=
 Disallow: *organization=
 Disallow: *headquarters=
 Disallow: *format=
+Disallow: /funding.html$
 Disallow: /${settings.big_picture.main.url}$
 ${settings.big_picture.extra ? `Disallow: /${settings.big_picture.extra.url}$` : '' }
 
