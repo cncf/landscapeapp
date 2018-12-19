@@ -177,7 +177,7 @@
   },
   "jest": {
     "haste": {
-      "providesModuleNodeModules": ["interactive-landscape", "@itneractive-landscape"]
+      "providesModuleNodeModules": ["interactive-landscape"]
     },
     "testPathIgnorePatterns": ["<rootDir>/node_modules"],
     "transformIgnorePatterns": ["<rootDir>/node_modules"],
