@@ -27,6 +27,7 @@ export default {
     children: false
   },
   resolve: {
+    modules: [path.resolve(projectPath, 'node_modules'), 'node_modules'],
     extensions: ['*', '.js', '.jsx', '.json'],
     alias: {
       // for a smaller bundle size
@@ -106,10 +107,10 @@ export default {
       {
         test: /\.jsx?$/,
         sideEffects: false,
+        exclude: /node_modules\/(?!(interactive-landscape)\/).*/,
         use: [{
           loader: 'babel-loader',
           options: {
-            exclude: /node_modules\/(?!(interactive-landscape)\/).*/,
             babelrc: false,
             presets: [
               ['@babel/preset-env', {modules: false, targets: '>1%'}],
