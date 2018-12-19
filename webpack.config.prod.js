@@ -109,7 +109,7 @@ export default {
         use: [{
           loader: 'babel-loader',
           options: {
-            exclude: /node_modules/,
+            exclude: /node_modules\/(?!(interactive-landscape)\/).*/,
             babelrc: false,
             presets: [
               ['@babel/preset-env', {modules: false, targets: '>1%'}],
