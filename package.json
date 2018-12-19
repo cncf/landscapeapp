@@ -1,6 +1,6 @@
 {
   "name": "interactive-landscape",
-  "version": "1.0.12",
+  "version": "1.0.13",
   "description": "Interactive visualization of cloud native projects and products",
   "engines": {
     "npm": ">=3",
@@ -177,10 +177,17 @@
   },
   "jest": {
     "haste": {
-      "providesModuleNodeModules": ["interactive-landscape", "@itneractive-landscape"]
+      "providesModuleNodeModules": [
+        "interactive-landscape",
+        "@itneractive-landscape"
+      ]
     },
-    "testPathIgnorePatterns": ["<rootDir>/node_modules"],
-    "transformIgnorePatterns": ["<rootDir>/node_modules"],
+    "testPathIgnorePatterns": [
+      "<rootDir>/node_modules"
+    ],
+    "transformIgnorePatterns": [
+      "<rootDir>/node_modules"
+    ],
     "moduleNameMapper": {
       "\\.(jpg|jpeg|png|gif|eot|otf|webp|svg|ttf|woff|woff2|mp4|webm|wav|mp3|m4a|aac|oga)$": "<rootDir>/tools/assetsTransformer.js",
       "\\.(css)$": "<rootDir>/tools/assetsTransformer.js"
