@@ -7,6 +7,7 @@ const base = settings.global.website;
 
 const page = `
 <head>
+  <link rel="shortcut icon" href="./favicon.png">
   <title>Changes in funding</title>
   <style>
     table {border-spacing: 0px; width:100%; max-width: 1200px; position: absolute; left: 50%; top: 40px; transform: translateX(-50%); }
