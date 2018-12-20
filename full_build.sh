@@ -2,7 +2,7 @@ set -e
 rm -rf dist || true
 mkdir -p dist
 
-bash build.sh LFDLFoundation/landscape lfdl
+bash build.sh LFDLFoundation/lfdl-landscape lfdl
 bash build.sh cncf/landscape cncf
 
 # This will increase a version and publish to an npm
