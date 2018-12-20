@@ -203,7 +203,7 @@ const HorizontalCategory = function({header, subcategories, rows, width, height,
           return [
             <div key={subcategory.name} style={{position: 'relative', fontSize: `${10 * zoom}px`}}>
               <div style={{position: 'relative', width: '100%', height: 40 * zoom, top: -14 * zoom}}>
-                <span style={{textAlign: 'center', position: 'absolute', width: '100%', minWidth: 100 * zoom, transform: 'translate(-50%, -50%)', left: '50%', top:'50%'}}>
+                <span style={{textAlign: 'center', position: 'absolute', width: '100%', minWidth: 80 * zoom, transform: 'translate(-50%, -50%)', left: '50%', top:'50%'}}>
                   <InternalLink to={subcategory.href}>
                     <span style={{
                       color: 'white',
