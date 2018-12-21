@@ -36,6 +36,27 @@ function mainTest() {
   });
 }
 
+function landscapeTest() {
+  describe("Big Picture Test", () => {
+    test("I visit a main landscape page and have all required elements", async () => {
+      console.info('about to open a main landscape page');
+      await page.goto(appUrl + '/format=' + settings.big_picture.main.url);
+      await page.waitForSelector('.big-picture-section');
+      await page.click('.big-picture-section img[src]');
+      await page.waitForSelector(".modal-content");
+    }, 6 * 60 * 1000); //give it up to 1 min to execute
+  });
+  if (settings.big_picture.extra) {
+    test("I visit an extra landscape page and have all required elements", async () => {
+      console.info('about to open an extra landscape page');
+      await page.goto(appUrl + '/format=' + settings.big_picture.extra.url);
+      await page.waitForSelector('.big-picture-section');
+      await page.click('.big-picture-section img[src]');
+      await page.waitForSelector(".modal-content");
+    }, 6 * 60 * 1000); //give it up to 1 min to execute
+  }
+}
+
 describe("Normal browser", function() {
   beforeAll(async function() {
     browser = await puppeteer.launch({headless: !process.env.SHOW_BROWSER});
@@ -46,6 +67,7 @@ describe("Normal browser", function() {
     browser.close();
   })
   mainTest();
+  landscapeTest();
 });
 
 describe("iPhone simulator", function() {
@@ -59,4 +81,5 @@ describe("iPhone simulator", function() {
     browser.close();
   })
   mainTest();
+  landscapeTest();
 });

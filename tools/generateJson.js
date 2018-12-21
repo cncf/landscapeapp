@@ -380,6 +380,28 @@ function removeNonReferencedImages() {
 }
 removeNonReferencedImages();
 
+var hasBadLandscape = false;
+_.each(settings.big_picture.main.elements, function(element) {
+  const hasCompanyCategory = (function() {
+    var result = false;
+    tree.map(function(node) {
+      if (node && node.category === null && node.name === element.category) {
+        result = true;
+      }
+    });
+    return result;
+  })();
+  console.info(element.category, hasCompanyCategory);
+  if (element.category && !hasCompanyCategory) {
+    console.info(`FATAL: big picture configration in settings.yml has an issue:
+      there is a big_picture.main.elements entry with category: "${element.category}" but we do not have that category "${element.category}" in the landscape.yml!`);
+    hasBadLandscape = true;
+  }
+});
+if (hasBadLandscape) {
+  process.exit(1);
+}
+
 
 const extractOptions = function(name) {
   return _.chain(itemsWithExtraFields).map(function(x) {
