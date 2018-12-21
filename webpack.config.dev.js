@@ -9,6 +9,7 @@ console.info({
 });
 export default {
   resolve: {
+    modules: [path.resolve(projectPath, 'node_modules'), 'node_modules'],
     extensions: ['*', '.js', '.jsx', '.json'],
     alias: {
       'project': path.resolve(projectPath),
@@ -52,7 +53,7 @@ export default {
     rules: [
       {
         test: /\.jsx?$/,
-        exclude: /node_modules/,
+        exclude: /node_modules\/(?!(interactive-landscape)\/).*/,
         use: [{
           loader: 'babel-loader',
           options: {
