@@ -40,7 +40,7 @@ function landscapeTest() {
   describe("Big Picture Test", () => {
     test("I visit a main landscape page and have all required elements", async () => {
       console.info('about to open a main landscape page');
-      await page.goto(appUrl + '?format=' + settings.big_picture.main.url);
+      await page.goto(appUrl + '/format=' + settings.big_picture.main.url);
       await page.waitForSelector('.big-picture-section');
       await page.click('.big-picture-section img[src]');
       await page.waitForSelector(".modal-content");
@@ -49,7 +49,7 @@ function landscapeTest() {
   if (settings.big_picture.extra) {
     test("I visit an extra landscape page and have all required elements", async () => {
       console.info('about to open an extra landscape page');
-      await page.goto(appUrl + '?format=' + settings.big_picture.extra.url);
+      await page.goto(appUrl + '/format=' + settings.big_picture.extra.url);
       await page.waitForSelector('.big-picture-section');
       await page.click('.big-picture-section img[src]');
       await page.waitForSelector(".modal-content");
