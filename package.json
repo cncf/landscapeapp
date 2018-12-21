@@ -1,6 +1,6 @@
 {
   "name": "interactive-landscape",
-  "version": "1.0.22",
+  "version": "1.0.23",
   "description": "Interactive visualization of cloud native projects and products",
   "engines": {
     "npm": ">=3",
