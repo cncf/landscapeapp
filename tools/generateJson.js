@@ -391,7 +391,6 @@ _.each(settings.big_picture.main.elements, function(element) {
     });
     return result;
   })();
-  console.info(element.category, hasCompanyCategory);
   if (element.category && !hasCompanyCategory) {
     console.info(`FATAL: big picture configration in settings.yml has an issue:
       there is a big_picture.main.elements entry with category: "${element.category}" but we do not have that category "${element.category}" in the landscape.yml!`);

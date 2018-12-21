@@ -3,10 +3,6 @@ import HtmlWebpackPlugin from 'html-webpack-plugin';
 import path from 'path';
 import {projectPath, settings} from './tools/settings';
 
-console.info({
-      'project': path.resolve(projectPath),
-      'favicon.png': path.resolve(projectPath, 'images/favicon.png')
-});
 export default {
   resolve: {
     modules: [path.resolve(projectPath, 'node_modules'), 'node_modules'],
