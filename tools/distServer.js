@@ -2,8 +2,10 @@
 // on your local machine.
 
 import browserSync from 'browser-sync';
+import path from 'path';
 import historyApiFallback from 'connect-history-api-fallback';
 import {chalkProcessing} from './chalkConfig';
+import { projectPath } from './settings';
 
 /* eslint-disable no-console */
 
@@ -16,12 +18,7 @@ browserSync({
     port: 4001
   },
   server: {
-    baseDir: 'dist'
+    baseDir: path.resolve(projectPath, 'dist')
   },
-
-  files: [
-    'src/*.html'
-  ],
-
   middleware: [historyApiFallback()]
 });
