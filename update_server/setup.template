@@ -9,8 +9,8 @@ which git || (
 )
 git config --global user.email "info@cncf.io"
 git config --global user.name "CNCF-Bot"
-node -v | grep 10. || (
-  curl -sL https://deb.nodesource.com/setup_10.x -o nodesource_setup.sh
+node -v | grep 11. || (
+  curl -sL https://deb.nodesource.com/setup_11.x -o nodesource_setup.sh
   bash nodesource_setup.sh
   apt-get -y install nodejs
   apt-get -y install build-essential
