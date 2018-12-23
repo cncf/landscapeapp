@@ -5,7 +5,7 @@
 import { loadData, loadPreviewData } from './api';
 import { filtersToUrl } from '../utils/syncToUrl';
 import _ from 'lodash';
-import { push } from 'react-router-redux';
+import { push } from 'connected-react-router';
 import { zoomLevels } from '../utils/zoom';
 import bus from './bus';
 import getGroupedItems from '../utils/itemsCalculator';

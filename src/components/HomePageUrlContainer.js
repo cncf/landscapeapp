@@ -15,7 +15,7 @@ history.listen(function(x) {
 
 
 const getParameters = createSelector(
-  (state) => state.routing.location.pathname.split('/').slice(-1)[0],
+  (state) => state.router.location.pathname.split('/').slice(-1)[0],
   function(part) {
     return parseUrl(part);
   }
