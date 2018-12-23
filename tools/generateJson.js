@@ -372,7 +372,7 @@ function removeNonReferencedImages() {
   const existingFiles = fs.readdirSync(`${projectPath}/hosted_logos`);
   const allowedFiles = itemsWithExtraFields.map( (e) => e.logo ).filter( (e) => !!e);
   _.each(existingFiles, function(existingFile) {
-    const fileName = './hosted_logos/' + existingFile;
+    const fileName = existingFile;
     if (allowedFiles.indexOf(fileName) === -1){
       fs.unlinkSync(`${projectPath}/hosted_logos/` + existingFile);
     }
