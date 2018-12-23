@@ -9,8 +9,8 @@ const content = isMainBranch ?
 User-agent: *
 Disallow: *grouping=
 Disallow: *sort=
-Disallow: *landscape=
-Disallow: *cncf=
+Disallow: *category=
+Disallow: *project=
 Disallow: *license=
 Disallow: *organization=
 Disallow: *headquarters=

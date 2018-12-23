@@ -17,7 +17,7 @@ import settings from 'project/settings.yml';
 const relationField = (function() {
   const rootEntry = {
     id: 'relation',
-    url: settings.relation.url,
+    url: 'project',
     label: settings.relation.label,
     isArray: true
   }
@@ -94,6 +94,7 @@ const fields = {
   },
   landscape: {
     id: 'landscape',
+    url: 'category',
     label: 'Category',
     isArray: true,
     values: [].concat(unpack(lookups.landscape) || []),
