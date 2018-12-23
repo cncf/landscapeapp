@@ -1,6 +1,7 @@
 import _ from 'lodash';
 import path from 'path';
 import { projectPath } from './settings';
+import { dump } from './yaml';
 
 const cleanupFile = function(filename, orderKeys) {
   const source = require('js-yaml').safeLoad(require('fs').readFileSync(path.resolve(projectPath, filename)));
@@ -18,9 +19,13 @@ const cleanupFile = function(filename, orderKeys) {
       });
     });
   }
-  var dump = require('js-yaml').dump(source, {lineWidth: 160});
-  dump = dump.replace(/(- \w+:) null/g, '$1');
-  require('fs').writeFileSync(path.resolve(projectPath, filename), dump);
+  require('fs').writeFileSync(path.resolve(projectPath, filename), dump(source));
+}
+const cleanupMembers = function() {
+  const filename = 'members.yml';
+  const data = require('js-yaml').safeLoad(require('fs').readFileSync(path.resolve(projectPath, filename)));
+  const sortedData = _.mapValues(data, (value, key) => _.orderBy(value));
+  require('fs').writeFileSync(path.resolve(projectPath, filename), dump(sortedData));
 }
 
 const landscapeKeys = [
@@ -38,3 +43,4 @@ const landscapeKeys = [
 ];
 cleanupFile('landscape.yml', landscapeKeys);
 cleanupFile('settings.yml');
+cleanupMembers();
