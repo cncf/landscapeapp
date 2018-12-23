@@ -4,7 +4,6 @@ const file = require('fs').readFileSync('update_server/setup.template', 'utf-8')
 
 const values = {
   repo: settings.global.repo,
-  email: settings.global.email,
   ip: settings.update_server.ip,
   update_hour: settings.update_server.update_hour,
   update_minute: settings.update_server.update_minute
