@@ -2,6 +2,7 @@ import { connect } from 'react-redux';
 import Presets from './Presets';
 import settings from 'project/settings.yml';
 import { parseUrl, filtersToUrl } from '../utils/syncToUrl';
+import _ from 'lodash';
 
 
 const mapStateToProps = (state) => {
