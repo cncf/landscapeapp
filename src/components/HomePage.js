@@ -6,7 +6,7 @@ import classNames from 'classnames'
 import Filters from './Filters';
 import Grouping from './Grouping';
 import Sorting from './Sorting';
-import Presets from './Presets';
+import PresetsContainer from './PresetsContainer';
 import Ad from './Ad';
 import AutoSizer from './CustomAutoSizer';
 import {
@@ -176,7 +176,7 @@ const HomePage = ({isEmbed, mainContentMode, ready, hasSelectedItem, filtersVisi
             <Grouping/>
             <Sorting/>
             <Filters />
-            <Presets />
+            <PresetsContainer />
             <ExportCsvContainer />
             <Ad />
           </div>

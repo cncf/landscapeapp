@@ -1,7 +1,7 @@
 {
   "name": "interactive-landscape",
-  "version": "1.0.26",
-  "description": "Interactive visualization of cloud native projects and products",
+  "version": "1.0.38",
+  "description": "Visualization tool for building interactive landscapes",
   "engines": {
     "npm": ">=3",
     "node": ">= 10.5"

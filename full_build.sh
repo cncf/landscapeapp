@@ -11,7 +11,7 @@ bash build.sh cncf/landscape cncf
 if [ $BRANCH = "master" ]; then
   git config --global user.email "info@cncf.io"
   git config --global user.name "CNCF-bot"
-  git remote rm github || true
+  git remote rm github 2>/dev/null || true
   git remote add github "https://$GITHUB_USER:$GITHUB_TOKEN@github.com/cncf/landscapeapp"
   git fetch github
   yarn version --patch

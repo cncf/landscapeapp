@@ -1,8 +1,7 @@
 import React from 'react';
 import { NavLink } from 'react-router-dom';
-import settings from 'project/settings.yml';
 
-const Presets = () => {
+const Presets = ({presets, activePreset}) => {
   const normalizeUrl = function(url) {
     if (url.indexOf('/') === 0) {
       return url.substring(1);
@@ -12,8 +11,8 @@ const Presets = () => {
   }
   return (
     <div className="sidebar-presets">
-      <h4>Example filters:</h4>{settings.presets.map( entry => (
-        <div key={entry.url}><NavLink className="preset" activeClassName="active" to={normalizeUrl(entry.url)}>{entry.label}</NavLink></div>
+      <h4>Example filters:</h4>{presets.map( preset => (
+        <div key={preset.url}><NavLink className="preset" isActive={() => preset === activePreset} activeClassName="active" to={normalizeUrl(preset.url)}>{preset.label}</NavLink></div>
     ))}
     </div>
   )

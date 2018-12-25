@@ -1,6 +1,6 @@
 # Landscapeapp
 
-The landscapeapp is an upstream NPM [module](https://www.npmjs.com/package/interactive-landscape) that supports building interactive landscape websites such as the [CNCF Cloud Native Landscape](https://landscape.cncf.io) and the [LF Deep Learning Foundation Landscape](https://landscape.lfdl.io). The application has been developed by [Andrey Kozlov](https://github.com/ZeusTheTrueGod) and [Dan Kohn](https://www.dankohn.com) of [CNCF](https://www.cncf.io).
+The landscapeapp is an upstream NPM [module](https://www.npmjs.com/package/interactive-landscape) that supports building interactive landscape websites such as the [CNCF Cloud Native Landscape](https://landscape.cncf.io) ([source](https://github.com/cncf/landscape)) and the [LF Deep Learning Foundation Landscape](https://landscape.lfdl.io) ([source](https://github.com/LFDLFoundation/lfdl-landscape)). The application has been developed by [Andrey Kozlov](https://github.com/ZeusTheTrueGod) and [Dan Kohn](https://www.dankohn.com) of [CNCF](https://www.cncf.io).
 
 If you want to create an interactive landscape for your project or organization, the easiest process is to fork the [LFDL landscape](https://github.com/LFDLFoundation/lfdl-landscape), since it only has a single landscape image. Edit `settings.yml`, `landscape.yml`, and `members.yml` for your topic. Then create a Netlify account (or similar) to automatically build and publish the static site on every commit.
 
@@ -49,10 +49,17 @@ alias yq='y remove-quotes'
 
 Reload with `. ~/.bash_profile` and then use `y open:src`, `yf`, etc. to run functions on the landscape in your current directory.
 
+If you want to fetch updates to the landscapeapp and both the CNCF and LFDL landscapes and update packages on all three, this alias for your `~/.bash_profile` will do so:
+
+```sh
+alias all='for path in /Users/your-username/dev/{landscapeapp,landscape,lfdl-landscape}; do git -C $path pull -p; yarn; done;'
+
+```
+
 ## Vulnerability reporting
 
 Please open an [issue](https://github.com/cncf/landscapeapp/issues/new) or, for sensitive information, email info@cncf.io.
 
 ## Continuous Integration and NPM Publishing
 
-On every commit, Netlify builds landscapeapp, clones the CNCF and LFDL repos, and build their landscapes and verifies that their tests pass with the updated landscapeapp. When that succeeds, it [generates](./full_build.sh) and pushes an updated NPM module.
+On every commit, Netlify builds landscapeapp, clones the CNCF and LFDL repos, and builds their landscapes and verifies that their tests pass with the updated landscapeapp. When that succeeds, it [generates](./full_build.sh) and pushes an updated NPM module.

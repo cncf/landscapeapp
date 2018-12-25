@@ -5,7 +5,7 @@ import { settings, projectPath } from './settings'
 import path from 'path';
 const base = settings.global.website;
 // sync should go from a proper place!!!
-console.info(require('child_process').execSync(`cd '${projectPath}'; git remote add origin ${process.env.REPOSITORY_URL} || true`).toString('utf-8'));
+require('child_process').execSync(`cd '${projectPath}'; git remote add origin ${process.env.REPOSITORY_URL} || true`).toString('utf-8');
 console.info(require('child_process').execSync(`cd '${projectPath}'; git fetch origin`).toString('utf-8'));
 
 function getFileFromHistory(days) {

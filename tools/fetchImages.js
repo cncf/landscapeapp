@@ -93,10 +93,6 @@ export async function fetchImageEntries({cache, preferCache}) {
     }
     debug(`Fetching data for ${item.name} with logo ${item.logo}`);
     var url = item.logo;
-    if (url && url.indexOf('http') !== 0 && url.indexOf('.') !== 0) {
-      console.info(`adding a prefix for ${url}`);
-      url = 'http://' + url;
-    }
     if (url && url.indexOf('//github.com/') !== -1) {
       url = url.replace('github.com', 'raw.githubusercontent.com');
       url = url.replace('blob/', '');
@@ -116,11 +112,11 @@ export async function fetchImageEntries({cache, preferCache}) {
       const fileName = `${saneName(item.id)}${outputExt}`;
       try {
         var response = null;
-        if (url.indexOf('.') === 0) {
-          if (url.indexOf('./hosted_logos') !== 0) {
-            throw new Error('local files should always start from ./hosted_logos');
+        if (url.indexOf('http://') !== 0 && url.indexOf('https://') !== 0) {
+          if (fs.readdirSync(path.resolve(projectPath, 'hosted_logos')).indexOf(url) === -1) {
+            throw new Error(`there is no file ${url} in a hosted_logos folder`);
           }
-          response = fs.readFileSync(path.resolve(projectPath, url));
+          response = fs.readFileSync(path.resolve(projectPath, 'hosted_logos', url));
         } else {
           response = await rp({
             encoding: null,
