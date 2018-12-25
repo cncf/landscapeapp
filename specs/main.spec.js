@@ -59,7 +59,7 @@ function landscapeTest() {
 
 describe("Normal browser", function() {
   beforeAll(async function() {
-    browser = await puppeteer.launch({headless: !process.env.SHOW_BROWSER});
+    browser = await puppeteer.launch({args: ['--no-sandbox', '--disable-setuid-sandbox'], headless: !process.env.SHOW_BROWSER});
     page = await browser.newPage();
     await page.setViewport({ width, height });
   })
@@ -72,7 +72,7 @@ describe("Normal browser", function() {
 
 describe("iPhone simulator", function() {
   beforeAll(async function() {
-    browser = await puppeteer.launch({headless: !process.env.SHOW_BROWSER});
+    browser = await puppeteer.launch({args: ['--no-sandbox', '--disable-setuid-sandbox'], headless: !process.env.SHOW_BROWSER});
     page = await browser.newPage();
     await page.emulate(devices['iPhone X'])
   })
