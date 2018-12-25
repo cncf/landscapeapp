@@ -1,4 +1,5 @@
 set -e
+env
 rm -rf $2 || true
 git clone https://github.com/$1 $2
 cd $2
