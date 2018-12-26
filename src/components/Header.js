@@ -1,4 +1,3 @@
-boom();
 import React from 'react';
 import { OutboundLink } from 'react-ga';
 import settings from 'project/settings.yml';
