@@ -6,11 +6,11 @@ import App from './App';
 export default class Root extends Component {
   render() {
     const { store, history } = this.props;
-    const ctx = React.createContext({store: store});
+    // const ctx = React.createContext({store: store});
     return (
-      <Provider store={store} context={ctx}>
-          <ConnectedRouter history={history} context={ctx}>
-            <App />
+      <Provider store={store}>
+          <ConnectedRouter history={history}>
+            <div />
           </ConnectedRouter>
       </Provider>
     );

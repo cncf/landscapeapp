@@ -4,29 +4,22 @@
 import path from 'path';
 import browserSync from 'browser-sync';
 import historyApiFallback from 'connect-history-api-fallback';
+import connect from 'connect';
+import serveStatic from 'serve-static';
 import {chalkProcessing} from './chalkConfig';
 import { projectPath } from './settings';
 
 /* eslint-disable no-console */
 
 
+
 console.log(chalkProcessing('running a dist server on http://localhost:4000 ...'));
-// Run Browsersync
-const result = browserSync({
-  port: 4000,
-  ui: {
-    port: 4001
-  },
-  open: false,
-  server: {
-    baseDir: path.resolve(projectPath, 'dist')
-  },
-
-  files: [
-    'src/*.html'
-  ],
-
-  middleware: [historyApiFallback()]
+const app = connect();
+app.use(serveStatic(path.resolve(projectPath, 'dist')));
+app.use(function(req, res, next) {
+  res.url = '/index.html';
+  next();
 });
+app.use(serveStatic(path.resolve(projectPath, 'dist')));
+app.listen(4000);
 require('fs').writeFileSync('/tmp/ci.pid', process.pid);
-export default result;
