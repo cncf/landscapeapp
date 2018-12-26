@@ -5,7 +5,6 @@ import {projectPath, settings} from './tools/settings';
 
 export default {
   resolve: {
-    modules: [path.resolve(projectPath, 'node_modules'), 'node_modules'],
     extensions: ['*', '.js', '.jsx', '.json'],
     alias: {
       'project': path.resolve(projectPath),

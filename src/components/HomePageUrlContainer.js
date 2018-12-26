@@ -15,7 +15,7 @@ history.listen(function(x) {
 
 
 const getParameters = createSelector(
-  (state) => state.routing.location.pathname.split('/').slice(-1)[0],
+  (state) => state.router.location.pathname.split('/').slice(-1)[0],
   function(part) {
     return parseUrl(part);
   }
@@ -29,11 +29,15 @@ const mapDispatchToProps = {
 };
 
 
+let oldValues = {}
 const render = ({info, changeParameters}) => {
   // if we are here - url has changed
   // otherwise everything is cached
-  console.info('Want to change : ', JSON.stringify(info));
-  window.setTimeout(() => changeParameters(info), 1);
+  if (JSON.stringify(oldValues) !== JSON.stringify(info)) {
+    oldValues = info;
+    console.info('Want to change : ', JSON.stringify(info));
+    window.setTimeout(() => changeParameters(info), 1);
+  }
   return <div/>;
 }
 

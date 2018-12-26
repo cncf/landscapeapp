@@ -27,7 +27,6 @@ export default {
     children: false
   },
   resolve: {
-    modules: [path.resolve(projectPath, 'node_modules'), 'node_modules'],
     extensions: ['*', '.js', '.jsx', '.json'],
     alias: {
       // for a smaller bundle size
