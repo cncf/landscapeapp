@@ -160,9 +160,9 @@ export function changeParameters(value) {
   }
 }
 export function resetParameters() {
-  return function(dispatch) {
-    dispatch(setParameters(initialState));
-    dispatch(push('/'));
+  return function(dispatch, getState) {
+    dispatch(setParameters({...getState().main, filters: initialState.filters, grouping: initialState.grouping, sortField: initialState.sortField}));
+    dispatch(push(filtersToUrl(getState().main)));
     setTimeout(() => bus.emit('scrollToTop'), 1);
   }
 }
