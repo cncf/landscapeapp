@@ -5,6 +5,12 @@ import settings from 'project/settings.yml';
 const Ad = () => {
 
   const entries = settings.ads;
+  const normalizeUrl = function(url) {
+    if (url.indexOf('/') === 0) {
+      return url.substring(1);
+    }
+    return url;
+  }
 
 
   return <div id="kubecon">
@@ -14,7 +20,7 @@ const Ad = () => {
             eventLabel={entry.url}
             to={entry.url}
             target="_blank">
-            <img src={entry.image} />
+            <img src={normalizeUrl(entry.image)} />
         </OutboundLink>
     )) }
   </div>
