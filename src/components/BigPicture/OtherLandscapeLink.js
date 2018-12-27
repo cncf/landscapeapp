@@ -10,7 +10,7 @@ const OtherLandscapeLink = function({zoom, top, left, height, width, color, show
     <div style={{ width: width * zoom, height: 20 * zoom, lineHeight: `${20 * zoom}px`, textAlign: 'center', color: 'white', background: color, fontSize: 12 * zoom}}> {title} </div>
     { showPreview &&
         <div style={{ width: (width - 10) * zoom, height: (height - 40) * zoom, margin: 5 * zoom,
-          backgroundImage: `url("/images/${url}_preview.png")`, backgroundSize: 'contain', backgroundPosition: 'center', backgroundRepeat: 'no-repeat' }}></div>
+          backgroundImage: `url("images/${url}_preview.png")`, backgroundSize: 'contain', backgroundPosition: 'center', backgroundRepeat: 'no-repeat' }}></div>
     }
   </div>);
   }
@@ -22,7 +22,7 @@ const OtherLandscapeLink = function({zoom, top, left, height, width, color, show
     <div style={{ width: width * zoom, height: 20 * zoom, lineHeight: `${20 * zoom}px`, textAlign: 'center', color: 'white', fontSize: 11 * zoom}}> {title}</div>
     { showPreview &&
         <div style={{ width: (width - 10) * zoom, height: (height - 40) * zoom, margin: 5 * zoom,
-          backgroundImage: `url("/images/${url}_preview.png")`, backgroundSize: 'contain', backgroundPosition: 'center', backgroundRepeat: 'no-repeat' }}></div>
+          backgroundImage: `url("images/${url}_preview.png")`, backgroundSize: 'contain', backgroundPosition: 'center', backgroundRepeat: 'no-repeat' }}></div>
     }
   </div>);
   }
