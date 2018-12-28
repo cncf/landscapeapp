@@ -24,10 +24,10 @@ function mainTest() {
       await page.waitForXPath(`//a[contains(text(), '${settings.test.section}')]`);
       console.info('group headers are ok');
       //card
-      await page.waitForSelector(`.mosaic img[src='./logos/${settings.test.logo}']`);
+      await page.waitForSelector(`.mosaic img[src='logos/${settings.test.logo}']`);
       console.info('there is a kubernetes card');
       //click on a card
-      await page.click(`.mosaic img[src='./logos/${settings.test.logo}']`);
+      await page.click(`.mosaic img[src='logos/${settings.test.logo}']`);
       console.info('it is clickable');
       //await for a modal
       await page.waitForSelector(".modal-content");
