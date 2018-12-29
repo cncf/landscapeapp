@@ -5,6 +5,7 @@ mkdir -p dist
 # do not forget a build hook in the end of the file
 bash build.sh LFDLFoundation/lfdl-landscape lfdl
 bash build.sh cncf/landscape cncf
+echo "Disallow: /" > dist/robots.txt
 
 # This will increase a version and publish to an npm
 # If there is an existing package
