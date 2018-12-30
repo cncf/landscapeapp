@@ -8904,6 +8904,11 @@ react-event-listener@^0.6.2:
     prop-types "^15.6.0"
     warning "^4.0.1"
 
+react-fast-compare@^2.0.3:
+  version "2.0.4"
+  resolved "https://registry.yarnpkg.com/react-fast-compare/-/react-fast-compare-2.0.4.tgz#e84b4d455b0fec113e0402c329352715196f81f9"
+  integrity sha512-suNP+J1VU1MWFKcyt7RtjiSWUjvidmQSlqu+eHslq+342xCbGTYmC0mEhPCOHxlW0CywylOC1u2DFAT+bv4dBw==
+
 react-ga@2.5.6:
   version "2.5.6"
   resolved "https://registry.yarnpkg.com/react-ga/-/react-ga-2.5.6.tgz#5a2e2fa78ae298e5b0a4498210eeec631ef1b562"
@@ -11309,6 +11314,14 @@ which@1, which@^1.2.10, which@^1.2.12, which@^1.2.14, which@^1.2.9, which@^1.3.0
   integrity sha512-HxJdYWq1MTIQbJ3nw0cqssHoTNU267KlrDuGZ1WYlxDStUtKUhOaJmh112/TZmHxxUfuJqPXSOm7tDyas0OSIQ==
   dependencies:
     isexe "^2.0.0"
+
+why-did-you-update@1.0.6:
+  version "1.0.6"
+  resolved "https://registry.yarnpkg.com/why-did-you-update/-/why-did-you-update-1.0.6.tgz#2e2c6a04291e715755ecdff1ac8272f721df6f04"
+  integrity sha512-XVrdHhdrPBDuSW8b/uH6DCb1/0984qv8KElpE8NZiRvWZX8nw49av577+ZyIrxSNesi6r2cQEhpxQTKFFHTj8A==
+  dependencies:
+    lodash "^4.17.11"
+    react-fast-compare "^2.0.3"
 
 wide-align@^1.1.0:
   version "1.1.3"

@@ -168,6 +168,7 @@
     "webpack-dev-middleware": "3.4.0",
     "webpack-hot-middleware": "2.24.3",
     "webpack-md5-hash": "0.0.6",
+    "why-did-you-update": "1.0.6",
     "xml2js": "0.4.19",
     "yahoo-finance": "0.3.5",
     "yaml-loader": "0.5.0"
