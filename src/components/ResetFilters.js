@@ -1,4 +1,5 @@
 import React from 'react';
+import { pure } from 'recompose';
 import ResetIcon from '@material-ui/icons/SettingsBackupRestore';
 
 const Filters = ({reset}) => {
@@ -8,4 +9,4 @@ const Filters = ({reset}) => {
     </div>
   );
 };
-export default Filters;
+export default pure(Filters);

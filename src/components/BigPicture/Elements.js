@@ -1,4 +1,5 @@
 import React from 'react';
+import { pure } from 'recompose';
 import _ from 'lodash'
 import InternalLink from '../InternalLink';
 import Fade from '@material-ui/core/Fade';
@@ -12,7 +13,7 @@ const isLargeFn = function(x) {
   return !!relationInfo.big_picture_order;
 }
 
-const Item = function({zoom, item, x, y, isLarge, onSelectItem}) {
+const Item = pure(function({zoom, item, x, y, isLarge, onSelectItem}) {
   if (isLarge) {
     return new LargeItem({zoom, item, x, y, onSelectItem});
   }
@@ -38,9 +39,9 @@ const Item = function({zoom, item, x, y, isLarge, onSelectItem}) {
     onClick={ () => onSelectItem(item.id)}
   />
   </div>;
-}
+})
 
-const LargeItem = function({zoom, item, x, y, onSelectItem}) {
+const LargeItem = pure(function({zoom, item, x, y, onSelectItem}) {
   const k = 2;
   const z = function(x) {
     return Math.round(x * zoom * 2) / 2;
@@ -69,9 +70,9 @@ const LargeItem = function({zoom, item, x, y, onSelectItem}) {
     {label}
   </div>
   </div>;
-}
+})
 
-const HorizontalSubcategory = function({zoom, subcategory, rows, onSelectItem, parentHeight, xRatio }) {
+const HorizontalSubcategory = pure(function({zoom, subcategory, rows, onSelectItem, parentHeight, xRatio }) {
   const categoryHeight = rows;
   const total = _.sumBy(subcategory.allItems, function(item) {
     return isLargeFn(item) ? 4 : 1;
@@ -112,9 +113,9 @@ const HorizontalSubcategory = function({zoom, subcategory, rows, onSelectItem, p
       </Fade>;
     }) }
   </div>
-};
+});
 
-const VerticalSubcategory = function({zoom, subcategory, cols, onSelectItem, xRatio}) {
+const VerticalSubcategory = pure(function({zoom, subcategory, cols, onSelectItem, xRatio}) {
   const categoryWidth = cols;
   const total = _.sumBy(subcategory.allItems, function(item) {
     return isLargeFn(item) ? 4 : 1;
@@ -150,7 +151,7 @@ const VerticalSubcategory = function({zoom, subcategory, cols, onSelectItem, xRa
       </Fade>;
     }) }
   </div>
-};
+});
 
 const getSubcategoryWidth = function({subcategory, rows}) {
   const categoryHeight = rows;
@@ -163,7 +164,7 @@ const getSubcategoryWidth = function({subcategory, rows}) {
   return width;
 }
 
-const HorizontalCategory = function({header, subcategories, rows, width, height, top, left, zoom, color, href, onSelectItem, fitWidth}) {
+const HorizontalCategory = pure(function({header, subcategories, rows, width, height, top, left, zoom, color, href, onSelectItem, fitWidth}) {
 
   let innerWidth = _.sumBy(subcategories, (subcategory) =>  getSubcategoryWidth({subcategory, rows}));
   if (subcategories.length > 1) {
@@ -220,10 +221,10 @@ const HorizontalCategory = function({header, subcategories, rows, width, height,
       </div>
 
   </div>);
-}
+});
 
 
-const VerticalCategory = function({header, subcategories, cols = 6, top, left, width, height, color, zoom, href, onSelectItem}) {
+const VerticalCategory = pure(function({header, subcategories, cols = 6, top, left, width, height, color, zoom, href, onSelectItem}) {
   const xRatio = 1.07;
   return (<div style={{}}>
     <div style={{
@@ -255,7 +256,7 @@ const VerticalCategory = function({header, subcategories, cols = 6, top, left, w
     </div>
     </div>
   </div>);
-}
+});
 
 export {
   HorizontalCategory,

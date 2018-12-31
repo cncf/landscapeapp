@@ -1,4 +1,5 @@
 import React from 'react';
+import { pure } from 'recompose';
 import MenuItem from '@material-ui/core/MenuItem';
 import Select from '@material-ui/core/Select';
 import ComboboxSelector from './ComboboxSelector';
@@ -21,4 +22,4 @@ const SortFieldSelector = ({isBigPicture, value, options, onChange}) => {
     );
   }
 };
-export default SortFieldSelector;
+export default pure(SortFieldSelector);

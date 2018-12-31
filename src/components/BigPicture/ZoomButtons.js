@@ -1,4 +1,5 @@
 // locate zoom buttons
+import { pure } from 'recompose';
 import IconButton from '@material-ui/core/IconButton';
 import Button from '@material-ui/core/Button';
 import RemoveCircleIcon from '@material-ui/icons/RemoveCircle';
@@ -17,4 +18,4 @@ const ZoomButtons = function({canZoomIn, canZoomOut, zoomText, onZoomIn, onZoomO
         </IconButton>
   </div>
 }
-export default ZoomButtons;
+export default pure(ZoomButtons);

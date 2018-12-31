@@ -1,4 +1,5 @@
 import React from 'react';
+import { pure } from 'recompose';
 
 const OtherLandscapeLink = function({zoom, top, left, height, width, color, showPreview, onClick, title, url, layout}) {
   if (layout === 'category') {
@@ -27,4 +28,4 @@ const OtherLandscapeLink = function({zoom, top, left, height, width, color, show
   </div>);
   }
 }
-export default OtherLandscapeLink;
+export default pure(OtherLandscapeLink);

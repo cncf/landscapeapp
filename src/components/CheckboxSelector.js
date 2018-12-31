@@ -1,4 +1,5 @@
 import React from 'react';
+import { pure } from 'recompose';
 import FormGroup from '@material-ui/core/FormGroup';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Checkbox from '@material-ui/core/Checkbox';
@@ -29,4 +30,4 @@ const CheckboxSelector = ({value, options, onChange}) => {
     )) }
   </FormGroup>
 };
-export default CheckboxSelector;
+export default pure(CheckboxSelector);

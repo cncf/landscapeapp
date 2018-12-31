@@ -1,4 +1,5 @@
 import React from 'react';
+import { pure } from 'recompose';
 import FormGroup from '@material-ui/core/FormGroup';
 import FormControl from '@material-ui/core/FormControl';
 import FormLabel from '@material-ui/core/FormLabel';
@@ -11,4 +12,4 @@ const Sorting = () => {
         </FormControl>
       </FormGroup>;
 };
-export default Sorting;
+export default pure(Sorting);

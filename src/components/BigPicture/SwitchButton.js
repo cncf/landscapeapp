@@ -1,4 +1,5 @@
 import React from 'react';
+import { pure } from 'recompose';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 import InternalLink from '../InternalLink';
@@ -20,4 +21,4 @@ const SwitchButton = function({mainContentMode, changeMainContentMode, cards}) {
           }) }
         </Tabs>
 }
-export default SwitchButton;
+export default pure(SwitchButton);

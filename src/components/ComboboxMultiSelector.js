@@ -1,4 +1,5 @@
 import React from 'react';
+import { pure } from 'recompose';
 import MenuItem from '@material-ui/core/MenuItem';
 import Select from '@material-ui/core/Select';
 import Checkbox from '@material-ui/core/Checkbox';
@@ -37,4 +38,4 @@ const ComboboxSelector = ({value, options, onChange}) => {
     )) }
   </Select>
 };
-export default ComboboxSelector;
+export default pure(ComboboxSelector);

@@ -1,4 +1,5 @@
 import React from 'react';
+import { pure } from 'recompose';
 import IconButton from '@material-ui/core/IconButton';
 import CloseIcon from '@material-ui/icons/Close';
 import MenuIcon from '@material-ui/icons/Menu';
@@ -224,4 +225,4 @@ const HomePage = ({isEmbed, mainContentMode, ready, hasSelectedItem, filtersVisi
   );
 };
 
-export default HomePage;
+export default pure(HomePage);

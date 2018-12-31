@@ -1,4 +1,5 @@
 import React from 'react';
+import { pure } from 'recompose';
 import _ from 'lodash';
 
 import {HorizontalCategory, VerticalCategory } from './Elements';
@@ -41,4 +42,4 @@ const LandscapeContent = ({groupedItems, onSelectItem, style, showPreview, switc
   </div>);
 };
 
-export default LandscapeContent;
+export default pure(LandscapeContent);

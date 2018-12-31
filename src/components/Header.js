@@ -1,8 +1,9 @@
 import React from 'react';
+import { pure } from 'recompose';
 import { OutboundLink } from 'react-ga';
 import settings from 'project/settings.yml';
 
-const Header = ({reset, test}) => {
+const Header = ({reset}) => {
   return (
     <div className="header_container">
       <div className="header">
@@ -16,4 +17,4 @@ const Header = ({reset, test}) => {
   );
 };
 
-export default Header;
+export default pure(Header);

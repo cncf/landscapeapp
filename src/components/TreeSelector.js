@@ -1,4 +1,5 @@
 import React from 'react';
+import { pure } from 'recompose';
 import MenuItem from '@material-ui/core/MenuItem';
 import Select from '@material-ui/core/Select';
 import Checkbox from '@material-ui/core/Checkbox';
@@ -106,4 +107,4 @@ const TreeSelector = ({value, options, onChange}) => {
     )) }
   </Select>
 };
-export default TreeSelector;
+export default pure(TreeSelector);
