@@ -36,7 +36,7 @@ const render = ({info, changeParameters}) => {
   if (JSON.stringify(oldValues) !== JSON.stringify(info)) {
     oldValues = info;
     console.info('Want to change : ', JSON.stringify(info));
-    window.setTimeout(() => changeParameters(info), 1);
+    // window.setTimeout(() => changeParameters(info), 1);
   }
   return <div/>;
 }

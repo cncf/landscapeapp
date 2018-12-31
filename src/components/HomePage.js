@@ -44,6 +44,9 @@ const state = {
 bus.on('scrollToTop', function() {
   document.scrollingElement.scrollTop = 0;
 });
+document.scrollingElement.addEventListener('scroll', function(x) {
+  console.info('scroll!!!');
+});
 
 
 const HomePage = ({isEmbed, mainContentMode, ready, hasSelectedItem, filtersVisible, hideFilters, showFilters, onClose, title, isFullscreen}) => {

@@ -7,7 +7,15 @@ const mapStateToProps = (state) => ({
 const mapDispatchToProps = {
 };
 
-const Component = function() {
+let oldValue = null;
+const Component = function({groupedItems}) {
+  if (groupedItems === oldValue) {
+    return null;
+  }
+  if (groupedItems !== oldValue) {
+    console.info(groupedItems, oldValue);
+  }
+  oldValue = groupedItems;
   setTimeout(function() {
     document.scrollingElement.scrollTop = 0;
   }, 1);

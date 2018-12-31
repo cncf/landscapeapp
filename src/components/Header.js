@@ -2,7 +2,7 @@ import React from 'react';
 import { OutboundLink } from 'react-ga';
 import settings from 'project/settings.yml';
 
-const Header = ({reset}) => {
+const Header = ({reset, test}) => {
   return (
     <div className="header_container">
       <div className="header">
