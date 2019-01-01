@@ -1,4 +1,5 @@
 import React from 'react';
+import { pure } from 'recompose';
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
 import ChevronRightIcon from '@material-ui/icons/ChevronRight';
 import KeyHandler from 'react-key-handler';
@@ -23,4 +24,4 @@ const ItemDialogButtons = ({hasSelectedItem, onClose, previousItemId, nextItemId
     </div>
   );
 }
-export default ItemDialogButtons;
+export default pure(ItemDialogButtons);

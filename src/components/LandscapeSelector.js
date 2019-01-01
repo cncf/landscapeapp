@@ -1,4 +1,5 @@
 import React from 'react';
+import { pure } from 'recompose';
 import MenuItem from '@material-ui/core/MenuItem';
 import Select from '@material-ui/core/Select';
 import TreeSelector from './TreeSelector';
@@ -21,4 +22,4 @@ const LandscapeSelector = ({isBigPicture, value, options, onChange}) => {
     );
   }
 };
-export default LandscapeSelector;
+export default pure(LandscapeSelector);

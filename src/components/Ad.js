@@ -1,4 +1,5 @@
 import React from 'react';
+import { pure } from 'recompose';
 import { OutboundLink } from 'react-ga';
 import settings from 'project/settings.yml';
 
@@ -25,4 +26,4 @@ const Ad = () => {
     )) }
   </div>
 }
-export default Ad;
+export default pure(Ad);

@@ -1,4 +1,5 @@
 import React from 'react';
+import { pure } from 'recompose';
 import { connect } from 'react-redux';
 
 import createSelector from '../utils/createSelector';
@@ -29,17 +30,13 @@ const mapDispatchToProps = {
 };
 
 
-let oldValues = {}
 const render = ({info, changeParameters}) => {
   // if we are here - url has changed
   // otherwise everything is cached
-  if (JSON.stringify(oldValues) !== JSON.stringify(info)) {
-    oldValues = info;
-    console.info('Want to change : ', JSON.stringify(info));
-    window.setTimeout(() => changeParameters(info), 1);
-  }
+  console.info('Want to change : ', JSON.stringify(info));
+  window.setTimeout(() => changeParameters(info), 1);
   return <div/>;
 }
 
 
-export default connect(mapStateToProps, mapDispatchToProps)(render);
+export default connect(mapStateToProps, mapDispatchToProps)(pure(render));

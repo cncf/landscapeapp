@@ -1,4 +1,5 @@
 import React from 'react';
+import { pure } from 'recompose';
 import SystemUpdateIcon from '@material-ui/icons/SystemUpdate';
 
 const ExportCsv = ({onExport}) => {
@@ -8,4 +9,4 @@ const ExportCsv = ({onExport}) => {
     </div>
   );
 };
-export default ExportCsv;
+export default pure(ExportCsv);

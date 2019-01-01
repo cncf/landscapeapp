@@ -1,5 +1,6 @@
 // locate zoom buttons
 import IconButton from '@material-ui/core/IconButton';
+import { pure } from 'recompose';
 import FullscreenExitIcon from '@material-ui/icons/FullscreenExit';
 import FullscreenIcon from '@material-ui/icons/Fullscreen';
 
@@ -21,4 +22,4 @@ const FullscreenButton = function({isVisible, isFullscreen, enableFullscreen, di
         }
   </div>
 }
-export default FullscreenButton;
+export default pure(FullscreenButton);

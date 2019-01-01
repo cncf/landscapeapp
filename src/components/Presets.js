@@ -1,4 +1,5 @@
 import React from 'react';
+import { pure } from 'recompose';
 import { NavLink } from 'react-router-dom';
 
 const Presets = ({presets, activePreset}) => {
@@ -17,4 +18,4 @@ const Presets = ({presets, activePreset}) => {
     </div>
   )
 };
-export default Presets;
+export default pure(Presets);

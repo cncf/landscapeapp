@@ -1,4 +1,5 @@
 import React from 'react';
+import { pure } from 'recompose';
 import FormGroup from '@material-ui/core/FormGroup';
 import FormControl from '@material-ui/core/FormControl';
 import FormLabel from '@material-ui/core/FormLabel';
@@ -50,4 +51,4 @@ const Filters = () => {
 
     </div>;
 }
-export default Filters;
+export default pure(Filters);

@@ -1,4 +1,5 @@
 import React from 'react';
+import { pure } from 'recompose';
 import millify from 'millify';
 import formatNumber from '../utils/formatNumber';
 import _ from 'lodash';
@@ -25,4 +26,4 @@ const Summary = ({ready, summary}) => {
   }
   return <h4 className="summary">{getText({summary})}</h4>;
 }
-export default Summary;
+export default pure(Summary);

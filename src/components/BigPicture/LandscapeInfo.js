@@ -1,4 +1,5 @@
 import React from 'react';
+import { pure } from 'recompose';
 import _ from 'lodash';
 
 const LandscapeInfo = ({zoom, width, height, top, left, childrenInfo}) => {
@@ -47,4 +48,4 @@ const LandscapeInfo = ({zoom, width, height, top, left, childrenInfo}) => {
     boxShadow: `0 ${4 * zoom}px ${8 * zoom}px 0 rgba(0, 0, 0, 0.2), 0 ${6 * zoom}px ${20 * zoom}px 0 rgba(0, 0, 0, 0.19)`
   }}>{children}</div>
 }
-export default LandscapeInfo;
+export default pure(LandscapeInfo);

@@ -1,4 +1,5 @@
 import React from 'react';
+import { pure } from 'recompose';
 import LandscapeContent from './LandscapeContent';
 import HomePageUrlContainer from '../HomePageUrlContainer';
 import qs from 'query-string';
@@ -66,4 +67,4 @@ const Fullscreen = ({ready, groupedItems, landscapeSettings, showPreview, versio
   );
 };
 
-export default Fullscreen;
+export default pure(Fullscreen);

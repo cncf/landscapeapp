@@ -1,4 +1,5 @@
 import React from 'react';
+import { pure } from 'recompose';
 import isEmbed from '../utils/isEmbed';
 import { NavLink } from 'react-router-dom';
 const skipDefaultHandler = (e) => e.preventDefault();
@@ -15,6 +16,6 @@ const InternalLink = ({to, children, onClick, ...other}) => {
     return <NavLink {...other} to={to}>{children}</NavLink>
   }
 }
-export default InternalLink;
+export default pure(InternalLink);
 
 

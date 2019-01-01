@@ -1,4 +1,5 @@
 import React from 'react';
+import { pure } from 'recompose';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Radio from '@material-ui/core/Radio';
 import RadioGroup from '@material-ui/core/RadioGroup';
@@ -20,4 +21,4 @@ const RadioSelector = ({value, options, onChange}) => {
     )) }
   </RadioGroup>
 };
-export default RadioSelector;
+export default pure(RadioSelector);

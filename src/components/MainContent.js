@@ -1,4 +1,5 @@
 import React from 'react';
+import { pure } from 'recompose';
 import StarIcon from '@material-ui/icons/Star';
 import millify from 'millify'
 import classNames from 'classnames'
@@ -25,7 +26,7 @@ function getRelationStyle(relation) {
   }
 }
 
-const Card = ({item, handler, itemRef, ...props}) => {
+const Card = pure(({item, handler, itemRef, ...props}) => {
   return (
             <div ref={itemRef} className="mosaic-wrap" key={item.id} {...props}>
             <div className={classNames('mosaic', {nonoss : item.oss === false})} style={getRelationStyle(item.relation)}
@@ -53,9 +54,9 @@ const Card = ({item, handler, itemRef, ...props}) => {
             </div>
           </div>
   );
-}
+});
 
-const Header =({groupedItem, itemRef, ...props}) => {
+const Header = pure(({groupedItem, itemRef, ...props}) => {
   return (
           <div ref={itemRef} className="sh_wrapper" key={"subheader:" + groupedItem.header} {...props}>
             <ListSubheader component="div" style={{fontSize: 24, paddingLeft: 16 }}>
@@ -63,7 +64,7 @@ const Header =({groupedItem, itemRef, ...props}) => {
               <span> ({groupedItem.items.length})</span></ListSubheader>
           </div>
   );
-}
+})
 
 /*
  That is quite a complex component. It draws headers and cards, and also animates the difference
@@ -406,4 +407,4 @@ const MainContent = ({groupedItems, onSelectItem, onOpenItemInNewTab}) => {
   );
 };
 
-export default MainContent;
+export default pure(MainContent);

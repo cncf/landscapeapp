@@ -1,4 +1,5 @@
 import React from 'react';
+import { pure } from 'recompose';
 import Dialog from '@material-ui/core/Dialog';
 import classNames from 'classnames'
 import _ from 'lodash';
@@ -46,4 +47,4 @@ const ItemDialog = ({onClose, itemInfo}) => {
       </Dialog>
   );
 }
-export default ItemDialog;
+export default pure(ItemDialog);
