@@ -15,7 +15,7 @@ const isLargeFn = function(x) {
 
 const Item = pure(function({zoom, item, x, y, isLarge, onSelectItem}) {
   if (isLarge) {
-    return new LargeItem({zoom, item, x, y, onSelectItem});
+    return <LargeItem {...{zoom, item, x, y, onSelectItem}} />;
   }
   const k = 1;
   return <div style={{
@@ -109,7 +109,7 @@ const HorizontalSubcategory = pure(function({zoom, subcategory, rows, onSelectIt
         }
       }
       return <Fade timeout={1000} in={isVisible}>
-        {new Item({...result, x: result.x * xRatio})}
+        <Item {...result} x={result.x * xRatio}/>
       </Fade>;
     }) }
   </div>
@@ -147,7 +147,7 @@ const VerticalSubcategory = pure(function({zoom, subcategory, cols, onSelectItem
       }
 
       return <Fade timeout={1000} in={isVisible}>
-        {new Item({...result, x: result.x * xRatio})}
+        <Item {...result}  x={result.x * xRatio} />
       </Fade>;
     }) }
   </div>
