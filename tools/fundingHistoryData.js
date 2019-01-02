@@ -5,8 +5,9 @@ import { settings, projectPath } from './settings'
 import path from 'path';
 const base = settings.global.website;
 // sync should go from a proper place!!!
-require('child_process').execSync(`cd '${projectPath}'; git remote add origin ${process.env.REPOSITORY_URL} || true`).toString('utf-8');
-console.info(require('child_process').execSync(`cd '${projectPath}'; git fetch origin`).toString('utf-8'));
+require('child_process').execSync(`cd '${projectPath}'; git remote rm github 2>/dev/null || true`);
+require('child_process').execSync(`cd '${projectPath}'; git remote add github https://github.com/${settings.global.repo}`);
+console.info(require('child_process').execSync(`cd '${projectPath}'; git fetch github`).toString('utf-8'));
 
 function getFileFromHistory(days) {
   const commit = getCommitFromHistory(days);
@@ -16,7 +17,7 @@ function getFileFromHistory(days) {
 }
 
 function getCommitFromHistory(days) {
-  const commit = require('child_process').execSync(`cd '${projectPath}'; git log --format='%H' -n 1 --before='{${days} days ago}' --author='CNCF-bot' origin/master`).toString('utf-8').trim();
+  const commit = require('child_process').execSync(`cd '${projectPath}'; git log --format='%H' -n 1 --before='{${days} days ago}' --author='CNCF-bot' github/master`).toString('utf-8').trim();
   return commit;
 }
 
