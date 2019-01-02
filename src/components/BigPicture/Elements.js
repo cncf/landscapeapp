@@ -13,7 +13,7 @@ const isLargeFn = function(x) {
   return !!relationInfo.big_picture_order;
 }
 
-const Item = pure(function({zoom, item, x, y, isLarge, onSelectItem}) {
+const Item = (function({zoom, item, x, y, isLarge, onSelectItem}) {
   if (isLarge) {
     return <LargeItem {...{zoom, item, x, y, onSelectItem}} />;
   }
@@ -41,7 +41,7 @@ const Item = pure(function({zoom, item, x, y, isLarge, onSelectItem}) {
   </div>;
 })
 
-const LargeItem = pure(function({zoom, item, x, y, onSelectItem}) {
+const LargeItem = (function({zoom, item, x, y, onSelectItem}) {
   const k = 2;
   const z = function(x) {
     return Math.round(x * zoom * 2) / 2;
@@ -72,7 +72,7 @@ const LargeItem = pure(function({zoom, item, x, y, onSelectItem}) {
   </div>;
 })
 
-const HorizontalSubcategory = pure(function({zoom, subcategory, rows, onSelectItem, parentHeight, xRatio }) {
+const HorizontalSubcategory = (function({zoom, subcategory, rows, onSelectItem, parentHeight, xRatio }) {
   const categoryHeight = rows;
   const total = _.sumBy(subcategory.allItems, function(item) {
     return isLargeFn(item) ? 4 : 1;
@@ -108,6 +108,11 @@ const HorizontalSubcategory = pure(function({zoom, subcategory, rows, onSelectIt
           y += 1;
         }
       }
+      if (isVisible) {
+        return <Item {...result} x={result.x * xRatio}/>;
+      } else {
+        return null;
+      }
       return <Fade timeout={1000} in={isVisible}>
         <Item {...result} x={result.x * xRatio}/>
       </Fade>;
@@ -115,7 +120,7 @@ const HorizontalSubcategory = pure(function({zoom, subcategory, rows, onSelectIt
   </div>
 });
 
-const VerticalSubcategory = pure(function({zoom, subcategory, cols, onSelectItem, xRatio}) {
+const VerticalSubcategory = (function({zoom, subcategory, cols, onSelectItem, xRatio}) {
   const categoryWidth = cols;
   const total = _.sumBy(subcategory.allItems, function(item) {
     return isLargeFn(item) ? 4 : 1;
@@ -146,6 +151,11 @@ const VerticalSubcategory = pure(function({zoom, subcategory, cols, onSelectItem
         }
       }
 
+      if (isVisible) {
+        return <Item {...result} x={result.x * xRatio}/>;
+      } else {
+        return null;
+      }
       return <Fade timeout={1000} in={isVisible}>
         <Item {...result}  x={result.x * xRatio} />
       </Fade>;
@@ -164,7 +174,7 @@ const getSubcategoryWidth = function({subcategory, rows}) {
   return width;
 }
 
-const HorizontalCategory = pure(function({header, subcategories, rows, width, height, top, left, zoom, color, href, onSelectItem, fitWidth}) {
+const HorizontalCategory = (function({header, subcategories, rows, width, height, top, left, zoom, color, href, onSelectItem, fitWidth}) {
 
   let innerWidth = _.sumBy(subcategories, (subcategory) =>  getSubcategoryWidth({subcategory, rows}));
   if (subcategories.length > 1) {
@@ -224,7 +234,7 @@ const HorizontalCategory = pure(function({header, subcategories, rows, width, he
 });
 
 
-const VerticalCategory = pure(function({header, subcategories, cols = 6, top, left, width, height, color, zoom, href, onSelectItem}) {
+const VerticalCategory = (function({header, subcategories, cols = 6, top, left, width, height, color, zoom, href, onSelectItem}) {
   const xRatio = 1.07;
   return (<div style={{}}>
     <div style={{
