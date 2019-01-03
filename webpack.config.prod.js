@@ -106,7 +106,7 @@ export default {
       {
         test: /\.jsx?$/,
         sideEffects: false,
-        // exclude: /node_modules\/(?!(interactive-landscape)\/).*/,
+        exclude: /node_modules\/(?!(interactive-landscape)\/).*/,
         use: [{
           loader: 'babel-loader',
           options: {
