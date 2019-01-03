@@ -11,6 +11,12 @@
   <script>
     window.GA = "<%= htmlWebpackPlugin.options.GA %>";
     window.lastUpdated = "<%= htmlWebpackPlugin.options.lastUpdated %>";
+    window.onerror = function (errorMsg, url, lineNumber) {
+      var elem = document.createElement('div');
+      elem.innerText = ('Error: ' + errorMsg + ' Script: ' + url + ' Line: ' + lineNumber);
+      document.body.appendChild(elem);
+      elem.innerText = ('Error: ' + errorMsg + ' Script: ' + url + ' Line: ' + lineNumber);
+    }
   </script>
 
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
