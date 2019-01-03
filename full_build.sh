@@ -2,7 +2,7 @@ set -e
 rm -rf dist || true
 mkdir -p dist
 
-echo "<meta name="google-site-verification" content="27ZKkPQS2PWkd_0jqsSq4yUgUZ_BBTYjABudtQpMhXI" />" > dist/index.html
+echo '<head><meta name="google-site-verification" content="27ZKkPQS2PWkd_0jqsSq4yUgUZ_BBTYjABudtQpMhXI" /></head>' > dist/index.html
 # do not forget a build hook in the end of the file
 bash build.sh LFDLFoundation/lfdl-landscape lfdl
 bash build.sh cncf/landscape cncf
