@@ -112,7 +112,7 @@ export default {
           options: {
             babelrc: false,
             presets: [
-              ['@babel/preset-env', {modules: false, targets: {chrome: 41}}],
+              ['@babel/preset-env', {modules: false, targets: {chrome: 41}, useBuiltIns: 'entry'}],
                '@babel/preset-react'
             ],
             plugins: [
