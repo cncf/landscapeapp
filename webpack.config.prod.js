@@ -30,16 +30,16 @@ export default {
     extensions: ['*', '.js', '.jsx', '.json'],
     alias: {
       // for a smaller bundle size
-      // '@material-ui/core': '@material-ui/core/es',
-      // 'lodash.clonedeep': 'lodash/cloneDeep.js',
-      // 'lodash.set': 'lodash/set.js',
-      // 'lodash.get': 'lodash/get.js',
-      // 'current-device': 'current-device/es',
-      // 'react-redux': 'react-redux/es',
-      // 'react-router-dom': 'react-router-dom/es',
-      // 'react-router-redux': 'react-router-redux/es',
-      // 'redux-thunk': 'redux-thunk/es',
-      // 'reselect': 'reselect/es',
+      '@material-ui/core': '@material-ui/core/es',
+      'lodash.clonedeep': 'lodash/cloneDeep.js',
+      'lodash.set': 'lodash/set.js',
+      'lodash.get': 'lodash/get.js',
+      'current-device': 'current-device/es',
+      'react-redux': 'react-redux/es',
+      'react-router-dom': 'react-router-dom/es',
+      'react-router-redux': 'react-router-redux/es',
+      'redux-thunk': 'redux-thunk/es',
+      'reselect': 'reselect/es',
 
       // for an upstream/downastream setup
       'project': path.resolve(projectPath),
@@ -101,7 +101,7 @@ export default {
           options: {
             babelrc: false,
             presets: [
-              ['@babel/preset-env', {modules: false, targets: {chrome: 41}, useBuiltIns: 'entry'}],
+              ['@babel/preset-env', {modules: false, targets: '>1%'}],
                '@babel/preset-react'
             ],
             plugins: [

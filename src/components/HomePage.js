@@ -43,10 +43,7 @@ const state = {
 };
 
 bus.on('scrollToTop', function() {
-  document.scrollingElement.scrollTop = 0;
-});
-document.scrollingElement.addEventListener('scroll', function(x) {
-  console.info('scroll!!!');
+  (document.scrollingElement || document.body).scrollTop = 0;
 });
 
 
@@ -79,14 +76,14 @@ const HomePage = ({isEmbed, mainContentMode, ready, hasSelectedItem, filtersVisi
   if (isIphone) {
     if (hasSelectedItem) {
       if (!document.querySelector('.iphone-scroller')) {
-        state.lastScrollPosition = document.scrollingElement.scrollTop;
+        state.lastScrollPosition = (document.scrollingElement || document.body).scrollTop;
       }
       document.querySelector('html').classList.add('has-selected-item');
-      document.scrollingElement.scrollTop = 0;
+      (document.scrollingElement || document.body).scrollTop = 0;
     } else {
       document.querySelector('html').classList.remove('has-selected-item');
       if (document.querySelector('.iphone-scroller')) {
-        document.scrollingElement.scrollTop = state.lastScrollPosition;
+        (document.scrollingElement || document.body).scrollTop = state.lastScrollPosition;
       }
     }
     //try to get a current scroll if we are in a normal mode
