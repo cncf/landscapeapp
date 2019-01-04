@@ -67,9 +67,9 @@ function imageExist(entry) {
 }
 
 function getItemHash(item) {
-  if (item.logo && item.logo.indexOf('.') === 0) {
+  if (item.logo && item.logo.indexOf('http://') !== 0 && item.logo.indexOf('https://') !== 0) {
     // console.info(item.logo);
-    const response = fs.readFileSync(path.resolve(projectPath,  item.logo));
+    const response = fs.readFileSync(path.resolve(projectPath, 'hosted_logos',  item.logo));
     return require('crypto').createHash('sha256').update(response).digest('base64');
   }
   return;
