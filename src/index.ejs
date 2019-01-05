@@ -11,11 +11,14 @@
   <script>
     window.GA = "<%= htmlWebpackPlugin.options.GA %>";
     window.lastUpdated = "<%= htmlWebpackPlugin.options.lastUpdated %>";
-    window.onerror = function (errorMsg, url, lineNumber) {
-      var elem = document.createElement('div');
-      elem.innerText = ('Error: ' + errorMsg + ' Script: ' + url + ' Line: ' + lineNumber);
-      document.body.appendChild(elem);
-      elem.innerText = ('Error: ' + errorMsg + ' Script: ' + url + ' Line: ' + lineNumber);
+    var isGoogle = navigator.userAgent.indexOf('bot.html') !== -1;
+    if (isGoogle) {
+      window.onerror = function (errorMsg, url, lineNumber) {
+        var elem = document.createElement('div');
+        elem.innerText = ('Error: ' + errorMsg + ' Script: ' + url + ' Line: ' + lineNumber);
+        document.body.appendChild(elem);
+        elem.innerText = ('Error: ' + errorMsg + ' Script: ' + url + ' Line: ' + lineNumber);
+      }
     }
   </script>
 
@@ -44,7 +47,7 @@
 </head>
 <body>
   <script>
-      const isGoogle = navigator.userAgent.indexOf('bot.html') !== -1;
+      var isGoogle = navigator.userAgent.indexOf('bot.html') !== -1;
       if (isGoogle) {
         var s = document.createElement("script");
         s.type = "text/javascript";
