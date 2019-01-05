@@ -10,7 +10,7 @@ const mapDispatchToProps = {
 
 const Component = function({groupedItems}) {
   setTimeout(function() {
-    document.scrollingElement.scrollTop = 0;
+    (document.scrollingElement || document.body).scrollTop = 0;
   }, 1);
   return null;
 }

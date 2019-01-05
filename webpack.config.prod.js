@@ -73,18 +73,7 @@ export default {
     new HtmlWebpackPlugin({
       template: path.resolve(__dirname, './src/index.ejs'),
       favicon: path.resolve(projectPath, './images/favicon.png'),
-      minify: {
-        removeComments: true,
-        collapseWhitespace: true,
-        removeRedundantAttributes: true,
-        useShortDoctype: true,
-        removeEmptyAttributes: true,
-        removeStyleLinkTypeAttributes: true,
-        keepClosingSlash: true,
-        minifyJS: true,
-        minifyCSS: true,
-        minifyURLs: true
-      },
+      minify: false,
       inject: true,
       // custom properties
       GA :require('process').env['GA'],
@@ -112,7 +101,7 @@ export default {
           options: {
             babelrc: false,
             presets: [
-              ['@babel/preset-env', {modules: false, targets: '>1%, chrome 41'}],
+              ['@babel/preset-env', {modules: false, targets: '>1%'}],
                '@babel/preset-react'
             ],
             plugins: [
@@ -229,4 +218,5 @@ export default {
       }
     ]
   }
+
 };
