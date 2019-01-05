@@ -1,5 +1,7 @@
 # Landscapeapp
 
+[![CII Best Practices](https://bestpractices.coreinfrastructure.org/projects/2434/badge)](https://bestpractices.coreinfrastructure.org/projects/2434)
+
 The landscapeapp is an upstream NPM [module](https://www.npmjs.com/package/interactive-landscape) that supports building interactive landscape websites such as the [CNCF Cloud Native Landscape](https://landscape.cncf.io) ([source](https://github.com/cncf/landscape)) and the [LF Deep Learning Foundation Landscape](https://landscape.lfdl.io) ([source](https://github.com/LFDLFoundation/lfdl-landscape)). The application has been developed by [Andrey Kozlov](https://github.com/ZeusTheTrueGod) and [Dan Kohn](https://www.dankohn.com) of [CNCF](https://www.cncf.io).
 
 If you want to create an interactive landscape for your project or organization, the easiest process is to fork the [LFDL landscape](https://github.com/LFDLFoundation/lfdl-landscape), since it only has a single landscape image. Edit `settings.yml`, `landscape.yml`, and `members.yml` for your topic. Then create a Netlify account (or similar) to automatically build and publish the static site on every commit.
