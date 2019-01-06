@@ -8,6 +8,16 @@ const sitemap = createSitemap({
   hostname: settings.global.website,
   cacheTime: 600 * 1000,
   urls: _.flatten([
+    _.values(settings.big_picture).map(function(section) {
+      return {
+        url: `images/${section.url}.pdf`,
+        img: [{
+          title: section.title,
+          url: `images/${section.url}.pdf`,
+          license: 'https://creativecommons.org/licenses/by/4.0/'
+        }]
+      }
+    }),
     { url: '/',
       img: _.values(settings.big_picture).map(function(section) {
         return {
