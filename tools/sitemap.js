@@ -17,12 +17,10 @@ const sitemap = createSitemap({
         }
       }).concat([{
         title: `${settings.global.short_name} Landscape Logo`,
-        url: `images/left-logo.svg`,
-        license: 'https://creativecommons.org/licenses/by/4.0/'
+        url: 'images/left-logo.svg',
       }, {
         title: `${settings.global.short_name} Logo`,
-        url: `images/right-logo.svg`,
-        license: 'https://creativecommons.org/licenses/by/4.0/'
+        url: 'images/right-logo.svg',
       }])
     },
     items.map(function(item) {
