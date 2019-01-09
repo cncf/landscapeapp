@@ -7,21 +7,13 @@ import path from 'path';
 const content = isMainBranch ?
   `
 User-agent: *
-Disallow: *grouping=
-Disallow: *sort=
-Disallow: *category=
-Disallow: *project=
-Disallow: *license=
-Disallow: *organization=
-Disallow: *headquarters=
-Disallow: *format=
-Disallow: *zoom=
-Disallow: *version=
-Disallow: *bestpractices=
-Disallow: /funding.html$
-Disallow: /${settings.big_picture.main.url}$
-${settings.big_picture.extra ? `Disallow: /${settings.big_picture.extra.url}$` : '' }
-
+Allow: /$
+Allow: /selected=
+Allow: /images/*.pdf
+Allow: /images/*.png
+Allow: /images/*.svg
+Allow: /logos/*.svg
+Disallow: /
 Sitemap: ${settings.global.website}/sitemap.xml
   `
   :
