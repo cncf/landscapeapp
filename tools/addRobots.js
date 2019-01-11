@@ -8,12 +8,14 @@ const content = isMainBranch ?
   `
 User-agent: *
 Allow: /$
+Allow: /images/*.pdf$
+Allow: /images/*.png$
+Allow: /images/*.svg$
+Allow: /logos/*.svg$
+Disallow: /selected=*&
 Allow: /selected=
-Allow: /images/*.pdf
-Allow: /images/*.png
-Allow: /images/*.svg
-Allow: /logos/*.svg
 Disallow: /
+
 Sitemap: ${settings.global.website}/sitemap.xml
   `
   :
