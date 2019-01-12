@@ -8,6 +8,9 @@ const content = isMainBranch ?
   `
 User-agent: *
 Allow: /$
+Allow: /main.*css$
+Allow: /main.*js$
+Allow: /main.googlebot.js?
 Allow: /images/*.pdf$
 Allow: /images/*.png$
 Allow: /images/*.svg$
