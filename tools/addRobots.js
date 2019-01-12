@@ -8,9 +8,13 @@ const content = isMainBranch ?
   `
 User-agent: *
 Allow: /$
+Allow: /data.json$
+Allow: /roboto-latin-*.woff$
+Allow: /roboto-latin-*.woff2$
 Allow: /main.*css$
 Allow: /main.*js$
 Allow: /main.googlebot.js?
+Allow: /images/*.jpg$
 Allow: /images/*.pdf$
 Allow: /images/*.png$
 Allow: /images/*.svg$
