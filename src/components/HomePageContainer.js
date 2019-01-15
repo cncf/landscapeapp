@@ -3,11 +3,11 @@ import createSelector from '../utils/createSelector';
 import HomePage from './HomePage';
 import {showFilters, hideFilters, closeDialog } from '../reducers/mainReducer';
 import isEmbed from '../utils/isEmbed';
-
 import getGroupedItems, {getGroupedItemsForBigPicture } from '../utils/itemsCalculator';
 import selectedItemCalculator from '../utils/selectedItemCalculator';
+import settings from 'project/settings.yml'
 
-const defaultTitle =  `CNCF Cloud Native Interactive Landscape`;
+const defaultTitle =  settings.global.meta.title;
 const getTitle = createSelector([state => state], function(state) {
     if (!state.main.ready) {
       return defaultTitle;
