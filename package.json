@@ -157,7 +157,7 @@
     "sitemap": "2.1.0",
     "string-replace-all": "1.0.3",
     "style-loader": "0.23.1",
-    "svg-autocrop": "1.0.4",
+    "svg-autocrop": "1.0.6",
     "terser-webpack-plugin": "1.2.0",
     "traverse": "0.6.6",
     "twitter": "1.7.1",

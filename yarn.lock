@@ -10655,10 +10655,10 @@ supports-color@^5.3.0, supports-color@^5.5.0:
   dependencies:
     has-flag "^3.0.0"
 
-svg-autocrop@1.0.4:
-  version "1.0.4"
-  resolved "https://registry.yarnpkg.com/svg-autocrop/-/svg-autocrop-1.0.4.tgz#ca80d2dbde3566ffb83d74c5c4fcfbf91442d2df"
-  integrity sha512-apmKGxwbsp2skWq1FWo3HZzOPfDfRm2SXOMKIGUujUjOQE1nH1CB2q8BsX/3MtCPkuQC9lylbR8ZwOBLCohIOA==
+svg-autocrop@1.0.6:
+  version "1.0.6"
+  resolved "https://registry.yarnpkg.com/svg-autocrop/-/svg-autocrop-1.0.6.tgz#205758e1844bd1bdb74fb8ebdabc3217958b2f14"
+  integrity sha512-V6hzQsV+mE/jmy1yV6jo50O7UdSEHM7XhneRE6cCEPcJaAWdpmKcWjnsGAIXaXD2F+pmSpYUGndhLYKeCSrF/Q==
   dependencies:
     convert-svg-to-png "0.5.0"
     jimp "0.6.0"
