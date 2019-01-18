@@ -7,7 +7,7 @@ import path from 'path';
 import _ from 'lodash';
 import { settings, projectPath } from './settings';
 import { addError, addWarning } from './reporter';
-import { ensureViewBoxExists, autoCropSvg } from './processSvg';
+import autoCropSvg from 'svg-autocrop';
 const debug = require('debug')('images');
 
 const error = colors.red;
@@ -127,8 +127,7 @@ export async function fetchImageEntries({cache, preferCache}) {
             timeout: 30 * 1000
           });
         }
-        const processedSvg = await ensureViewBoxExists(response);
-        const croppedSvg = await autoCropSvg(processedSvg);
+        const croppedSvg = await autoCropSvg(response, {title: item.name});
         require('fs').writeFileSync(path.resolve(projectPath, `cached_logos/${fileName}`), croppedSvg);
         require('process').stdout.write(cacheMiss("*"));
         return {
