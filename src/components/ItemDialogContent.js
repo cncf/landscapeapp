@@ -179,14 +179,14 @@ const ItemDialogContent = ({itemInfo}) => {
     </div>
   );
 
-  const contributorsCountElement =  itemInfo.contributorsCount && (
+  const contributorsCountElement =  itemInfo.contributorsCount ? (
                       <div className="product-property row">
                         <div className="product-property-name col col-40">Contributors</div>
                         <div className="product-property-value tight-col col-60">
                           <OutboundLink eventLabel={itemInfo.contributorsLink} to={itemInfo.contributorsLink} target="_blank">{itemInfo.contributorsCount}</OutboundLink>
                         </div>
                       </div>
-                    );
+                    ) : null;
 
   const headquartersElement =  itemInfo.headquarters && itemInfo.headquarters !== 'N/A' && (
     <div className="product-property row">
