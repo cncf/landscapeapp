@@ -1,3 +1,5 @@
-### Don't create an issue
+### This is the upstream landscapeapp
 
-If you see an error in the cards or missing ones, please don't create an issue here. Instead, edit landscape.yml (you can even do it via the GitHub web interface) and open a pull request. Then, review the preview staging server that's posted to your pull request and add a comment if your new or updated card looks correct and is ready to merge. Before going forward, please carefully review the sections of the Readme covering new entries, corrections, and logos: https://github.com/cncf/landscape/blob/master/README.md.
+If you want to modify the content in the CNCF or LFDL landscapes, please make changes to those downstream repos:
+https://github.com/cncf/landscape
+https://github.com/LFDLFoundation/lfdl-landscape
