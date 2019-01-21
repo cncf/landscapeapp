@@ -20,6 +20,7 @@
     "clean-dist": "npm run remove-dist && mkdir \"$PROJECT_PATH\"/dist",
     "remove-dist": "rimraf \"$PROJECT_PATH\"/dist",
     "precommit": "npm run fetch",
+    "host-images": "babel-node tools/hostImages.js && npm run fetch",
     "start-ci": "(babel-node tools/ciServer &) && sleep 10",
     "stop-old-ci": "(kill -9 `ps ux | grep ciServer | grep -v grep | awk -F ' ' '{print $2}'` 2>/dev/null || true)",
     "stop-ci": "kill -9 `cat /tmp/ci.pid` && rm /tmp/ci.pid",
