@@ -127,7 +127,7 @@ export async function fetchImageEntries({cache, preferCache}) {
             timeout: 30 * 1000
           });
         }
-        const croppedSvg = await autoCropSvg(response, {title: item.name});
+        const croppedSvg = await autoCropSvg(response, {title: `${item.name} logo`});
         require('fs').writeFileSync(path.resolve(projectPath, `cached_logos/${fileName}`), croppedSvg);
         require('process').stdout.write(cacheMiss("*"));
         return {
