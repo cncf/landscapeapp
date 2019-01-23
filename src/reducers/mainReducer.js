@@ -155,8 +155,15 @@ export function exportCsv() {
 
 
 export function changeParameters(value) {
-  return function(dispatch) {
-    dispatch(setParameters(value));
+  return function(dispatch, getState) {
+    const state = getState().main;
+    if (state.ready && value.selectedItemId && ! _.find(state.data, {id: value.selectedItemId})) {
+      // that selectedItemId does not exist, we need to redirect
+      console.info('redirect');
+      window.location.href = '/';
+    } else {
+      dispatch(setParameters(value));
+    }
   }
 }
 export function resetParameters() {
@@ -338,6 +345,9 @@ function setSelectedItemIdHandler(state, action) {
   return {...state, selectedItemId: action.value };
 }
 function setParametersHandler(state, action) {
+
+
+
   return {...state,
     filters: _.assign({}, initialState.filters, action.value.filters),
     grouping: action.value.grouping || initialState.grouping,
