@@ -158,9 +158,10 @@ export function changeParameters(value) {
   return function(dispatch, getState) {
     const state = getState().main;
     if (state.ready && value.selectedItemId && ! _.find(state.data, {id: value.selectedItemId})) {
-      // that selectedItemId does not exist, we need to redirect
-      console.info('redirect');
-      window.location.href = '/';
+      dispatch(setParameters({...value, selectedItemId: null}));
+      const newState = getState().main;
+      const url = filtersToUrl(newState);
+      dispatch(push(url));
     } else {
       dispatch(setParameters(value));
     }
