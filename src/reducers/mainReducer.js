@@ -155,8 +155,16 @@ export function exportCsv() {
 
 
 export function changeParameters(value) {
-  return function(dispatch) {
-    dispatch(setParameters(value));
+  return function(dispatch, getState) {
+    const state = getState().main;
+    let newValue = {...value};
+    if (state.ready && value.selectedItemId && ! _.find(state.data, {id: value.selectedItemId})) {
+      newValue.selectedItemId = null;
+    }
+    dispatch(setParameters({...newValue}));
+    const newState = getState().main;
+    const url = filtersToUrl(newState);
+    dispatch(push(url));
   }
 }
 export function resetParameters() {
@@ -338,6 +346,9 @@ function setSelectedItemIdHandler(state, action) {
   return {...state, selectedItemId: action.value };
 }
 function setParametersHandler(state, action) {
+
+
+
   return {...state,
     filters: _.assign({}, initialState.filters, action.value.filters),
     grouping: action.value.grouping || initialState.grouping,
