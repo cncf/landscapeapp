@@ -157,14 +157,14 @@ export function exportCsv() {
 export function changeParameters(value) {
   return function(dispatch, getState) {
     const state = getState().main;
+    let newValue = {...value};
     if (state.ready && value.selectedItemId && ! _.find(state.data, {id: value.selectedItemId})) {
-      dispatch(setParameters({...value, selectedItemId: null}));
-      const newState = getState().main;
-      const url = filtersToUrl(newState);
-      dispatch(push(url));
-    } else {
-      dispatch(setParameters(value));
+      newValue.selectedItemId = null;
     }
+    dispatch(setParameters({...newValue}));
+    const newState = getState().main;
+    const url = filtersToUrl(newState);
+    dispatch(push(url));
   }
 }
 export function resetParameters() {
