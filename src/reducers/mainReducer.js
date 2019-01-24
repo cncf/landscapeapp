@@ -5,7 +5,7 @@
 import { loadData, loadPreviewData } from './api';
 import { filtersToUrl } from '../utils/syncToUrl';
 import _ from 'lodash';
-import { push } from 'connected-react-router';
+import { push, replace } from 'connected-react-router';
 import { zoomLevels } from '../utils/zoom';
 import bus from './bus';
 import getGroupedItems from '../utils/itemsCalculator';
@@ -15,6 +15,7 @@ import exportItems from '../utils/csvExporter';
 export const initialState = {
   data: null,
   ready: false,
+  initialUrlHandled: false,
   filters: {
     relation: [],
     stars: null,
@@ -155,8 +156,23 @@ export function exportCsv() {
 
 
 export function changeParameters(value) {
-  return function(dispatch) {
-    dispatch(setParameters(value));
+  return function(dispatch, getState) {
+    const state = getState().main;
+    if (!state.initialUrlHandled) {
+      let newValue = {...value};
+      if (state.ready === true && value.selectedItemId && ! _.find(state.data, {id: value.selectedItemId})) {
+        newValue.selectedItemId = null;
+      }
+      dispatch(setParameters({...newValue}));
+      const newState = getState().main;
+      const url = filtersToUrl(newState);
+      dispatch(replace(url));
+      if (state.ready === true) {
+        dispatch(markInitialUrlAsHandled());
+      }
+    } else {
+      dispatch(setParameters({...value}));
+    }
   }
 }
 export function resetParameters() {
@@ -217,6 +233,12 @@ export function makeFullscreenDisabled() {
   }
 }
 
+
+function markInitialUrlAsHandled() {
+  return {
+    type: 'Main/MarkInitialUrlAsHandled'
+  };
+}
 
 function zoomIn() {
   return {
@@ -319,6 +341,10 @@ function setMainContentMode(value) {
   }
 }
 
+function markInitialUrlAsHandledHandler(state) {
+  return { ...state, initialUrlHandled: true };
+}
+
 function setDataHandler(state, action) {
   return { ...state, data: action.data };
 }
@@ -338,6 +364,9 @@ function setSelectedItemIdHandler(state, action) {
   return {...state, selectedItemId: action.value };
 }
 function setParametersHandler(state, action) {
+
+
+
   return {...state,
     filters: _.assign({}, initialState.filters, action.value.filters),
     grouping: action.value.grouping || initialState.grouping,
@@ -422,6 +451,8 @@ function reducer(state = initialState, action) {
       return enableFullscreenHandler(state, action);
     case 'Main/DisableFullscreen':
       return disableFullscreenHandler(state, action);
+    case 'Main/MarkInitialUrlAsHandled':
+      return markInitialUrlAsHandledHandler(state, action);
 
     default:
       return state;
