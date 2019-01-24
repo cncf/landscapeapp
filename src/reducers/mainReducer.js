@@ -15,6 +15,7 @@ import exportItems from '../utils/csvExporter';
 export const initialState = {
   data: null,
   ready: false,
+  initialUrlHandled: false,
   filters: {
     relation: [],
     stars: null,
@@ -157,14 +158,21 @@ export function exportCsv() {
 export function changeParameters(value) {
   return function(dispatch, getState) {
     const state = getState().main;
-    let newValue = {...value};
-    if (state.ready === true && value.selectedItemId && ! _.find(state.data, {id: value.selectedItemId})) {
-      newValue.selectedItemId = null;
+    if (!state.initialUrlHandled) {
+      let newValue = {...value};
+      if (state.ready === true && value.selectedItemId && ! _.find(state.data, {id: value.selectedItemId})) {
+        newValue.selectedItemId = null;
+      }
+      dispatch(setParameters({...newValue}));
+      const newState = getState().main;
+      const url = filtersToUrl(newState);
+      dispatch(replace(url));
+      if (state.ready === true) {
+        dispatch(markInitialUrlAsHandled());
+      }
+    } else {
+      dispatch(setParameters({...value}));
     }
-    dispatch(setParameters({...newValue}));
-    const newState = getState().main;
-    const url = filtersToUrl(newState);
-    dispatch(replace(url));
   }
 }
 export function resetParameters() {
@@ -225,6 +233,12 @@ export function makeFullscreenDisabled() {
   }
 }
 
+
+function markInitialUrlAsHandled() {
+  return {
+    type: 'Main/MarkInitialUrlAsHandled'
+  };
+}
 
 function zoomIn() {
   return {
@@ -325,6 +339,10 @@ function setMainContentMode(value) {
     type: 'Main/SetMainContentMode',
     value: value
   }
+}
+
+function markInitialUrlAsHandledHandler(state) {
+  return { ...state, initialUrlHandled: true };
 }
 
 function setDataHandler(state, action) {
@@ -433,6 +451,8 @@ function reducer(state = initialState, action) {
       return enableFullscreenHandler(state, action);
     case 'Main/DisableFullscreen':
       return disableFullscreenHandler(state, action);
+    case 'Main/MarkInitialUrlAsHandled':
+      return markInitialUrlAsHandledHandler(state, action);
 
     default:
       return state;
