@@ -5,17 +5,15 @@ import HomePageUrlContainer from '../HomePageUrlContainer';
 import qs from 'query-string';
 
 const Fullscreen = ({ready, groupedItems, landscapeSettings, showPreview, version}) => {
-  if (!ready) {
+  if (ready !== true) {
     return (
       <div>
-        <HomePageUrlContainer />
       </div>
     )
   }
 
   return (
     <div style={{zoom: 4, fontFamily: 'roboto'}}>
-        <HomePageUrlContainer />
         <div className="gradient-bg" style={{
           width: landscapeSettings.fullscreen_size.width,
           height: landscapeSettings.fullscreen_size.height,

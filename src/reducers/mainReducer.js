@@ -5,7 +5,7 @@
 import { loadData, loadPreviewData } from './api';
 import { filtersToUrl } from '../utils/syncToUrl';
 import _ from 'lodash';
-import { push } from 'connected-react-router';
+import { push, replace } from 'connected-react-router';
 import { zoomLevels } from '../utils/zoom';
 import bus from './bus';
 import getGroupedItems from '../utils/itemsCalculator';
@@ -158,13 +158,13 @@ export function changeParameters(value) {
   return function(dispatch, getState) {
     const state = getState().main;
     let newValue = {...value};
-    if (state.ready && value.selectedItemId && ! _.find(state.data, {id: value.selectedItemId})) {
+    if (state.ready === true && value.selectedItemId && ! _.find(state.data, {id: value.selectedItemId})) {
       newValue.selectedItemId = null;
     }
     dispatch(setParameters({...newValue}));
     const newState = getState().main;
     const url = filtersToUrl(newState);
-    dispatch(push(url));
+    dispatch(replace(url));
   }
 }
 export function resetParameters() {
