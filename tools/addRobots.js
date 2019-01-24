@@ -21,7 +21,7 @@ Allow: /images/*.png$
 Allow: /images/*.svg$
 Allow: /logos/*.svg$
 Disallow: /selected=*&
-Allow: /selected=
+Allow: /selected=*
 Disallow: /
 
 Sitemap: ${settings.global.website}/sitemap.xml
