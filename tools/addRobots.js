@@ -10,6 +10,7 @@ User-agent: *
 Allow: /$
 Allow: /data.json$
 Allow: /favicon.png$
+Allow: /sitemap.xml$
 Allow: /roboto-latin-*.woff$
 Allow: /roboto-latin-*.woff2$
 Allow: /main.*css$
