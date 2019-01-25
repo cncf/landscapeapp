@@ -23,6 +23,9 @@ function mainTest() {
       //group headers
       await page.waitForXPath(`//a[contains(text(), '${settings.test.section}')]`);
       console.info('group headers are ok');
+      // ensure that everything was loaded
+      await page.waitForXPath(`//*[contains(text(), 'You are viewing ')]`);
+      console.info('group headers are ok');
       //card
       await page.waitForSelector(`.mosaic img[src='logos/${settings.test.logo}']`);
       console.info('there is a kubernetes card');
