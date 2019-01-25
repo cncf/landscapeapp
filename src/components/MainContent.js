@@ -99,13 +99,13 @@ const MainContent = ({groupedItems, onSelectItem, onOpenItemInNewTab}) => {
       return [
         (function() {
           if (newItemsAndHeaderIds.indexOf(groupedItem.header) >= maxAnimatedElements) {
-            return <Header groupedItem={groupedItem} />;
+            return <Header key={Math.random()} groupedItem={groupedItem} />;
           }
           return [];
         })()
       ].concat(_.map(groupedItem.items, function(item) {
         if (newItemsAndHeaderIds.indexOf(item.id) >= maxAnimatedElements) {
-          return <Card item={item} handler={handler} />;
+          return <Card key={Math.random()} item={item} handler={handler} />;
         }
         return [];
       }));
@@ -328,7 +328,7 @@ const MainContent = ({groupedItems, onSelectItem, onOpenItemInNewTab}) => {
         }
         if (kind === 'move') {
           return [
-            <Card itemRef={captureNew(item.id)} item={item} handler={handler} key={Math.random} />,
+            <Card itemRef={captureNew(item.id)} item={item} handler={handler} key={Math.random()} />,
             <Card itemRef={captureNewCopy(item.id)} item={item} handler={handler} key={Math.random()} style={{position: 'absolute'}}/>
           ];
         }
@@ -353,7 +353,7 @@ const MainContent = ({groupedItems, onSelectItem, onOpenItemInNewTab}) => {
             );
           }
           if (kind === 'move') {
-            return <Header itemRef={captureOld(groupedItem.header)} groupedItem={groupedItem} />;
+            return <Header key={Math.random()} itemRef={captureOld(groupedItem.header)} groupedItem={groupedItem} />;
           }
         })()
       ].concat(_.map(groupedItem.items, function(item) {
@@ -369,7 +369,7 @@ const MainContent = ({groupedItems, onSelectItem, onOpenItemInNewTab}) => {
           );
         }
         if (kind === 'move') {
-          return <Card itemRef={captureOld(item.id)} item={item} handler={handler} />;
+          return <Card key={Math.random()} itemRef={captureOld(item.id)} item={item} handler={handler} />;
         }
       }));
     });
