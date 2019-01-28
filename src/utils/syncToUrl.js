@@ -3,6 +3,7 @@ import _ from 'lodash';
 import qs from 'query-string';
 import fields from '../types/fields';
 import { options } from '../components/SortFieldContainer';
+import isEmbed from './isEmbed';
 const sortOptions = options.map(function(x) {
   return {
     field: JSON.parse(x.id).field,
@@ -29,9 +30,9 @@ export function filtersToUrl({filters, grouping, sortField, selectedItemId, zoom
   addZoomToParams({zoom: zoom, mainContentMode: mainContentMode, params: params});
   addFullscreenToParams({isFullscreen: isFullscreen, params: params});
   if (_.isEmpty(params)) {
-    return `/${prefix}`;
+    return `/${prefix}` + (isEmbed ? 'embed=yes' : '');
   }
-  const filtersPart = qs.stringify(params, {encode: false});
+  const filtersPart = qs.stringify(params, {encode: false}) + (isEmbed ? '&embed=yes':'');
 
   return `/${prefix}` + filtersPart;
 }
