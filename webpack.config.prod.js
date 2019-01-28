@@ -1,6 +1,7 @@
 // For info about this file refer to webpack and webpack-hot-middleware documentation
 // For info on how we're generating bundles with hashed filenames for cache busting: https://medium.com/@okonetchnikov/long-term-caching-of-static-assets-with-webpack-1ecb139adb95#.w99i89nsz
 import TerserPlugin from 'terser-webpack-plugin';
+import LodashModuleReplacementPlugin from 'lodash-webpack-plugin';
 import webpack from 'webpack';
 import MiniCssExtractPlugin from 'mini-css-extract-plugin';
 import HtmlWebpackPlugin from 'html-webpack-plugin';
@@ -88,7 +89,8 @@ export default {
             yandex: false
           }
         }
-    })
+    }),
+    new LodashModuleReplacementPlugin()
   ],
   module: {
     rules: [
