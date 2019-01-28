@@ -2,6 +2,7 @@
 
 // State Description (TODO: Add FLOW here!)
 // data: null | { .. Data ... }
+import settings from 'project/settings.yml';
 import { loadData, loadPreviewData } from './api';
 import { filtersToUrl } from '../utils/syncToUrl';
 import _ from 'lodash';
@@ -30,7 +31,7 @@ export const initialState = {
   sortField: 'name',
   sortDirection: 'asc',
   selectedItemId: null,
-  mainContentMode: 'card', // also landscape or serverless for a big picture
+  mainContentMode: settings.big_picture.main.url, // also landscape or serverless for a big picture
   filtersVisible: false,
   zoom: 1,
   isFullscreen: false
