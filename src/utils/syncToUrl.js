@@ -119,6 +119,9 @@ function addMainContentModeToParams({mainContentMode, params}) {
     if (mainContentMode === extraSettings.url && extraSettings.url) {
       params['format'] = extraSettings.url;
     }
+    if (mainContentMode === 'card') {
+      params['format'] = 'card-mode'
+    }
   }
 }
 
@@ -198,11 +201,11 @@ function setSortFieldFromParams({ newParameters, params}) {
 function setMainContentModeFromParams({ newParameters, params}) {
   const format = params.format;
   if (!format) {
-    newParameters.mainContentMode = 'card';
+    newParameters.mainContentMode = mainSettings.url;
   } else if (format === extraSettings.url && extraSettings.url) {
     newParameters.mainContentMode = extraSettings.url;
-  } else if (format === mainSettings.url) {
-    newParameters.mainContentMode = mainSettings.url;
+  } else if (format === 'card-mode') {
+    newParameters.mainContentMode = 'card';
   }
 }
 

@@ -15,7 +15,7 @@ function mainTest() {
   describe("Main test", () => {
     test("I visit a main page and have all required elements", async () => {
       console.info('about to open a page', appUrl);
-      await page.goto(appUrl);
+      await page.goto(appUrl + '/format=card-mode');
       console.info('page is open');
       //header
       await page.waitForXPath(`//h1[text() = '${settings.test.header}']`);
@@ -44,6 +44,12 @@ function landscapeTest() {
     test("I visit a main landscape page and have all required elements", async () => {
       console.info('about to open a main landscape page');
       await page.goto(appUrl + '/format=' + settings.big_picture.main.url);
+      await page.waitForSelector('.big-picture-section');
+      await page.click('.big-picture-section img[src]');
+      await page.waitForSelector(".modal-content");
+
+      // and check that without redirect it works too
+      await page.goto(appUrl);
       await page.waitForSelector('.big-picture-section');
       await page.click('.big-picture-section img[src]');
       await page.waitForSelector(".modal-content");
