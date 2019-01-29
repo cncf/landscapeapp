@@ -11,6 +11,35 @@ let browser;
 if (process.env.SHOW_BROWSER) {
   jest.setTimeout(30000);
 }
+
+function embedTest() {
+  describe("Embed test", () => {
+    test("I visit an example embed page", async () => {
+      console.info('about to open a page', appUrl);
+      await page.goto(appUrl + '/embed.html');
+      console.info('page is open');
+
+      const frame = await page.frames()[1];
+      // should be a clickable frame
+      await frame.waitForXPath(`//h1[contains(text(), 'full interactive landscape')]`);
+      // we should not see the content from a main mode
+      const wrongElement = await frame.$x(`//h1[text() = '${settings.test.header}']`);
+      if (wrongElement.length !== 0) {
+        throw 'A text from a normal mode is visible!';
+      }
+
+      // ensure that it is clickable
+      await frame.waitForSelector(`.mosaic img`);
+      await frame.click(`.mosaic img`);
+      await frame.waitForSelector(".modal-content");
+    }, 6 * 60 * 1000); //give it up to 1 min to execute
+  });
+
+
+
+}
+
+
 function mainTest() {
   describe("Main test", () => {
     test("I visit a main page and have all required elements", async () => {
@@ -77,6 +106,7 @@ describe("Normal browser", function() {
   })
   mainTest();
   landscapeTest();
+  embedTest();
 });
 
 describe("iPhone simulator", function() {
