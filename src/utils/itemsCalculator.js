@@ -12,9 +12,10 @@ const landscape = fields.landscape.values;
 
 export const getFilteredItems = createSelector(
   [(state) => state.main.data,
-  (state) => state.main.filters
+    (state) => state.main.filters,
+    (state) => state.main.mainContentMode
   ],
-  function(data, filters) {
+  function(data, filters, mainContentMode) {
     var filterHostedProject = filterFn({field: 'relation', filters});
     if (settings.global.flags.cncf_sandbox) {
       filterHostedProject = function(x) {
@@ -29,7 +30,7 @@ export const getFilteredItems = createSelector(
     var filterByLicense = filterFn({field: 'license', filters});
     var filterByOrganization = filterFn({field: 'organization', filters});
     var filterByHeadquarters = filterFn({field: 'headquarters', filters});
-    var filterByLandscape = filterFn({field: 'landscape', filters});
+    var filterByLandscape = mainContentMode === 'card' ? filterFn({field: 'landscape', filters}) : (x) => true;
     var filterByBestPractices = filterFn({field: 'bestPracticeBadgeId', filters});
     return data.filter(function(x) {
       return filterHostedProject(x) && filterByLicense(x) && filterByOrganization(x) && filterByHeadquarters(x) && filterByLandscape(x) && filterByBestPractices(x);
