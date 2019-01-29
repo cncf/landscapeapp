@@ -27,7 +27,7 @@
     "integration-test": "jest",
     "check-landscape": "babel-node tools/checkLandscape",
     "render-landscape": "babel-node tools/renderLandscape",
-    "copy-dist": "cp -r _headers _redirects \"$PROJECT_PATH\"/data.json \"$PROJECT_PATH\"/images src/embed.html \"$PROJECT_PATH\"/dist/ && cp -r \"$PROJECT_PATH\"/cached_logos \"$PROJECT_PATH\"/dist/logos && yarn copy-iframe-resizer",
+    "copy-dist": "cp -r _headers _redirects \"$PROJECT_PATH\"/data.json \"$PROJECT_PATH\"/images src/iframeHandler.js src/embed.html \"$PROJECT_PATH\"/dist/ && cp -r \"$PROJECT_PATH\"/cached_logos \"$PROJECT_PATH\"/dist/logos && yarn copy-iframe-resizer",
     "copy-iframe-resizer": "(cp \"$PROJECT_PATH\"/node_modules/iframe-resizer/js/iframeResizer.min.js \"$PROJECT_PATH\"/dist/iframeResizer.js) || (cp node_modules/iframe-resizer/js/iframeResizer.min.js \"$PROJECT_PATH\"/dist/iframeResizer.js)",
     "setup-robots": "babel-node tools/sitemap && babel-node tools/addRobots",
     "quick-build": "babel-node tools/build.js && npm run copy-dist && npm run setup-robots",
