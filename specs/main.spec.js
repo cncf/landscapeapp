@@ -106,7 +106,7 @@ describe("Normal browser", function() {
   afterAll(async function() {
     browser.close();
   })
-  for (i = 0; i < 100; i++) {
+  for (var i = 0; i < 100; i++) {
     mainTest();
     landscapeTest();
     embedTest();
