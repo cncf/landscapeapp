@@ -10,6 +10,8 @@ let browser;
 
 if (process.env.SHOW_BROWSER) {
   jest.setTimeout(30000);
+} else {
+  jest.setTimeout(20000);
 }
 
 function embedTest() {
@@ -104,9 +106,11 @@ describe("Normal browser", function() {
   afterAll(async function() {
     browser.close();
   })
-  mainTest();
-  landscapeTest();
-  embedTest();
+  for (i = 0; i < 100; i++) {
+    mainTest();
+    landscapeTest();
+    embedTest();
+  }
 });
 
 describe("iPhone simulator", function() {
