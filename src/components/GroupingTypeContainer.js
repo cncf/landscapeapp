@@ -1,5 +1,5 @@
 import { connect } from 'react-redux';
-import ComboboxSelector from './ComboboxSelector';
+import GroupingSelector from './GroupingSelector';
 import { changeGrouping } from '../reducers/mainReducer.js';
 import fields from '../types/fields';
 
@@ -13,11 +13,10 @@ const options = [{
     id: x,
     label: fields[x].groupingLabel
   };
-}).filter(function(x) {
-  return ! fields[x.id].hideInGrouping;
 }));
 
 const mapStateToProps = (state) => ({
+  isBigPicture: state.main.mainContentMode !== 'card',
   value: state.main.grouping,
   options: options
 });
@@ -28,4 +27,4 @@ const mapDispatchToProps = {
   onChange: onChange
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(ComboboxSelector);
+export default connect(mapStateToProps, mapDispatchToProps)(GroupingSelector);
