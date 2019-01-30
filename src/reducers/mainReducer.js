@@ -39,7 +39,7 @@ export const initialState = {
 // we load main data preview only if it is '/'
 export function loadMainData() {
   return async function (dispatch) {
-    if (location.pathname === '/') {
+    if (location.pathname === '/' + window.prefix) {
       const preview = await loadPreviewData();
       dispatch(setData(preview));
       dispatch(setReady('partially'));
@@ -177,6 +177,13 @@ export function changeParameters(value) {
   }
 }
 export function resetParameters() {
+  return function(dispatch) {
+    dispatch(push('/' + window.prefix));
+    setTimeout(() => bus.emit('scrollToTop'), 1);
+  }
+}
+
+export function resetFilters() {
   return function(dispatch, getState) {
     dispatch(setParameters({...getState().main, filters: initialState.filters, grouping: initialState.grouping, sortField: initialState.sortField}));
     dispatch(push(filtersToUrl(getState().main)));

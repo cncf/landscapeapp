@@ -1,12 +1,12 @@
 import { connect } from 'react-redux';
 import ResetFilters from './ResetFilters';
-import { resetParameters } from '../reducers/mainReducer.js';
+import { resetFilters } from '../reducers/mainReducer.js';
 
 
 const mapStateToProps = () => ({
 });
 const mapDispatchToProps = {
-  reset: resetParameters
+  reset: resetFilters
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(ResetFilters);
