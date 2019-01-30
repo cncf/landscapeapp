@@ -177,8 +177,16 @@ export function changeParameters(value) {
   }
 }
 export function resetParameters() {
-  return function(dispatch, getState) {
+  return function(dispatch) {
     dispatch(push('/' + window.prefix));
+    setTimeout(() => bus.emit('scrollToTop'), 1);
+  }
+}
+
+export function resetFilters() {
+  return function(dispatch, getState) {
+    dispatch(setParameters({...getState().main, filters: initialState.filters, grouping: initialState.grouping, sortField: initialState.sortField}));
+    dispatch(push(filtersToUrl(getState().main)));
     setTimeout(() => bus.emit('scrollToTop'), 1);
   }
 }
