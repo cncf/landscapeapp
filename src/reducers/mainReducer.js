@@ -174,6 +174,7 @@ export function changeParameters(value) {
       }
     } else {
       dispatch(setParameters({...value}));
+      addNoIndexIfRequired();
     }
   }
 }
