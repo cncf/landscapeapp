@@ -106,11 +106,9 @@ describe("Normal browser", function() {
   afterAll(async function() {
     browser.close();
   })
-  for (var i = 0; i < 100; i++) {
-    mainTest();
-    landscapeTest();
-    embedTest();
-  }
+  mainTest();
+  landscapeTest();
+  embedTest();
 });
 
 describe("iPhone simulator", function() {
