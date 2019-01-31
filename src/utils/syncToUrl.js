@@ -26,11 +26,14 @@ export function addNoIndexIfRequired() {
     }
   } else {
     console.info('adding a no index meta tag for ', url);
-    var link=document.createElement('meta');
-    link.name='robots';
-    link.content = 'noindex';
-    const head = document.getElementsByTagName('head')[0];
-    head.insertBefore(link, head.firstChild);
+    const existingMeta = document.querySelector('meta[name="robots"]');
+    if (!existingMeta) {
+      var link=document.createElement('meta');
+      link.name='robots';
+      link.content = 'noindex';
+      const head = document.getElementsByTagName('head')[0];
+      head.insertBefore(link, head.firstChild);
+    }
   }
 }
 
