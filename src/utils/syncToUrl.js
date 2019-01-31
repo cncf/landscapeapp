@@ -15,6 +15,28 @@ import settings from 'project/settings.yml';
 const mainSettings = settings.big_picture.main;
 const extraSettings = settings.big_picture.extra || {};
 
+export function addNoIndexIfRequired() {
+  const url = window.location.pathname;
+  if (url === '/' + window.prefix || (url.indexOf('/' + window.prefix + 'selected=') === 0 && url.indexOf('&') === -1)) {
+    console.info('this can be indexed');
+    const existingMeta = document.querySelector('meta[name="robots"]');
+    if (existingMeta) {
+      const head = document.getElementsByTagName('head')[0];
+      head.removeChild(existingMeta);
+    }
+  } else {
+    console.info('adding a no index meta tag for ', url);
+    const existingMeta = document.querySelector('meta[name="robots"]');
+    if (!existingMeta) {
+      var link=document.createElement('meta');
+      link.name='robots';
+      link.content = 'noindex';
+      const head = document.getElementsByTagName('head')[0];
+      head.insertBefore(link, head.firstChild);
+    }
+  }
+}
+
 export function filtersToUrl({filters, grouping, sortField, selectedItemId, zoom, mainContentMode = 'card', isFullscreen}) {
   const prefix = window.prefix;
   const params = {};
