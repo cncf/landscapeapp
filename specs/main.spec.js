@@ -5,8 +5,8 @@ const port = process.env.PORT || '4000';
 const appUrl = `http://localhost:${port}`;
 const width = 1920;
 const height = 1080;
-let page;
 let browser;
+let setup;
 
 if (process.env.SHOW_BROWSER) {
   jest.setTimeout(30000);
@@ -14,11 +14,29 @@ if (process.env.SHOW_BROWSER) {
   jest.setTimeout(20000);
 }
 
+async function makePage(initialUrl) {
+  try {
+    browser = await puppeteer.launch({args: ['--no-sandbox', '--disable-setuid-sandbox'], headless: !process.env.SHOW_BROWSER});
+    const page = await browser.newPage();
+    await setup(page);
+    await page.goto(initialUrl);
+    return page;
+  } catch(ex) {
+    try {
+      console.info('retrying...', ex);
+      browser.close();
+    } catch(ex2) {
+
+    }
+    return await makePage(initialUrl);
+  }
+}
+
 function embedTest() {
   describe("Embed test", () => {
     test("I visit an example embed page", async () => {
       console.info('about to open a page', appUrl);
-      await page.goto(appUrl + '/embed.html');
+      const page = await makePage(appUrl + '/embed.html');
       console.info('page is open');
 
       const frame = await page.frames()[1];
@@ -45,8 +63,8 @@ function embedTest() {
 function mainTest() {
   describe("Main test", () => {
     test("I visit a main page and have all required elements", async () => {
-      console.info('about to open a page', appUrl);
-      await page.goto(appUrl + '/format=card-mode');
+      console.info('about to open a page', appUrl + '/format=card-mode');
+      const page = await makePage(appUrl + '/format=card-mode');
       console.info('page is open');
       //header
       await page.waitForXPath(`//h1[text() = '${settings.test.header}']`);
@@ -74,7 +92,7 @@ function landscapeTest() {
   describe("Big Picture Test", () => {
     test("I visit a main landscape page and have all required elements", async () => {
       console.info('about to open a main landscape page');
-      await page.goto(appUrl + '/format=' + settings.big_picture.main.url);
+      const page = await makePage(appUrl + '/format=' + settings.big_picture.main.url);
       await page.waitForSelector('.big-picture-section');
       await page.click('.big-picture-section img[src]');
       await page.waitForSelector(".modal-content");
@@ -89,7 +107,7 @@ function landscapeTest() {
   if (settings.big_picture.extra) {
     test("I visit an extra landscape page and have all required elements", async () => {
       console.info('about to open an extra landscape page');
-      await page.goto(appUrl + '/format=' + settings.big_picture.extra.url);
+      const page = await makePage(appUrl + '/format=' + settings.big_picture.extra.url);
       await page.waitForSelector('.big-picture-section');
       await page.click('.big-picture-section img[src]');
       await page.waitForSelector(".modal-content");
@@ -98,12 +116,10 @@ function landscapeTest() {
 }
 
 describe("Normal browser", function() {
-  beforeAll(async function() {
-    browser = await puppeteer.launch({args: ['--no-sandbox', '--disable-setuid-sandbox'], headless: !process.env.SHOW_BROWSER});
-    page = await browser.newPage();
-    await page.setViewport({ width, height });
+  beforeEach(async function() {
+    setup = async (page) =>  await page.setViewport({ width, height });
   })
-  afterAll(async function() {
+  afterEach(async function() {
     browser.close();
   })
   mainTest();
@@ -112,13 +128,11 @@ describe("Normal browser", function() {
 });
 
 describe("iPhone simulator", function() {
-  beforeAll(async function() {
-    browser = await puppeteer.launch({args: ['--no-sandbox', '--disable-setuid-sandbox'], headless: !process.env.SHOW_BROWSER});
-    page = await browser.newPage();
-    await page.emulate(devices['iPhone X'])
+  beforeEach(async function() {
+    setup = async (page) => await page.emulate(devices['iPhone X'])
   })
 
-  afterAll(async function() {
+  afterEach(async function() {
     browser.close();
   })
   mainTest();

@@ -24,7 +24,7 @@
     "start-ci": "(babel-node tools/ciServer &) && sleep 10",
     "stop-old-ci": "(kill -9 `ps ux | grep ciServer | grep -v grep | awk -F ' ' '{print $2}'` 2>/dev/null || true)",
     "stop-ci": "kill -9 `cat /tmp/ci.pid` && rm /tmp/ci.pid",
-    "integration-test": "jest && jest && jest && jest && jest && jest && jest && jest && jest && jest && jest && jest && jest && jest && jest && jest && jest && jest && jest && jest && jest && jest && jest && jest && jest && jest && jest && jest && jest && jest && jest && jest && jest && jest && jest && jest && jest && jest && jest && jest",
+    "integration-test": "jest",
     "check-landscape": "babel-node tools/checkLandscape",
     "render-landscape": "babel-node tools/renderLandscape",
     "copy-dist": "cp -r _headers _redirects \"$PROJECT_PATH\"/data.json \"$PROJECT_PATH\"/images src/embed.html \"$PROJECT_PATH\"/dist/ && cp -r \"$PROJECT_PATH\"/cached_logos \"$PROJECT_PATH\"/dist/logos && yarn copy-iframe-resizer",
@@ -35,7 +35,7 @@
     "build": "((babel-node tools/build.js && npm run copy-dist && npm run setup-robots && npm run stop-old-ci && npm run start-ci && npm run integration-test && npm run check-landscape && npm run render-landscape) || (npm run stop-old-ci && false)) && npm run stop-ci && babel-node tools/fundingForMasterBranch && npm run googlebot",
     "googlebot": "babel --no-babelrc --presets=@babel/env \"$PROJECT_PATH\"/dist/main.*.js > \"$PROJECT_PATH\"/dist/main.googlebot.js",
     "show-report": "open dist/report.html",
-    "test": "jest && jest && jest && jest && jest && jest && jest && jest && jest && jest && jest && jest && jest && jest && jest && jest && jest && jest && jest && jest && jest && jest && jest && jest && jest && jest && jest && jest && jest && jest && jest && jest && jest && jest && jest && jest && jest && jest && jest && jest",
+    "test": "jest",
     "test:CI": "babel-node tools/testCi.js",
     "test:watch": "jest --watch",
     "analyze-bundle": "babel-node ./tools/analyzeBundle.js"
