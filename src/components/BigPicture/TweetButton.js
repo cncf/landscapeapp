@@ -6,7 +6,7 @@ import React from 'react';
 
 const TweetButton = function() {
   return <div className="tweet-button">
-    <Share url="https://github.com" />
+    <Share url="https://github.com" options={{text: "Let everyone know how great is this website"}} />
   </div>
 }
 export default pure(TweetButton);
