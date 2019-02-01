@@ -6,7 +6,6 @@ import ZoomButtonsContainer from './ZoomButtonsContainer';
 import MainFullscreenLandscapeContainer from './MainFullscreenLandscapeContainer';
 import ExtraFullscreenLandscapeContainer from './ExtraFullscreenLandscapeContainer';
 import FullscreenButtonContainer from './FullscreenButtonContainer';
-import TweetButton from './TweetButton';
 
 export {
   MainLandscapeContentContainer,
@@ -16,6 +15,5 @@ export {
   ZoomButtonsContainer,
   MainFullscreenLandscapeContainer,
   ExtraFullscreenLandscapeContainer,
-  FullscreenButtonContainer,
-  TweetButton
+  FullscreenButtonContainer
 }

@@ -15,9 +15,9 @@ import {
   ExtraLandscapeContentContainer,
   SwitchButtonContainer,
   ZoomButtonsContainer,
-  FullscreenButtonContainer,
-  TweetButton
+  FullscreenButtonContainer
 } from './BigPicture';
+import TweetButton from './TweetButton';
 import MainContentContainer from './MainContentContainer';
 import HomePageUrlContainer from './HomePageUrlContainer';
 import HomePageScrollerContainer from './HomePageScrollerContainer';
@@ -188,6 +188,7 @@ const HomePage = ({isEmbed, mainContentMode, ready, hasSelectedItem, filtersVisi
         <div className="app-overlay" onClick={hideFilters}></div>
 
         <HomePageUrlContainer />
+        {!isEmbed && <TweetButton/> }
 
         <div className={classNames('main', {'embed': isEmbed})}>
           { isMobile && <SwitchButtonContainer /> }
@@ -204,7 +205,6 @@ const HomePage = ({isEmbed, mainContentMode, ready, hasSelectedItem, filtersVisi
                   <div style={{width:width, height: height, position: 'relative', background: 'rgb(134,175,188)'}}>
                     <ZoomButtonsContainer />
                     <FullscreenButtonContainer />
-                    <TweetButton />
                     <div style={{width: '100%', height: '100%', position: 'relative', overflow: 'scroll', padding: 10}}>
                       { mainContentMode === mainSettings.url && <MainLandscapeContentContainer /> }
                       { mainContentMode === extraSettings.url && <ExtraLandscapeContentContainer /> }

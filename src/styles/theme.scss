@@ -425,10 +425,53 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='rgb(124,170,1
 }
 
 .tweet-button {
-  top: -26px;
+  top: 156px;
+  right: 15px;
+  z-index: 7;
+  position: absolute;
+
+}
+
+.big-picture .tweet-button {
+  top: 160px;
   right: 215px;
   z-index: 7;
   position: absolute;
+}
+
+.mobile.portrait .tweet-button {
+  top: 74px;
+  right: 15px;
+  z-index: 1;
+  position: absolute;
+}
+
+.mobile.landscape .tweet-button {
+  top: 21px;
+  right: 15px;
+  z-index: 7;
+  position: absolute;
+}
+
+.mobile.landscape.big-picture .tweet-button {
+  top: 17px;
+  right: 215px;
+  z-index: 7;
+  position: absolute;
+}
+
+.mobile.portrait.big-picture .tweet-button {
+  width: 18px;
+  top: 64px;
+  right: 124px;
+  z-index: 7;
+  position: absolute;
+  overflow: hidden;
+  > div {
+    position: relative;
+    width: 20px;
+    left: -2px;
+  }
 }
 
 
