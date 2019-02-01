@@ -165,6 +165,7 @@ a {text-decoration: none; transition: all 0.5s; color: $blue;
   padding-top: 0px;
 }
 
+
 /* grid */
 .row {margin-left: -20px; margin-right: -20px; display: flex;}
 .col {padding: 0 20px;
@@ -421,6 +422,13 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='rgb(124,170,1
   top: -40px;
   right: 170px;
   z-index: 7;
+}
+
+.tweet-button {
+  top: -26px;
+  right: 215px;
+  z-index: 7;
+  position: absolute;
 }
 
 

@@ -15,7 +15,8 @@ import {
   ExtraLandscapeContentContainer,
   SwitchButtonContainer,
   ZoomButtonsContainer,
-  FullscreenButtonContainer
+  FullscreenButtonContainer,
+  TweetButton
 } from './BigPicture';
 import MainContentContainer from './MainContentContainer';
 import HomePageUrlContainer from './HomePageUrlContainer';
@@ -203,6 +204,7 @@ const HomePage = ({isEmbed, mainContentMode, ready, hasSelectedItem, filtersVisi
                   <div style={{width:width, height: height, position: 'relative', background: 'rgb(134,175,188)'}}>
                     <ZoomButtonsContainer />
                     <FullscreenButtonContainer />
+                    <TweetButton />
                     <div style={{width: '100%', height: '100%', position: 'relative', overflow: 'scroll', padding: 10}}>
                       { mainContentMode === mainSettings.url && <MainLandscapeContentContainer /> }
                       { mainContentMode === extraSettings.url && <ExtraLandscapeContentContainer /> }
