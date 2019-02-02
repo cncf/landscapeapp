@@ -212,5 +212,8 @@
   },
   "devDependencies": {
     "postinstall-prepare": "1.0.1"
+  },
+  "resolutions": {
+    "terser": "3.14.1"
   }
 }
