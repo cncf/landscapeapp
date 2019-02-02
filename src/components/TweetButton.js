@@ -8,7 +8,7 @@ import React from 'react';
 const TweetButton = function() {
   return <div className="tweet-button">
     <Share url="https://github.com" options={{text: settings.twitter.text, url: settings.twitter.url}} />
-    <span>{window.tweets}</span>
+    <div className="tweet-count"><span>{window.tweets}</span></div>
   </div>
 }
 export default pure(TweetButton);
