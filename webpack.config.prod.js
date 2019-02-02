@@ -15,7 +15,7 @@ const GLOBALS = {
   'process.env.NODE_ENV': JSON.stringify('production'),
   'process.env.GA': require('process').env['GA'],
   'window.possiblePrefix': JSON.stringify(process.env.PROJECT_NAME || ''),
-  'window.tweets': (source.twitter_options || {}).count || 0
+  'window.tweets': (source.twitter_options || {}).count || 0,
   __DEV__: false
 };
 
