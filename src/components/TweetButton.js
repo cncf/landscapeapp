@@ -1,14 +1,15 @@
 // locate zoom buttons
-import { pure } from 'recompose';
+import { withState, pure } from 'recompose';
 import Share from 'react-twitter-widgets/dist/components/Share'
 import settings from 'project/settings.yml'
 
 import React from 'react';
 
-const TweetButton = function() {
+const wrapper = withState('isReady', 'setIsReady', false);
+const TweetButton = function({isReady, setIsReady}) {
   return <div className="tweet-button">
-    <Share url="https://github.com" options={{text: settings.twitter.text, url: settings.twitter.url}} />
-    <div className="tweet-count"><span>{window.tweets}</span></div>
+    <Share url={settings.twitter.url} options={{text: settings.twitter.text}} onLoad={() => setTimeout( () => setIsReady(true), 100)} />
+    { isReady && <div className="tweet-count"><span>{window.tweets}</span></div> }
   </div>
 }
-export default pure(TweetButton);
+export default pure(wrapper(TweetButton));
