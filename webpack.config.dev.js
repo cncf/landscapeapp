@@ -3,7 +3,7 @@ import HtmlWebpackPlugin from 'html-webpack-plugin';
 import path from 'path';
 import {projectPath, settings} from './tools/settings';
 
-const source =  require('js-yaml').safeLoad(fs.readFileSync(path.resolve(projectPath, 'processed_landscape.yml')));
+const source =  require('js-yaml').safeLoad(require('fs').readFileSync(require('path').resolve(projectPath, 'processed_landscape.yml')));
 export default {
   resolve: {
     extensions: ['*', '.js', '.jsx', '.json'],

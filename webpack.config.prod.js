@@ -10,7 +10,7 @@ import WebappWebpackPlugin from 'webapp-webpack-plugin';
 const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 import {projectPath, settings} from './tools/settings';
 
-const source =  require('js-yaml').safeLoad(fs.readFileSync(path.resolve(projectPath, 'processed_landscape.yml')));
+const source =  require('js-yaml').safeLoad(require('fs').readFileSync(require('path').resolve(projectPath, 'processed_landscape.yml')));
 const GLOBALS = {
   'process.env.NODE_ENV': JSON.stringify('production'),
   'process.env.GA': require('process').env['GA'],

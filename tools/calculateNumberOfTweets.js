@@ -42,7 +42,7 @@ async function main() {
     count: result.count + twitterOptions.count,
     since_id: result.since_id
   };
-  const newContent = dump(source);
+  const newContent = "# THIS FILE IS GENERATED AUTOMATICALLY!\n" + dump(source);
   require('fs').writeFileSync(path.resolve(projectPath, 'processed_landscape.yml'), newContent);
 }
 main();
