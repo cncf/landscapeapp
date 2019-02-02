@@ -432,13 +432,14 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='rgb(124,170,1
   width: 100px;
   > .tweet-count {
     position: relative;
-    border: 1px solid blue;
+    border: 1px solid rgb(128, 194, 235);
     width: 35px;
     height: 20px;
     top: -24px;
     left: 64px;
     font-size: 10px;
     line-height: 15px;
+    background: rgb(242, 250, 255);
     span {
       display: inline-block;
       margin-top: 2px;
