@@ -1,16 +1,20 @@
+import _ from 'lodash';
+import fs from 'fs';
+import path from 'path';
 import client from './twitterClient';
+import { projectPath, settings } from './settings';
+import {dump} from './yaml';
 
 // we need to know a latest since_id, otherwise we can only expect
-const baseCount = {
-  count: 444,
-  since_id: '1091279509075021824'
+const defaultOptions = {
+  count: 443,
+  since_id: '1090098766219300865'
 }
 
-async function main() {
+async function getLatestTweets(sinceId) {
   let count = 0;
   async function getTweets(maxId) {
-    console.info(count);
-    const result = await client.get('search/tweets', {q: 'landscape.cncf.io', count: 20, max_id: maxId});
+    const result = await client.get('search/tweets', {q: settings.twitter.search, count: 100, max_id: maxId, since_id: sinceId});
     const withoutLastId = result.statuses.filter( (x) => x.id_str !== maxId);
     count += withoutLastId.length;
     if (withoutLastId.length === 0) {
@@ -20,5 +24,25 @@ async function main() {
     }
   }
   const tweets = await getTweets();
-  console.info(tweets.length, tweets.map ((x) => x.text));
+  const normalTweets = tweets.filter( (x) => x.text.indexOf('RT ') !== 0);
+  return {
+    count: normalTweets.length,
+    since_id: _.max(normalTweets.map((x) => x.id_str)) || sinceId
+  }
 }
+
+async function main() {
+  const source =  require('js-yaml').safeLoad(fs.readFileSync(path.resolve(projectPath, 'processed_landscape.yml')));
+  const twitterOptions = source.twitter_options || defaultOptions;
+  // get a count from processed_landscape or use a base count
+  const result = await getLatestTweets(twitterOptions.since_id);
+  console.info(twitterOptions, result);
+  // write this back to the processed_landscape.yml
+  source.twitter_options = {
+    count: result.count + twitterOptions.count,
+    since_id: result.since_id
+  };
+  const newContent = dump(source);
+  require('fs').writeFileSync(path.resolve(projectPath, 'processed_landscape.yml'), newContent);
+}
+main();
