@@ -16,7 +16,7 @@ async function main() {
       var sections = document.querySelectorAll('.big-picture-section');
       for (var i = 0; i < sections.length; i++) {
         var section = sections[i];
-        var title = section.childNodes[0].innerText;
+        var title = section.childNodes[0].innerText || section.childNodes[1].innerText;
         var sectionBounds = section.getBoundingClientRect();
         var items = section.querySelectorAll('img');
         for (var j = 0; j < items.length; j++) {
