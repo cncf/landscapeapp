@@ -5,7 +5,7 @@ cd $2
 git checkout origin/master
 cd ..
 export PROJECT_PATH=$2
-PROJECT_NAME=$2 npm build
+PROJECT_NAME=$2 npm run build
 mkdir -p dist
 cp -r $2/dist dist/$2
 rm -rf ./$2
