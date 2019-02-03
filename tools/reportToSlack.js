@@ -15,14 +15,26 @@ const fields = _.map(_.keys(errorsAndWarnings.warnings), function(key) {
     short: true
   }
 });
+
+const logContent = (function() {
+  const text = require('fs').readFileSync(process.env.LOGFILE_PATH, 'utf-8');
+  const lines = text.split('\n');
+  const lastYarnLine = lines.indexOf('Processing the tree');
+  const remainingLines = lines.slice(lastYarnLine);
+  return remainingLines.join('\n');
+})();
+
+
 const payload = {
   text: `Update from ${new Date().toISOString()} finished with ${errorStatus}`,
   attachments: [{
     title: 'Log File: (update.log)',
-    text: require('fs').readFileSync(process.env.LOGFILE_PATH, 'utf-8'),
+    text: logContent,
     fields: fields
   }]
 };
+
+
 
 async function main() {
   const result = await rp({
