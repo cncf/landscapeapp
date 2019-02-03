@@ -42,7 +42,7 @@ The update server enhances the source data with the fetched data and saves the r
 If you are working with more than one landscape, there's a trick to run the standard landscapeapp `package.json` functions. Add the following to your `~/.bash_profile`:
 
 ```sh
-function y { PROJECT_PATH=$PWD npm explore interactive-landscape -- yarn "$@"; }
+function y { PROJECT_PATH=$PWD npm explore interactive-landscape -- npm run "$@"; }
 export -f y
 alias yf='y fetch'
 alias yl='y check-links'
@@ -54,7 +54,7 @@ Reload with `. ~/.bash_profile` and then use `y open:src`, `yf`, etc. to run fun
 If you want to fetch updates to the landscapeapp and both the CNCF and LFDL landscapes and update packages on all three, this alias for your `~/.bash_profile` will do so:
 
 ```sh
-alias all='for path in /Users/your-username/dev/{landscapeapp,landscape,lfdl-landscape}; do git -C $path pull -p; yarn; done;'
+alias all='for path in /Users/your-username/dev/{landscapeapp,landscape,lfdl-landscape}; do git -C $path pull -p; npm install; done;'
 
 ```
 
