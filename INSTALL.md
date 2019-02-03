@@ -2,28 +2,27 @@
 
 ## Install on Mac
 1. Install [Homebrew](https://brew.sh/)
-2. `brew install node yarn`
 3. `git clone git@github.com:cncf/landscape.git`
 
 ## Install on Linux
 1. `git clone git@github.com:cncf/landscape.git`
-2. Please follow [this script](https://github.com/cncf/landscape/blob/master/update_server/setup.bash) to install correct versions of `yarn`, `nodejs` and other packages on Linux.
+2. Please follow [this script](https://github.com/cncf/landscape/blob/master/update_server/setup.bash) to install correct versions of `nodejs` and other packages on Linux.
 
 ## Local development
 1. `git pull`
-2. `yarn` (installs dependencies)
-* `yarn open:src` (starts a development server) or
-* `yarn build`, then `yarn open:dist` (compiles and opens a production build)
+2. `npm install` (installs dependencies)
+* `npx open:src` (starts a development server) or
+* `npx build`, then `npx open:dist` (compiles and opens a production build)
 
 ## Review build details
-1. `yarn build`
+1. `npx build`
 1. `open dist/report.html`
 
 ## Updating data
 
-After making your changes to `landscape.yml`, run `yarn fetch` to fetch any needed data and generate [processed_landscape.yml](processed_landscape.yml) and [data.json](https://github.com/cncf/landscape/blob/master/src/data.json).
+After making your changes to `landscape.yml`, run `npx fetch` to fetch any needed data and generate [processed_landscape.yml](processed_landscape.yml) and [data.json](https://github.com/cncf/landscape/blob/master/src/data.json).
 
-`yarn fetch` runs in 4 modes of increasingly aggressive downloading, with a default to easy. Reading data from the cache (meaning from processed_landscape.yml) means that no new data is fetched if the project/product already exists. The modes are:
+`npx fetch` runs in 4 modes of increasingly aggressive downloading, with a default to easy. Reading data from the cache (meaning from processed_landscape.yml) means that no new data is fetched if the project/product already exists. The modes are:
 
 | Data cached            | easy   | medium   | hard   | complete   |
 |------------------------|--------|----------|--------|------------|
