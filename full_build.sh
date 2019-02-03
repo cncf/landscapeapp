@@ -25,6 +25,7 @@ if [ $BRANCH = "master" ]; then
   git push github HEAD:master
   git push github HEAD:master --tags --force
   echo "//registry.npmjs.org/:_authToken=$NPM_TOKEN" > ~/.npmrc
+  git checkout -- .
   npm publish || (sleep 5 && npm publish) || (sleep 30 && npm publish)
   curl -X POST -d {} https://api.netlify.com/build_hooks/5c1bd8e14ed62f166e8d9f7f
   curl -X POST -d {} https://api.netlify.com/build_hooks/5c1bd968fdd72a78a54bdcd1
