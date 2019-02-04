@@ -38,7 +38,8 @@
     "test": "jest",
     "test:CI": "babel-node tools/testCi.js",
     "test:watch": "jest --watch",
-    "analyze-bundle": "babel-node ./tools/analyzeBundle.js"
+    "analyze-bundle": "babel-node ./tools/analyzeBundle.js",
+    "latest": "npm install"
   },
   "author": "CNCF",
   "license": "Apache-2.0",
