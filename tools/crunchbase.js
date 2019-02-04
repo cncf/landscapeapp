@@ -1,5 +1,4 @@
 import colors from 'colors';
-import yahooFinance from 'yahoo-finance';
 import process from 'process'
 import rp from './rpRetry'
 import Promise from 'bluebird'
@@ -97,12 +96,19 @@ async function getMarketCap(ticker) {
   debug(`Extracting the ticker from ${ticker}`);
   var quote;
   try {
-    quote = marketCapCache[ticker] ||  await yahooFinance.quote({symbol: ticker, modules: ['summaryDetail']});
+    quote = marketCapCache[ticker];
+    if (!quote) {
+      const response = (await rp({
+        url: `https://query2.finance.yahoo.com/v10/finance/quoteSummary/${ticker}?modules=summaryDetail`,
+        json: true
+      }));
+      quote = response.quoteSummary.result[0].summaryDetail.marketCap;
+    }
   } catch(ex) {
     throw new Error(`Can't resolve stock ticker ${ticker}; please manually add a "stock_ticker" key to landscape.yml or set to null`);
   }
   marketCapCache[ticker] = quote;
-  const marketCap = quote.summaryDetail.marketCap;
+  const marketCap = quote;
   const result = marketCap.raw || marketCap;
   if (!_.isNumber(result)) {
     throw new Error('marketCap ' + JSON.stringify(marketCap) + ' is not a number!');
