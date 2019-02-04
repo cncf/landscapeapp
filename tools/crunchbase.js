@@ -96,10 +96,14 @@ async function getMarketCap(ticker) {
   debug(`Extracting the ticker from ${ticker}`);
   var quote;
   try {
-    quote = marketCapCache[ticker] ||  (await rp({
-      url: `https://query2.finance.yahoo.com/v10/finance/quoteSummary/${ticker}?modules=summaryDetail`,
-      format: 'json'
-    })).quoteSummary.result[0].summaryDetail.marketCap;
+    quote = marketCapCache[ticker];
+    if (!quote) {
+      const response = (await rp({
+        url: `https://query2.finance.yahoo.com/v10/finance/quoteSummary/${ticker}?modules=summaryDetail`,
+        json: true
+      }));
+      quote = response.quoteSummary.result[0].summaryDetail.marketCap;
+    }
   } catch(ex) {
     throw new Error(`Can't resolve stock ticker ${ticker}; please manually add a "stock_ticker" key to landscape.yml or set to null`);
   }
