@@ -160,7 +160,7 @@
     "string-replace-all": "1.0.3",
     "style-loader": "0.23.1",
     "svg-autocrop": "1.0.17",
-    "terser": "3.14.1",
+    "terser": "^3.14.1",
     "terser-webpack-plugin": "1.2.1",
     "traverse": "0.6.6",
     "twitter": "1.7.1",
