@@ -15,7 +15,7 @@ import { fetchTwitterEntries, extractSavedTwitterEntries } from './twitter';
 import { fetchBestPracticeEntriesWithFullScan, fetchBestPracticeEntriesWithIndividualUrls, extractSavedBestPracticeEntries } from './fetchBestPractices';
 import shortRepoName from '../src/utils/shortRepoName';
 
-var useCrunchbaseCache = true;
+var useCrunchbaseCache = false;
 var useImagesCache=true;
 var useGithubCache=true;
 var useGithubStartDatesCache=true;
