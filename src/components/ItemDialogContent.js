@@ -16,6 +16,7 @@ import '../styles/itemModal.scss';
 import fields from '../types/fields';
 import isGoogle from '../utils/isGoogle';
 import settings from 'project/settings.yml';
+import TweetButton from './TweetButton';
 
 let productScrollEl = null;
 const formatDate = function(x) {
@@ -263,6 +264,7 @@ const ItemDialogContent = ({itemInfo}) => {
               <div>{openSourceTag(itemInfo.oss)}</div>
               <div>{licenseTag(itemInfo)}</div>
               <div>{badgeTag(itemInfo)}</div>
+              <TweetButton/>
             </div>
 
             <div className="product-scroll" ref={(x) => productScrollEl = x }>

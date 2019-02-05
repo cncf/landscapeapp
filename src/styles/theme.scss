@@ -507,6 +507,25 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='rgb(124,170,1
   }
 }
 
+.modal-content .tweet-button {
+  right: 0;
+  top: 0;
+  position: relative;
+}
+
+.mobile.portrait .modal-content .tweet-button {
+  right: 0;
+  top: 0;
+  position: relative;
+}
+
+.mobile.landscape .modal-content .tweet-button {
+  right: inherit;
+  top: -32px;
+  left: 2px;
+  position: absolute;
+}
+
 
 .mobile.landscape {
   .fullscreen-button {
