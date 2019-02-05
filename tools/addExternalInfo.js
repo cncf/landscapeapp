@@ -181,7 +181,7 @@ async function main() {
         delete node.image_data.name;
       }
       // best practicies
-      const bestPracticeEntry = _.clone(_.find(bestPracticeEntries, function(x) {
+      let bestPracticeEntry = _.clone(_.find(bestPracticeEntries, function(x) {
         if (!x) {
           return false;
         }
@@ -193,11 +193,16 @@ async function main() {
           return shortName === shortRepoName(node.repo_url);
         }
         return false;
-      })) || {repo_url: node.url_for_bestpractices || node.repo_url, badge: false, percentage: null };
-      if (bestPracticeEntry) {
-        node.best_practice_data = bestPracticeEntry;
-        delete node.best_practice_data.repo_url;
+      }));
+      if (!bestPracticeEntry || _.isEmpty(bestPracticeEntry) || (_.isUndefined(bestPracticeEntry.badge) && _.isUndefined(bestPracticeEntry.percentage))) {
+        bestPracticeEntry = {
+          repo_url: node.url_for_bestpractices || node.repo_url,
+          badge: false,
+          percentage: null
+        };
       }
+      node.best_practice_data = bestPracticeEntry;
+      delete node.best_practice_data.repo_url;
       // twitter
       const twitter = actualTwitter(node, node.crunchbase_data);
 

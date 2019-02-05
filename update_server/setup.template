@@ -13,11 +13,6 @@ curl -o- https://raw.githubusercontent.com/creationix/nvm/v0.34.0/install.sh | b
 apt-get update
 apt-get -y install build-essential gconf-service libasound2 libatk1.0-0 libc6 libcairo2 libcups2 libdbus-1-3 libexpat1 libfontconfig1 libgcc1 libgconf-2-4 libgdk-pixbuf2.0-0 libglib2.0-0 libgtk-3-0 libnspr4 libpango-1.0-0 libpangocairo-1.0-0 libstdc++6 libx11-6 libx11-xcb1 libxcb1 libxcomposite1 libxcursor1 libxdamage1 libxext6 libxfixes3 libxi6 libxrandr2 libxrender1 libxss1 libxtst6 ca-certificates fonts-liberation libappindicator1 libnss3 lsb-release xdg-utils wget
 
-which yarn || (
-  curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | sudo apt-key add -
-  echo "deb https://dl.yarnpkg.com/debian/ stable main" | sudo tee /etc/apt/sources.list.d/yarn.list
-  apt-get update && apt-get -y install yarn
-)
 echo '
 <%= update_minute %> <%= update_hour %> * * * root bash -l -c "bash /root/update.sh"
 ' > /etc/cron.d/updater
@@ -29,7 +24,7 @@ echo '
   rm -rf /repo
   git clone https://$GITHUB_USER:$GITHUB_TOKEN@github.com/<%= repo %> /repo
   cd /repo
-  yarn && yarn upgrade && cp ./node_modules/interactive-landscape/.nvmrc . && nvm install `cat .nvmrc` && nvm use && yarn && yarn upgrade && (export PROJECT_PATH="$PWD"; npm explore interactive-landscape -- npm run update) && git add . && git config --global user.email "info@cncf.io" && git config --global user.name "CNCF-bot" && git commit -m "Automated update by CNCF-bot" && git push origin HEAD
+  npm install && npm install interactive-landscape@latest && cp ./node_modules/interactive-landscape/.nvmrc . && nvm install `cat .nvmrc` && nvm use && npm install && npm install interactive-landscape@latest && (export PROJECT_PATH="$PWD"; npm explore interactive-landscape -- npm run update) && git add . && git config --global user.email "info@cncf.io" && git config --global user.name "CNCF-bot" && git commit -m "Automated update by CNCF-bot" && git push origin HEAD
 ' > /root/real_update.sh
 echo '
   set -e
