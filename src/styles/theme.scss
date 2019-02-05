@@ -376,6 +376,7 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='rgb(124,170,1
   position: fixed;
   top:  4px;
   left: 200px;
+  width: calc(100% - 200px);
 }
 .mobile.landscape.big-picture .big-picture-switch {
   z-index: 5;
@@ -424,22 +425,25 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='rgb(124,170,1
   z-index: 7;
 }
 
+.big-picture .big-picture-switch .tweet-button {
+  display: none;
+}
+
 .tweet-button {
-  top: 156px;
-  right: 15px;
+  top: 15px;
+  right: 5px;
+  height: 30px;
   z-index: 7;
   position: absolute;
   width: 100px;
   > .tweet-count {
     position: relative;
-    border: 1px solid rgb(128, 194, 235);
     width: 35px;
     height: 20px;
     top: -24px;
     left: 64px;
     font-size: 10px;
     line-height: 15px;
-    background: rgb(242, 250, 255);
     span {
       display: inline-block;
       margin-top: 2px;
@@ -447,40 +451,49 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='rgb(124,170,1
 
     }
   }
+  svg {
+    width: 35px;
+    height: 20px;
+    position: absolute;
+    left: 0;
+    z-index: -1;
+    stroke: rgb(128, 194, 235);
+    fill: rgb(242, 250, 255);
+  }
 }
 
 .big-picture .tweet-button {
-  top: 160px;
+  top: -25px;
   right: 215px;
   z-index: 7;
   position: absolute;
 }
 
 .mobile.portrait .tweet-button {
-  top: 74px;
+  top: 15px;
   right: 15px;
   z-index: 1;
   position: absolute;
 }
 
 .mobile.landscape .tweet-button {
-  top: 21px;
+  top: 18px;
   right: 15px;
   z-index: 7;
   position: absolute;
 }
 
 .mobile.landscape.big-picture .tweet-button {
-  top: 17px;
-  right: 215px;
+  top: -53px;
+  right: 210px;
   z-index: 7;
   position: absolute;
 }
 
 .mobile.portrait.big-picture .tweet-button {
   width: 18px;
-  top: 64px;
-  right: 124px;
+  top: -33px;
+  right: 112px;
   z-index: 7;
   position: absolute;
   overflow: hidden;
@@ -514,6 +527,7 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='rgb(124,170,1
     padding-left: 6px;
     padding-right: 6px;
   }
+  width: 100%;
 }
 
 .mobile.fullscreen {
