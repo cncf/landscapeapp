@@ -337,7 +337,7 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='rgb(124,170,1
 }
 
 .zoom-buttons {
-  top: -40px;
+  top: -47px;
   right: 0px;
   z-index: 7;
 }
@@ -365,6 +365,16 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='rgb(124,170,1
   max-width: 23px;
   min-width: 0;
   margin-top: -7px;
+}
+
+.desktop .zoom-buttons {
+  @media (max-width: 536px) {
+    button {
+      padding: 5px;
+      min-width: 0;
+      margin-top: 5px;
+    }
+  }
 }
 
 .mobile.landscape .landscapeapp-logo {
@@ -420,9 +430,15 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='rgb(124,170,1
 }
 
 .fullscreen-button {
-  top: -40px;
+  top: -47px;
   right: 170px;
   z-index: 7;
+}
+.desktop .fullscreen-button {
+  @media (max-width: 536px) {
+    right: 110px;
+    top: -48px;
+  }
 }
 
 .big-picture .big-picture-switch .tweet-button {
@@ -463,7 +479,7 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='rgb(124,170,1
 }
 
 .big-picture .tweet-button {
-  top: -25px;
+  top: -33px;
   right: 215px;
   z-index: 7;
   position: absolute;
@@ -510,7 +526,7 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='rgb(124,170,1
 .desktop .tweet-button {
   @media (max-width: 620px) {
     width: 18px;
-    top: -24px;
+    top: -32px;
     position: absolute;
     overflow: hidden;
     > div {
@@ -521,6 +537,10 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='rgb(124,170,1
     > .tweet-count {
       display: none;
     }
+  }
+  @media (max-width: 536px) {
+    right: 150px;
+    top: -34px;
   }
 }
 
