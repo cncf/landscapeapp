@@ -126,14 +126,21 @@ $mobilewidth: 710px;
       padding-left: 32px;
       padding-top: 270px;
     }
+    .product-scroll {
+      left: calc(10% - 20px);
+    }
+    .landscape-layout {
+      position: relative;
+    }
+    .right-column {
+      padding-left: 40%;
+    }
     .product-logo {
-      top: 50px;
-      left: 49px;
+      top: 10px;
       height: 152px;
       width: calc(34% - 49px);
     }
     .product-tags {
-      left: 49px;
       top: 210px;
     }
   }
