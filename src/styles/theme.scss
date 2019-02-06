@@ -507,6 +507,24 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='rgb(124,170,1
   }
 }
 
+.desktop .tweet-button {
+  @media (max-width: 620px) {
+    width: 18px;
+    top: -24px;
+    position: absolute;
+    overflow: hidden;
+    > div {
+      position: relative;
+      width: 20px;
+      left: -4px;
+    }
+    > .tweet-count {
+      display: none;
+    }
+  }
+}
+
+
 .modal-content .tweet-button {
   right: 0;
   top: 0;
