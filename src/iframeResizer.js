@@ -1,4 +1,4 @@
-document.on('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', function() {
   iFrameResize({
     log:true,
     messageCallback         : function(messageData){ // Callback fn when message is received
