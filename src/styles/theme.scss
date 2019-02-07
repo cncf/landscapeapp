@@ -332,6 +332,9 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='rgb(124,170,1
 .mobile .big-picture-switch * {
   font-size: 13px !important;
 }
+.mobile .big-picture-switch .tweet-button a span {
+  font-size: 10px !important;
+}
 .big-picture-switch * {
   text-transform: none;
 }
@@ -455,8 +458,8 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='rgb(124,170,1
   > .tweet-count {
     position: relative;
     width: 35px;
-    height: 20px;
-    top: -24px;
+    height: 19px;
+    top: -22.5px;
     left: 64px;
     font-size: 10px;
     line-height: 15px;
@@ -466,15 +469,37 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='rgb(124,170,1
       margin-left: 6px;
 
     }
+    svg {
+      width: 35px;
+      height: 21px;
+      position: absolute;
+      left: 0;
+      z-index: -1;
+      stroke: rgb(128, 194, 235);
+      fill: rgb(242, 250, 255);
+    }
   }
-  svg {
-    width: 35px;
-    height: 21px;
-    position: absolute;
-    left: 0;
-    z-index: -1;
-    stroke: rgb(128, 194, 235);
-    fill: rgb(242, 250, 255);
+  a {
+    display: inline-block;
+    border-radius: 2px;
+    width: 60px;
+    height: 19px;
+    background: rgb(38, 150, 221);
+    color: white;
+    svg {
+      margin-top: 2px;
+      margin-left: 5px;
+      width: 16px;
+      height: 16px;
+      fill: white;
+    }
+    span {
+      position: relative;
+      margin-left: 2px;
+      top: -4px;
+      font-size: 10px !important;
+      font-weight: bold;
+    }
   }
 }
 
@@ -520,6 +545,13 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='rgb(124,170,1
   }
   > .tweet-count {
     display: none;
+  }
+  a {
+    background: none;
+    svg {
+      margin-left: 0;
+      fill: rgb(89, 173, 235);
+    }
   }
 }
 
