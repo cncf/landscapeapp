@@ -141,7 +141,7 @@ $mobilewidth: 710px;
       width: calc(34% - 49px);
     }
     .product-tags {
-      top: 210px;
+      top: 195px;
     }
   }
 }
@@ -208,6 +208,17 @@ $mobilewidth: 710px;
       height: auto;
       overflow: visible;
       position: static;
+  }
+
+}
+
+.single-column {
+  width: 100%;
+  .row .col:nth-child(1) {
+    width: 20%;
+  }
+  .row .col:nth-child(2) {
+    width: 80%;
   }
 
 }
