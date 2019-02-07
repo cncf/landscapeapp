@@ -6,11 +6,6 @@ import { projectPath, settings } from './settings';
 import {dump} from './yaml';
 
 // we need to know a latest since_id, otherwise we can only expect
-const defaultOptions = {
-  count: 443,
-  since_id: '1090098766219300865'
-}
-
 async function getLatestTweets(sinceId) {
   let count = 0;
   async function getTweets(maxId) {
@@ -33,7 +28,7 @@ async function getLatestTweets(sinceId) {
 
 async function main() {
   const source =  require('js-yaml').safeLoad(fs.readFileSync(path.resolve(projectPath, 'processed_landscape.yml')));
-  const twitterOptions = source.twitter_options || defaultOptions;
+  const twitterOptions = source.twitter_options || { count: 0};
   // get a count from processed_landscape or use a base count
   const result = await getLatestTweets(twitterOptions.since_id);
   console.info(twitterOptions, result);
