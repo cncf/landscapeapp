@@ -4,6 +4,14 @@ $blue: #5093e0;
 $blue-hover: #0e61c0;
 $mobilewidth: 812px;
 
+html.desktop {
+  min-width: 560px;
+}
+.desktop body {
+  min-width: 560px;
+}
+
+
 html {-webkit-text-size-adjust: 100%;}
 body {background-color:#F4F4f4 !important; font-family: Arial, Helvetica, sans-serif;}
 body.popup {background-color:transparent !important;}
@@ -164,6 +172,7 @@ a {text-decoration: none; transition: all 0.5s; color: $blue;
   margin-left: 0;
   padding-top: 0px;
 }
+
 
 /* grid */
 .row {margin-left: -20px; margin-right: -20px; display: flex;}
@@ -331,12 +340,15 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='rgb(124,170,1
 .mobile .big-picture-switch * {
   font-size: 13px !important;
 }
+.mobile .big-picture-switch .tweet-button a span {
+  font-size: 10px !important;
+}
 .big-picture-switch * {
   text-transform: none;
 }
 
 .zoom-buttons {
-  top: -40px;
+  top: -47px;
   right: 0px;
   z-index: 7;
 }
@@ -366,6 +378,16 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='rgb(124,170,1
   margin-top: -7px;
 }
 
+.desktop .zoom-buttons {
+  @media (max-width: 536px) {
+    button {
+      padding: 5px;
+      min-width: 0;
+      margin-top: 5px;
+    }
+  }
+}
+
 .mobile.landscape .landscapeapp-logo {
   display: none;
 }
@@ -375,6 +397,7 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='rgb(124,170,1
   position: fixed;
   top:  4px;
   left: 200px;
+  width: calc(100% - 200px);
 }
 .mobile.landscape.big-picture .big-picture-switch {
   z-index: 5;
@@ -418,9 +441,178 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='rgb(124,170,1
 }
 
 .fullscreen-button {
-  top: -40px;
+  top: -47px;
   right: 170px;
   z-index: 7;
+}
+.desktop .fullscreen-button {
+  @media (max-width: 536px) {
+    right: 110px;
+    top: -48px;
+  }
+}
+
+.big-picture .big-picture-switch .tweet-button {
+  display: none;
+}
+
+.tweet-button {
+  top: 15px;
+  right: 5px;
+  height: 30px;
+  z-index: 7;
+  position: absolute;
+  width: 100px;
+  > .tweet-count {
+    position: relative;
+    width: 35px;
+    height: 19px;
+    top: -22.5px;
+    left: 64px;
+    font-size: 10px;
+    line-height: 15px;
+    span {
+      display: inline-block;
+      margin-top: 2px;
+      margin-left: 6px;
+
+    }
+    svg {
+      width: 35px;
+      height: 21px;
+      position: absolute;
+      left: 0;
+      z-index: -1;
+      stroke: rgb(128, 194, 235);
+      fill: rgb(242, 250, 255);
+    }
+  }
+  a {
+    display: inline-block;
+    border-radius: 2px;
+    width: 60px;
+    height: 19px;
+    background: rgb(38, 150, 221);
+    color: white;
+    svg {
+      margin-top: 2px;
+      margin-left: 5px;
+      width: 16px;
+      height: 16px;
+      fill: white;
+    }
+    span {
+      position: relative;
+      margin-left: 2px;
+      top: -4px;
+      font-size: 10px !important;
+      font-weight: bold;
+    }
+  }
+}
+
+.big-picture .tweet-button {
+  top: -33px;
+  right: 215px;
+  z-index: 7;
+  position: absolute;
+}
+
+.mobile.portrait .tweet-button {
+  top: 15px;
+  right: 15px;
+  z-index: 1;
+  position: absolute;
+}
+
+.mobile.landscape .tweet-button {
+  top: 18px;
+  right: 15px;
+  z-index: 7;
+  position: absolute;
+}
+
+.mobile.landscape.big-picture .tweet-button {
+  top: -53px;
+  right: 210px;
+  z-index: 7;
+  position: absolute;
+}
+
+.mobile.portrait.big-picture .tweet-button {
+  width: 18px;
+  top: -33px;
+  right: 112px;
+  z-index: 7;
+  position: absolute;
+  overflow: hidden;
+  > div {
+    position: relative;
+    width: 20px;
+    left: -2px;
+  }
+  > .tweet-count {
+    display: none;
+  }
+  a {
+    background: none;
+    svg {
+      margin-left: 0;
+      fill: rgb(89, 173, 235);
+    }
+  }
+}
+
+.desktop.big-picture .tweet-button {
+  @media (max-width: 620px) {
+    width: 18px;
+    top: -32px;
+    position: absolute;
+    overflow: hidden;
+    > div {
+      position: relative;
+      width: 20px;
+      left: -4px;
+    }
+    > .tweet-count {
+      display: none;
+    }
+    a {
+      background: inherit;
+      svg {
+        margin-top: 2px;
+        margin-left: 1px;
+        width: 16px;
+        height: 16px;
+        fill: rgb(38, 150, 221);
+      }
+    }
+  }
+  @media (max-width: 536px) {
+    right: 150px;
+    top: -34px;
+
+  }
+}
+
+
+.modal-content .tweet-button {
+  right: 0;
+  top: 0;
+  position: relative;
+}
+
+.mobile.portrait .modal-content .tweet-button {
+  right: 0;
+  top: 0;
+  position: relative;
+}
+
+.mobile.landscape .modal-content .tweet-button {
+  right: inherit;
+  top: -25px;
+  left: 2px;
+  position: absolute;
 }
 
 
@@ -443,6 +635,7 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='rgb(124,170,1
     padding-left: 6px;
     padding-right: 6px;
   }
+  width: 100%;
 }
 
 .mobile.fullscreen {

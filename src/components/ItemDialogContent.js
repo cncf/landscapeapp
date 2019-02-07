@@ -16,6 +16,8 @@ import '../styles/itemModal.scss';
 import fields from '../types/fields';
 import isGoogle from '../utils/isGoogle';
 import settings from 'project/settings.yml';
+import TweetButton from './TweetButton';
+import currentDevice from 'current-device';
 
 let productScrollEl = null;
 const formatDate = function(x) {
@@ -250,29 +252,26 @@ const ItemDialogContent = ({itemInfo}) => {
     </div>
   );
 
-  return (
-        <div className="modal-content">
-            <KeyHandler keyEventName="keydown" keyValue="ArrowUp" onKeyHandle={handleUp} />
-            <KeyHandler keyEventName="keydown" keyValue="ArrowDown" onKeyHandle={handleDown} />
+  const scrollAllContent = currentDevice.mobile() && currentDevice.landscape();
+  const productLogoAndTags = [
             <div className="product-logo" style={getRelationStyle(itemInfo.relation)}>
               <img src={itemInfo.href} className='product-logo-img'/>
-            </div>
-
+            </div>,
             <div className="product-tags">
               <div>{projectTag(itemInfo)}</div>
               <div>{openSourceTag(itemInfo.oss)}</div>
               <div>{licenseTag(itemInfo)}</div>
               <div>{badgeTag(itemInfo)}</div>
+              <TweetButton/>
             </div>
-
-            <div className="product-scroll" ref={(x) => productScrollEl = x }>
-
+  ];
+  const productInfo = [
               <div className="product-main">
                 <div className="product-name">{itemInfo.name}</div>
                 <div className="product-parent"><InternalLink to={linkToOrganization}>{itemInfo.organization}</InternalLink></div>
                 <div className="product-category">{itemCategory(itemInfo.landscape)}</div>
                 <div className="product-description">{itemInfo.description}</div>
-              </div>
+              </div>,
 
               <div className="product-properties">
                 <div className="product-property row">
@@ -318,7 +317,7 @@ const ItemDialogContent = ({itemInfo}) => {
                 </div>
                 }
                 <div className="row">
-                  { isMobile &&  <div className="col col-50">
+                  { isMobile &&  <div className="single-column">
                     { twitterElement }
                     { latestTweetDateElement }
                     { firstCommitDateElement }
@@ -348,6 +347,23 @@ const ItemDialogContent = ({itemInfo}) => {
                   }
               </div>
             </div>
+  ];
+
+  return (
+        <div className="modal-content">
+            <KeyHandler keyEventName="keydown" keyValue="ArrowUp" onKeyHandle={handleUp} />
+            <KeyHandler keyEventName="keydown" keyValue="ArrowDown" onKeyHandle={handleDown} />
+
+            { !scrollAllContent && productLogoAndTags }
+
+            <div className="product-scroll" ref={(x) => productScrollEl = x }>
+              { !scrollAllContent && productInfo }
+              { scrollAllContent && <div className="landscape-layout">
+                  {productLogoAndTags}
+                  <div className="right-column">{productInfo}</div>
+                </div>
+              }
+
 
               { showTwitter && itemInfo.twitter && (
                 <div className="product-twitter">

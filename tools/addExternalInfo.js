@@ -216,6 +216,8 @@ async function main() {
     }
   });
 
+  newSource.twitter_options = require('js-yaml').safeLoad(require('fs').readFileSync(require('path').resolve(projectPath, 'processed_landscape.yml'))).twitter_options;
+
   const newContent = "# THIS FILE IS GENERATED AUTOMATICALLY!\n" + dump(newSource);
   require('fs').writeFileSync(path.resolve(projectPath, 'processed_landscape.yml'), newContent);
 }

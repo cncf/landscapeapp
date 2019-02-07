@@ -17,6 +17,7 @@ import {
   ZoomButtonsContainer,
   FullscreenButtonContainer
 } from './BigPicture';
+import TweetButton from './TweetButton';
 import MainContentContainer from './MainContentContainer';
 import HomePageUrlContainer from './HomePageUrlContainer';
 import HomePageScrollerContainer from './HomePageScrollerContainer';
@@ -31,6 +32,7 @@ import EmbeddedFooter from './EmbeddedFooter';
 
 import isIphone from '../utils/isIphone';
 import isMobile from '../utils/isMobile';
+import isDesktop from '../utils/isDesktop';
 import isGoogle from '../utils/isGoogle';
 import bus from '../reducers/bus';
 import settings from 'project/settings.yml'
@@ -200,9 +202,10 @@ const HomePage = ({isEmbed, mainContentMode, ready, hasSelectedItem, filtersVisi
           { isBigPicture &&
               <AutoSizer>
                 {({ height, width }) => (
-                  <div style={{width:width, height: height, position: 'relative', background: 'rgb(134,175,188)'}}>
+                  <div style={{minWidth: (isDesktop ? 560 : undefined), width:width, height: height, position: 'relative', background: 'rgb(134,175,188)'}}>
                     <ZoomButtonsContainer />
                     <FullscreenButtonContainer />
+                    <TweetButton />
                     <div style={{width: '100%', height: '100%', position: 'relative', overflow: 'scroll', padding: 10}}>
                       { mainContentMode === mainSettings.url && <MainLandscapeContentContainer /> }
                       { mainContentMode === extraSettings.url && <ExtraLandscapeContentContainer /> }
