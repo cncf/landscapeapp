@@ -573,6 +573,17 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='rgb(124,170,1
   @media (max-width: 536px) {
     right: 150px;
     top: -34px;
+    a {
+      background: inherit;
+      svg {
+        margin-top: 2px;
+        margin-left: 1px;
+        width: 16px;
+        height: 16px;
+        fill: rgb(38, 150, 221);
+      }
+    }
+
   }
 }
 
