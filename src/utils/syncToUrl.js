@@ -148,7 +148,7 @@ function addMainContentModeToParams({mainContentMode, params}) {
 }
 
 function addZoomToParams({zoom, mainContentMode, params}) {
-  if (zoom !== initialState.zoom && mainContentMode !== 'card') {
+  if (zoom && zoom !== initialState.zoom && mainContentMode !== 'card') {
     params['zoom'] = zoom * 100;
   }
 }
