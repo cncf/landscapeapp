@@ -317,7 +317,7 @@ const ItemDialogContent = ({itemInfo}) => {
                 </div>
                 }
                 <div className="row">
-                  { isMobile &&  <div className="single-column">
+                  { isMobile &&  <div className="col col-50 single-column">
                     { twitterElement }
                     { latestTweetDateElement }
                     { firstCommitDateElement }

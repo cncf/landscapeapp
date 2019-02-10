@@ -212,13 +212,18 @@ $mobilewidth: 710px;
 
 }
 
-.single-column {
-  width: 100%;
-  .row .col:nth-child(1) {
-    width: 20%;
-  }
-  .row .col:nth-child(2) {
-    width: 80%;
-  }
+.landscape {
+  .modal {
+    .single-column {
+      .product-property .col:nth-child(1) {
+        display: inline-block;
+        width: 40%;
+      }
+      .product-property .col:nth-child(2) {
+        display: inline-block;
+        width: 60%
+      }
 
+    }
+  }
 }
