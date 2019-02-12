@@ -32,7 +32,7 @@ async function getLandscapeItems() {
   return _.uniq(items);
 }
 
-async function checkUrl(url) {
+export async function checkUrl(url) {
   function getFullLocation(url, redirect) {
     if (redirect.indexOf('http') === 0) {
       return redirect;
@@ -118,7 +118,7 @@ function formatError(record) {
     return `homepage ${record.homepageUrl} redirects to ${record.location}`;
   }
   if (record.type === 'redirect' && record.repo) {
-    return `repo ${record.repo} redirects to ${record.repo}`;
+    return `repo ${record.repo} redirects to ${record.location}`;
   }
   if (record.type === 'error') {
     const kind = record.homepageUrl ? `homepage ${record.homepageUrl}` : `repo ${record.repo}`;
