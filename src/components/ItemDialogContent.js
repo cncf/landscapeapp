@@ -1,5 +1,5 @@
 import React from 'react';
-import { pure } from 'recompose';
+import { pure, withState } from 'recompose';
 import Timeline from 'react-twitter-widgets/dist/components/Timeline.js';
 import SvgIcon from '@material-ui/core/SvgIcon';
 import StarIcon from '@material-ui/icons/Star';
@@ -134,8 +134,13 @@ function handleDown() {
 const $script = require('scriptjs'); // eslint-disable-line global-require
 $script('https://platform.twitter.com/widgets.js', 'twitter-widgets');
 
-
-const ItemDialogContent = ({itemInfo}) => {
+let timeoutId;
+const ItemDialogContent = ({itemInfo, isLandscape, setIsLandscape}) => {
+  if (!timeoutId) {
+    timeoutId = setInterval(function() {
+      setIsLandscape(currentDevice.landscape());
+    }, 1000);
+  }
 
 
 
@@ -252,7 +257,7 @@ const ItemDialogContent = ({itemInfo}) => {
     </div>
   );
 
-  const scrollAllContent = currentDevice.mobile() && currentDevice.landscape();
+  const scrollAllContent = currentDevice.mobile() && isLandscape;
   const productLogoAndTags = [
             <div className="product-logo" style={getRelationStyle(itemInfo.relation)}>
               <img src={itemInfo.href} className='product-logo-img'/>
@@ -384,4 +389,5 @@ const ItemDialogContent = ({itemInfo}) => {
         </div>
   );
 }
-export default pure(ItemDialogContent);
+const wrapper = withState('isLandscape', 'setIsLandscape', currentDevice.landscape());
+export default wrapper(pure(ItemDialogContent));
