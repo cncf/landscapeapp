@@ -1,7 +1,6 @@
 // locate zoom buttons
 import { connect } from 'react-redux';
 import { withState, pure } from 'recompose';
-import Share from 'react-twitter-widgets/dist/components/Share'
 import settings from 'project/settings.yml'
 import qs from 'query-string';
 
@@ -25,7 +24,7 @@ const TweetButton = function({url}) {
   });
   const twitterUrl = `https://twitter.com/intent/tweet?${params}`;
   return <div className="tweet-button">
-    <a href={twitterUrl}>{bird}<span>Share</span></a>
+    <a href={twitterUrl}>{bird}<span>Tweet</span></a>
     <div className="tweet-count"><span>{window.tweets}</span>{countBorder}</div>
   </div>
 }
