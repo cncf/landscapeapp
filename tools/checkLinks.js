@@ -50,7 +50,7 @@ export async function checkUrl(url) {
     let result = null;
     try {
       await page.goto(url);
-      await Promise.delay(10 * 1000);
+      await Promise.delay(5 * 1000);
       const newUrl = await page.evaluate ( (x) => window.location.href );
       await browser.close();
       if (newUrl === url) {
@@ -160,23 +160,34 @@ async function main() {
     if (result !== 'ok') {
       errors.push({'homepageUrl': item.homepageUrl,...result});
       require('process').stdout.write(fatal("F"));
+      console.info(result);
     } else {
       require('process').stdout.write(".");
     }
-  }, {concurrency: 10});
+  }, {concurrency: 4});
   await Promise.map(items, async function(item) {
     if (item.repo) {
       const result = await checkUrl(item.repo);
       if (result !== 'ok') {
         errors.push({'repo': item.repo, ...result});
         require('process').stdout.write(fatal("F"));
+        console.info(result);
       } else {
         require('process').stdout.write(".");
       }
     }
-  }, {concurrency: 10});
+  }, {concurrency: 4});
   console.info('');
-  _.uniq(errors).forEach((x) => console.info(formatError(x)));
-  process.exit(errors.length === 0 ? 0 : 1);
+  const uniqErrors = _.uniq(errors);
+  const errorsText = uniqErrors.map( (x) => formatError(x)).join('\n');
+  const redirectsCount = uniqErrors.filter( (x) => x.type === 'redirect').length;
+  const errorsCount = uniqErrors.filter( (x) => x.type !== 'redirect').length;
+  const result = {
+    numberOfErrors: errorsCount,
+    numberOfRedirects: redirectsCount,
+    messages: errorsText
+  }
+  console.info(result);
+  require('fs').writeFileSync('/tmp/links.json', JSON.stringify(result, null, 4));
 }
 main();
