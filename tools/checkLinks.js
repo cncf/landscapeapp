@@ -15,6 +15,12 @@ const rpWithRetry = async function(args) {
 process.setMaxListeners(0);
 
 
+try {
+  require('fs').unlinkSync('/tmp/links.json');
+} catch(ex) {
+
+}
+
 
 async function getLandscapeItems() {
   const source = require('js-yaml').safeLoad(require('fs').readFileSync(path.resolve(projectPath, 'landscape.yml')));
