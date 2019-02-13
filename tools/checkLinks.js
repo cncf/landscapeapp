@@ -46,6 +46,28 @@ export async function checkUrl(url) {
     const puppeteer = require('puppeteer');
     const browser = await puppeteer.launch();
     const page = await browser.newPage();
+    page.setDefaultNavigationTimeout(120 * 1000);
+    let result = null;
+    try {
+      await page.goto(url);
+      await Promise.delay(10 * 1000);
+      const newUrl = await page.evaluate ( (x) => window.location.href );
+      await browser.close();
+      if (newUrl === url) {
+        return 'ok';
+      } else {
+        return {type: 'redirect', redirect: newUrl};
+      }
+    } catch(ex2) {
+      await browser.close();
+      return {type: 'error', message: ex2.message.substring(0, 200)};
+    }
+  }
+
+  async function quickCheckViaPuppeteer() {
+    const puppeteer = require('puppeteer');
+    const browser = await puppeteer.launch();
+    const page = await browser.newPage();
     await page.setRequestInterception(true);
     page.on('request', request => {
       if (request.resourceType() !== 'document')
@@ -106,11 +128,11 @@ export async function checkUrl(url) {
     }
   }
 
-  try {
-    return await checkWithRequest();
-  } catch (ex) {
-    return await checkViaPuppeteer();
+  const result = await quickCheckViaPuppeteer(); // detect errors and http redirects
+  if (result !== 'ok') {
+    return result;
   }
+  return await checkViaPuppeteer();
 }
 
 function formatError(record) {
@@ -141,7 +163,7 @@ async function main() {
     } else {
       require('process').stdout.write(".");
     }
-  }, {concurrency: 25});
+  }, {concurrency: 10});
   await Promise.map(items, async function(item) {
     if (item.repo) {
       const result = await checkUrl(item.repo);
@@ -152,7 +174,7 @@ async function main() {
         require('process').stdout.write(".");
       }
     }
-  }, {concurrency: 25});
+  }, {concurrency: 10});
   console.info('');
   _.uniq(errors).forEach((x) => console.info(formatError(x)));
   process.exit(errors.length === 0 ? 0 : 1);
