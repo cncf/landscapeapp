@@ -24,6 +24,8 @@ const logContent = (function() {
   return remainingLines.join('\n');
 })();
 
+const checkLinksData = JSON.parse(require('fs').readFileSync('/tmp/links.json', 'utf-8'));
+
 
 const payload = {
   text: `Update from ${new Date().toISOString()} finished with ${errorStatus}`,
@@ -31,6 +33,16 @@ const payload = {
     title: 'Log File: (update.log)',
     text: logContent,
     fields: fields
+  }, {
+    title: 'Check links result',
+    text: checkLinksData.messages,
+    fields: [{
+      title: '# of Redirects',
+      value: checkLinksData.numberOfRedirects
+    }, {
+      title: '# of Redirects',
+      value: checkLinksData.numberOfErrors
+    }]
   }]
 };
 

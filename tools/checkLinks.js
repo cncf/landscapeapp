@@ -15,6 +15,12 @@ const rpWithRetry = async function(args) {
 process.setMaxListeners(0);
 
 
+try {
+  require('fs').unlinkSync('/tmp/links.json');
+} catch(ex) {
+
+}
+
 
 async function getLandscapeItems() {
   const source = require('js-yaml').safeLoad(require('fs').readFileSync(path.resolve(projectPath, 'landscape.yml')));
@@ -43,6 +49,28 @@ export async function checkUrl(url) {
   }
 
   async function checkViaPuppeteer() {
+    const puppeteer = require('puppeteer');
+    const browser = await puppeteer.launch();
+    const page = await browser.newPage();
+    page.setDefaultNavigationTimeout(120 * 1000);
+    let result = null;
+    try {
+      await page.goto(url);
+      await Promise.delay(5 * 1000);
+      const newUrl = await page.evaluate ( (x) => window.location.href );
+      await browser.close();
+      if (newUrl === url) {
+        return 'ok';
+      } else {
+        return {type: 'redirect', redirect: newUrl};
+      }
+    } catch(ex2) {
+      await browser.close();
+      return {type: 'error', message: ex2.message.substring(0, 200)};
+    }
+  }
+
+  async function quickCheckViaPuppeteer() {
     const puppeteer = require('puppeteer');
     const browser = await puppeteer.launch();
     const page = await browser.newPage();
@@ -106,11 +134,11 @@ export async function checkUrl(url) {
     }
   }
 
-  try {
-    return await checkWithRequest();
-  } catch (ex) {
-    return await checkViaPuppeteer();
+  const result = await quickCheckViaPuppeteer(); // detect errors and http redirects
+  if (result !== 'ok') {
+    return result;
   }
+  return await checkViaPuppeteer();
 }
 
 function formatError(record) {
@@ -138,23 +166,34 @@ async function main() {
     if (result !== 'ok') {
       errors.push({'homepageUrl': item.homepageUrl,...result});
       require('process').stdout.write(fatal("F"));
+      console.info(result);
     } else {
       require('process').stdout.write(".");
     }
-  }, {concurrency: 25});
+  }, {concurrency: 4});
   await Promise.map(items, async function(item) {
     if (item.repo) {
       const result = await checkUrl(item.repo);
       if (result !== 'ok') {
         errors.push({'repo': item.repo, ...result});
         require('process').stdout.write(fatal("F"));
+        console.info(result);
       } else {
         require('process').stdout.write(".");
       }
     }
-  }, {concurrency: 25});
+  }, {concurrency: 4});
   console.info('');
-  _.uniq(errors).forEach((x) => console.info(formatError(x)));
-  process.exit(errors.length === 0 ? 0 : 1);
+  const uniqErrors = _.uniq(errors);
+  const errorsText = uniqErrors.map( (x) => formatError(x)).join('\n');
+  const redirectsCount = uniqErrors.filter( (x) => x.type === 'redirect').length;
+  const errorsCount = uniqErrors.filter( (x) => x.type !== 'redirect').length;
+  const result = {
+    numberOfErrors: errorsCount,
+    numberOfRedirects: redirectsCount,
+    messages: errorsText
+  }
+  console.info(result);
+  require('fs').writeFileSync('/tmp/links.json', JSON.stringify(result, null, 4));
 }
 main();

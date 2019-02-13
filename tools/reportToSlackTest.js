@@ -66,6 +66,20 @@ nually a',
   'Using cached entry, because can not fetch: octo-technology Can\'t resolve stock ticker ALOCT; please manually ',
   'Using cached entry, because can not fetch: callidus-software Cannot read property \'raw\' of undefined' ]
     `
+  }, {
+    title: 'links status',
+    fields: [{
+      title: 'Number of redirects',
+      value: 20
+    }, {
+      title: 'Number of errors',
+      value: 10
+    }],
+    text: `
+        Item item1 has url aaa redirect to bbb
+        Can not fetch url ...
+        Item item2 has repo aaa2 redirect to bbb2
+    `
   }]
 };
 
