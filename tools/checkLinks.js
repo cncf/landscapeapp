@@ -48,7 +48,7 @@ export async function checkUrl(url) {
     return `${myURL.protocol}//${myURL.host}${redirect}`;
   }
 
-  async function checkViaPuppeteer() {
+  async function checkViaPuppeteer(remainingAttempts = 3) {
     const puppeteer = require('puppeteer');
     const browser = await puppeteer.launch({args: ['--no-sandbox', '--disable-setuid-sandbox', '--ignore-certificate-errors']});
 
@@ -69,11 +69,15 @@ export async function checkUrl(url) {
       }
     } catch(ex2) {
       await browser.close();
-      return {type: 'error', message: ex2.message.substring(0, 200)};
+      if (remainingAttempts > 0 ) {
+        return await checkViaPuppeteer(remainingAttempts - 1)
+      } else {
+        return {type: 'error', message: ex2.message.substring(0, 200)};
+      }
     }
   }
 
-  async function quickCheckViaPuppeteer() {
+  async function quickCheckViaPuppeteer(remainingAttempts = 3) {
     const puppeteer = require('puppeteer');
     const browser = await puppeteer.launch({args: ['--no-sandbox', '--disable-setuid-sandbox', '--ignore-certificate-errors']});
     const page = await browser.newPage();
@@ -106,7 +110,12 @@ export async function checkUrl(url) {
       return result;
     } catch(ex2) {
       await browser.close();
-      return {type: 'error', message: ex2.message.substring(0, 200)};
+      if (remainingAttempts > 0) {
+        await Promise.delay(10 * 1000);
+        return await quickCheckViaPuppeteer(remainingAttempts - 1);
+      } else {
+        return {type: 'error', message: ex2.message.substring(0, 200)};
+      }
     }
   }
 
