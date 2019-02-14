@@ -53,6 +53,7 @@ export async function checkUrl(url) {
     const browser = await puppeteer.launch({args: ['--no-sandbox', '--disable-setuid-sandbox'], ignoreHTTPSErrors: true});
 
     const page = await browser.newPage();
+    page.setViewport({width: 1920, height: 1024});
     page.setDefaultNavigationTimeout(120 * 1000);
     let result = null;
     try {
@@ -60,10 +61,11 @@ export async function checkUrl(url) {
       await Promise.delay(5 * 1000);
       const newUrl = await page.evaluate ( (x) => window.location.href );
       await browser.close();
-      if (newUrl === url) {
+      const withoutTrailingSlash = ( (x) => x.replace(/\/$/, ''));
+      if (withoutTrailingSlash(newUrl) === withoutTrailingSlash(url)) {
         return 'ok';
       } else {
-        return {type: 'redirect', location: newUrl};
+        return {type: 'redirect', location: withoutTrailingSlash(newUrl)};
       }
     } catch(ex2) {
       await browser.close();
@@ -75,6 +77,7 @@ export async function checkUrl(url) {
     const puppeteer = require('puppeteer');
     const browser = await puppeteer.launch({args: ['--no-sandbox', '--disable-setuid-sandbox'], ignoreHTTPSErrors: true});
     const page = await browser.newPage();
+    page.setViewport({width: 1920, height: 1024});
     await page.setRequestInterception(true);
     page.on('request', request => {
       if (request.resourceType() !== 'document')
