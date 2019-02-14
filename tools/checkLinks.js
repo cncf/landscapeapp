@@ -50,7 +50,7 @@ export async function checkUrl(url) {
 
   async function checkViaPuppeteer() {
     const puppeteer = require('puppeteer');
-    const browser = await puppeteer.launch({args: ['--no-sandbox', '--disable-setuid-sandbox'], ignoreHTTPSErrors: true});
+    const browser = await puppeteer.launch({args: ['--no-sandbox', '--disable-setuid-sandbox', '--ignore-certificate-errors']});
 
     const page = await browser.newPage();
     page.setViewport({width: 1920, height: 1024});
@@ -75,7 +75,7 @@ export async function checkUrl(url) {
 
   async function quickCheckViaPuppeteer() {
     const puppeteer = require('puppeteer');
-    const browser = await puppeteer.launch({args: ['--no-sandbox', '--disable-setuid-sandbox'], ignoreHTTPSErrors: true});
+    const browser = await puppeteer.launch({args: ['--no-sandbox', '--disable-setuid-sandbox', '--ignore-certificate-errors']});
     const page = await browser.newPage();
     page.setViewport({width: 1920, height: 1024});
     await page.setRequestInterception(true);
