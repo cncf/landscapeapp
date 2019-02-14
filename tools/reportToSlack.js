@@ -40,7 +40,7 @@ const payload = {
       title: '# of Redirects',
       value: checkLinksData.numberOfRedirects
     }, {
-      title: '# of Redirects',
+      title: '# of Errors',
       value: checkLinksData.numberOfErrors
     }]
   }]
