@@ -63,7 +63,7 @@ export async function checkUrl(url) {
       if (newUrl === url) {
         return 'ok';
       } else {
-        return {type: 'redirect', redirect: newUrl};
+        return {type: 'redirect', location: newUrl};
       }
     } catch(ex2) {
       await browser.close();
@@ -90,7 +90,7 @@ export async function checkUrl(url) {
         const status = response.status()
         if (url === response.request().url() || url + '/' === response.request().url) {
           if ((status >= 300) && (status <= 399)) {
-            result = {type: 'redirect', redirect: response.headers()['location']};
+            result = {type: 'redirect', location: response.headers()['location']};
           }
           else if (status >= 400) {
             result = {type: 'error', status: status};
