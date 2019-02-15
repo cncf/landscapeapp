@@ -61,7 +61,7 @@ export async function checkUrl(url) {
       await Promise.delay(5 * 1000);
       const newUrl = await page.evaluate ( (x) => window.location.href );
       await browser.close();
-      const withoutTrailingSlash = (x) => x.replace(/\/$/, '').replace(/#(.*)/, '');
+      const withoutTrailingSlash = (x) => x.replace(/#(.*)/, '').replace(/\/$/, '');
       if (withoutTrailingSlash(newUrl) === withoutTrailingSlash(url)) {
         return 'ok';
       } else {
