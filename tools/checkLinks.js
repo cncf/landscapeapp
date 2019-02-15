@@ -61,7 +61,7 @@ export async function checkUrl(url) {
       await Promise.delay(5 * 1000);
       const newUrl = await page.evaluate ( (x) => window.location.href );
       await browser.close();
-      const withoutTrailingSlash = ( (x) => x.replace(/\/$/, ''));
+      const withoutTrailingSlash = (x) => x.replace(/\/$/, '').replace(/#(.*)/, '');
       if (withoutTrailingSlash(newUrl) === withoutTrailingSlash(url)) {
         return 'ok';
       } else {
@@ -72,7 +72,11 @@ export async function checkUrl(url) {
       if (remainingAttempts > 0 ) {
         return await checkViaPuppeteer(remainingAttempts - 1)
       } else {
-        return {type: 'error', message: ex2.message.substring(0, 200)};
+        const normalCheck = await checkWithRequest();
+        if (normalCheck !== 'ok') {
+          return normalCheck;
+        }
+        return {type: 'mayRedirect', message: ex2.message.substring(0, 200)};
       }
     }
   }
@@ -156,17 +160,24 @@ export async function checkUrl(url) {
 
 function formatError(record) {
   if (record.type === 'redirect' && record.homepageUrl) {
-    return `homepage ${record.homepageUrl} redirects to ${record.location}`;
+    return `REDIRECT: homepage ${record.homepageUrl} redirects to ${record.location}`;
   }
   if (record.type === 'redirect' && record.repo) {
-    return `repo ${record.repo} redirects to ${record.location}`;
+    return `REDIRECT: repo ${record.repo} redirects to ${record.location}`;
   }
   if (record.type === 'error') {
     const kind = record.homepageUrl ? `homepage ${record.homepageUrl}` : `repo ${record.repo}`;
     const statusPart = record.status ? `has a status ${record.status}` : null;
     const messagePart = record.message ? `has an error ${record.message}` : null;
     const info = [statusPart, messagePart].filter( (x) => !!x).join(' and ');
-    return `${kind} ${info}`;
+    return `ERROR: ${kind} ${info}`;
+  }
+  if (record.type === 'mayRedirect') {
+    const kind = record.homepageUrl ? `homepage ${record.homepageUrl}` : `repo ${record.repo}`;
+    const statusPart = record.status ? `has a status ${record.status}` : null;
+    const messagePart = record.message ? `has an error ${record.message}` : null;
+    const info = [statusPart, messagePart].filter( (x) => !!x).join(' and ');
+    return `WARNING: ${kind} ${info}. curl request is OK, but curl can not detect a javascript redirect`;
   }
 
 }
