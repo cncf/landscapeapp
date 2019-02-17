@@ -13,7 +13,7 @@ const getText = ({summary}) => {
   const starsSection = summary.stars ? `of ${formatNumber(summary.stars)} stars` : null;
   const marketCapSection = summary.marketCap ? `market cap of $${millify(summary.marketCap)}` : null;
   const fundingSection = summary.funding ? `funding of $${millify(summary.funding)}` : null;
-  if (!marketCapSection && !fundingSection) {
+  if (!marketCapSection && !fundingSection && !starsSection) {
     return `You are viewing ${formatNumber(summary.total)} ${cardsText}.`;
   }
 
