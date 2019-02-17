@@ -8,10 +8,14 @@ const getText = ({summary}) => {
   if (!summary.total) {
     return 'There are no cards matching your filters';
   }
-  const startText = `You are viewing ${formatNumber(summary.total)} cards with a total`;
+  const cardsText = summary.total === 1 ? 'card' : 'cards';
+  const startText = `You are viewing ${formatNumber(summary.total)} ${cardsText} with a total`;
   const starsSection = summary.stars ? `of ${formatNumber(summary.stars)} stars` : null;
   const marketCapSection = summary.marketCap ? `market cap of $${millify(summary.marketCap)}` : null;
   const fundingSection = summary.funding ? `funding of $${millify(summary.funding)}` : null;
+  if (!marketCapSection && !fundingSection) {
+    return `You are viewing ${formatNumber(summary.total)} ${cardsText}.`;
+  }
 
   const parts = [starsSection, marketCapSection, fundingSection].filter( (x) => !!x);
   const startPartsText = _.slice(parts, 0, -1).join(', ');
