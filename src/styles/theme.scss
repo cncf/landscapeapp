@@ -615,6 +615,46 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='rgb(124,170,1
   position: absolute;
 }
 
+.mobile.portrait.big-picture .modal-content .tweet-button {
+  position: relative;
+  z-index: 7;
+  overflow: hidden;
+  height: 30px;
+  width: 100px;
+  right: inherit;
+  > div {
+    position: inherit;
+    width: 35px;
+    left: 64px;
+    margin-top: -1px;
+  }
+  > .tweet-count {
+    display: inherit;
+  }
+  a {
+    display: inline-block;
+    border-radius: 2px;
+    width: 60px;
+    height: 19px;
+    background: rgb(38, 150, 221);
+    color: white;
+    svg {
+      margin-top: 2px;
+      margin-left: 5px;
+      width: 16px;
+      height: 16px;
+      fill: white;
+    }
+    span {
+      position: relative;
+      margin-left: 2px;
+      top: -4px;
+      font-size: 10px !important;
+      font-weight: bold;
+    }
+  }
+}
+
 
 .mobile.landscape {
   .fullscreen-button {
