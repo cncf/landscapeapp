@@ -160,9 +160,15 @@ export async function checkUrl(url) {
 
 function formatError(record) {
   if (record.type === 'redirect' && record.homepageUrl) {
+    if (record.homepageUrl === record.location) {
+      return null;
+    }
     return `REDIRECT: homepage ${record.homepageUrl} redirects to ${record.location}`;
   }
   if (record.type === 'redirect' && record.repo) {
+    if (record.repo === record.location) {
+      return null;
+    }
     return `REDIRECT: repo ${record.repo} redirects to ${record.location}`;
   }
   if (record.type === 'error') {
@@ -209,7 +215,7 @@ async function main() {
   }, {concurrency: 4});
   console.info('');
   const uniqErrors = _.uniq(errors);
-  const errorsText = uniqErrors.map( (x) => formatError(x)).join('\n');
+  const errorsText = uniqErrors.map( (x) => formatError(x)).filter( (x) => x).join('\n');
   const redirectsCount = uniqErrors.filter( (x) => x.type === 'redirect').length;
   const errorsCount = uniqErrors.filter( (x) => x.type !== 'redirect').length;
   const result = {
