@@ -340,7 +340,7 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='rgb(124,170,1
 .mobile .big-picture-switch * {
   font-size: 13px !important;
 }
-.mobile .big-picture-switch .tweet-button a span {
+.mobile .big-picture-switch .tweet-button.tweet-button-main a span {
   font-size: 10px !important;
 }
 .big-picture-switch * {
@@ -452,7 +452,7 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='rgb(124,170,1
   }
 }
 
-.big-picture .big-picture-switch .tweet-button {
+.big-picture .big-picture-switch .tweet-button.tweet-button-main {
   display: none;
 }
 
@@ -511,35 +511,35 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='rgb(124,170,1
   }
 }
 
-.big-picture .tweet-button {
+.big-picture .tweet-button.tweet-button-main {
   top: -33px;
   right: 215px;
   z-index: 7;
   position: absolute;
 }
 
-.mobile.portrait .tweet-button {
+.mobile.portrait .tweet-button.tweet-button-main {
   top: 15px;
   right: 15px;
   z-index: 1;
   position: absolute;
 }
 
-.mobile.landscape .tweet-button {
+.mobile.landscape .tweet-button.tweet-button-main {
   top: 18px;
   right: 15px;
   z-index: 7;
   position: absolute;
 }
 
-.mobile.landscape.big-picture .tweet-button {
+.mobile.landscape.big-picture .tweet-button.tweet-button-main {
   top: -53px;
   right: 210px;
   z-index: 7;
   position: absolute;
 }
 
-.mobile.portrait.big-picture .tweet-button {
+.mobile.portrait.big-picture .tweet-button.tweet-button-main {
   width: 18px;
   top: -33px;
   right: 112px;
@@ -563,7 +563,7 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='rgb(124,170,1
   }
 }
 
-.desktop.big-picture .tweet-button {
+.desktop.big-picture .tweet-button.tweet-button-main {
   @media (max-width: 620px) {
     width: 18px;
     top: -32px;
@@ -602,19 +602,12 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='rgb(124,170,1
   position: relative;
 }
 
-.mobile.portrait .modal-content .tweet-button {
-  right: 0;
-  top: 0;
-  position: relative;
-}
-
 .mobile.landscape .modal-content .tweet-button {
   right: inherit;
   top: -25px;
   left: 2px;
   position: absolute;
 }
-
 
 .mobile.landscape {
   .fullscreen-button {
