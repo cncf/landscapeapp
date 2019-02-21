@@ -14,7 +14,7 @@ const bird = ( <svg
   </g>
 </svg>);
 
-const TweetButton = function({url}) {
+const TweetButton = function({url, cls}) {
   const countBorder = (<svg>
     <path d="M3 1 L3 9 L 1 12 L 3 15 L 3 19 L 34 19 L 34 1 Z" />
   </svg>);
@@ -23,7 +23,7 @@ const TweetButton = function({url}) {
     url: url
   });
   const twitterUrl = `https://twitter.com/intent/tweet?${params}`;
-  return <div className="tweet-button">
+  return <div className={`tweet-button ${cls}`}>
     <a href={twitterUrl}>{bird}<span>Tweet</span></a>
     <div className="tweet-count"><span>{window.tweets}</span>{countBorder}</div>
   </div>
