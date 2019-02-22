@@ -33,7 +33,7 @@
     "quick-build": "babel-node tools/build.js && npm run copy-dist && npm run setup-robots",
     "prebuild": "npm config set scripts-prepend-node-path true && npm run fetch && npm run clean-dist",
     "build": "((babel-node tools/build.js && npm run copy-dist && npm run setup-robots && npm run stop-old-ci && npm run start-ci && npm run integration-test && npm run check-landscape && npm run render-landscape) || (npm run stop-old-ci && false)) && npm run stop-ci && babel-node tools/fundingForMasterBranch && npm run googlebot",
-    "googlebot": "babel --no-babelrc --presets=@babel/env \"$PROJECT_PATH\"/dist/main.*.js > \"$PROJECT_PATH\"/dist/main.googlebot.js",
+    "googlebot": "babel --compact --no-babelrc --presets=@babel/env \"$PROJECT_PATH\"/dist/main.*.js > \"$PROJECT_PATH\"/dist/main.googlebot.js",
     "show-report": "open dist/report.html",
     "test": "jest",
     "test:CI": "babel-node tools/testCi.js",
