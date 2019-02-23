@@ -30,7 +30,7 @@ function getFileFromFs() {
 }
 
 const getItems = function(yaml) {
-  return _.flattenDeep( yaml.landscape.map( (category) => category.subcategories.map( (sc) => sc.items)));
+  return _.flattenDeep( yaml.landscape.map( (category) => category.subcategories.map( (sc) => sc.items))).filter( (x) => !!x);
 }
 
 
