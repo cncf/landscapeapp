@@ -3,6 +3,7 @@ import ejs from 'ejs';
 const file = require('fs').readFileSync('update_server/setup.template', 'utf-8');
 
 const values = {
+  name: settings.global.short_name,
   repo: settings.global.repo,
   ip: settings.update_server.ip,
   update_hour: settings.update_server.update_hour,
