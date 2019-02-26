@@ -180,6 +180,7 @@ export function changeParameters(value) {
 }
 export function resetParameters() {
   return function(dispatch) {
+    dispatch(setParameters({...initialState, zoom: 1}));
     dispatch(push('/' + window.prefix));
     setTimeout(() => bus.emit('scrollToTop'), 1);
   }
