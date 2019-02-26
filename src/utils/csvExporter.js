@@ -1,7 +1,6 @@
 import _ from 'lodash';
 import Parser from 'json2csv/lib/JSON2CSVParser';
-export default function exportItems(groupedItems) {
-  const elements = _.flatten(_.map(groupedItems, 'items'));
+export default function exportItems(elements) {
   const fields = [{
     label: 'Name',
     value: 'name'
@@ -151,7 +150,7 @@ function downloadCSV(csv) {
   if (!csv.match(/^data:text\/csv/i)) {
     csv = 'data:text/csv;charset=utf-8,' + csv;
   }
-  data = encodeURI(csv);
+  data = encodeURIComponent(csv);
 
   link = document.createElement('a');
   link.setAttribute('href', data);

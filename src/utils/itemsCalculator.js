@@ -8,6 +8,8 @@ import formatNumber from 'format-number';
 import { filtersToUrl } from '../utils/syncToUrl';
 import stringOrSpecial from '../utils/stringOrSpecial';
 import settings from 'project/settings.yml';
+const extraSettings = settings.big_picture.extra;
+
 const landscape = fields.landscape.values;
 
 export const getFilteredItems = createSelector(
@@ -305,6 +307,16 @@ const getGroupedItemsForServerlessBigPicture = createSelector([
 
   }
 );
+
+export function getItemsForExport(state) {
+  let items;
+  if (state.main.mainContentMode !== 'card') {
+    items = _.flattenDeep(getGroupedItemsForBigPicture(state).map( (group) => group.subcategories.map(subcategory => subcategory.items)));
+  } else {
+    items = _.flatten(getGroupedItems(state), (x) => x.items);
+  }
+  return items;
+}
 
 export const bigPictureMethods = {
   getGroupedItemsForCncfBigPicture,

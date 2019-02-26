@@ -9,7 +9,7 @@ import _ from 'lodash';
 import { push, replace } from 'connected-react-router';
 import { zoomLevels } from '../utils/zoom';
 import bus from './bus';
-import getGroupedItems from '../utils/itemsCalculator';
+import { getItemsForExport } from '../utils/itemsCalculator';
 import exportItems from '../utils/csvExporter';
 
 
@@ -150,8 +150,8 @@ export function exportCsv() {
   return function(dispatch, getState) {
     // do the actual export here for now
     const state = getState();
-    const groupedItems = getGroupedItems(state);
-    exportItems(groupedItems);
+    const items = getItemsForExport(state);
+    exportItems(items);
   }
 }
 
