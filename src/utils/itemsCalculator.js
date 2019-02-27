@@ -200,10 +200,15 @@ const getGroupedItemsForCncfBigPicture = createSelector(
     (state) => state.main.data,
     (state) => state.main.grouping,
     (state) => state.main.filters,
-    (state) => state.main.sortField
+    (state) => state.main.sortField,
+    (state) => state.main.mainContentMode
   ],
-  function(items, allItems, grouping, filters, sortField) {
-    const categories = landscape.filter( (l) => l.level === 1).map(function(category) {
+  function(items, allItems, grouping, filters, sortField, mainContentMode) {
+    const bigPictureSettings = _.values(settings.big_picture);
+    const currentSettings = _.find(bigPictureSettings, {url: mainContentMode});
+    const categories = landscape.filter( (l) => l.level === 1).filter(function(category) {
+      return _.find(currentSettings.elements, (element) => element.category === category.id);
+    }).map(function(category) {
       const newFilters = {...filters, landscape: category.id };
       return {
         key: stringOrSpecial(category.label),
