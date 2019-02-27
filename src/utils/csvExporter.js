@@ -1,7 +1,6 @@
 import _ from 'lodash';
 import Parser from 'json2csv/lib/JSON2CSVParser';
-export default function exportItems(groupedItems) {
-  const elements = _.flatten(_.map(groupedItems, 'items'));
+export default function exportItems(elements) {
   const fields = [{
     label: 'Name',
     value: 'name'
@@ -148,13 +147,14 @@ function downloadCSV(csv) {
   var data, filename, link;
   filename = 'interactive_landscape.csv';
 
+  window.csv = csv;
   if (!csv.match(/^data:text\/csv/i)) {
-    csv = 'data:text/csv;charset=utf-8,' + csv;
+    csv = 'data:text/csv;charset=utf-8,' + encodeURIComponent(csv);
   }
-  data = encodeURI(csv);
+  window.csv = csv;
 
   link = document.createElement('a');
-  link.setAttribute('href', data);
+  link.setAttribute('href', csv);
   link.setAttribute('download', filename);
   link.click();
 }

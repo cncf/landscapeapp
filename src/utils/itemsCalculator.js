@@ -8,6 +8,8 @@ import formatNumber from 'format-number';
 import { filtersToUrl } from '../utils/syncToUrl';
 import stringOrSpecial from '../utils/stringOrSpecial';
 import settings from 'project/settings.yml';
+const extraSettings = settings.big_picture.extra;
+
 const landscape = fields.landscape.values;
 
 export const getFilteredItems = createSelector(
@@ -198,10 +200,15 @@ const getGroupedItemsForCncfBigPicture = createSelector(
     (state) => state.main.data,
     (state) => state.main.grouping,
     (state) => state.main.filters,
-    (state) => state.main.sortField
+    (state) => state.main.sortField,
+    (state) => state.main.mainContentMode
   ],
-  function(items, allItems, grouping, filters, sortField) {
-    const categories = landscape.filter( (l) => l.level === 1).map(function(category) {
+  function(items, allItems, grouping, filters, sortField, mainContentMode) {
+    const bigPictureSettings = _.values(settings.big_picture);
+    const currentSettings = _.find(bigPictureSettings, {url: mainContentMode});
+    const categories = landscape.filter( (l) => l.level === 1).filter(function(category) {
+      return _.find(currentSettings.elements, (element) => element.category === category.id);
+    }).map(function(category) {
       const newFilters = {...filters, landscape: category.id };
       return {
         key: stringOrSpecial(category.label),
@@ -305,6 +312,16 @@ const getGroupedItemsForServerlessBigPicture = createSelector([
 
   }
 );
+
+export function getItemsForExport(state) {
+  let items;
+  if (state.main.mainContentMode !== 'card') {
+    items = _.flattenDeep(getGroupedItemsForBigPicture(state).map( (group) => group.subcategories.map(subcategory => subcategory.items)));
+  } else {
+    items = _.flatten(getGroupedItems(state).map((x) => x.items));
+  }
+  return items;
+}
 
 export const bigPictureMethods = {
   getGroupedItemsForCncfBigPicture,
