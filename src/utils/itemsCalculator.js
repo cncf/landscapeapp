@@ -313,7 +313,7 @@ export function getItemsForExport(state) {
   if (state.main.mainContentMode !== 'card') {
     items = _.flattenDeep(getGroupedItemsForBigPicture(state).map( (group) => group.subcategories.map(subcategory => subcategory.items)));
   } else {
-    items = _.flatten(getGroupedItems(state), (x) => x.items);
+    items = _.flatten(getGroupedItems(state).map((x) => x.items));
   }
   return items;
 }
