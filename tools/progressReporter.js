@@ -1,3 +1,4 @@
+import _ from 'lodash';
 const isNetlify = !!process.env.REPOSITORY_URL;
 console.info(isNetlify);
 export default function makeReporter() {
@@ -12,7 +13,9 @@ export default function makeReporter() {
     },
     summary: function() {
       if (isNetlify) {
-        console.info(items.join(''));
+        const parts = _.chunk(items, 160);
+        const text = parts.map( (part) => part.join('')).join('\n');
+        console.info(text);
       } else {
         process.stdout.write("\n");
       }
