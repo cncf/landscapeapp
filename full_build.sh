@@ -2,9 +2,6 @@ set -e
 rm -rf dist || true
 mkdir -p dist
 
-node 1.js
-exit 0
-
 # uncomment below when about to test a googlebot rendering
 # echo '<head><meta name="google-site-verification" content="27ZKkPQS2PWkd_0jqsSq4yUgUZ_BBTYjABudtQpMhXI" /></head>' > dist/index.html
 npm install -g npm

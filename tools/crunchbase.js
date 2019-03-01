@@ -7,6 +7,7 @@ import ensureHttps from './ensureHttps';
 import { addError, addWarning } from './reporter';
 import { projectPath } from './settings';
 import path from 'path';
+import makeReporter from './progressReporter';
 const error = colors.red;
 const fatal = (x) => colors.red(colors.inverse(x));
 const cacheMiss = colors.green;
@@ -119,6 +120,7 @@ async function getMarketCap(ticker) {
 export async function fetchCrunchbaseEntries({cache, preferCache}) {
   // console.info(organizations);
   // console.info(_.find(organizations, {name: 'foreman'}));
+  const reporter = makeReporter();
   const errors = [];
   const organizations = await getCrunchbaseOrganizationsList();
   const result = await Promise.map(organizations,async function(c) {
@@ -174,7 +176,7 @@ export async function fetchCrunchbaseEntries({cache, preferCache}) {
       } else {
         // console.info(cbInfo.name, 'no finance info');
       }
-      require('process').stdout.write(cacheMiss("*"));
+      reporter.write(cacheMiss("*"));
       return entry;
       // console.info(entry);
     } catch (ex) {
@@ -182,7 +184,7 @@ export async function fetchCrunchbaseEntries({cache, preferCache}) {
         addWarning('crunchbase');
         debug(`normal request failed, so returning a cached entry for ${c.name}`);
         errors.push(error(`Using cached entry, because can not fetch: ${c.name} ` +  ex.message.substring(0, 200)));
-        require('process').stdout.write(error("E"));
+        reporter.write(error("E"));
         return cachedEntry;
       } else {
         // console.info(c.name);
@@ -190,12 +192,13 @@ export async function fetchCrunchbaseEntries({cache, preferCache}) {
         debug(`normal request failed, and no cached entry for ${c.name}`);
         console.info(ex);
         errors.push(fatal(`No cached entry, and can not fetch: ${c.name} ` +  ex.message.substring(0, 200)));
-        require('process').stdout.write(fatal("F"));
+        reporter.write(fatal("F"));
         return null;
       }
     }
   }, {concurrency: 5})
-  require('process').stdout.write("\n");
+
+  process.stdout.write("\n");
   _.each(errors, console.info);
   return result;
 }
