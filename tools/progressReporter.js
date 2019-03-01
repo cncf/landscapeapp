@@ -1,4 +1,5 @@
-const isNetlify = true;
+const isNetlify = !!process.env.REPOSITORY_URL;
+console.info(isNetlify);
 export default function makeReporter() {
   const items = [];
   return {

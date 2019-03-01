@@ -127,7 +127,7 @@ export async function fetchCrunchbaseEntries({cache, preferCache}) {
     const cachedEntry = _.find(cache, {url: c.crunchbase});
     if (cachedEntry && preferCache) {
       debug(`returning a cached entry for ${cachedEntry.url}`);
-      require('process').stdout.write(".");
+      reporter.write(".");
       return cachedEntry;
     }
     await Promise.delay(1 * 1000);
