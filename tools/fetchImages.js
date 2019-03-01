@@ -6,6 +6,7 @@ import fs from 'fs';
 import path from 'path';
 import _ from 'lodash';
 import { settings, projectPath } from './settings';
+import makeReporter from './progressReporter';
 import { addError, addWarning } from './reporter';
 import autoCropSvg from 'svg-autocrop';
 const debug = require('debug')('images');
@@ -78,6 +79,7 @@ function getItemHash(item) {
 export async function fetchImageEntries({cache, preferCache}) {
   const items = await getLandscapeItems();
   const errors = [];
+  const reporter = makeReporter();
   const result = await Promise.map(items, async function(item) {
     const hash = getItemHash(item);
     const searchOptions = {logo: item.logo, name: item.name};
@@ -88,7 +90,7 @@ export async function fetchImageEntries({cache, preferCache}) {
     const cachedEntry = _.find(cache, searchOptions);
     if (preferCache && cachedEntry && imageExist(cachedEntry)) {
       debug(`Found cached entry for ${item.name} with logo ${item.logo}`);
-      require('process').stdout.write(".");
+      reporter.write('.');
       return cachedEntry;
     }
     debug(`Fetching data for ${item.name} with logo ${item.logo}`);
@@ -129,7 +131,7 @@ export async function fetchImageEntries({cache, preferCache}) {
         }
         const croppedSvg = await autoCropSvg(response, {title: `${item.name} logo`});
         require('fs').writeFileSync(path.resolve(projectPath, `cached_logos/${fileName}`), croppedSvg);
-        require('process').stdout.write(cacheMiss("*"));
+        reporter.write(cacheMiss('*'));
         return {
           fileName: fileName,
           name: item.name,
@@ -140,19 +142,19 @@ export async function fetchImageEntries({cache, preferCache}) {
         debug(`Cannot fetch ${url}`);
         if (cachedEntry && imageExist(cachedEntry)) {
           addWarning('image');
-          require('process').stdout.write(error("E"));
+          reporter.write(error('E'));
           errors.push(error(`Using cached entry, because ${item.name} has issues with logo: ${url}, ${ex.message.substring(0, 200)}`));
           return cachedEntry;
         } else {
           addError('image');
-          require('process').stdout.write(fatal("E"));
+          reporter.write(fatal('F'));
           errors.push(fatal(`No cached entry, and ${item.name} has issues with logo: ${url}, ${ex.message.substring(0, 200)}`));
           return null;
         }
       }
     }
   }, {concurrency: 5});
-  require('process').stdout.write("\n");
+  reporter.summary();
   _.each(errors, function(error) {
     console.info('error: ', error);
   });

@@ -199,6 +199,6 @@ export async function fetchCrunchbaseEntries({cache, preferCache}) {
   }, {concurrency: 5})
 
   reporter.summary();
-  _.each(errors, console.info);
+  _.each(errors, (x) => console.info(x));
   return result;
 }

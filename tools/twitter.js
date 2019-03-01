@@ -8,6 +8,7 @@ import actualTwitter from './actualTwitter';
 const debug = require('debug')('twitter');
 import twitterClient from './twitterClient';
 import retry from './retry';
+import makeReporter from './progressReporter';
 
 const error = colors.red;
 const fatal = (x) => colors.red(colors.inverse(x));
@@ -88,11 +89,12 @@ const readDate = async function(url) {
 export async function fetchTwitterEntries({cache, preferCache, crunchbaseEntries}) {
   const items = (await getLandscapeItems(crunchbaseEntries));
   const errors = [];
+  const reporter = makeReporter();
   const result = await Promise.map(items, async function(item) {
     const cachedEntry = _.find(cache, {url: item.twitter});
     if (preferCache && cachedEntry && cachedEntry.latest_tweet_date) {
       debug(`Found cached entry for ${item.twitter}`);
-      require('process').stdout.write(".");
+      reporter.write('.');
       return cachedEntry;
     }
     debug(`Fetching data for ${item.twitter}`);
@@ -100,13 +102,13 @@ export async function fetchTwitterEntries({cache, preferCache, crunchbaseEntries
       var url = item.twitter;
       const date = await readDate(url);
       if (date) {
-        require('process').stdout.write(cacheMiss("*"));
+        reporter.write(cacheMiss("*"));
         return {
           latest_tweet_date: date,
           url: url
         };
       } else {
-        require('process').stdout.write(fatal("E"));
+        reporter.write(fatal("F"));
         errors.push(fatal(`Empty twitter for ${item.name}: ${url}`));
         return {
           latest_tweet_date: date,
@@ -117,18 +119,18 @@ export async function fetchTwitterEntries({cache, preferCache, crunchbaseEntries
       debug(`Cannot fetch twitter at ${url} ${ex.message}`);
       if (cachedEntry) {
         addWarning('twitter');
-        require('process').stdout.write(error("E"));
+        reporter.write(error("E"));
         errors.push(error(`Using cached entry, because ${item.name} has issues with twitter: ${url}, ${(ex.message || ex).substring(0, 100)}`));
         return cachedEntry;
       } else {
         addError('twitter');
-        require('process').stdout.write(fatal("E"));
+        reporter.write(fatal("F"));
         errors.push(fatal(`No cached entry, and ${item.name} has issues with twitter: ${url}, ${(ex.message || ex).substring(0, 100)}`));
         return null;
       }
     }
   }, {concurrency: 5});
-  require('process').stdout.write("\n");
+  reporter.summary();
   _.each(errors, (x) => console.info(x));
   return result;
 }

@@ -1,6 +1,5 @@
 import _ from 'lodash';
 const isNetlify = !!process.env.REPOSITORY_URL;
-console.info(isNetlify);
 export default function makeReporter() {
   const items = [];
   return {
