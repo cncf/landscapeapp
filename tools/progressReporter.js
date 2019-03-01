@@ -12,9 +12,9 @@ export default function makeReporter() {
     },
     summary: function() {
       if (isNetlify) {
-        const parts = _.chunk(items, 160);
+        const parts = _.chunk(items, 80);
         const text = parts.map( (part) => part.join('')).join('\n');
-        console.info('Reporting progress:', text);
+        console.info(text);
       } else {
         process.stdout.write("\n");
       }
