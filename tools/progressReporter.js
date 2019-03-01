@@ -12,7 +12,9 @@ export default function makeReporter() {
     },
     summary: function() {
       if (isNetlify) {
-        process.stdout.write(items.join(''));
+        console.info(items.join(''));
+      } else {
+        process.stdout.write("\n");
       }
     }
   };
