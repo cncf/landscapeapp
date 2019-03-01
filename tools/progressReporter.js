@@ -14,7 +14,7 @@ export default function makeReporter() {
       if (isNetlify) {
         const parts = _.chunk(items, 160);
         const text = parts.map( (part) => part.join('')).join('\n');
-        console.info(text);
+        console.info('Reporting progress:', text);
       } else {
         process.stdout.write("\n");
       }
