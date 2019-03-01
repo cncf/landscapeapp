@@ -3,9 +3,14 @@ const traverse = require('traverse');
 import fs from 'fs';
 import path from 'path'
 import _ from 'lodash';
+import colors from 'colors';
 import { settings, projectPath } from './settings';
 import { addWarning } from './reporter';
 import getRepositoryInfo from './getRepositoryInfo';
+import makeReporter from './progressReporter';
+const error = colors.red;
+const fatal = (x) => colors.red(colors.inverse(x));
+const cacheMiss = colors.green;
 const debug = require('debug')('github');
 
 import { getRepoStartDate } from './githubDates';
@@ -60,10 +65,12 @@ async function getGithubRepos() {
 
 export async function fetchStartDateEntries({cache, preferCache}) {
   const repos = await getGithubRepos();
-  return await Promise.map(repos, async function(repo) {
+  const reporter = makeReporter();
+  const result =  await Promise.map(repos, async function(repo) {
     const cachedEntry = _.find(cache, {url: repo.url, branch: repo.branch});
     if (cachedEntry && preferCache) {
       debug(`Cache found for ${repo.url}`);
+      reporter.write('.');
       return cachedEntry;
     }
     debug(`Cache not found for ${repo.url}`);
@@ -78,12 +85,16 @@ export async function fetchStartDateEntries({cache, preferCache}) {
     const repoName = url.split('/').slice(3,5).join('/');
     try {
       const { date, commitLink } = await getRepoStartDate({repo: repoName, branch});
+      reporter.write(cacheMiss("*"));
       return ({url: repo.url, start_commit_link: commitLink, start_date: date});
     } catch (ex) {
       addWarning('githubStartDate');
+      reporter.write(error('E'));
       debug(`Fetch failed for ${repo.url}, attempt to use a cached entry`);
       console.info(`Cannot fetch: ${repo.url} `, ex.message.substring(0, 200));
       return cachedEntry || null;
     }
   }, {concurrency: 20});
+  reporter.summary();
+  return result;
 }

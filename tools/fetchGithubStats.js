@@ -8,6 +8,7 @@ import rp from './rpRetry';
 import { JSDOM } from 'jsdom';
 import { addError, addWarning } from './reporter';
 import { settings, projectPath } from './settings';
+import makeReporter from './progressReporter';
 const debug = require('debug')('github');
 import shortRepoName from '../src/utils/shortRepoName';
 import getRepositoryInfo from './getRepositoryInfo';
@@ -71,11 +72,12 @@ export async function fetchGithubEntries({cache, preferCache}) {
   const repos = await getGithubRepos();
   debug(cache);
   const errors = [];
+  const reporter = makeReporter();
   const result = await Promise.map(repos, async function(repo) {
     const cachedEntry = _.find(cache, {url: repo.url, branch: repo.branch});
     if (cachedEntry && preferCache) {
       debug(`Cache ${cachedEntry} found for ${repo.url}`);
-      require('process').stdout.write(".");
+      reporter.write('.');
       return cachedEntry;
     }
     debug(`No cache found for ${repo.url} ${repo.branch}`);
@@ -133,7 +135,7 @@ export async function fetchGithubEntries({cache, preferCache}) {
       // console.info(repo, latestDateResult);
       date = latestDateResult.date;
       latestCommitLink = latestDateResult.commitLink;
-      require('process').stdout.write(cacheMiss("*"));
+      reporter.write(cacheMiss('*'));
       return ({
         url: repo.url,
         stars,
@@ -150,18 +152,18 @@ export async function fetchGithubEntries({cache, preferCache}) {
       debug(`Fetch failed for ${repo.url}, attempt to use a cached entry`);
       if (cachedEntry) {
         addWarning('github');
-        require('process').stdout.write(error("E"));
+        reporter.write(error('E'));
         errors.push(error(`Using cached entry, and ${repo.url} has issues with stats fetching: ${ex.message.substring(0, 100)}`));
         return cachedEntry;
       } else {
         addError('github');
-        require('process').stdout.write(fatal("E"));
+        reporter.write(fatal('F'));
         errors.push(fatal(`No cached entry, and ${repo.url} has issues with stats fetching: ${ex.message.substring(0, 100)}`));
         return null;
       }
     }
   }, {concurrency: 10});
-  require('process').stdout.write("\n");
+  reporter.summary();
   _.each(errors, console.info);
   return result;
 }

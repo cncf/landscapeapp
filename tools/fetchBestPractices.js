@@ -6,6 +6,7 @@ import _ from 'lodash';
 import { addWarning } from './reporter';
 import { settings, projectPath } from './settings';
 import path from 'path';
+import makeReporter from './progressReporter';
 const debug = require('debug')('bestPractices');
 
 const error = colors.red;
@@ -75,6 +76,7 @@ export async function fetchBestPracticeEntriesWithFullScan({cache, preferCache})
   const items = await getLandscapeItems();
   const errors = [];
   var fetchedEntries = null;
+  const reporter = makeReporter();
   const result = await Promise.mapSeries(items, async function(item) {
     if (!item.repo_url) {
       return null;
@@ -82,14 +84,14 @@ export async function fetchBestPracticeEntriesWithFullScan({cache, preferCache})
     const cachedEntry = _.find(cache, {repo_url: item.repo_url});
     if (cachedEntry && preferCache) {
       debug(`Full scan: Cache found for ${item.repo_url}`);
-      require('process').stdout.write(".");
+      reporter.write('.');
       return cachedEntry;
     }
     debug(`Full scan: Cache not found for ${item.repo_url}`);
     try {
       fetchedEntries = fetchedEntries || await fetchEntries();
       const badge = _.find(fetchedEntries, {repo_url: item.repo_url});
-      require('process').stdout.write(cacheMiss("*"));
+      reporter.write(cacheMiss("*"));
       return ({
         repo_url: item.repo_url,
         badge: badge ? badge.id : false,
@@ -98,11 +100,12 @@ export async function fetchBestPracticeEntriesWithFullScan({cache, preferCache})
     } catch (ex) {
       debug(`Full scan: Fetch failed for ${item.repo_url}, attempt to use a cached entry`);
       addWarning('bestPractices');
-      require('process').stdout.write(error("E"));
+      reporter.write(error("E"));
       errors.push(error(`Cannot fetch: ${item.repo_url} `, ex.message.substring(0, 200)));
       return cachedEntry || null;
     }
   });
+  reporter.summary();
   _.each(errors, function(error) {
     console.info('error: ', error);
   });
@@ -112,6 +115,7 @@ export async function fetchBestPracticeEntriesWithFullScan({cache, preferCache})
 export async function fetchBestPracticeEntriesWithIndividualUrls({cache, preferCache}) {
   const items = await getLandscapeItems();
   const errors = [];
+  const reporter = makeReporter();
   const result = await Promise.mapSeries(items, async function(item) {
     if (!item.repo_url) {
       return null;
@@ -119,13 +123,13 @@ export async function fetchBestPracticeEntriesWithIndividualUrls({cache, preferC
     const cachedEntry = _.find(cache, {repo_url: item.repo_url});
     if (cachedEntry && preferCache) {
       debug(`Individual scan: Cache found for ${item.repo_url}`);
-      require('process').stdout.write(".");
+      reporter.write('.');
       return cachedEntry;
     }
     debug(`Individual scan: Cache not found for ${item.repo_url}`);
     try {
       const badge = await fetchEntry(item.repo_url);
-      require('process').stdout.write(cacheMiss("*"));
+      reporter.write(cacheMiss("*"));
       return ({
         repo_url: item.repo_url,
         badge: badge ? badge.id : false,
@@ -133,11 +137,12 @@ export async function fetchBestPracticeEntriesWithIndividualUrls({cache, preferC
       });
     } catch (ex) {
       debug(`Individual scan: Fetch failed for ${item.repo_url}, attempt to use a cached entry`);
-      require('process').stdout.write(error("E"));
+      reporter.write(error("E"));
       errors.push(error(`Cannot fetch: ${item.repo_url} `, ex.message.substring(0, 200)));
       return cachedEntry || null;
     }
   });
+  reporter.summary();
   _.each(errors, function(error) {
     console.info('error: ', error);
   });
