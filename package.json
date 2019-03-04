@@ -7,6 +7,7 @@
     "node": ">= 10.5"
   },
   "scripts": {
+    "autocrop-images": "babel-node tools/autocropImages",
     "open:src": "npm run yaml2json && babel-node tools/srcServer.js",
     "open:dist": "babel-node tools/distServer.js",
     "lint": "esw webpack.config.* src tools --color",
