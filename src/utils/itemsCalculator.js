@@ -314,13 +314,7 @@ const getGroupedItemsForServerlessBigPicture = createSelector([
 );
 
 export function getItemsForExport(state) {
-  let items;
-  if (state.main.mainContentMode !== 'card') {
-    items = _.flattenDeep(getGroupedItemsForBigPicture(state).map( (group) => group.subcategories.map(subcategory => subcategory.items)));
-  } else {
-    items = _.flatten(getGroupedItems(state).map((x) => x.items));
-  }
-  return items;
+  return _.flatten(getGroupedItems(state).map((x) => x.items));
 }
 
 export const bigPictureMethods = {
