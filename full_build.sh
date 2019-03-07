@@ -32,6 +32,7 @@ if [ $BRANCH = "master" ]; then
   echo "//registry.npmjs.org/:_authToken=$NPM_TOKEN" > ~/.npmrc
   git diff
   npm publish || (sleep 5 && npm publish) || (sleep 30 && npm publish)
+  echo 'Npm package published'
   curl -X POST -d {} https://api.netlify.com/build_hooks/5c1bd8e14ed62f166e8d9f7f
   curl -X POST -d {} https://api.netlify.com/build_hooks/5c1bd968fdd72a78a54bdcd1
   curl -x POST -d {} https://api.netlify.com/build_hooks/5c80e31894c5c7758edb31e4
