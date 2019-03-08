@@ -85,9 +85,10 @@ export async function fetchGithubEntries({cache, preferCache}) {
     try {
       const url = repo.url;
       if (url.split('/').length !==  5 || !url.split('/')[4]) {
-        result.push({url, stars: 'N/A', license: 'Unknown License'});
-        console.info(url, ' does not look like a GitHub repo');
-        return;
+        addError('github');
+        reporter.write(fatal('F'));
+        errors.push(fatal(`${repo.url} does not look like a github repo`));
+        return null;
       }
       const repoName = shortRepoName(url);
       const apiInfo = await getRepositoryInfo(url);

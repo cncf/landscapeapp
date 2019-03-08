@@ -79,8 +79,12 @@ export async function fetchStartDateEntries({cache, preferCache}) {
     const apiInfo  = await getRepositoryInfo(repo.url);
     const branch = repo.branch || apiInfo.default_branch;
     if (url.split('/').length !==  5 || !url.split('/')[4]) {
-      console.info(url, ' does not look like a GitHub repo');
-      return;
+      if (url.split('/').length !==  5 || !url.split('/')[4]) {
+        addError('github');
+        reporter.write(fatal('F'));
+        errors.push(fatal(`${repo.url} does not look like a github repo`));
+        return null;
+      }
     }
     const repoName = url.split('/').slice(3,5).join('/');
     try {
