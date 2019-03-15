@@ -160,7 +160,6 @@ export async function fetchCrunchbaseEntries({cache, preferCache}) {
       if (_.isEmpty(entry.city)) {
         addError('crunchbase');
         debug(`empty city on ${c.name}`);
-        console.info(ex);
         errors.push(fatal(`No city for a crunchbase entry for ${c.name} at ${c.crunchbase} `));
         reporter.write(fatal("F"));
         return null;
