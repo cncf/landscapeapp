@@ -380,6 +380,29 @@ if (hasBadLandscape) {
   process.exit(1);
 }
 
+var hasBadFieldWithSpaces = false;
+_.each(itemsWithExtraFields, function(item) {
+  if (!_.isEmpty(item.twitter) && item.twitter.indexOf(' ') !== -1) {
+    hasBadFieldWithSpaces = true;
+    console.info(`FATAL: ${item.name} has a twitter ${item.twitter} with spaces`);
+  }
+  if (!_.isEmpty(item.crunchbase) && item.crunchbase.indexOf(' ') !== -1) {
+    hasBadFieldWithSpaces = true;
+    console.info(`FATAL: ${item.name} has a crunchbase ${item.crunchbase} with spaces`);
+  }
+  if (!_.isEmpty(item.repo_url) && item.repo_url.indexOf(' ') !== -1) {
+    hasBadFieldWithSpaces = true;
+    console.info(`FATAL: ${item.name} has a repo_url ${item.repo_url} with spaces`);
+  }
+  if (!_.isEmpty(item.homepage_url) && item.homepage_url.indexOf(' ') !== -1) {
+    hasBadFieldWithSpaces = true;
+    console.info(`FATAL: ${item.name} has a homepage_url ${item.homepage_url} with spaces`);
+  }
+});
+if (hasBadFieldWithSpaces) {
+  process.exit(-1);
+}
+
 
 const extractOptions = function(name) {
   return _.chain(itemsWithExtraFields).map(function(x) {
