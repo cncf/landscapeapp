@@ -2,7 +2,7 @@ import rp from 'request-promise';
 process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
 import  { checkUrl } from './checkLinks';
 const urls = [
-  "https://tenxcloud.com/enterprise.html"
+  "https://www.adfolks.com/"
 ];
 
 async function main(url) {

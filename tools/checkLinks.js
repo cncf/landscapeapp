@@ -57,7 +57,7 @@ export async function checkUrl(url) {
     page.setDefaultNavigationTimeout(120 * 1000);
     let result = null;
     try {
-      await page.goto(url);
+      await page.goto(url, {waitUntil: 'networkidle2' });
       await Promise.delay(5 * 1000);
       const newUrl = await page.evaluate ( (x) => window.location.href );
       await browser.close();
@@ -108,7 +108,7 @@ export async function checkUrl(url) {
           }
         }
       })
-      await page.goto(url);
+      await page.goto(url, {waitUntil: 'networkidle2' });
       result = result || 'ok';
       await browser.close();
       return result;
@@ -226,4 +226,4 @@ async function main() {
   console.info(result);
   require('fs').writeFileSync('/tmp/links.json', JSON.stringify(result, null, 4));
 }
-main();
+// main();
