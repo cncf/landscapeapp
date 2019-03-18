@@ -57,7 +57,7 @@ export async function checkUrl(url) {
     page.setDefaultNavigationTimeout(120 * 1000);
     let result = null;
     try {
-      await page.goto(url);
+      await page.goto(url, {waitUntil: 'networkidle2' });
       await Promise.delay(5 * 1000);
       const newUrl = await page.evaluate ( (x) => window.location.href );
       await browser.close();
@@ -67,16 +67,12 @@ export async function checkUrl(url) {
       } else {
         return {type: 'redirect', location: withoutTrailingSlash(newUrl)};
       }
-    } catch(ex2) {
+    } catch(ex) {
       await browser.close();
       if (remainingAttempts > 0 ) {
-        return await checkViaPuppeteer(remainingAttempts - 1)
+        return await checkViaPuppeteer(remainingAttempts - 1);
       } else {
-        const normalCheck = await checkWithRequest();
-        if (normalCheck !== 'ok') {
-          return normalCheck;
-        }
-        return {type: 'mayRedirect', message: ex2.message.substring(0, 200)};
+        return { type: 'error', message: (ex.message || ex).substring(0, 200) };
       }
     }
   }
@@ -108,51 +104,18 @@ export async function checkUrl(url) {
           }
         }
       })
-      await page.goto(url);
+      await page.goto(url, {waitUntil: 'networkidle2' });
       result = result || 'ok';
       await browser.close();
       return result;
     } catch(ex2) {
       await browser.close();
-      if (remainingAttempts > 0) {
-        await Promise.delay(10 * 1000);
-        return await quickCheckViaPuppeteer(remainingAttempts - 1);
-      } else {
-        return {type: 'error', message: ex2.message.substring(0, 200)};
-      }
-    }
-  }
-
-  async function checkWithRequest() {
-    const result = await rpWithRetry({
-      followRedirect: false,
-      url: url,
-      timeout: 45 * 1000,
-      simple: false,
-      resolveWithFullResponse: true,
-      headers: { // make them think we are a real browser from us
-        accept: 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8',
-        'accept-encoding': 'gzip, deflate, br',
-        'accept-language': 'en-US,en;q=0.9,es',
-        'cache-control': 'no-cache',
-        dnt: '1',
-        pragma: 'no-cache',
-        'upgrade-insecure-requests': 1,
-        'user-agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_12_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/65.0.3325.181 Safari/537.36'
-      }
-    });
-    if (result.statusCode === 200) {
-      return 'ok';
-    }
-    else if (result.statusCode >= 300 && result.statusCode < 400) {
-      return { type: 'redirect', location: getFullLocation(url, result.headers.location)};
-    } else {
-      return {type: 'error', status: result.statusCode};
+      return 'error';
     }
   }
 
   const result = await quickCheckViaPuppeteer(); // detect errors and http redirects
-  if (result !== 'ok') {
+  if (result !== 'ok' && result !== 'error') {
     return result;
   }
   return await checkViaPuppeteer();
