@@ -128,7 +128,6 @@
     "node-sass": "4.11.0",
     "object-assign": "4.1.1",
     "opn-cli": "4.0.0",
-    "phantom": "6.0.3",
     "postcss-loader": "3.0.0",
     "prompt": "1.0.0",
     "prop-types": "15.7.2",

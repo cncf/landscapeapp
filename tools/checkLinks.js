@@ -48,46 +48,6 @@ export async function checkUrl(url) {
     return `${myURL.protocol}//${myURL.host}${redirect}`;
   }
 
-  async function checkViaPhantom() {
-    try {
-      let status = null;
-      const no = () => null;
-      const instance = await phantom.create(['--ignore-ssl-errors=yes', '--load-images=no'], {logger: {info: no, warning: no, error: no, debug: no}});
-      const page = await instance.createPage();
-      await page.on('onResourceReceived', function(response) {
-        if (response.stage === 'end') {
-          if (response.url === url + '/') {
-            // nothings special
-          }
-          if (response.url === url || response.url === url + '/') {
-            status = response.status;
-          }
-        }
-      });
-      await page.open(url);
-      await Promise.delay(5 * 1000);
-      const newUrl = await page.evaluate(function() {
-        return document.location.href
-      });
-      await instance.exit();
-      const withoutTrailingSlash = (x) => x.replace(/#(.*)/, '').replace(/\/$/, '');
-      if (withoutTrailingSlash(newUrl) !== withoutTrailingSlash(pageUrl)) {
-        return {
-          type: 'redirect',
-          location: withoutTrailingSlash(newUrl)
-        };
-      } else if (status >= 400) {
-        return { type: 'error', status: status };
-      } else if (status === null) {
-        return { type: 'error', message: 'navigation timeout or bad domain' };
-      }
-      return 'ok';
-    } catch(ex) {
-      await instance.exit();
-      return { type: 'error', message: (ex.message || ex).substring(0, 200) };
-    }
-  }
-
   async function checkViaPuppeteer(remainingAttempts = 3) {
     const puppeteer = require('puppeteer');
     const browser = await puppeteer.launch({args: ['--no-sandbox', '--disable-setuid-sandbox', '--ignore-certificate-errors']});
@@ -112,7 +72,7 @@ export async function checkUrl(url) {
       if (remainingAttempts > 0 ) {
         return await checkViaPuppeteer(remainingAttempts - 1);
       } else {
-        return await checkViaPhantom();
+        return { type: 'error', message: (ex.message || ex).substring(0, 200) };
       }
     }
   }
