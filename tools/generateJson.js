@@ -304,6 +304,10 @@ _.each(itemsWithExtraFields, function(item) {
     console.info(`Fatal: ${item.name} has a twitter ${item.twitter} which ends with /`);
     hasWrongTwitterUrls = true;
   }
+  if (item.twitter && item.twitter.indexOf('https://twitter.com/') !== 0 && item.twitter.indexOf('http://twitter.com/') !== 0) {
+    console.info(`Fatal: ${item.name} has a twitter ${item.twitter} which does not start with https://twitter.com/ or http://twitter.com/`);
+    hasWrongTwitterUrls = true;
+  }
 });
 if (hasWrongTwitterUrls) {
   require('process').exit(1);
