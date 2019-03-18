@@ -48,6 +48,46 @@ export async function checkUrl(url) {
     return `${myURL.protocol}//${myURL.host}${redirect}`;
   }
 
+  async function checkViaPhantom() {
+    try {
+      let status = null;
+      const no = () => null;
+      const instance = await phantom.create(['--ignore-ssl-errors=yes', '--load-images=no'], {logger: {info: no, warning: no, error: no, debug: no}});
+      const page = await instance.createPage();
+      await page.on('onResourceReceived', function(response) {
+        if (response.stage === 'end') {
+          if (response.url === url + '/') {
+            // nothings special
+          }
+          if (response.url === url || response.url === url + '/') {
+            status = response.status;
+          }
+        }
+      });
+      await page.open(url);
+      await Promise.delay(5 * 1000);
+      const newUrl = await page.evaluate(function() {
+        return document.location.href
+      });
+      await instance.exit();
+      const withoutTrailingSlash = (x) => x.replace(/#(.*)/, '').replace(/\/$/, '');
+      if (withoutTrailingSlash(newUrl) !== withoutTrailingSlash(pageUrl)) {
+        return {
+          type: 'redirect',
+          location: withoutTrailingSlash(newUrl)
+        };
+      } else if (status >= 400) {
+        return { type: 'error', status: status };
+      } else if (status === null) {
+        return { type: 'error', message: 'navigation timeout or bad domain' };
+      }
+      return 'ok';
+    } catch(ex) {
+      await instance.exit();
+      return { type: 'error', message: (ex.message || ex).substring(0, 200) };
+    }
+  }
+
   async function checkViaPuppeteer(remainingAttempts = 3) {
     const puppeteer = require('puppeteer');
     const browser = await puppeteer.launch({args: ['--no-sandbox', '--disable-setuid-sandbox', '--ignore-certificate-errors']});
@@ -70,13 +110,9 @@ export async function checkUrl(url) {
     } catch(ex2) {
       await browser.close();
       if (remainingAttempts > 0 ) {
-        return await checkViaPuppeteer(remainingAttempts - 1)
+        return await checkViaPuppeteer(remainingAttempts - 1);
       } else {
-        const normalCheck = await checkWithRequest();
-        if (normalCheck !== 'ok') {
-          return normalCheck;
-        }
-        return {type: 'mayRedirect', message: ex2.message.substring(0, 200)};
+        return await checkViaPhantom();
       }
     }
   }
@@ -114,45 +150,12 @@ export async function checkUrl(url) {
       return result;
     } catch(ex2) {
       await browser.close();
-      if (remainingAttempts > 0) {
-        await Promise.delay(10 * 1000);
-        return await quickCheckViaPuppeteer(remainingAttempts - 1);
-      } else {
-        return {type: 'error', message: ex2.message.substring(0, 200)};
-      }
-    }
-  }
-
-  async function checkWithRequest() {
-    const result = await rpWithRetry({
-      followRedirect: false,
-      url: url,
-      timeout: 45 * 1000,
-      simple: false,
-      resolveWithFullResponse: true,
-      headers: { // make them think we are a real browser from us
-        accept: 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8',
-        'accept-encoding': 'gzip, deflate, br',
-        'accept-language': 'en-US,en;q=0.9,es',
-        'cache-control': 'no-cache',
-        dnt: '1',
-        pragma: 'no-cache',
-        'upgrade-insecure-requests': 1,
-        'user-agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_12_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/65.0.3325.181 Safari/537.36'
-      }
-    });
-    if (result.statusCode === 200) {
-      return 'ok';
-    }
-    else if (result.statusCode >= 300 && result.statusCode < 400) {
-      return { type: 'redirect', location: getFullLocation(url, result.headers.location)};
-    } else {
-      return {type: 'error', status: result.statusCode};
+      return 'error';
     }
   }
 
   const result = await quickCheckViaPuppeteer(); // detect errors and http redirects
-  if (result !== 'ok') {
+  if (result !== 'ok' && result !== 'error') {
     return result;
   }
   return await checkViaPuppeteer();
@@ -226,4 +229,4 @@ async function main() {
   console.info(result);
   require('fs').writeFileSync('/tmp/links.json', JSON.stringify(result, null, 4));
 }
-// main();
+main();
