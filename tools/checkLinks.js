@@ -67,7 +67,7 @@ export async function checkUrl(url) {
       } else {
         return {type: 'redirect', location: withoutTrailingSlash(newUrl)};
       }
-    } catch(ex2) {
+    } catch(ex) {
       await browser.close();
       if (remainingAttempts > 0 ) {
         return await checkViaPuppeteer(remainingAttempts - 1);
