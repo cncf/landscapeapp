@@ -157,6 +157,13 @@ export async function fetchCrunchbaseEntries({cache, preferCache}) {
         twitter: twitterEntry ? twitterEntry.properties.url : null,
         linkedin: linkedInEntry ? ensureHttps(linkedInEntry.properties.url) : null
       };
+      if (_.isEmpty(entry.city)) {
+        addError('crunchbase');
+        debug(`empty city on ${c.name}`);
+        errors.push(fatal(`No city for a crunchbase entry for ${c.name} at ${c.crunchbase} `));
+        reporter.write(fatal("F"));
+        return null;
+      }
       var parents = await getParentCompanies(result.data);
        // console.info(parents.map( (x) => x.properties.name));
       var meAndParents = [result.data].concat(parents);
