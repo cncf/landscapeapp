@@ -42,20 +42,21 @@ async function readGithubStats({repo, branch}) {
   }
 }
 export async function getReleaseDate({repo}) {
-  var url = `https://github.com/${repo}/releases`;
-  var response = await rp({
+  var url = `https://api.github.com/repos/${repo}/releases/latest`;
+  var releaseInfo = await rp({
     uri: url,
     followRedirect: true,
     timeout: 10 * 1000,
-    simple: true
+    headers: {
+      'User-agent': 'CNCF'
+    },
+    json: true
   });
-  const dom = new JSDOM(response);
-  const doc = dom.window.document;
-  const releaseLink = doc.querySelector('.release-timeline-tags relative-time');
-  if (!releaseLink) {
-    return;
+  if (!releaseInfo) {
+    return null;
+  } else {
+    return releaseInfo.published_at;
   }
-  return releaseLink.getAttribute('datetime');
 }
 async function getCommitDate(link) {
   var url = `https://github.com${link}`;
