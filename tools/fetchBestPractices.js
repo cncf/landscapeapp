@@ -1,3 +1,4 @@
+import { setFatalError } from './fatalErrors';
 import colors from 'colors';
 import rp from 'request-promise';
 import retry from './retry';

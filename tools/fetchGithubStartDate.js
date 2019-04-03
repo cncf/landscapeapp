@@ -1,3 +1,4 @@
+import { setFatalError } from './fatalErrors';
 const Promise = require('bluebird');
 const traverse = require('traverse');
 import fs from 'fs';
@@ -83,6 +84,7 @@ export async function fetchStartDateEntries({cache, preferCache}) {
         addError('github');
         reporter.write(fatal('F'));
         errors.push(fatal(`${repo.url} does not look like a github repo`));
+        setFatalError();
         return null;
       }
     }

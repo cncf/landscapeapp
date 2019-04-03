@@ -1,3 +1,4 @@
+import { hasFatalErrors } from './fatalErrors';
 import process from 'process';
 import path from 'path';
 import { projectPath } from './settings';
@@ -120,6 +121,10 @@ async function main() {
     preferCache: useTwitterCache,
     crunchbaseEntries: crunchbaseEntries
   });
+
+  if (hasFatalErrors()) {
+    process.exit(1);
+  }
 
   console.info('Fetching yaml members');
   const members = require('js-yaml').safeLoad(require('fs').readFileSync(path.resolve(projectPath, 'members.yml')));

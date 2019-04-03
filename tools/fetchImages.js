@@ -1,3 +1,4 @@
+import { setFatalError } from './fatalErrors';
 import colors from 'colors';
 import rp from './rpRetry';
 import Promise from 'bluebird';
@@ -106,6 +107,7 @@ export async function fetchImageEntries({cache, preferCache}) {
       var ext='.' + extWithQuery.split('?')[0];
       var outputExt = '';
       if (['.jpg', '.png', '.gif'].indexOf(ext) !== -1 ) {
+        setFatalError();
         errors.push(fatal(`${item.name}: Only svg logos are supported`));
         return null;
       }
@@ -147,6 +149,7 @@ export async function fetchImageEntries({cache, preferCache}) {
           return cachedEntry;
         } else {
           addError('image');
+          setFatalError();
           reporter.write(fatal('F'));
           errors.push(fatal(`No cached entry, and ${item.name} has issues with logo: ${url}, ${ex.message.substring(0, 200)}`));
           return null;

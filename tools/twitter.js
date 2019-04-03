@@ -1,3 +1,4 @@
+import { setFatalError } from './fatalErrors';
 import colors from 'colors';
 import Promise from 'bluebird';
 import _ from 'lodash';
@@ -108,6 +109,7 @@ export async function fetchTwitterEntries({cache, preferCache, crunchbaseEntries
           url: url
         };
       } else {
+        setFatalError();
         reporter.write(fatal("F"));
         errors.push(fatal(`Empty twitter for ${item.name}: ${url}`));
         return {
@@ -124,6 +126,7 @@ export async function fetchTwitterEntries({cache, preferCache, crunchbaseEntries
         return cachedEntry;
       } else {
         addError('twitter');
+        setFatalError();
         reporter.write(fatal("F"));
         errors.push(fatal(`No cached entry, and ${item.name} has issues with twitter: ${url}, ${(ex.message || ex).substring(0, 100)}`));
         return null;
