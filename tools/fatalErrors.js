@@ -1,7 +1,7 @@
 let _hasFatalErrors = false;
-export hasFatalErrors() {
+export function hasFatalErrors() {
   return _hasFatalErrors;
 }
-export setFatalError() {
+export function setFatalError() {
   _hasFatalErrors = true;
 }
