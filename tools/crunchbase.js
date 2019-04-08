@@ -1,3 +1,4 @@
+import { setFatalError } from './fatalErrors';
 import colors from 'colors';
 import process from 'process'
 import rp from './rpRetry'
@@ -112,7 +113,7 @@ async function getMarketCap(ticker) {
   const marketCap = quote;
   const result = marketCap.raw || marketCap;
   if (!_.isNumber(result)) {
-    throw new Error('marketCap ' + JSON.stringify(marketCap) + ' is not a number!');
+    throw new Error(`can not fetch market cap from a ticker ${ticker}: ` + JSON.stringify(marketCap) + ' is not a number!');
   }
   return result;
 }
@@ -160,6 +161,7 @@ export async function fetchCrunchbaseEntries({cache, preferCache}) {
       if (_.isEmpty(entry.city)) {
         addError('crunchbase');
         debug(`empty city on ${c.name}`);
+        setFatalError();
         errors.push(fatal(`No city for a crunchbase entry for ${c.name} at ${c.crunchbase} `));
         reporter.write(fatal("F"));
         return null;
@@ -197,7 +199,7 @@ export async function fetchCrunchbaseEntries({cache, preferCache}) {
         // console.info(c.name);
         addError('crunchbase');
         debug(`normal request failed, and no cached entry for ${c.name}`);
-        console.info(ex);
+        setFatalError();
         errors.push(fatal(`No cached entry, and can not fetch: ${c.name} ` +  ex.message.substring(0, 200)));
         reporter.write(fatal("F"));
         return null;
