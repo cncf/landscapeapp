@@ -42,7 +42,7 @@ async function readGithubStats({repo, branch}) {
   }
 }
 export async function getReleaseDate({repo}) {
-  var url = `https://api.github.com/repos/${repo}/releases/latest`;
+  var url = `https://github.com/${repo}/releases/latest?access_token=${process.env.GITHUB_KEY}`;
   var releaseInfo = await rp({
     uri: url,
     followRedirect: true,
