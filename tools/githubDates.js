@@ -42,20 +42,23 @@ async function readGithubStats({repo, branch}) {
   }
 }
 export async function getReleaseDate({repo}) {
-  var url = `https://github.com/${repo}/releases/latest?access_token=${process.env.GITHUB_KEY}`;
-  var releaseInfo = await rp({
-    uri: url,
-    followRedirect: true,
-    timeout: 10 * 1000,
-    headers: {
-      'User-agent': 'CNCF'
-    },
-    json: true
-  });
-  if (!releaseInfo) {
-    return null;
-  } else {
+  var url = `https://api.github.com/repos/${repo}/releases/latest?access_token=${process.env.GITHUB_KEY}`;
+  try {
+    var releaseInfo = await rp({
+      uri: url,
+      followRedirect: true,
+      timeout: 10 * 1000,
+      headers: {
+        'User-agent': 'CNCF'
+      },
+      json: true
+    });
     return releaseInfo.published_at;
+  } catch(e) {
+    if (e.statusCode === 404) {
+      return null;
+    }
+    throw e;
   }
 }
 async function getCommitDate(link) {

@@ -168,6 +168,6 @@ export async function fetchGithubEntries({cache, preferCache}) {
     }
   }, {concurrency: 10});
   reporter.summary();
-  _.each(errors, console.info);
+  _.each(errors, (x) => console.info(x));
   return result;
 }
