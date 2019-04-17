@@ -38,7 +38,6 @@ export default {
       'lodash.get': 'lodash/get.js',
       'current-device': 'current-device/es',
       'react-redux': 'react-redux/es',
-      'react-router-dom': 'react-router-dom/es',
       'react-router-redux': 'react-router-redux/es',
       'redux-thunk': 'redux-thunk/es',
       'reselect': 'reselect/es',
