@@ -1,7 +1,7 @@
 import { hasFatalErrors } from './fatalErrors';
 import process from 'process';
 import path from 'path';
-import { projectPath } from './settings';
+import { projectPath, settings } from './settings';
 const source = require('js-yaml').safeLoad(require('fs').readFileSync(path.resolve(projectPath, 'landscape.yml')));
 const traverse = require('traverse');
 const _ = require('lodash');
@@ -68,6 +68,42 @@ else if (key.toLowerCase() === 'complete') {
   console.info('Unknown level. Should be one of easy, medium, hard or complete');
 }
 
+function getMembers() {
+  const membershipFile = path.resolve(projectPath, 'members.yml');
+  const hasMembershipFile = require('fs').existsSync(membershipFile);
+  const membershipCategoryName = settings.global.membership;
+  if (hasMembershipFile && membershipCategoryName) {
+    console.info(`FATAL: both members.yml and membership category ${membershipCategoryName} (global.membership in settings.yml) are present. Please choose only one source`);
+    process.exit(1);
+  }
+  if (!hasMembershipFile && !membershipCategoryName) {
+    console.info(`FATAL: both members.yml and membership category (global.membership in settings.yml) are not present. Please choose only one source`);
+    process.exit(1);
+
+  }
+  if (hasMembershipFile) {
+    console.info('Fetching yaml members');
+    const members = require('js-yaml').safeLoad(require('fs').readFileSync());
+    return members;
+  }
+  else {
+    console.info(`Fetching members from ${membershipCategoryName} category`);
+    const result = {};
+    const tree = traverse(source);
+    console.info('Processing the tree');
+    tree.map(function(node) {
+      if (node && node.category === null && node.name === settings.global.membership) {
+        node.subcategories.forEach(function(subcategory) {
+          result[subcategory.name] = subcategory.items.map( (item) => item.crunchbase);
+        });
+      }
+    });
+    return result;
+  }
+}
+const members = getMembers();
+console.info('members', members);
+
 async function main() {
 
   var crunchbaseEntries;
@@ -126,8 +162,6 @@ async function main() {
     process.exit(1);
   }
 
-  console.info('Fetching yaml members');
-  const members = require('js-yaml').safeLoad(require('fs').readFileSync(path.resolve(projectPath, 'members.yml')));
 
   console.info('Fetching best practices');
   const savedBestPracticeEntries = await extractSavedBestPracticeEntries();
