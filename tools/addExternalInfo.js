@@ -83,7 +83,7 @@ function getMembers() {
   }
   if (hasMembershipFile) {
     console.info('Fetching yaml members');
-    const members = require('js-yaml').safeLoad(require('fs').readFileSync());
+    const members = require('js-yaml').safeLoad(require('fs').readFileSync(membershipFile));
     return members;
   }
   else {
@@ -252,12 +252,15 @@ async function main() {
         node.twitter_data = twitterEntry;
         delete twitterEntry.url;
       }
+
+      console.info('processed: ', node.name );
     }
   });
 
   newSource.twitter_options = require('js-yaml').safeLoad(require('fs').readFileSync(require('path').resolve(projectPath, 'processed_landscape.yml'))).twitter_options;
 
   const newContent = "# THIS FILE IS GENERATED AUTOMATICALLY!\n" + dump(newSource);
+  console.info('saving!');
   require('fs').writeFileSync(path.resolve(projectPath, 'processed_landscape.yml'), newContent);
 }
 main().catch(function(x) {
