@@ -276,11 +276,17 @@ a {text-decoration: none; transition: all 0.5s; color: $blue;
   &-funding {white-space: nowrap;}
 }
 .logo-mode {
-  .mosaic .mosaic-info {
+  .mosaic .mosaic-info * {
     display: none;
   }
   .mosaic .logo_wrapper .logo {
-    height: 160px;
+    height: 130px;
+  }
+  .mosaic .mosaic-info .mosaic-title {
+    display: inherit;
+    width: 100%;
+    font-size: 1.5em;
+    text-align: center;
   }
 }
 

@@ -35,7 +35,7 @@ const Card = pure(({item, handler, itemRef, ...props}) => {
                 <img src={item.href} className='logo' max-height='100%' max-width='100%' />
               </div>
               <div className="mosaic-info">
-                <div>
+                <div className="mosaic-title">
                   <h5>{item.name}</h5>
                   {item.organization}
                 </div>
