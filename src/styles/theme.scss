@@ -255,6 +255,7 @@ a {text-decoration: none; transition: all 0.5s; color: $blue;
     .logo {width: 195px; height: 100px; max-width: 100%; border-radius: 4px 4px 0 0; }
   }
 
+
   &-info {
     font-size: 0.6em;
     border-width:1px 0 0 0;
@@ -274,6 +275,16 @@ a {text-decoration: none; transition: all 0.5s; color: $blue;
   }
   &-funding {white-space: nowrap;}
 }
+.logo-mode {
+  .mosaic .mosaic-info {
+    display: none;
+  }
+  .mosaic .logo_wrapper .logo {
+    height: 160px;
+  }
+}
+
+
 
 .ios {
   body {

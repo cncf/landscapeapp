@@ -78,7 +78,7 @@ const Header = pure(({groupedItem, itemRef, ...props}) => {
 
 
 
-const MainContent = ({groupedItems, onSelectItem, onOpenItemInNewTab}) => {
+const MainContent = ({groupedItems, isLogoMode, onSelectItem, onOpenItemInNewTab}) => {
   const handler = function(itemId) {
     const isSpecialMode = ( isMobile || window.innerWidth < 768 ) && isEmbed;
     isSpecialMode ? onOpenItemInNewTab(itemId) : onSelectItem(itemId);
@@ -397,7 +397,7 @@ const MainContent = ({groupedItems, onSelectItem, onOpenItemInNewTab}) => {
   }
 
   return (
-      <div className="column-content">
+      <div className={classNames('column-content', {'logo-mode': isLogoMode})}>
         { _.flatten(itemsAndHeaders) }
         { delayedRemainingContent }
         <div ref={autoHide} className="old-column-content" key={Math.random()}>

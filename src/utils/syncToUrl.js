@@ -37,7 +37,7 @@ export function addNoIndexIfRequired() {
   }
 }
 
-export function filtersToUrl({filters, grouping, sortField, selectedItemId, zoom, mainContentMode = 'card', isFullscreen}) {
+export function filtersToUrl({filters, grouping, sortField, selectedItemId, zoom, mainContentMode = 'card', isLogoMode = false, isFullscreen}) {
   const prefix = window.prefix;
   const params = {};
   var fieldNames = _.keys(fields);
@@ -48,7 +48,7 @@ export function filtersToUrl({filters, grouping, sortField, selectedItemId, zoom
   addSortFieldToParams({sortField: sortField, params: params});
   // addSortDirectionToParams({sortDirection: sortDirection, params: params});
   addSelectedItemIdToParams({selectedItemId: selectedItemId, params: params });
-  addMainContentModeToParams({mainContentMode: mainContentMode, params: params});
+  addMainContentModeToParams({mainContentMode: mainContentMode, isLogoMode: isLogoMode, params: params});
   addZoomToParams({zoom: zoom, mainContentMode: mainContentMode, params: params});
   addFullscreenToParams({isFullscreen: isFullscreen, params: params});
   if (_.isEmpty(params)) {
@@ -133,8 +133,13 @@ function addSortFieldToParams({sortField, params}) {
   }
 }
 
-function addMainContentModeToParams({mainContentMode, params}) {
-  if (mainContentMode !== initialState.mainContentMode) {
+function addMainContentModeToParams({mainContentMode, isLogoMode, params}) {
+  const initialMainContentMode = initialState.isLogoMode ? 'logo-mode' : initialState.mainContentMode;
+  if (isLogoMode) {
+    mainContentMode = 'logo-mode';
+  }
+
+  if (mainContentMode !== initialMainContentMode) {
     if (mainContentMode === mainSettings.url) {
       params['format'] = mainSettings.url;
     }
@@ -142,7 +147,10 @@ function addMainContentModeToParams({mainContentMode, params}) {
       params['format'] = extraSettings.url;
     }
     if (mainContentMode === 'card') {
-      params['format'] = 'card-mode'
+      params['format'] = 'card-mode';
+    }
+    if (mainContentMode === 'logo-mode') {
+      params['format'] = 'logo-mode';
     }
   }
 }
@@ -228,6 +236,10 @@ function setMainContentModeFromParams({ newParameters, params}) {
     newParameters.mainContentMode = extraSettings.url;
   } else if (format === 'card-mode') {
     newParameters.mainContentMode = 'card';
+    newParameters.isLogoMode = false;
+  } else if (format === 'logo-mode') {
+    newParameters.mainContentMode = 'card';
+    newParameters.isLogoMode = true;
   }
 }
 
