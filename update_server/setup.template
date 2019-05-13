@@ -31,8 +31,10 @@ echo '
     (
       source "$f"
       source "$f.private"
-      (bash /root/real_update.sh || bash /root/real_update.sh || bash root/real_update.sh) > /root/update.log
-      cd /repo/node_modules/interactive-landscape && ERROR_STATUS=$? LOGFILE_PATH=/root/update.log ./node_modules/.bin/babel-node tools/reportToSlack.js
+      set +e
+      (bash /root/real_update.sh || bash /root/real_update.sh || bash root/real_update.sh) > /root/update."$f".log
+      cd /repo/node_modules/interactive-landscape && ERROR_STATUS=$? LOGFILE_PATH=/root/update."$f".log ./node_modules/.bin/babel-node tools/reportToSlack.js
+      set -e
     ) || echo "failed to update a project $f"
   done
   ' > /root/update.sh
