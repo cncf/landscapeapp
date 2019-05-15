@@ -102,7 +102,6 @@ function getMembers() {
   }
 }
 const members = getMembers();
-console.info('members', members);
 
 async function main() {
 
@@ -253,7 +252,6 @@ async function main() {
         delete twitterEntry.url;
       }
 
-      console.info('processed: ', node.name );
     }
   });
 
