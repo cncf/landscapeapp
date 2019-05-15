@@ -2,7 +2,7 @@ set -e
 rm -rf $2 || true
 git clone https://github.com/$1 $2
 cd $2
-git checkout origin/master
+git checkout origin/$3
 cd ..
 export PROJECT_PATH=$2
 PROJECT_NAME=$2 npm run build

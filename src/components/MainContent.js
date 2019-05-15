@@ -35,7 +35,7 @@ const Card = pure(({item, handler, itemRef, ...props}) => {
                 <img src={item.href} className='logo' max-height='100%' max-width='100%' />
               </div>
               <div className="mosaic-info">
-                <div>
+                <div className="mosaic-title">
                   <h5>{item.name}</h5>
                   {item.organization}
                 </div>
@@ -78,7 +78,7 @@ const Header = pure(({groupedItem, itemRef, ...props}) => {
 
 
 
-const MainContent = ({groupedItems, onSelectItem, onOpenItemInNewTab}) => {
+const MainContent = ({groupedItems, isLogoMode, onSelectItem, onOpenItemInNewTab}) => {
   const handler = function(itemId) {
     const isSpecialMode = ( isMobile || window.innerWidth < 768 ) && isEmbed;
     isSpecialMode ? onOpenItemInNewTab(itemId) : onSelectItem(itemId);
@@ -397,7 +397,7 @@ const MainContent = ({groupedItems, onSelectItem, onOpenItemInNewTab}) => {
   }
 
   return (
-      <div className="column-content">
+      <div className={classNames('column-content', {'logo-mode': isLogoMode})}>
         { _.flatten(itemsAndHeaders) }
         { delayedRemainingContent }
         <div ref={autoHide} className="old-column-content" key={Math.random()}>
