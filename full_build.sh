@@ -21,7 +21,7 @@ if [ $BRANCH = "master" ]; then
   git remote rm github 2>/dev/null || true
   git remote add github "https://$GITHUB_USER:$GITHUB_TOKEN@github.com/cncf/landscapeapp"
   git fetch github
-  git diff
+  # git diff # Need to comment this when a diff is too large
   git checkout -- .
   npm version patch
   git commit -m 'Update to a new version [skip ci]' --allow-empty --amend
