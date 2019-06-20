@@ -226,6 +226,14 @@ if (settings.global.flags.companies) {
   });
 }
 
+if (settings.global.flags.hide_license_for_categories) {
+  _.each(itemsWithExtraFields, function(item) {
+    if (settings.global.flags.hide_license_for_categories.indexOf(item.category) !== -1) {
+      item.hideLicense = true;
+    }
+  });
+}
+
 
 // protect us from duplicates
 var hasDuplicates = false;
