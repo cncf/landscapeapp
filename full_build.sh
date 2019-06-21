@@ -7,7 +7,7 @@ mkdir -p dist
 npm install -g npm
 npm ci
 bash build.sh LFDLFoundation/lfdl-landscape lfdl master
-bash build.sh cncf/landscape cncf 219-hide-license
+bash build.sh cncf/landscape cncf master
 # bash build.sh lf-edge/lfedge-landscape lf-edge
 echo "User-agent: *" > dist/robots.txt
 # comment below when about to test a googlebot rendering
