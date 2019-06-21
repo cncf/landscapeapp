@@ -94,8 +94,11 @@ const openSourceTag = function(oss) {
     <span className="tag-value">Open Source Software</span>
   </InternalLink>)
 }
-const licenseTag = function({relation, license}) {
+const licenseTag = function({relation, license, hideLicense}) {
   if (relation === 'company') {
+    return null;
+  }
+  if (hideLicense) {
     return null;
   }
 
