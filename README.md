@@ -2,9 +2,9 @@
 
 [![CII Best Practices](https://bestpractices.coreinfrastructure.org/projects/2434/badge)](https://bestpractices.coreinfrastructure.org/projects/2434) [![npm version](https://img.shields.io/npm/v/interactive-landscape.svg)](https://www.npmjs.com/package/interactive-landscape) [![Dependency Status](https://img.shields.io/david/cncf/landscapeapp.svg?style=flat-square)](https://david-dm.org/cncf/landscapeapp) [![Netlify Status](https://api.netlify.com/api/v1/badges/50d760a8-5b21-4319-aa01-2ad54e453fd6/deploy-status)](https://app.netlify.com/sites/landscapeapp/deploys)
 
-The landscapeapp is an upstream NPM [module](https://www.npmjs.com/package/interactive-landscape) that supports building interactive landscape websites such as the [CNCF Cloud Native Landscape](https://landscape.cncf.io) ([source](https://github.com/cncf/landscape)) and the [LF Deep Learning Foundation Landscape](https://landscape.lfdl.io) ([source](https://github.com/LFDLFoundation/lfdl-landscape)). The application has been developed by [Andrey Kozlov](https://github.com/ZeusTheTrueGod) and [Dan Kohn](https://www.dankohn.com) of [CNCF](https://www.cncf.io).
+The landscapeapp is an upstream NPM [module](https://www.npmjs.com/package/interactive-landscape) that supports building interactive landscape websites such as the [CNCF Cloud Native Landscape](https://landscape.cncf.io) ([source](https://github.com/cncf/landscape)) and the [LF Deep Artificial Intelligence Landscape](https://landscape.lfai.foundation) ([source](https://github.com/lfai/lfai-landscape)). The application has been developed by [Andrey Kozlov](https://github.com/ZeusTheTrueGod) and [Dan Kohn](https://www.dankohn.com) of [CNCF](https://www.cncf.io).
 
-If you want to create an interactive landscape for your project or organization, the easiest process is to fork the [LFDL landscape](https://github.com/LFDLFoundation/lfdl-landscape), since it only has a single landscape image. Edit `settings.yml`, `landscape.yml`, and `members.yml` for your topic. Then create a Netlify account (or similar) to automatically build and publish the static site on every commit.
+If you want to create an interactive landscape for your project or organization, the easiest process is to fork the [LFDL landscape](https://github.com/lfai/lfai-landscape), since it only has a single landscape image. Edit `settings.yml`, `landscape.yml`, and `members.yml` for your topic. Then create a Netlify account (or similar) to automatically build and publish the static site on every commit.
 
 In addition to creating fully interactive sites, the landscapeapp builds static images on each update:
 
@@ -18,7 +18,7 @@ In addition to creating fully interactive sites, the landscapeapp builds static 
 
 ## LF Deep Learning Landscape
 
-[![LF Deep Learning Landscape](https://landscape.lfdl.io/images/landscape.png)](https://landscape.lfdl.io/images/landscape.png)
+[![LF Artificial Intelligence Landscape](https://landscape.lfai.foundation/images/landscape.png)](https://landscape.lfai.foundation/images/landscape.png)
 
 ## Images
 
