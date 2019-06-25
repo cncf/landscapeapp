@@ -13,6 +13,7 @@ import AutoSizer from './CustomAutoSizer';
 import {
   MainLandscapeContentContainer,
   ExtraLandscapeContentContainer,
+  ThirdLandscapeContentContainer,
   SwitchButtonContainer,
   ZoomButtonsContainer,
   FullscreenButtonContainer
@@ -39,6 +40,7 @@ import settings from 'project/settings.yml'
 
 const mainSettings = settings.big_picture.main;
 const extraSettings = settings.big_picture.extra || {};
+const thirdSettings = settings.big_picture.third || {};
 
 const state = {
   lastScrollPosition: 0
@@ -209,6 +211,7 @@ const HomePage = ({isEmbed, mainContentMode, ready, hasSelectedItem, filtersVisi
                     <div style={{width: '100%', height: '100%', position: 'relative', overflow: 'scroll', padding: 10}}>
                       { mainContentMode === mainSettings.url && <MainLandscapeContentContainer /> }
                       { mainContentMode === extraSettings.url && <ExtraLandscapeContentContainer /> }
+                      { mainContentMode === thirdSettings.url && <ThirdLandscapeContentContainer /> }
                     </div>
                   </div>
                 )}

@@ -8,7 +8,6 @@ import formatNumber from 'format-number';
 import { filtersToUrl } from '../utils/syncToUrl';
 import stringOrSpecial from '../utils/stringOrSpecial';
 import settings from 'project/settings.yml';
-const extraSettings = settings.big_picture.extra;
 
 const landscape = fields.landscape.values;
 
