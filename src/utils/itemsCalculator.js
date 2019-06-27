@@ -312,13 +312,57 @@ const getGroupedItemsForServerlessBigPicture = createSelector([
   }
 );
 
+const getGroupedItemsForCncfMembers = createSelector([
+     getFilteredItemsForBigPicture,
+    (state) => state.main.data,
+    (state) => state.main.grouping,
+    (state) => state.main.filters,
+    (state) => state.main.sortField
+  ],
+  function(items, allItems, grouping, filters, sortField) {
+    const membersCategory = landscape.filter( (l) => l.label === 'CNCF Members')[0];
+    const subcategories = landscape.filter( (l) => l.parentId === membersCategory.id);
+
+    const itemsFrom = function(subcategoryId) {
+      return _.orderBy(items.filter(function(item) {
+              return item.landscape ===  subcategoryId
+            }), bigPictureSortOrder)
+    };
+
+    const allItemsFrom = function(subcategoryId) {
+      return _.orderBy(allItems.filter(function(item) {
+              return item.landscape ===  subcategoryId
+            }), bigPictureSortOrder)
+    };
+
+    const result = subcategories.map(function(subcategory) {
+      const newFilters = {...filters, landscape: subcategory.id };
+      return {
+        key: stringOrSpecial(subcategory.label),
+        header: subcategory.label,
+        href: filtersToUrl({filters: newFilters, grouping: 'landscape', sortField, mainContentMode: 'card'}),
+        subcategories: [
+          {
+            name: '',
+            href: '',
+            items: itemsFrom(subcategory.id),
+            allItems: allItemsFrom(subcategory.id)
+          }
+        ]
+      };
+    });
+
+    return result;
+  }
+);
 export function getItemsForExport(state) {
   return _.flatten(getGroupedItems(state).map((x) => x.items));
 }
 
 export const bigPictureMethods = {
   getGroupedItemsForCncfBigPicture,
-  getGroupedItemsForServerlessBigPicture
+  getGroupedItemsForServerlessBigPicture,
+  getGroupedItemsForCncfMembers
 };
 
 export default getGroupedItems;
