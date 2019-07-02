@@ -180,13 +180,13 @@ const getSubcategoryWidth = function({subcategory, rows}) {
   return width;
 }
 
-const HorizontalCategory = (function({header, subcategories, rows, width, height, top, left, zoom, color, href, onSelectItem, fitWidth}) {
+const HorizontalCategory = (function({header, subcategories, rows, width, height, top, left, zoom, color, href, onSelectItem, fitWidth, offset = 50}) {
 
   let innerWidth = _.sumBy(subcategories, (subcategory) =>  getSubcategoryWidth({subcategory, rows}));
   if (subcategories.length > 1) {
     console.info(`${header} has a width of ${innerWidth}, but expected width is ${width}`);
   }
-  const xRatio = fitWidth ? (width - 50 ) / innerWidth : 1.05;
+  const xRatio = fitWidth ? (width - offset ) / innerWidth : 1.05;
 
   return (
     <div style={{
