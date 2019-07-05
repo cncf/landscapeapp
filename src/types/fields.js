@@ -171,12 +171,12 @@ const fields = {
     id: 'enduser',
     label: 'End User',
     url: 'enduser',
-    filterFn: function(filter, value) {
+    filterFn: function(filter, value, record) {
       if (filter === null) {
         return true;
       }
       if (filter === true) {
-        return !!value;
+        return !!value || record.landscape === 'CNCF Members / End User Supporter' ;
       }
       if (filter === false) {
         return !value;
