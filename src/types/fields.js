@@ -166,6 +166,23 @@ const fields = {
       }
     },
     values: [{id: true, label: 'Yes', url: 'yes'}, {id: false, label: 'No', url: 'no'}]
+  },
+  enduser: {
+    id: 'enduser',
+    label: 'End User',
+    url: 'enduser',
+    filterFn: function(filter, value) {
+      if (filter === null) {
+        return true;
+      }
+      if (filter === true) {
+        return !!value;
+      }
+      if (filter === false) {
+        return !value;
+      }
+    },
+    values: [{id: true, label: 'Yes', url: 'yes'}, {id: false, label: 'No', url: 'no'}]
   }
 };
 _.each(fields, function(field, key) {

@@ -25,7 +25,8 @@ export const initialState = {
     organization: [],
     headquarters: [],
     landscape: [],
-    bestPracticeBadgeId: null
+    bestPracticeBadgeId: null,
+    enduser: null
   },
   grouping: 'relation',
   sortField: 'name',

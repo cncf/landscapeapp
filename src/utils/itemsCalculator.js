@@ -33,8 +33,9 @@ export const getFilteredItems = createSelector(
     var filterByHeadquarters = filterFn({field: 'headquarters', filters});
     var filterByLandscape = mainContentMode === 'card' ? filterFn({field: 'landscape', filters}) : (x) => true;
     var filterByBestPractices = filterFn({field: 'bestPracticeBadgeId', filters});
+    var filterByEnduser = filterFn({field: 'enduser', filters});
     return data.filter(function(x) {
-      return filterHostedProject(x) && filterByLicense(x) && filterByOrganization(x) && filterByHeadquarters(x) && filterByLandscape(x) && filterByBestPractices(x);
+      return filterHostedProject(x) && filterByLicense(x) && filterByOrganization(x) && filterByHeadquarters(x) && filterByLandscape(x) && filterByBestPractices(x) && filterByEnduser(x);
     });
   }
 );
@@ -72,8 +73,9 @@ const getFilteredItemsForBigPicture = createSelector(
     var filterByOrganization = filterFn({field: 'organization', filters});
     var filterByHeadquarters = filterFn({field: 'headquarters', filters});
     var filterByBestPractices = filterFn({field: 'bestPracticeBadgeId', filters});
+    var filterByEnduser = filterFn({field: 'enduser', filters});
     return addExtraFields(data.filter(function(x) {
-      return filterHostedProject(x) && filterByLicense(x) && filterByOrganization(x) && filterByHeadquarters(x) && filterByBestPractices(x);
+      return filterHostedProject(x) && filterByLicense(x) && filterByOrganization(x) && filterByHeadquarters(x) && filterByBestPractices(x) && filterByEnduser(x);
     }));
   }
 );
