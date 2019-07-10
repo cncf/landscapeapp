@@ -19,7 +19,8 @@ const allowedKeys = [
   'description',
   'branch',
   'project',
-  'url_for_bestpractices'
+  'url_for_bestpractices',
+  'enduser'
 ];
 
 const categoryKeys = [

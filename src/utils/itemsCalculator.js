@@ -8,7 +8,6 @@ import formatNumber from 'format-number';
 import { filtersToUrl } from '../utils/syncToUrl';
 import stringOrSpecial from '../utils/stringOrSpecial';
 import settings from 'project/settings.yml';
-const extraSettings = settings.big_picture.extra;
 
 const landscape = fields.landscape.values;
 
@@ -34,8 +33,9 @@ export const getFilteredItems = createSelector(
     var filterByHeadquarters = filterFn({field: 'headquarters', filters});
     var filterByLandscape = mainContentMode === 'card' ? filterFn({field: 'landscape', filters}) : (x) => true;
     var filterByBestPractices = filterFn({field: 'bestPracticeBadgeId', filters});
+    var filterByEnduser = filterFn({field: 'enduser', filters});
     return data.filter(function(x) {
-      return filterHostedProject(x) && filterByLicense(x) && filterByOrganization(x) && filterByHeadquarters(x) && filterByLandscape(x) && filterByBestPractices(x);
+      return filterHostedProject(x) && filterByLicense(x) && filterByOrganization(x) && filterByHeadquarters(x) && filterByLandscape(x) && filterByBestPractices(x) && filterByEnduser(x);
     });
   }
 );
@@ -73,8 +73,9 @@ const getFilteredItemsForBigPicture = createSelector(
     var filterByOrganization = filterFn({field: 'organization', filters});
     var filterByHeadquarters = filterFn({field: 'headquarters', filters});
     var filterByBestPractices = filterFn({field: 'bestPracticeBadgeId', filters});
+    var filterByEnduser = filterFn({field: 'enduser', filters});
     return addExtraFields(data.filter(function(x) {
-      return filterHostedProject(x) && filterByLicense(x) && filterByOrganization(x) && filterByHeadquarters(x) && filterByBestPractices(x);
+      return filterHostedProject(x) && filterByLicense(x) && filterByOrganization(x) && filterByHeadquarters(x) && filterByBestPractices(x) && filterByEnduser(x);
     }));
   }
 );
@@ -100,8 +101,11 @@ const getSortedItems = createSelector(
     const emptyItemsUndefined = data.filter(function(x) {
       return _.isUndefined(x[sortField]);
     });
+    const nonPublicOrganization = data.filter(function(x) {
+      return x[sortField].indexOf('Non-Public Organization') === 0;
+    });
     const normalItems = data.filter(function(x) {
-      return x[sortField] !== 'N/A' && x[sortField] !== 'Not Entered Yet' && !_.isUndefined(x[sortField]);
+      return x[sortField] !== 'N/A' && x[sortField] !== 'Not Entered Yet' && !_.isUndefined(x[sortField]) && x[sortField].indexOf('Non-Public Organization') !== 0;
     });
     const sortedViaMainSort =  _.orderBy(normalItems, [function(x) {
       var result = x[sortField];
@@ -122,7 +126,11 @@ const getSortedItems = createSelector(
     const sortedViaName3 = _.orderBy(emptyItemsUndefined, function(x) {
       return x.name.toLowerCase();
     });
-    return sortedViaMainSort.concat(sortedViaName1).concat(sortedViaName2).concat(sortedViaName3);
+    const sortedViaName4 = _.orderBy(nonPublicOrganization, function(x) {
+      return x.name.toLowerCase();
+    });
+
+    return sortedViaMainSort.concat(sortedViaName1).concat(sortedViaName2).concat(sortedViaName3).concat(sortedViaName4);
   }
 );
 
@@ -180,6 +188,9 @@ const bigPictureSortOrder = [
       return 99;
     }
     return result.big_picture_order || 99;
+  },
+  function orderByAnimal(item) {
+    return item.name.indexOf('Non-Public Organization ');
   },
   function orderByProjectName(item) {
     return item.name.toLowerCase();
@@ -313,13 +324,57 @@ const getGroupedItemsForServerlessBigPicture = createSelector([
   }
 );
 
+const getGroupedItemsForCncfMembers = createSelector([
+     getFilteredItemsForBigPicture,
+    (state) => state.main.data,
+    (state) => state.main.grouping,
+    (state) => state.main.filters,
+    (state) => state.main.sortField
+  ],
+  function(items, allItems, grouping, filters, sortField) {
+    const membersCategory = landscape.filter( (l) => l.label === 'CNCF Members')[0];
+    const subcategories = landscape.filter( (l) => l.parentId === membersCategory.id);
+
+    const itemsFrom = function(subcategoryId) {
+      return _.orderBy(items.filter(function(item) {
+              return item.landscape ===  subcategoryId
+            }), bigPictureSortOrder)
+    };
+
+    const allItemsFrom = function(subcategoryId) {
+      return _.orderBy(allItems.filter(function(item) {
+              return item.landscape ===  subcategoryId
+            }), bigPictureSortOrder)
+    };
+
+    const result = subcategories.map(function(subcategory) {
+      const newFilters = {...filters, landscape: subcategory.id };
+      return {
+        key: stringOrSpecial(subcategory.label),
+        header: subcategory.label,
+        href: filtersToUrl({filters: newFilters, grouping: 'landscape', sortField, mainContentMode: 'card'}),
+        subcategories: [
+          {
+            name: '',
+            href: '',
+            items: itemsFrom(subcategory.id),
+            allItems: allItemsFrom(subcategory.id)
+          }
+        ]
+      };
+    });
+
+    return result;
+  }
+);
 export function getItemsForExport(state) {
   return _.flatten(getGroupedItems(state).map((x) => x.items));
 }
 
 export const bigPictureMethods = {
   getGroupedItemsForCncfBigPicture,
-  getGroupedItemsForServerlessBigPicture
+  getGroupedItemsForServerlessBigPicture,
+  getGroupedItemsForCncfMembers
 };
 
 export default getGroupedItems;

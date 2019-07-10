@@ -4,12 +4,17 @@ import _ from 'lodash'
 import InternalLink from '../InternalLink';
 import Fade from '@material-ui/core/Fade';
 import fields from '../../types/fields';
+import settings from 'project/settings.yml'
 
 const itemWidth = 36;
 const itemHeight = 32;
 
 const isLargeFn = function(x) {
   const relationInfo = _.find(fields.relation.values, {id: x.relation});
+  if (x.category === settings.global.membership) {
+    const membershipInfo = settings.membership[x.member];
+    return membershipInfo && !!membershipInfo.is_large;
+  }
   return !!relationInfo.big_picture_order;
 }
 
@@ -18,6 +23,7 @@ const Item = (function({zoom, item, x, y, isLarge, onSelectItem}) {
     return <LargeItem {...{zoom, item, x, y, onSelectItem}} />;
   }
   const k = 1;
+  const isMember = item.category === settings.global.membership;
   return <div style={{
     cursor: 'pointer',
     position: 'absolute',
@@ -32,9 +38,9 @@ const Item = (function({zoom, item, x, y, isLarge, onSelectItem}) {
       height: (itemHeight * k - 2) * zoom,
       margin: 2 * zoom,
       padding: 2 * zoom,
-      border: `${1 * zoom}px solid grey`,
+      border: isMember ? '' : `${1 * zoom}px solid grey`,
       borderRadius: 3 * zoom,
-      background: item.oss ? '' : '#eee'
+      background: isMember ? '' : item.oss ? '' : '#eee'
     }}
     onClick={ () => onSelectItem(item.id)}
   />
@@ -174,13 +180,13 @@ const getSubcategoryWidth = function({subcategory, rows}) {
   return width;
 }
 
-const HorizontalCategory = (function({header, subcategories, rows, width, height, top, left, zoom, color, href, onSelectItem, fitWidth}) {
+const HorizontalCategory = (function({header, subcategories, rows, width, height, top, left, zoom, color, href, onSelectItem, fitWidth, offset = 50}) {
 
   let innerWidth = _.sumBy(subcategories, (subcategory) =>  getSubcategoryWidth({subcategory, rows}));
   if (subcategories.length > 1) {
     console.info(`${header} has a width of ${innerWidth}, but expected width is ${width}`);
   }
-  const xRatio = fitWidth ? (width - 50 ) / innerWidth : 1.05;
+  const xRatio = fitWidth ? (width - offset ) / innerWidth : 1.05;
 
   return (
     <div style={{

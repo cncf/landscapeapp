@@ -4,12 +4,13 @@ import PropTypes from 'prop-types';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import { Switch, Route } from 'react-router-dom';
 
-import { MainFullscreenLandscapeContainer, ExtraFullscreenLandscapeContainer } from "./BigPicture";
+import { MainFullscreenLandscapeContainer, ExtraFullscreenLandscapeContainer, ThirdFullscreenLandscapeContainer } from "./BigPicture";
 import HomePageContainer from './HomePageContainer';
 import NotFoundPage from './NotFoundPage';
 import settings from 'project/settings.yml';
 const mainSettings = settings.big_picture.main;
 const extraSettings = settings.big_picture.extra;
+const thirdSettings = settings.big_picture.third;
 
 // detect an initial prefix, like /cncf/ or /lfdl/ , but it can be just /
 const possiblePrefix = window.possiblePrefix || '';
@@ -27,6 +28,7 @@ class App extends React.Component {
         <Switch>
           <Route exact path={`/${prefix}`} component={HomePageContainer} />
           { extraSettings && <Route exact path={`/${prefix}${extraSettings.url}`} component={ExtraFullscreenLandscapeContainer}/> }
+          { thirdSettings && <Route exact path={`/${prefix}${thirdSettings.url}`} component={ThirdFullscreenLandscapeContainer}/> }
           <Route exact path={`/${prefix}${mainSettings.url}`} component={MainFullscreenLandscapeContainer}/>
           <Route path={`/${prefix}`} component={HomePageContainer} />
           <Route component={NotFoundPage} />

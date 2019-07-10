@@ -14,6 +14,7 @@ const sortOptions = options.map(function(x) {
 import settings from 'project/settings.yml';
 const mainSettings = settings.big_picture.main;
 const extraSettings = settings.big_picture.extra || {};
+const thirdSettings = settings.big_picture.third || {};
 
 export function addNoIndexIfRequired() {
   const url = window.location.pathname;
@@ -146,6 +147,9 @@ function addMainContentModeToParams({mainContentMode, isLogoMode, params}) {
     if (mainContentMode === extraSettings.url && extraSettings.url) {
       params['format'] = extraSettings.url;
     }
+    if (mainContentMode === thirdSettings.url && thirdSettings.url) {
+      params['format'] = thirdSettings.url;
+    }
     if (mainContentMode === 'card') {
       params['format'] = 'card-mode';
     }
@@ -234,6 +238,8 @@ function setMainContentModeFromParams({ newParameters, params}) {
     newParameters.mainContentMode = mainSettings.url;
   } else if (format === extraSettings.url && extraSettings.url) {
     newParameters.mainContentMode = extraSettings.url;
+  } else if (format === thirdSettings.url && thirdSettings.url) {
+    newParameters.mainContentMode = thirdSettings.url;
   } else if (format === 'card-mode') {
     newParameters.mainContentMode = 'card';
     newParameters.isLogoMode = false;

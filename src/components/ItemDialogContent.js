@@ -56,7 +56,7 @@ const iconGithub = <svg viewBox="0 0 24 24">
     14.5,21C14.5,21.27 14.66,21.59 15.17,21.5C19.14,20.16 22,16.42 22,12A10,10 0 0,0 12,2Z" />
     </svg>
 
-const projectTag = function({relation, member, project}) {
+const projectTag = function({relation, member, project, enduser}) {
   if (relation === false) {
     return null;
   }
@@ -73,7 +73,10 @@ const projectTag = function({relation, member, project}) {
 
   if (relation === 'member' || relation === 'company') {
     console.info(settings.membership, member);
-    const { name, label } = settings.membership[member];
+    const info = settings.membership[member];
+    const name = info.name;
+    const label = enduser ? info.end_user_label : info.label ;
+
     return (<InternalLink to={filtersToUrl({filters:{relation: relation}})} className="tag tag-blue">
       <span className="tag-name">{name}</span>
       <span className="tag-value">{label}</span>

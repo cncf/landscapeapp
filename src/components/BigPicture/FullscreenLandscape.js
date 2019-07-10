@@ -33,7 +33,7 @@ const Fullscreen = ({ready, groupedItems, landscapeSettings, showPreview, versio
             paddingBottom: 3,
             borderRadius: 5
           }}>{landscapeSettings.fullscreen_header}</div>
-          <div style={{
+          { !landscapeSettings.fullscreen_hide_grey_logos && <div style={{
             position: 'absolute',
             top: 15,
             right: 12,
@@ -45,7 +45,7 @@ const Fullscreen = ({ready, groupedItems, landscapeSettings, showPreview, versio
             paddingTop: 3,
             paddingBottom: 3,
             borderRadius: 5
-          }}>Greyed logos are not open source</div>
+          }}>Greyed logos are not open source</div> }
           <div style={{
             position: 'absolute',
             top: 10,

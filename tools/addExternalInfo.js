@@ -68,6 +68,14 @@ else if (key.toLowerCase() === 'complete') {
   console.info('Unknown level. Should be one of easy, medium, hard or complete');
 }
 
+function getItemMembershipKey(item) {
+  if (item.crunchbase === 'https://www.cncf.io') {
+    return item.crunchbase + ':' + item.name;
+  } else {
+    return item.crunchbase;
+  }
+}
+
 function getMembers() {
   const membershipFile = path.resolve(projectPath, 'members.yml');
   const hasMembershipFile = require('fs').existsSync(membershipFile);
@@ -94,7 +102,7 @@ function getMembers() {
     tree.map(function(node) {
       if (node && node.category === null && node.name === settings.global.membership) {
         node.subcategories.forEach(function(subcategory) {
-          result[subcategory.name] = subcategory.items.map( (item) => item.crunchbase);
+          result[subcategory.name] = subcategory.items.map( (item) => getItemMembershipKey(item));
         });
       }
     });
@@ -195,7 +203,7 @@ async function main() {
         delete node.github_start_commit_data.branch;
       }
       //membership
-      const membership = _.findKey(members, (v) => v && v.indexOf(node.crunchbase) !== -1);
+      const membership = _.findKey(members, (v) => v && v.indexOf(getItemMembershipKey(node)) !== -1);
       node.membership_data = {
         member: membership || false
       }
