@@ -101,8 +101,11 @@ const getSortedItems = createSelector(
     const emptyItemsUndefined = data.filter(function(x) {
       return _.isUndefined(x[sortField]);
     });
+    const nonPublicOrganization = data.filter(function(x) {
+      return x[sortField].indexOf('Non-Public Organization') === 0;
+    });
     const normalItems = data.filter(function(x) {
-      return x[sortField] !== 'N/A' && x[sortField] !== 'Not Entered Yet' && !_.isUndefined(x[sortField]);
+      return x[sortField] !== 'N/A' && x[sortField] !== 'Not Entered Yet' && !_.isUndefined(x[sortField]) && x[sortField].indexOf('Non-Public Organization') !== 0;
     });
     const sortedViaMainSort =  _.orderBy(normalItems, [function(x) {
       var result = x[sortField];
@@ -123,7 +126,11 @@ const getSortedItems = createSelector(
     const sortedViaName3 = _.orderBy(emptyItemsUndefined, function(x) {
       return x.name.toLowerCase();
     });
-    return sortedViaMainSort.concat(sortedViaName1).concat(sortedViaName2).concat(sortedViaName3);
+    const sortedViaName4 = _.orderBy(nonPublicOrganization, function(x) {
+      return x.name.toLowerCase();
+    });
+
+    return sortedViaMainSort.concat(sortedViaName1).concat(sortedViaName2).concat(sortedViaName3).concat(sortedViaName4);
   }
 );
 
@@ -181,6 +188,9 @@ const bigPictureSortOrder = [
       return 99;
     }
     return result.big_picture_order || 99;
+  },
+  function orderByAnimal(item) {
+    return item.name.indexOf('Non-Public Organization ');
   },
   function orderByProjectName(item) {
     return item.name.toLowerCase();

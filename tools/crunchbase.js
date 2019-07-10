@@ -136,14 +136,12 @@ export async function fetchCrunchbaseEntries({cache, preferCache}) {
       const entry = {
         url: c.crunchbase,
         name: 'Non-Public Unnamed Organization',
-        description: 'Non-Public Unnamed Organization',
-        num_employees_min: 1,
-        num_employees_max: 10,
-        homepage: null,
+        description: '',
+        homepage: 'https://www.cncf.io',
         city: 'Bouvet Island, Antarctica',
         region: 'Antarctica',
         country: 'Antarctica',
-        twitter: null,
+        twitter: 'https://twitter.com/CloudNativeFdn',
         linkedin: null
       }
       return entry;
