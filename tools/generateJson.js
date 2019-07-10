@@ -276,7 +276,7 @@ if (hasEmptyCrunchbase) {
 
 var hasBadCrunchbase = false;
 _.each(itemsWithExtraFields, function(item) {
-  if (item.crunchbase.indexOf('https://www.crunchbase.com/organization/') !== 0) {
+  if (item.crunchbase.indexOf('https://www.crunchbase.com/organization/') !== 0 && item.crunchbase !== 'https://www.cncf.io') {
     hasBadCrunchbase = true;
     console.info(`FATAL ERROR: ${item.name}  has a crunchbase ${item.crunchbase} which does not start with 'https://www.crunchbase.com/organization'`);
   }

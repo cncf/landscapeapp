@@ -132,6 +132,22 @@ export async function fetchCrunchbaseEntries({cache, preferCache}) {
       return cachedEntry;
     }
     await Promise.delay(1 * 1000);
+    if (c.crunchbase === 'https://www.cncf.io') {
+      const entry = {
+        url: c.crunchbase,
+        name: 'Non-Public Unnamed Organization',
+        description: 'Non-Public Unnamed Organization',
+        num_employees_min: 1,
+        num_employees_max: 10,
+        homepage: null,
+        city: 'Bouvet Island, Antarctica',
+        region: 'Antarctica',
+        country: 'Antarctica',
+        twitter: null,
+        linkedin: null
+      }
+      return entry;
+    }
     try {
       const result = await rp({
         method: 'GET',
