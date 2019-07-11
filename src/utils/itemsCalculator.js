@@ -102,10 +102,10 @@ const getSortedItems = createSelector(
       return _.isUndefined(x[sortField]);
     });
     const nonPublicOrganization = data.filter(function(x) {
-      return x[sortField].indexOf('Non-Public Organization') === 0;
+      return (x[sortField] || '').toString().indexOf('Non-Public Organization') === 0;
     });
     const normalItems = data.filter(function(x) {
-      return x[sortField] !== 'N/A' && x[sortField] !== 'Not Entered Yet' && !_.isUndefined(x[sortField]) && x[sortField].indexOf('Non-Public Organization') !== 0;
+      return x[sortField] !== 'N/A' && x[sortField] !== 'Not Entered Yet' && !_.isUndefined(x[sortField]) && (x[sortField] || '').toString().indexOf('Non-Public Organization') !== 0;
     });
     const sortedViaMainSort =  _.orderBy(normalItems, [function(x) {
       var result = x[sortField];
