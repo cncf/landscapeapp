@@ -356,12 +356,27 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='rgb(124,170,1
 
 .mobile .big-picture-switch * {
   font-size: 13px !important;
+  min-width: 24px;
 }
 .mobile .big-picture-switch .tweet-button.tweet-button-main a span {
   font-size: 10px !important;
 }
 .big-picture-switch * {
   text-transform: none;
+}
+
+.big-picture-switch-normal {
+  display: block;
+}
+.big-picture-switch-short {
+  display: none;
+}
+
+.mobile .big-picture-switch-normal {
+  display: none;
+}
+.mobile .big-picture-switch-short {
+  display: block;
 }
 
 .zoom-buttons {
