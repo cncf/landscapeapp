@@ -41,6 +41,7 @@ const landscapeKeys = [
   'url_for_bestpractices',
   'stock_ticker',
   'logo',
+  'enduser',
   'twitter',
   'crunchbase'
 ];
