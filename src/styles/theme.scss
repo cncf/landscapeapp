@@ -379,6 +379,13 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='rgb(124,170,1
   display: block;
 }
 
+.mobile.portrait .big-picture-switch.big-picture-switch-short {
+  a > span > span {
+    padding-left: 4px;
+    padding-right: 4px;
+  }
+}
+
 .zoom-buttons {
   top: -47px;
   right: 0px;
