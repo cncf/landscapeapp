@@ -92,20 +92,19 @@ const getSortedItems = createSelector(
   ],
   function(data, sortField, sortDirection) {
     const fieldInfo = fields[sortField];
+    const nonPublic = (x) => (x.name || '').toString().indexOf('Non-Public Organization') === 0;
     const emptyItemsNA = data.filter(function(x) {
       return x[sortField] === 'N/A';
-    });
+    }).filter( (x) => !nonPublic(x));
     const emptyItemsNotEnteredYet = data.filter(function(x) {
       return x[sortField] === 'Not Entered Yet';
-    });
+    }).filter( (x) => !nonPublic(x));
     const emptyItemsUndefined = data.filter(function(x) {
       return _.isUndefined(x[sortField]);
-    });
-    const nonPublicOrganization = data.filter(function(x) {
-      return (x[sortField] || '').toString().indexOf('Non-Public Organization') === 0;
-    });
+    }).filter( (x) => !nonPublic(x));
+    const nonPublicOrganization = data.filter(nonPublic);
     const normalItems = data.filter(function(x) {
-      return x[sortField] !== 'N/A' && x[sortField] !== 'Not Entered Yet' && !_.isUndefined(x[sortField]) && (x[sortField] || '').toString().indexOf('Non-Public Organization') !== 0;
+      return x[sortField] !== 'N/A' && x[sortField] !== 'Not Entered Yet' && !_.isUndefined(x[sortField]) && (x.name || '').toString().indexOf('Non-Public Organization') !== 0;
     });
     const sortedViaMainSort =  _.orderBy(normalItems, [function(x) {
       var result = x[sortField];
