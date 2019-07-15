@@ -75,7 +75,7 @@ const projectTag = function({relation, member, project, enduser}) {
     console.info(settings.membership, member);
     const info = settings.membership[member];
     const name = info.name;
-    const label = enduser ? info.end_user_label : info.label ;
+    const label = enduser ? (info.end_user_label || info.label) : info.label ;
 
     return (<InternalLink to={filtersToUrl({filters:{relation: relation}})} className="tag tag-blue">
       <span className="tag-name">{name}</span>
