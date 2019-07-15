@@ -138,7 +138,7 @@ export async function fetchCrunchbaseEntries({cache, preferCache}) {
         name: 'Non-Public Unnamed Organization',
         description: '',
         homepage: 'https://www.cncf.io',
-        city: 'Bouvet Island, Antarctica',
+        city: 'Bouvet Island',
         region: 'Antarctica',
         country: 'Antarctica',
         twitter: 'https://twitter.com/CloudNativeFdn',
