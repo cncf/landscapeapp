@@ -18,11 +18,6 @@ require('favicon.png'); // Tell webpack to load favicon.png
 const store = configureStore();
 window.__MUI_USE_NEXT_TYPOGRAPHY_VARIANTS__ = true;
 
-if (process.env.NODE_ENV !== 'production') {
-  const {whyDidYouUpdate} = require('why-did-you-update');
-  whyDidYouUpdate(React);
-}
-
 import ps from 'project/settings.yml';
 console.info('project settings via yaml loader', ps);
 
