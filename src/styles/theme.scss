@@ -562,10 +562,27 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='rgb(124,170,1
 }
 
 .mobile.portrait .tweet-button.tweet-button-main {
-  top: 15px;
-  right: 15px;
-  z-index: 1;
+  width: 18px;
+  top: 12px;
+  right: 112px;
+  z-index: 7;
   position: absolute;
+  overflow: hidden;
+  > div {
+    position: relative;
+    width: 20px;
+    left: -2px;
+  }
+  > .tweet-count {
+    display: none;
+  }
+  a {
+    background: none;
+    svg {
+      margin-left: 0;
+      fill: rgb(89, 173, 235);
+    }
+  }
 }
 
 .mobile.landscape .tweet-button.tweet-button-main {
