@@ -16,7 +16,11 @@ In addition to creating fully interactive sites, the landscapeapp builds static 
 
 [![CNCF Serverless Landscape](https://landscape.cncf.io/images/serverless.png)](https://landscape.cncf.io/images/serverless.png)
 
-## LF Deep Learning Landscape
+## CNCF Member Landscape
+
+[![CNCF Member Landscape](https://landscape.cncf.io/images/members.png)](https://landscape.cncf.io/images/members.png)
+
+## LF Deep Artificial Intelligence Landscape
 
 [![LF Artificial Intelligence Landscape](https://landscape.lfai.foundation/images/landscape.png)](https://landscape.lfai.foundation/images/landscape.png)
 
