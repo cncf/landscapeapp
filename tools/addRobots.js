@@ -7,7 +7,6 @@ import path from 'path';
 const content = isMainBranch ?
   `
 User-agent: *
-Disallow: /*node_modules
 Allow: *
 
 Sitemap: ${settings.global.website}/sitemap.xml
