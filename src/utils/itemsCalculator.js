@@ -8,6 +8,7 @@ import formatNumber from 'format-number';
 import { filtersToUrl } from '../utils/syncToUrl';
 import stringOrSpecial from '../utils/stringOrSpecial';
 import  {sharedGetCategoriesForBigPicture, sharedGetCategoriesForServerlessBigPicture, sharedGetCategoriesForCncfMembers } from './sharedItemsCalculator';
+import settings from 'project/settings.yml';
 
 const landscape = fields.landscape.values;
 
