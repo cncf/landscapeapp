@@ -1,3 +1,13 @@
 {
-      "presets": [ ["babel-preset-latest-node", {target: 10}] ]
+      "presets": [ ["babel-preset-latest-node", {target: 10}] ],
+      "plugins": [
+          ["module-resolver", {
+              "root": ["./src"],
+              "alias": {
+                "project/settings.yml": "./tools/resolve-settings.js",
+                "project/lookup.json": "./tools/resolve-lookup.js",
+                "project/preview.json": "./tools/resolve-preview.js",
+              }
+          }]
+      ]
 }
