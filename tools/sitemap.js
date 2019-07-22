@@ -1,3 +1,4 @@
+import { bigPictureMethods } from '../src/utils/itemsCalculator';
 import {createSitemap} from 'sitemap';
 import { projectPath, settings } from './settings';
 import path from 'path';

@@ -7,7 +7,7 @@ import formatAmount from '../utils/formatAmount';
 import formatNumber from 'format-number';
 import { filtersToUrl } from '../utils/syncToUrl';
 import stringOrSpecial from '../utils/stringOrSpecial';
-import settings from 'project/settings.yml';
+import  {sharedGetCategoriesForBigPicture, sharedGetCategoriesForServerlessBigPicture, sharedGetCategoriesForCncfMembers } from './sharedItemsCalculator';
 
 const landscape = fields.landscape.values;
 
@@ -215,10 +215,8 @@ const getGroupedItemsForCncfBigPicture = createSelector(
   ],
   function(items, allItems, grouping, filters, sortField, mainContentMode) {
     const bigPictureSettings = _.values(settings.big_picture);
-    const currentSettings = _.find(bigPictureSettings, {url: mainContentMode});
-    const categories = landscape.filter( (l) => l.level === 1).filter(function(category) {
-      return _.find(currentSettings.elements, (element) => element.category === category.id);
-    }).map(function(category) {
+    const categories = sharedGetCategoriesForBigPicture({bigPictureSettings, format: mainContentMode, landscape });
+    return categories.map(function(category) {
       const newFilters = {...filters, landscape: category.id };
       return {
         key: stringOrSpecial(category.label),
@@ -239,7 +237,6 @@ const getGroupedItemsForCncfBigPicture = createSelector(
         })
       };
     });
-    return categories;
   }
 );
 
@@ -252,7 +249,7 @@ const getGroupedItemsForServerlessBigPicture = createSelector([
     (state) => state.main.sortField
   ],
   function(items, allItems, grouping, filters, sortField) {
-    const serverlessCategory = landscape.filter( (l) => l.label === 'Serverless')[0];
+    const serverlessCategory = sharedGetCategoriesForServerlessBigPicture({landscape})[0];
     const hostedPlatformSubcategory = _.find(landscape, {label: 'Hosted Platform'});
     const installablePlatformSubcategory = _.find(landscape, {label: 'Installable Platform'});
 
@@ -331,7 +328,7 @@ const getGroupedItemsForCncfMembers = createSelector([
     (state) => state.main.sortField
   ],
   function(items, allItems, grouping, filters, sortField) {
-    const membersCategory = landscape.filter( (l) => l.label === 'CNCF Members')[0];
+    const membersCategory = sharedGetCategoriesForCncfMembers({landscape})[0];
     const subcategories = landscape.filter( (l) => l.parentId === membersCategory.id);
 
     const itemsFrom = function(subcategoryId) {
