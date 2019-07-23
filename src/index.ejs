@@ -29,6 +29,18 @@
   <meta name="msvalidate.01" content="<%= htmlWebpackPlugin.options.settings.global.meta.ms_validate %>" />
   <title><%= htmlWebpackPlugin.options.settings.global.meta.title %></title>
   <script>
+    const parts = window.location.pathname.split('/'); // for example: /cncf/members or  /lfdl/landscape or /a/s/d/f
+    if (parts[1] === 'cncf' && parts[3]) {
+      window.location = '/'
+    }
+    else if (parts[1] === 'lfdl' && parts[3]) {
+      window.location = '/'
+    }
+    else if (parts[2]) {
+      window.location = '/'
+    }
+  </script>
+  <script>
     window.prefix = ''; // this line will be replaced for a landscapeapp build
   </script>
 </head>
