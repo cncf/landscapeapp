@@ -1,5 +1,5 @@
 import { projectPath, settings } from './settings';
-console.info('pf', projectPath);
+console.info('processed', projectPath);
 const source = require('js-yaml').safeLoad(require('fs').readFileSync(`${projectPath}/processed_landscape.yml`));
 const traverse = require('traverse');
 const _ = require('lodash');
