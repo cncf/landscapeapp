@@ -22,54 +22,53 @@ async function main() {
     }
   }
 
+  const sectionsWithOrder = [{key: 'card-mode', tab_index: 0}].concat( _.keys(settings.big_picture).map(function(key) {
+    return {
+      key: key,
+      tab_index: settings.big_picture[key].tab_index
+    }
+  }));
+
   const sitemap = createSitemap({
     hostname: settings.global.website,
     cacheTime: 600 * 1000,
     urls: _.flatten([
-      _.values(settings.big_picture).map(function(section) {
-        return {
-          url: `images/${section.url}.pdf`,
-          img: [{
-            title: section.title,
-            url: `images/${section.url}.pdf`,
-            license: 'https://creativecommons.org/licenses/by/4.0/'
-          }]
-        }
-      }),
-      { url: '/',
-        img: _.values(settings.big_picture).map(function(section) {
+      _.orderBy(sectionsWithOrder, 'tab_index').map(function(orderEntry) {
+        if (orderEntry.key === 'card-mode') {
           return {
+            url: '/format=card-mode',
+          };
+        }
+        const section = settings.big_picture[orderEntry.key];
+        return {
+          url: orderEntry.key === 'main' ? '/' : `/format=${section.url}`,
+          img: [{
             title: section.title,
             url: `images/${section.url}.png`,
             license: 'https://creativecommons.org/licenses/by/4.0/'
-          }
-        }).concat([{
-          title: `${settings.global.short_name} Landscape Logo`,
-          url: 'images/left-logo.svg',
-        }, {
-          title: `${settings.global.short_name} Logo`,
-          url: 'images/right-logo.svg',
-        }])
-      },
+          }].concat ( orderEntry.key === 'main' ? [{
+            title: `${settings.global.short_name} Landscape Logo`,
+            url: 'images/left-logo.svg'
+          }, {
+            title: `${settings.global.short_name} Logo`,
+            url: 'images/right-logo.svg'
+          }] : [])
+        };
+      }),
       items.map(function(item) {
         const landscapeInfo = _.find(bigPictureElements, function(entry) {
           return entry.categories.indexOf(item.category) !== -1;
         });
 
-        // console.info(item, landscapeInfo);
-
         const formatPart = (function() {
           if (!landscapeInfo) {
             return 'format=card-mode&'
           }
-          // console.info(item.name, item.category, landscapeInfo.urlPart);
           if (!landscapeInfo.urlPart) {
             return ''
           }
           return `format=${landscapeInfo.urlPart}&`;
         })();
-
-        // console.info(item.name, formatPart);
 
         return {
           url: `${formatPart}selected=${item.id}`,
