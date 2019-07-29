@@ -33,6 +33,16 @@ async function main() {
     hostname: settings.global.website,
     cacheTime: 600 * 1000,
     urls: _.flatten([
+      _.values(settings.big_picture).map(function(section) {
+        return {
+          url: `images/${section.url}.pdf`,
+          img: [{
+            title: section.title,
+            url: `images/${section.url}.pdf`,
+            license: 'https://creativecommons.org/licenses/by/4.0/'
+          }]
+        }
+      }),
       _.orderBy(sectionsWithOrder, 'tab_index').map(function(orderEntry) {
         if (orderEntry.key === 'card-mode') {
           return {
