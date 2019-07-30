@@ -21,7 +21,13 @@ export function addNoIndexIfRequired() {
   const isSelectedOnMainLandscape = url.indexOf('/' + window.prefix + 'selected=') === 0 && url.indexOf('&') === -1;
   const isSelectedOnSecondLandscape = url.indexOf(`/${window.prefix}format=${extraSettings.url}&selected=`) === 0 && url.split('&').length === 2;
   const isSelectedOnThirdLandscape = url.indexOf(`/${window.prefix}format=${thirdSettings.url}&selected=`) === 0 && url.split('&').length === 2;
-  if (url === '/' + window.prefix || isSelectedOnMainLandscape || isSelectedOnSecondLandscape || isSelectedOnThirdLandscape) {
+  const isMainLandscape = url === '/' + window.prefix;
+  const isSecondLandscape = url === `/${window.prefix}format=${extraSettings.url}`;
+  const isThirdLandscape = url === `/${window.prefix}format=${thirdSettings.url}`;
+  const isCardMode = url === `/${window.prefix}format=card-mode`;
+  if (url === '/' + window.prefix || isSelectedOnMainLandscape || isSelectedOnSecondLandscape || isSelectedOnThirdLandscape
+    || isMainLandscape || isSecondLandscape || isThirdLandscape || isCardMode
+  ) {
     console.info('this can be indexed');
     const existingMeta = document.querySelector('meta[name="robots"]');
     if (existingMeta) {
