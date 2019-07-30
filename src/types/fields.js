@@ -179,7 +179,7 @@ const fields = {
         return !!value || record.landscape === 'CNCF Members / End User Supporter' ;
       }
       if (filter === false) {
-        return !value;
+        return !value && record.landscape !== 'CNCF Members / End User Supporter';
       }
     },
     values: [{id: true, label: 'Yes', url: 'yes'}, {id: false, label: 'No', url: 'no'}]
