@@ -16,7 +16,7 @@
     "update": "(rm /tmp/landscape.json || true) && babel-node tools/validateLandscapeKeys && npm run remove-quotes && LEVEL=medium babel-node tools/addExternalInfo.js && npm run yaml2json && babel-node tools/calculateNumberOfTweets",
     "yaml2json": "babel-node tools/generateJson.js",
     "remove-quotes": "babel-node tools/removeQuotes",
-    "check-links": "babel-node tools/checkLinks",
+    "check-links": "pkill -9 chrome; pkill -9 chrome; babel-node tools/checkLinks",
     "fetchAll": "LEVEL=complete npm run fetch",
     "clean-dist": "npm run remove-dist && mkdir \"$PROJECT_PATH\"/dist",
     "remove-dist": "rimraf \"$PROJECT_PATH\"/dist",
