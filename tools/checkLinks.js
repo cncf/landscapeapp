@@ -49,12 +49,22 @@ export async function checkUrl(url) {
   }
 
   async function checkViaPuppeteer(remainingAttempts = 3) {
-    const puppeteer = require('puppeteer');
-    const browser = await puppeteer.launch({args: ['--no-sandbox', '--disable-setuid-sandbox', '--ignore-certificate-errors']});
-
-    const page = await browser.newPage();
-    page.setViewport({width: 1920, height: 1024});
-    page.setDefaultNavigationTimeout(120 * 1000);
+    let puppeteer;
+    let browser;
+    let page;
+    try {
+      puppeteer = require('puppeteer');
+      browser = await puppeteer.launch({args: ['--no-sandbox', '--disable-setuid-sandbox', '--ignore-certificate-errors']});
+      page = await browser.newPage();
+      page.setViewport({width: 1920, height: 1024});
+      page.setDefaultNavigationTimeout(120 * 1000);
+    } catch (ex) {
+      if (remainingAttempts > 0 ) {
+        return await checkViaPuppeteer(remainingAttempts - 1);
+      } else {
+        return { type: 'error', message: (ex.message || ex).substring(0, 200) };
+      }
+    }
     let result = null;
     try {
       await page.goto(url, {waitUntil: 'networkidle2' });
@@ -163,7 +173,7 @@ async function main() {
     } else {
       require('process').stdout.write(".");
     }
-  }, {concurrency: 4});
+  }, {concurrency: 1});
   await Promise.map(items, async function(item) {
     if (item.repo) {
       const result = await checkUrl(item.repo);
@@ -175,7 +185,7 @@ async function main() {
         require('process').stdout.write(".");
       }
     }
-  }, {concurrency: 4});
+  }, {concurrency: 1});
   console.info('');
   const uniqErrors = _.uniq(errors);
   const errorsText = uniqErrors.map( (x) => formatError(x)).filter( (x) => x).join('\n');
