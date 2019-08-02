@@ -165,7 +165,12 @@ async function main() {
   const items = await getLandscapeItems();
   const errors= [];
   await Promise.map(items, async function(item) {
-    const result = await checkUrl(item.homepageUrl);
+    let result;
+    try {
+      result = await checkUrl(item.homepageUrl);
+    } catch(ex) {
+      result = { type: 'error', message: 'puppeteer issue' };
+    }
     if (result !== 'ok') {
       errors.push({'homepageUrl': item.homepageUrl,...result});
       require('process').stdout.write(fatal("F"));
@@ -173,10 +178,15 @@ async function main() {
     } else {
       require('process').stdout.write(".");
     }
-  }, {concurrency: 1});
+  }, {concurrency: 2});
   await Promise.map(items, async function(item) {
     if (item.repo) {
-      const result = await checkUrl(item.repo);
+      let result;
+      try {
+        result = await checkUrl(item.repo);
+      } catch (ex) {
+        result = { type: 'error', message: 'puppeteer issue' };
+      }
       if (result !== 'ok') {
         errors.push({'repo': item.repo, ...result});
         require('process').stdout.write(fatal("F"));
@@ -185,7 +195,7 @@ async function main() {
         require('process').stdout.write(".");
       }
     }
-  }, {concurrency: 1});
+  }, {concurrency: 2});
   console.info('');
   const uniqErrors = _.uniq(errors);
   const errorsText = uniqErrors.map( (x) => formatError(x)).filter( (x) => x).join('\n');
