@@ -34,6 +34,18 @@ export function addNoIndexIfRequired() {
       const head = document.getElementsByTagName('head')[0];
       head.removeChild(existingMeta);
     }
+
+    const existingCanonical = document.getElementById('canonicalLink');
+    if (existingCanonical) {
+      const head = document.getElementsByTagName('head')[0];
+      head.removeChild(existingCanonical);
+    }
+    var canonicalLink=document.createElement('link');
+    canonicalLink.id = 'canonicalLink';
+    canonicalLink.rel='canonical';
+    canonicalLink.href = window.location.href;
+    const head = document.getElementsByTagName('head')[0];
+    head.insertBefore(canonicalLink, head.firstChild);
   } else {
     console.info('adding a no index meta tag for ', url);
     const existingMeta = document.querySelector('meta[name="robots"]');
@@ -43,6 +55,11 @@ export function addNoIndexIfRequired() {
       link.content = 'noindex';
       const head = document.getElementsByTagName('head')[0];
       head.insertBefore(link, head.firstChild);
+    }
+    const existingCanonical = document.getElementById('canonicalLink');
+    if (existingCanonical) {
+      const head = document.getElementsByTagName('head')[0];
+      head.removeChild(existingCanonical);
     }
   }
 }
