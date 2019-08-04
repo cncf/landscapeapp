@@ -4,8 +4,6 @@
 
 The landscapeapp is an upstream NPM [module](https://www.npmjs.com/package/interactive-landscape) that supports building interactive landscape websites such as the [CNCF Cloud Native Landscape](https://landscape.cncf.io) ([source](https://github.com/cncf/landscape)) and the [LF Deep Artificial Intelligence Landscape](https://landscape.lfai.foundation) ([source](https://github.com/lfai/lfai-landscape)). The application has been developed by [Andrey Kozlov](https://github.com/ZeusTheTrueGod) and [Dan Kohn](https://www.dankohn.com) of [CNCF](https://www.cncf.io).
 
-If you want to create an interactive landscape for your project or organization, the easiest process is to fork the [LFAI landscape](https://github.com/lfai/lfai-landscape), since it only has a single landscape image. Edit `settings.yml`, `landscape.yml`, and `members.yml` for your topic. Then create a Netlify account (or similar) to automatically build and publish the static site on every commit.
-
 In addition to creating fully interactive sites, the landscapeapp builds static images on each update:
 
 ## Cloud Native Landscape
@@ -41,7 +39,17 @@ The canonical source for all data is `landscape.yml`. Once a day, the landscapea
 
 The update server enhances the source data with the fetched data and saves the result in `processed_landscape.yml` and as `data.json`, the latter of which is what the app loads to display data.
 
-## Bash shortcuts
+## Creating a New Landscape
+
+If you want to create an interactive landscape for your project or organization:
+1. Fork the [LFAI landscape](https://github.com/lfai/lfai-landscape), since it only has a single landscape image.
+2. If you're working with the [LF](https://www.linuxfoundation.org/), give [dankohn](https://github.com/dankohn) admin privleges to the site and ping me after creating an account at [slack.cncf.io](https://slack.cncf.io).
+3. Email [support@github.com](support@github.com) and ask them not to show your project as a fork.
+4. For LF projects, I'll set you up in Netlify to build on every commit. Build command is `npm install -g npm && npm ci && npm run build` and publish directory is `dist`. Environment variables that need to be set are `CRUNCHBASE_KEY`, `GITHUB_KEY`, and `TWITTER_KEYS`. I recommend these notifications:
+![image](https://user-images.githubusercontent.com/3083270/62425480-87c36000-b6a8-11e9-9882-e84c4e2cdfb4.png)
+5. Edit `settings.yml`, `landscape.yml`, and `members.yml` for your topic.
+
+## Bash Shortcuts
 
 If you are working with more than one landscape, there's a trick to run the standard landscapeapp `package.json` functions. Add the following to your `~/.bash_profile`:
 
