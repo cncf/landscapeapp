@@ -56,7 +56,7 @@ const iconGithub = <svg viewBox="0 0 24 24">
     14.5,21C14.5,21.27 14.66,21.59 15.17,21.5C19.14,20.16 22,16.42 22,12A10,10 0 0,0 12,2Z" />
     </svg>
 
-const projectTag = function({relation, member, project, enduser}) {
+const projectTag = function({relation, member, isSubsidiaryProject, project, enduser}) {
   if (relation === false) {
     return null;
   }
@@ -69,6 +69,11 @@ const projectTag = function({relation, member, project, enduser}) {
         <span className="tag-value">Sandbox Project</span>
       </InternalLink>)
     }
+  }
+  if (isSubsidiaryProject) {
+    return (<div className="tag tag-blue">
+      <span className="tag-value">Subsidiary CNCF Project</span>
+    </div>)
   }
 
   if (relation === 'member' || relation === 'company') {
