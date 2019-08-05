@@ -139,10 +139,26 @@ tree.map(function(node) {
       return 'https://github.com' + link;
     }
 
+    const {relation, isSubsidiaryProject} = (function() {
+      let result;
+      result = node.project === 'sandbox' && settings.global.flags.cncf_sandbox ? 'member' : node.project;
+      if (result) {
+        return {relation: result, isSubsidiaryProject: false};
+      }
+      if (node.membership_data.member) {
+        return {relation: 'member', isSubsidiaryProject: false};
+      }
+      if (node.crunchbase === settings.global.self) {
+        return {relation: 'member', isSubsidiaryProject: true};
+      }
+      return {relation: false, isSubsidiaryProject: false};
+    })();
+
     items.push({...node,
       project: node.project,
       member: node.membership_data.member,
-      relation: (node.project === 'sandbox' && settings.global.flags.cncf_sandbox ? 'member' : node.project) || ( node.membership_data.member ? 'member' : false ),
+      relation: relation,
+      isSubsidiaryProject: isSubsidiaryProject,
       firstCommitDate: formatDate((node.github_start_commit_data || {}).start_date),
       firstCommitLink: getCommitLink((node.github_start_commit_data || {}).start_commit_link),
       latestCommitDate: formatDate((node.github_data || {}).latest_commit_date),
