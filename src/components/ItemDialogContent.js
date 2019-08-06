@@ -283,10 +283,20 @@ const ItemDialogContent = ({itemInfo, isLandscape, setIsLandscape}) => {
   ];
   const productInfo = [
               <div className="product-main">
-                <div className="product-name">{itemInfo.name}</div>
-                <div className="product-parent"><InternalLink to={linkToOrganization}>{itemInfo.organization}</InternalLink></div>
-                <div className="product-category">{itemCategory(itemInfo.landscape)}</div>
-                <div className="product-description">{itemInfo.description}</div>
+                { !isGoogle && <React.Fragment>
+                    <div className="product-name">{itemInfo.name}</div>
+                    <div className="product-parent"><InternalLink to={linkToOrganization}>{itemInfo.organization}</InternalLink></div>
+                    <div className="product-category">{itemCategory(itemInfo.landscape)}</div>
+                    <div className="product-description">{itemInfo.description}</div>
+                  </React.Fragment>
+                }
+                { isGoogle && <React.Fragment>
+                    <div className="product-name">{itemInfo.name}</div>
+                    <div className="product-description">{itemInfo.description}</div>
+                    <div className="product-parent"><InternalLink to={linkToOrganization}>{itemInfo.organization}</InternalLink></div>
+                    <div className="product-category">{itemCategory(itemInfo.landscape)}</div>
+                  </React.Fragment>
+                }
               </div>,
 
               <div className="product-properties">
