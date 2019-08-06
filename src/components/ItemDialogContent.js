@@ -370,7 +370,7 @@ const ItemDialogContent = ({itemInfo, isLandscape, setIsLandscape}) => {
             <KeyHandler keyEventName="keydown" keyValue="ArrowUp" onKeyHandle={handleUp} />
             <KeyHandler keyEventName="keydown" keyValue="ArrowDown" onKeyHandle={handleDown} />
 
-            { !scrollAllContent && productLogoAndTags }
+            { !scrollAllContent && !isGoogle && productLogoAndTags }
 
             <div className="product-scroll" ref={(x) => productScrollEl = x }>
               { !scrollAllContent && productInfo }
@@ -397,6 +397,7 @@ const ItemDialogContent = ({itemInfo, isLandscape, setIsLandscape}) => {
                 </div>
               )}
             </div>
+            { !scrollAllContent && isGoogle && productLogoAndTags }
         </div>
   );
 }
