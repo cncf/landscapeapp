@@ -513,6 +513,12 @@ const generateLicenses = function() {
     return x.id !== 'NotOpenSource';
   });
   return [{
+    id: 'NotOpenSource',
+    label: 'Not Open Source',
+    url: saneName('NotOpenSource'),
+    level: 1,
+    children: []
+  }, {
     id: 'Open Source',
     label: 'Open Source',
     url: saneName('Open Source'),
@@ -524,14 +530,7 @@ const generateLicenses = function() {
       parentId: 'Open Source',
       level: 2
     };
-  })).concat([{
-      id: 'NotOpenSource',
-      label: 'Not Open Source',
-      url: saneName('NotOpenSource'),
-      level: 1,
-      children: []
-    }
-  ]);
+  }));
 };
 const lookups = {
   organization: pack(extractOptions('organization')),
