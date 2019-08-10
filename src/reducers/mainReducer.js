@@ -3,7 +3,7 @@
 // State Description (TODO: Add FLOW here!)
 // data: null | { .. Data ... }
 import settings from 'project/settings.yml';
-import { loadData, loadPreviewData } from './api';
+import { loadData} from './api';
 import { addNoIndexIfRequired, filtersToUrl } from '../utils/syncToUrl';
 import _ from 'lodash';
 import { push, replace } from 'connected-react-router';
@@ -40,21 +40,12 @@ export const initialState = {
   zoom: 1,
   isFullscreen: false
 };
-// we load main data preview only if it is '/'
+
 export function loadMainData() {
   return async function (dispatch) {
-    if (location.pathname === '/' + window.prefix) {
-      const preview = await loadPreviewData();
-      dispatch(setData(preview));
-      dispatch(setReady('partially'));
-      const result = await loadData();
-      dispatch(setData(result));
-      dispatch(setReady(true));
-    } else {
-      const result = await loadData();
-      dispatch(setData(result));
-      dispatch(setReady(true));
-    }
+    const result = await loadData();
+    dispatch(setData(result));
+    dispatch(setReady(true));
   }
 }
 
