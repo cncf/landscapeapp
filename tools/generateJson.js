@@ -538,10 +538,6 @@ const lookups = {
   license: pack(generateLicenses()),
   headquarters: pack(generateHeadquarters())
 }
-const previewData = itemsWithExtraFields.filter(function(x) {
-  return !!x.project && (x.project !== 'sandbox' || !settings.global.flags.cncf_sandbox);
-});
 
 require('fs').writeFileSync(`${projectPath}/data.json`, JSON.stringify(itemsWithExtraFields, null, 2));
-require('fs').writeFileSync(`${projectPath}/preview.json`, JSON.stringify(pack(previewData), null, 2));
 require('fs').writeFileSync(`${projectPath}/lookup.json`, JSON.stringify(lookups, null, 2));
