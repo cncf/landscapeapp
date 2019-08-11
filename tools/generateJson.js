@@ -154,6 +154,7 @@ tree.map(function(node) {
       return {relation: false, isSubsidiaryProject: false};
     })();
 
+
     items.push({...node,
       project: node.project,
       member: node.membership_data.member,
@@ -189,10 +190,17 @@ tree.map(function(node) {
   }
 });
 const itemsWithExtraFields = items.map(function(item) {
+  const getLinkedin = function(el) {
+    if (!el.linkedin) {
+      return null;
+    }
+    return el.linkedin.replace(/\?.*/, '');
+  }
   if (item.crunchbase_data) {
     item.crunchbaseData.numEmployeesMin = item.crunchbaseData.num_employees_min;
     item.crunchbaseData.numEmployeesMax = item.crunchbaseData.num_employees_max;
     item.crunchbaseData.tickerSymbol = item.crunchbaseData.ticker_symbol;
+    item.crunchbaseData.linkedin = getLinkedin(item.crunchbaseData);
   }
   delete item.crunchbase_data;
   delete item.twitter_data;
