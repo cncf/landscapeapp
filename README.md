@@ -42,10 +42,9 @@ The update server enhances the source data with the fetched data and saves the r
 ## Creating a New Landscape
 
 If you want to create an interactive landscape for your project or organization:
-1. Fork the [LFAI landscape](https://github.com/lfai/lfai-landscape), since it only has a single landscape image.
+1. Copy the files from [LFAI landscape](https://github.com/lfai/lfai-landscape), since it is relatively simple (it only has a single landscape image) into a new repo.
 2. If you're working with the [LF](https://www.linuxfoundation.org/), give [dankohn](https://github.com/dankohn) admin privleges to the site and ping me after creating an account at [slack.cncf.io](https://slack.cncf.io).
-3. Email [support@github.com](support@github.com) and ask them not to show your project as a fork.
-4. For LF projects, I'll set you up in Netlify to build on every commit. Build command is `npm install -g npm && npm ci && npm run build` and publish directory is `dist`. Environment variables that need to be set are `CRUNCHBASE_KEY`, `GITHUB_KEY`, and `TWITTER_KEYS`. I recommend these notifications:
+3. For LF projects, I'll set you up in Netlify to build on every commit. Build command is `npm install -g npm && npm ci && npm run build` and publish directory is `dist`. Environment variables that need to be set are `CRUNCHBASE_KEY`, `GITHUB_KEY`, and `TWITTER_KEYS`. I recommend these notifications:
 ![image](https://user-images.githubusercontent.com/3083270/62425480-87c36000-b6a8-11e9-9882-e84c4e2cdfb4.png)
 5. Edit `settings.yml`, `landscape.yml`, and `members.yml` for your topic.
 6. [Generate](https://ventipix.com/designer-qr-code-generator.php) a QR code, setting colors to black and embedding the LF Landscape [icon](https://github.com/lf-edge/artwork/blob/master/lfedge-landscape/icon/color/lfedge-landscape-icon-color.png). Save as SVG and overwrite images/qr.svg with it.
