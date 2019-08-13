@@ -212,9 +212,12 @@ function setFieldFromParams({field, filters, params}) {
   if (!fieldInfo) {
     return;
   }
-  const urlValue = params[fieldInfo.url];
+  let urlValue = params[fieldInfo.url];
   if (!urlValue) {
     return;
+  }
+  if (urlValue === 'true') {
+    urlValue = 'yes';
   }
   const parts = urlValue.split(',');
   const values = parts.map(function(part) {
