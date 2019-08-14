@@ -32,10 +32,16 @@
     const parts = window.location.pathname.split('/'); // for example: /cncf/members or  /lfdl/landscape or /a/s/d/f
     console.info({parts});
     if (parts[1] === 'cncf') {
-      console.info('skip cncf redirect!');
+      if (parts[3]) {
+        console.info(parts, 'cncf redirect!');
+        window.location = '/cncf'
+      }
     }
     else if (parts[1] === 'lfdl') {
-      console.info('skip lfdl redirect!');
+      if (parts[3]) {
+        console.info(parts, 'lfdl redirect!');
+        window.location = '/lfdl'
+      }
     }
     else if (parts[2]) {
       console.info(parts, 'basic redirect!');
