@@ -366,17 +366,17 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='rgb(124,170,1
 }
 
 .big-picture-switch-normal {
-  display: block;
+  display: block !important;
 }
 .big-picture-switch-short {
-  display: none;
+  display: none !important;
 }
 
 .mobile .big-picture-switch-normal {
-  display: none;
+  display: none !important;
 }
 .mobile .big-picture-switch-short {
-  display: block;
+  display: block !important;
 }
 
 .mobile.portrait .big-picture-switch-short {
@@ -731,4 +731,10 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='rgb(124,170,1
     max-width: 23px;
     min-width: 0;
   }
+}
+
+.MuiMenuItem-root {
+  padding-top: 0 !important;
+  padding-bottom: 0 !important;
+  min-height: 26px !important;
 }

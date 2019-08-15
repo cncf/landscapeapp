@@ -3,14 +3,16 @@
 // State Description (TODO: Add FLOW here!)
 // data: null | { .. Data ... }
 import settings from 'project/settings.yml';
-import { loadData, loadPreviewData } from './api';
+import { loadData} from './api';
 import { addNoIndexIfRequired, filtersToUrl } from '../utils/syncToUrl';
 import _ from 'lodash';
 import { push, replace } from 'connected-react-router';
 import { zoomLevels } from '../utils/zoom';
 import bus from './bus';
 import { getItemsForExport } from '../utils/itemsCalculator';
+import { bigPictureMethods } from '../utils/sharedItemsCalculator';
 import exportItems from '../utils/csvExporter';
+import fields from '../types/fields';
 
 
 export const initialState = {
@@ -38,21 +40,12 @@ export const initialState = {
   zoom: 1,
   isFullscreen: false
 };
-// we load main data preview only if it is '/'
+
 export function loadMainData() {
   return async function (dispatch) {
-    if (location.pathname === '/' + window.prefix) {
-      const preview = await loadPreviewData();
-      dispatch(setData(preview));
-      dispatch(setReady('partially'));
-      const result = await loadData();
-      dispatch(setData(result));
-      dispatch(setReady(true));
-    } else {
-      const result = await loadData();
-      dispatch(setData(result));
-      dispatch(setReady(true));
-    }
+    const result = await loadData();
+    dispatch(setData(result));
+    dispatch(setReady(true));
   }
 }
 
@@ -163,8 +156,28 @@ export function changeParameters(value) {
     const state = getState().main;
     if (!state.initialUrlHandled) {
       let newValue = {...value};
-      if (state.ready === true && value.selectedItemId && ! _.find(state.data, {id: value.selectedItemId})) {
-        newValue.selectedItemId = null;
+      // TODO: somehow use selectedItemCalculator here to detect if selected
+      // item becomes null on a current tab
+      if (state.ready === true && value.selectedItemId) {
+        const mainContentMode = value.mainContentMode || state.mainContentMode;
+        const item = _.find(state.data, {id: value.selectedItemId});
+        if (mainContentMode !== 'card') {
+          const bigPictureSettings = _.find(_.values(settings.big_picture), function(bigPicture) {
+            return bigPicture.url === mainContentMode
+          });
+          const landscape = fields.landscape.values;
+          const categories = bigPictureMethods[bigPictureSettings.method]({bigPictureSettings: settings.big_picture, format: mainContentMode, landscape: landscape });
+          const itemInCategories = _.find(categories, function(category) {
+            return item && item.category === category.label;
+          });
+          if (!itemInCategories) {
+            newValue.selectedItemId = null;
+          }
+        } else {
+          if (!item) {
+            newValue.selectedItemId = null;
+          }
+        }
       }
       dispatch(setParameters({...newValue}));
       const newState = getState().main;

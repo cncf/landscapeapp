@@ -56,7 +56,7 @@ const iconGithub = <svg viewBox="0 0 24 24">
     14.5,21C14.5,21.27 14.66,21.59 15.17,21.5C19.14,20.16 22,16.42 22,12A10,10 0 0,0 12,2Z" />
     </svg>
 
-const projectTag = function({relation, member, project, enduser}) {
+const projectTag = function({relation, member, isSubsidiaryProject, project, enduser}) {
   if (relation === false) {
     return null;
   }
@@ -69,6 +69,11 @@ const projectTag = function({relation, member, project, enduser}) {
         <span className="tag-value">Sandbox Project</span>
       </InternalLink>)
     }
+  }
+  if (isSubsidiaryProject) {
+    return (<div className="tag tag-blue">
+      <span className="tag-value">Subsidiary CNCF Project</span>
+    </div>)
   }
 
   if (relation === 'member' || relation === 'company') {
@@ -278,10 +283,20 @@ const ItemDialogContent = ({itemInfo, isLandscape, setIsLandscape}) => {
   ];
   const productInfo = [
               <div className="product-main">
-                <div className="product-name">{itemInfo.name}</div>
-                <div className="product-parent"><InternalLink to={linkToOrganization}>{itemInfo.organization}</InternalLink></div>
-                <div className="product-category">{itemCategory(itemInfo.landscape)}</div>
-                <div className="product-description">{itemInfo.description}</div>
+                { !isGoogle && <React.Fragment>
+                    <div className="product-name">{itemInfo.name}</div>
+                    <div className="product-parent"><InternalLink to={linkToOrganization}>{itemInfo.organization}</InternalLink></div>
+                    <div className="product-category">{itemCategory(itemInfo.landscape)}</div>
+                    <div className="product-description">{itemInfo.description}</div>
+                  </React.Fragment>
+                }
+                { isGoogle && <React.Fragment>
+                    <div className="product-name">{itemInfo.name}</div>
+                    <div className="product-description">{itemInfo.description}</div>
+                    <div className="product-parent"><InternalLink to={linkToOrganization}>{itemInfo.organization}</InternalLink></div>
+                    <div className="product-category">{itemCategory(itemInfo.landscape)}</div>
+                  </React.Fragment>
+                }
               </div>,
 
               <div className="product-properties">
@@ -365,7 +380,7 @@ const ItemDialogContent = ({itemInfo, isLandscape, setIsLandscape}) => {
             <KeyHandler keyEventName="keydown" keyValue="ArrowUp" onKeyHandle={handleUp} />
             <KeyHandler keyEventName="keydown" keyValue="ArrowDown" onKeyHandle={handleDown} />
 
-            { !scrollAllContent && productLogoAndTags }
+            { !scrollAllContent && !isGoogle && productLogoAndTags }
 
             <div className="product-scroll" ref={(x) => productScrollEl = x }>
               { !scrollAllContent && productInfo }
@@ -392,6 +407,7 @@ const ItemDialogContent = ({itemInfo, isLandscape, setIsLandscape}) => {
                 </div>
               )}
             </div>
+            { !scrollAllContent && isGoogle && productLogoAndTags }
         </div>
   );
 }

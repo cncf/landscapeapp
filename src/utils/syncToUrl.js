@@ -18,13 +18,34 @@ const thirdSettings = settings.big_picture.third || {};
 
 export function addNoIndexIfRequired() {
   const url = window.location.pathname;
-  if (url === '/' + window.prefix || (url.indexOf('/' + window.prefix + 'selected=') === 0 && url.indexOf('&') === -1)) {
+  const isSelectedOnMainLandscape = url.indexOf('/' + window.prefix + 'selected=') === 0 && url.indexOf('&') === -1;
+  const isSelectedOnSecondLandscape = url.indexOf(`/${window.prefix}format=${extraSettings.url}&selected=`) === 0 && url.split('&').length === 2;
+  const isSelectedOnThirdLandscape = url.indexOf(`/${window.prefix}format=${thirdSettings.url}&selected=`) === 0 && url.split('&').length === 2;
+  const isMainLandscape = url === '/' + window.prefix;
+  const isSecondLandscape = url === `/${window.prefix}format=${extraSettings.url}`;
+  const isThirdLandscape = url === `/${window.prefix}format=${thirdSettings.url}`;
+  const isCardMode = url === `/${window.prefix}format=card-mode`;
+  if (url === '/' + window.prefix || isSelectedOnMainLandscape || isSelectedOnSecondLandscape || isSelectedOnThirdLandscape
+    || isMainLandscape || isSecondLandscape || isThirdLandscape || isCardMode
+  ) {
     console.info('this can be indexed');
     const existingMeta = document.querySelector('meta[name="robots"]');
     if (existingMeta) {
       const head = document.getElementsByTagName('head')[0];
       head.removeChild(existingMeta);
     }
+
+    const existingCanonical = document.getElementById('canonicalLink');
+    if (existingCanonical) {
+      const head = document.getElementsByTagName('head')[0];
+      head.removeChild(existingCanonical);
+    }
+    var canonicalLink=document.createElement('link');
+    canonicalLink.id = 'canonicalLink';
+    canonicalLink.rel='canonical';
+    canonicalLink.href = window.location.href;
+    const head = document.getElementsByTagName('head')[0];
+    head.insertBefore(canonicalLink, head.firstChild);
   } else {
     console.info('adding a no index meta tag for ', url);
     const existingMeta = document.querySelector('meta[name="robots"]');
@@ -34,6 +55,11 @@ export function addNoIndexIfRequired() {
       link.content = 'noindex';
       const head = document.getElementsByTagName('head')[0];
       head.insertBefore(link, head.firstChild);
+    }
+    const existingCanonical = document.getElementById('canonicalLink');
+    if (existingCanonical) {
+      const head = document.getElementsByTagName('head')[0];
+      head.removeChild(existingCanonical);
     }
   }
 }
@@ -186,9 +212,12 @@ function setFieldFromParams({field, filters, params}) {
   if (!fieldInfo) {
     return;
   }
-  const urlValue = params[fieldInfo.url];
+  let urlValue = params[fieldInfo.url];
   if (!urlValue) {
     return;
+  }
+  if (urlValue === 'true') {
+    urlValue = 'yes';
   }
   const parts = urlValue.split(',');
   const values = parts.map(function(part) {

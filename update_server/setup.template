@@ -15,6 +15,7 @@ apt-get -y install build-essential gconf-service libasound2 libatk1.0-0 libc6 li
 
 echo '
 <%= update_minute %> <%= update_hour %> * * * root bash -l -c "bash /root/update.sh"
+55 23 * * * root bash -l -c "sudo reboot"
 ' > /etc/cron.d/updater
 echo '
   set -e
@@ -32,7 +33,7 @@ echo '
       source "$f"
       source "$f.private"
       set +e
-      (bash /root/real_update.sh || bash /root/real_update.sh || bash root/real_update.sh) > /root/update."$f".log
+      (bash /root/real_update.sh || bash /root/real_update.sh || bash root/real_update.sh) > /root/update."$f".log 2>&1
       cd /repo/node_modules/interactive-landscape && ERROR_STATUS=$? LOGFILE_PATH=/root/update."$f".log ./node_modules/.bin/babel-node tools/reportToSlack.js
       set -e
     ) || echo "failed to update a project $f"

@@ -1,5 +1,5 @@
 import { projectPath, settings } from './settings';
-console.info('pf', projectPath);
+console.info('processed', projectPath);
 const source = require('js-yaml').safeLoad(require('fs').readFileSync(`${projectPath}/processed_landscape.yml`));
 const traverse = require('traverse');
 const _ = require('lodash');
@@ -139,10 +139,27 @@ tree.map(function(node) {
       return 'https://github.com' + link;
     }
 
+    const {relation, isSubsidiaryProject} = (function() {
+      let result;
+      result = node.project === 'sandbox' && settings.global.flags.cncf_sandbox ? 'member' : node.project;
+      if (result) {
+        return {relation: result, isSubsidiaryProject: false};
+      }
+      if (node.membership_data.member) {
+        return {relation: 'member', isSubsidiaryProject: false};
+      }
+      if (node.crunchbase === settings.global.self) {
+        return {relation: 'member', isSubsidiaryProject: true};
+      }
+      return {relation: false, isSubsidiaryProject: false};
+    })();
+
+
     items.push({...node,
       project: node.project,
       member: node.membership_data.member,
-      relation: (node.project === 'sandbox' && settings.global.flags.cncf_sandbox ? 'member' : node.project) || ( node.membership_data.member ? 'member' : false ),
+      relation: relation,
+      isSubsidiaryProject: isSubsidiaryProject,
       firstCommitDate: formatDate((node.github_start_commit_data || {}).start_date),
       firstCommitLink: getCommitLink((node.github_start_commit_data || {}).start_commit_link),
       latestCommitDate: formatDate((node.github_data || {}).latest_commit_date),
@@ -173,10 +190,17 @@ tree.map(function(node) {
   }
 });
 const itemsWithExtraFields = items.map(function(item) {
+  const getLinkedin = function(el) {
+    if (!el.linkedin) {
+      return null;
+    }
+    return el.linkedin.replace(/\?.*/, '');
+  }
   if (item.crunchbase_data) {
     item.crunchbaseData.numEmployeesMin = item.crunchbaseData.num_employees_min;
     item.crunchbaseData.numEmployeesMax = item.crunchbaseData.num_employees_max;
     item.crunchbaseData.tickerSymbol = item.crunchbaseData.ticker_symbol;
+    item.crunchbaseData.linkedin = getLinkedin(item.crunchbaseData);
   }
   delete item.crunchbase_data;
   delete item.twitter_data;
@@ -497,6 +521,12 @@ const generateLicenses = function() {
     return x.id !== 'NotOpenSource';
   });
   return [{
+    id: 'NotOpenSource',
+    label: 'Not Open Source',
+    url: saneName('NotOpenSource'),
+    level: 1,
+    children: []
+  }, {
     id: 'Open Source',
     label: 'Open Source',
     url: saneName('Open Source'),
@@ -508,14 +538,7 @@ const generateLicenses = function() {
       parentId: 'Open Source',
       level: 2
     };
-  })).concat([{
-      id: 'NotOpenSource',
-      label: 'Not Open Source',
-      url: saneName('NotOpenSource'),
-      level: 1,
-      children: []
-    }
-  ]);
+  }));
 };
 const lookups = {
   organization: pack(extractOptions('organization')),
@@ -523,10 +546,6 @@ const lookups = {
   license: pack(generateLicenses()),
   headquarters: pack(generateHeadquarters())
 }
-const previewData = itemsWithExtraFields.filter(function(x) {
-  return !!x.project && (x.project !== 'sandbox' || !settings.global.flags.cncf_sandbox);
-});
 
 require('fs').writeFileSync(`${projectPath}/data.json`, JSON.stringify(itemsWithExtraFields, null, 2));
-require('fs').writeFileSync(`${projectPath}/preview.json`, JSON.stringify(pack(previewData), null, 2));
 require('fs').writeFileSync(`${projectPath}/lookup.json`, JSON.stringify(lookups, null, 2));
