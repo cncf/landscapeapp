@@ -78,12 +78,11 @@ So, we have an https://github.com/AcademySoftwareFoundation/aswf-landscape repo 
 4  ssh into our setup server (root@147.75.106.211) and then ensure that `ls`
 shows a new `ASWF.settings as well as ASWF.settings.private`. Now you need to
 fill in ASWF.settings.private, usually, copy everything and change the slack
-channel from the CNCF.settings.private
-ensure that `ls` shows a new `ASWF.settings as well as ASWF.settings.private`.
-Now you need to fill in ASWF.settings.private, usually, copy everything and
-change the slack channel from the CNCF.settings.private. You can find it it
-netlify, Build&Deploy, slack notifications in post processing.
+channel from the CNCF.settings.private. You can a slack channel id the
+netlify project configuration, Build&Deploy, slack notifications in post processing.
 5. that is all we need, you can run `update.sh` manually to ensure that it will pick up the settings files and build that repo too. Log is stored in the update.ASWF.settings.log
+
+Absolutely exact steps are used for a GraphQL project.
 
 ## Continuous Integration and NPM Publishing
 
