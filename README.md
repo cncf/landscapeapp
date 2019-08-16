@@ -84,6 +84,10 @@ netlify project configuration, Build&Deploy, slack notifications in post process
 
 Absolutely exact steps are used for a GraphQL project.
 
+## Vulnerability reporting
+
+Please open an [issue](https://github.com/cncf/landscapeapp/issues/new) or, for sensitive information, email info@cncf.io.
+
 ## Continuous Integration and NPM Publishing
 
 On every commit, Netlify builds landscapeapp, clones the CNCF and LFAI repos, and builds their landscapes and verifies that their tests pass with the updated landscapeapp. When that succeeds, it [generates](./full_build.sh) and pushes an updated NPM module.
