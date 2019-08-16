@@ -70,9 +70,20 @@ alias all='for path in /Users/your-username/dev/{landscapeapp,landscape,lfdl-lan
 
 ```
 
-## Vulnerability reporting
-
-Please open an [issue](https://github.com/cncf/landscapeapp/issues/new) or, for sensitive information, email info@cncf.io.
+## Adding a new landscape to the autoupdater.
+So, we have an https://github.com/AcademySoftwareFoundation/aswf-landscape repo and we want to set up automatic updates for it
+1. Lets guess that landscapeapp is exctracted to the ~/Documents/landscapeapp, and we will clone that new https://github.com/AcademySoftwareFoundation/aswf-landscape to ~/Documents/aswf-landscape
+2. go to the ~/Documents/landscapeapp and add `export PROJECT_PATH=../aswf-landscape` so all further commands will use that one
+3. run `./node_modules/.bin/babel-node tools/setupServer
+4  ssh into our setup server (root@147.75.106.211) and then ensure that `ls`
+shows a new `ASWF.settings as well as ASWF.settings.private`. Now you need to
+fill in ASWF.settings.private, usually, copy everything and change the slack
+channel from the CNCF.settings.private
+ensure that `ls` shows a new `ASWF.settings as well as ASWF.settings.private`.
+Now you need to fill in ASWF.settings.private, usually, copy everything and
+change the slack channel from the CNCF.settings.private. You can find it it
+netlify, Build&Deploy, slack notifications in post processing.
+5. that is all we need, you can run `update.sh` manually to ensure that it will pick up the settings files and build that repo too. Log is stored in the update.ASWF.settings.log
 
 ## Continuous Integration and NPM Publishing
 
