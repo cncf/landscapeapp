@@ -156,10 +156,6 @@ tree.map(function(node) {
       return {relation: false, isSubsidiaryProject: false};
     })();
 
-    if (node.repo_url) {
-      console.log(node.repo_url, getLicense())
-    }
-
     items.push({...node,
       project: node.project,
       member: node.membership_data.member,
