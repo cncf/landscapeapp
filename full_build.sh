@@ -35,5 +35,7 @@ if [ $BRANCH = "master" ]; then
   echo 'Npm package published'
   curl -X POST -d {} https://api.netlify.com/build_hooks/5c1bd8e14ed62f166e8d9f7f
   curl -X POST -d {} https://api.netlify.com/build_hooks/5c1bd968fdd72a78a54bdcd1
-  # curl -X POST -d {} https://api.netlify.com/build_hooks/5c80e31894c5c7758edb31e4
+  curl -X POST -d {} https://api.netlify.com/build_hooks/5c80e31894c5c7758edb31e4
+  curl -X POST -d {} https://api.netlify.com/build_hooks/5d5c7ca6dc2c51cf02381f63
+  curl -X POST -d {} https://api.netlify.com/build_hooks/5d5c7ccf64ecb5bd3d2592f7
 fi
