@@ -84,6 +84,21 @@ netlify project configuration, Build&Deploy, slack notifications in post process
 
 Absolutely exact steps are used for a GraphQL project.
 
+
+## Adding to a google search console
+  Go to the google search console, add a new property, enter the url of the
+  given project, for example, https://landscape.cncf.io
+
+  Next, google will want to verify that it is your site, so you need to choose
+  an `html tag verification` option and copy a secret code from it and put it to
+  the `settings.yml` of a given landscape and commit to the master branch with
+  that change and deploy. The key is named `google_site_veryfication` and it is
+  somewhere around line 14 in settings.yml. After netlify succesfully deploys
+  that dashbaord,
+  verify the html tag in a google console, and then the job is done. Do not forget to add
+  Dan@linuxfoundation.org as someone who has a full access from a `Settings`
+  menu for a given search console.
+
 ## Vulnerability reporting
 
 Please open an [issue](https://github.com/cncf/landscapeapp/issues/new) or, for sensitive information, email info@cncf.io.
