@@ -25,7 +25,7 @@ const relationField = (function() {
   if (!firstEntry.children) {
     throw new Error('First entry of relation settings should have children!');
   }
-  const values = [{
+  const options = [{
     id: firstEntry.id,
     label: firstEntry.label,
     tag: firstEntry.tag,
@@ -48,7 +48,12 @@ const relationField = (function() {
     }
   }));
 
-  return { ...rootEntry, values: values};
+  return {
+    ...rootEntry,
+    values: options,
+    processValuesBeforeSaving: (values) => processValuesBeforeSaving({options, values}),
+    processValuesBeforeLoading: (values) => processValuesBeforeLoading({options, values})
+  };
 
 })();
 
@@ -191,20 +196,15 @@ _.each(fields, function(field, key) {
     groupingLabel: field.label,
     url: field.id,
     answers: field.values,
-    processValuesBeforeSaving: (values) => {
-      return processValuesBeforeSaving({options: field.values, values: values});
-    },
-    processValuesBeforeLoading: (values) => {
-      return processValuesBeforeLoading({options: field.values, values: values});
-    }
+    processValuesBeforeSaving: _.identity,
+    processValuesBeforeLoading: _.identity
   });
   _.each(field.values, function(value, index) {
     _.defaults(value, {
       label: value.id,
       groupingLabel: value.label || value.id,
       url: value.id,
-      groupingSortOrder: index,
-      children: []
+      groupingSortOrder: index
     });
   });
   _.each(field.answers, function(value, index) {
