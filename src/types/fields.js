@@ -25,7 +25,7 @@ const relationField = (function() {
   if (!firstEntry.children) {
     throw new Error('First entry of relation settings should have children!');
   }
-  const options = [{
+  const values = [{
     id: firstEntry.id,
     label: firstEntry.label,
     tag: firstEntry.tag,
@@ -48,12 +48,7 @@ const relationField = (function() {
     }
   }));
 
-  return {
-    ...rootEntry,
-    values: options,
-    processValuesBeforeSaving: (values) => processValuesBeforeSaving({options, values}),
-    processValuesBeforeLoading: (values) => processValuesBeforeLoading({options, values})
-  };
+  return { ...rootEntry, values: values};
 
 })();
 
