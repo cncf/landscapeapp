@@ -203,7 +203,8 @@ _.each(fields, function(field, key) {
       label: value.id,
       groupingLabel: value.label || value.id,
       url: value.id,
-      groupingSortOrder: index
+      groupingSortOrder: index,
+      children: []
     });
   });
   _.each(field.answers, function(value, index) {

@@ -130,6 +130,9 @@ describe("Normal browser", function() {
   test("Filtering by organization", async () => {
     const page = await makePage(appUrl + '/organization=cloud-native-computing-foundation-cncf&format=card-mode');
     await expect(page).toMatch('Kubernetes');
+
+    await page.goto(appUrl + '/organization=baidu&format=card-mode');
+    await expect(page).not.toMatch('Kubernetes');
   }, 6 * 60 * 1000);
 });
 
