@@ -1,4 +1,5 @@
 import puppeteer from "puppeteer";
+require('expect-puppeteer');
 import devices from 'puppeteer/DeviceDescriptors';
 import { settings } from '../tools/settings'
 const port = process.env.PORT || '4000';
@@ -125,6 +126,11 @@ describe("Normal browser", function() {
   mainTest();
   landscapeTest();
   embedTest();
+
+  test("Filtering by organization", async () => {
+    const page = await makePage(appUrl + '/organization=cloud-native-computing-foundation-cncf&format=card-mode');
+    await expect(page).toMatch('Kubernetes');
+  }, 6 * 60 * 1000);
 });
 
 describe("iPhone simulator", function() {
