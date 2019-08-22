@@ -28,7 +28,8 @@ export const initialState = {
     headquarters: [],
     landscape: [],
     bestPracticeBadgeId: null,
-    enduser: null
+    enduser: null,
+    googlebot: null
   },
   grouping: 'relation',
   sortField: 'name',
