@@ -108,13 +108,15 @@ tree.map(function(node) {
       return null;
     };
     const getLicense = function() {
-      if (!node.github_data) {
-        if (node.repo_url) {
-          return 'Unknown License';
-        }
+      if ((node.hasOwnProperty('open_source') && !node.open_source) || !node.repo_url) {
         return 'NotOpenSource';
       }
-      return node.github_data.license;
+
+      if (node.github_data) {
+        return node.github_data.license;
+      }
+
+      return 'Unknown License';
     }
     const getAmount = function() {
       if (node.yahoo_finance_data) {
@@ -153,7 +155,6 @@ tree.map(function(node) {
       }
       return {relation: false, isSubsidiaryProject: false};
     })();
-
 
     items.push({...node,
       project: node.project,
