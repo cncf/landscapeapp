@@ -1,7 +1,9 @@
 import puppeteer from "puppeteer";
 require('expect-puppeteer');
 import devices from 'puppeteer/DeviceDescriptors';
-import { settings } from '../tools/settings'
+import { paramCase } from 'change-case';
+import { settings } from '../tools/settings';
+import { processedLandscape } from '../tools/loadProcessedLandscape';
 const port = process.env.PORT || '4000';
 const appUrl = `http://localhost:${port}`;
 const width = 1920;
@@ -116,6 +118,11 @@ function landscapeTest() {
   }
 }
 
+const getProjects = () => {
+  return processedLandscape.landscape.flatMap(({ subcategories }) => subcategories)
+                                     .flatMap(({ items }) => items)
+}
+
 describe("Normal browser", function() {
   beforeEach(async function() {
     setup = async (page) =>  await page.setViewport({ width, height });
@@ -128,11 +135,19 @@ describe("Normal browser", function() {
   embedTest();
 
   test("Filtering by organization", async () => {
-    const page = await makePage(appUrl + '/organization=cloud-native-computing-foundation-cncf&format=card-mode');
-    await expect(page).toMatch('Kubernetes');
+    const projects = getProjects();
+    const project = projects.find(({ crunchbase_data }) => crunchbase_data);
+    const organizationSlug = paramCase(project.crunchbase_data.name);
+    const otherProject = projects.find(({ crunchbase_data }) => crunchbase_data && crunchbase_data.name !== project.crunchbase_data.name);
+    const otherOrganizationSlug = paramCase(otherProject.crunchbase_data.name);
 
-    await page.goto(appUrl + '/organization=baidu&format=card-mode');
-    await expect(page).not.toMatch('Kubernetes');
+    console.log(`Checking we see ${project.name} when filtering by organization ${project.crunchbase_data.name}`);
+    const page = await makePage(`${appUrl}/organization=${organizationSlug}&format=card-mode`);
+    await expect(page).toMatch(project.name);
+
+    console.log(`Checking we don't see ${project.name} when filtering by organization ${otherProject.crunchbase_data.name}`);
+    await page.goto(`${appUrl}/organization=${otherOrganizationSlug}&format=card-mode`);
+    await expect(page).not.toMatch(project.name);
   }, 6 * 60 * 1000);
 });
 
