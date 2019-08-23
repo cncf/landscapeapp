@@ -3,7 +3,7 @@ require('expect-puppeteer');
 import devices from 'puppeteer/DeviceDescriptors';
 import { paramCase } from 'change-case';
 import { settings } from '../tools/settings';
-import { processedLandscape } from '../tools/loadProcessedLandscape';
+import { projects } from '../tools/loadData';
 const port = process.env.PORT || '4000';
 const appUrl = `http://localhost:${port}`;
 const width = 1920;
@@ -118,11 +118,6 @@ function landscapeTest() {
   }
 }
 
-const getProjects = () => {
-  return processedLandscape.landscape.flatMap(({ subcategories }) => subcategories)
-                                     .flatMap(({ items }) => items)
-}
-
 describe("Normal browser", function() {
   beforeEach(async function() {
     setup = async (page) =>  await page.setViewport({ width, height });
@@ -135,17 +130,16 @@ describe("Normal browser", function() {
   embedTest();
 
   test("Filtering by organization", async () => {
-    const projects = getProjects();
-    const project = projects.find(({ crunchbase_data }) => crunchbase_data);
-    const organizationSlug = paramCase(project.crunchbase_data.name);
-    const otherProject = projects.find(({ crunchbase_data }) => crunchbase_data && crunchbase_data.name !== project.crunchbase_data.name);
-    const otherOrganizationSlug = paramCase(otherProject.crunchbase_data.name);
+    const project = projects[0];
+    const organizationSlug = paramCase(project.organization);
+    const otherProject = projects.find(({ organization }) => organization !== project.organization);
+    const otherOrganizationSlug = paramCase(otherProject.organization);
 
-    console.log(`Checking we see ${project.name} when filtering by organization ${project.crunchbase_data.name}`);
+    console.log(`Checking we see ${project.name} when filtering by organization ${project.organization}`);
     const page = await makePage(`${appUrl}/organization=${organizationSlug}&format=card-mode`);
     await expect(page).toMatch(project.name);
 
-    console.log(`Checking we don't see ${project.name} when filtering by organization ${otherProject.crunchbase_data.name}`);
+    console.log(`Checking we don't see ${project.name} when filtering by organization ${otherProject.organization}`);
     await page.goto(`${appUrl}/organization=${otherOrganizationSlug}&format=card-mode`);
     await expect(page).not.toMatch(project.name);
   }, 6 * 60 * 1000);
