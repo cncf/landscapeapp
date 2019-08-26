@@ -80,34 +80,27 @@ function getMembers() {
   const membershipFile = path.resolve(projectPath, 'members.yml');
   const hasMembershipFile = require('fs').existsSync(membershipFile);
   const membershipCategoryName = settings.global.membership;
-  if (hasMembershipFile && membershipCategoryName) {
-    console.info(`FATAL: both members.yml and membership category ${membershipCategoryName} (global.membership in settings.yml) are present. Please choose only one source`);
+  if (hasMembershipFile) {
+    console.info(`FATAL: members.yml is not supported anymore. Instead, we need a 'membership' key in a 'global' setting of a settings.yml file`);
     process.exit(1);
   }
-  if (!hasMembershipFile && !membershipCategoryName) {
-    console.info(`FATAL: both members.yml and membership category (global.membership in settings.yml) are not present. Please choose only one source`);
+  if (!membershipCategoryName) {
+    console.info(`FATAL: membership category (global.membership in settings.yml) is not present. Please add a category to the settings.yml file`);
     process.exit(1);
 
   }
-  if (hasMembershipFile) {
-    console.info('Fetching yaml members');
-    const members = require('js-yaml').safeLoad(require('fs').readFileSync(membershipFile));
-    return members;
-  }
-  else {
-    console.info(`Fetching members from ${membershipCategoryName} category`);
-    const result = {};
-    const tree = traverse(source);
-    console.info('Processing the tree');
-    tree.map(function(node) {
-      if (node && node.category === null && node.name === settings.global.membership) {
-        node.subcategories.forEach(function(subcategory) {
-          result[subcategory.name] = subcategory.items.map( (item) => getItemMembershipKey(item));
-        });
-      }
-    });
-    return result;
-  }
+  console.info(`Fetching members from ${membershipCategoryName} category`);
+  const result = {};
+  const tree = traverse(source);
+  console.info('Processing the tree');
+  tree.map(function(node) {
+    if (node && node.category === null && node.name === settings.global.membership) {
+      node.subcategories.forEach(function(subcategory) {
+        result[subcategory.name] = subcategory.items.map( (item) => getItemMembershipKey(item));
+      });
+    }
+  });
+  return result;
 }
 const members = getMembers();
 
