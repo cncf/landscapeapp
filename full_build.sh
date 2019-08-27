@@ -6,8 +6,13 @@ mkdir -p dist
 # echo '<head><meta name="google-site-verification" content="27ZKkPQS2PWkd_0jqsSq4yUgUZ_BBTYjABudtQpMhXI" /></head>' > dist/index.html
 npm install -g npm
 npm ci
-bash build.sh LFDLFoundation/lfdl-landscape lfdl master
+bash build.sh LFDLFoundation/lfdl-landscape lfdl 260-remove-members.yml
 bash build.sh cncf/landscape cncf master
+bash build.sh lf-edge/lfedge-landscape lf-edge master
+bash build.sh AcademySoftwareFoundation/aswf-landscape aswf master
+bash build.sh graphql/graphql-landscape master
+bash build.sh openmainframeproject/omp-landscape master
+
 # bash build.sh lf-edge/lfedge-landscape lf-edge
 echo "User-agent: *" > dist/robots.txt
 # comment below when about to test a googlebot rendering
