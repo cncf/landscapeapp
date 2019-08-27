@@ -108,7 +108,7 @@ tree.map(function(node) {
       return null;
     };
     const getLicense = function() {
-      if (node.hasOwnProperty('open_source') && node.open_source) && !node.repo_url) {
+      if (node.hasOwnProperty('open_source') && node.open_source && !node.repo_url) {
         return 'Other';
       }
       
