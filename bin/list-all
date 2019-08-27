@@ -1,0 +1,4 @@
+#!/usr/bin/env bash
+
+parentdir=$(cd $(dirname "$0")/../..; pwd)
+find $parentdir -maxdepth 2 -type f -name "landscape.yml" | xargs -n1 dirname
