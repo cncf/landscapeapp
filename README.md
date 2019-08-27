@@ -64,6 +64,18 @@ If you want to create an interactive landscape for your project or organization:
 5. Edit `settings.yml`, `landscape.yml`, and `members.yml` for your topic.
 6. [Generate](https://ventipix.com/designer-qr-code-generator.php) a QR code, setting colors to black and embedding the LF Landscape [icon](https://github.com/lf-edge/artwork/blob/master/lfedge-landscape/icon/color/lfedge-landscape-icon-color.png). Save as SVG and overwrite images/qr.svg with it. Note if you are having trouble with the SVG being generated being valid, save as an EPS file and convert to an SVG.
 
+## API Keys
+
+You want to add the following to your `~/.bash_profile`. If you're with the LF, ask Dan Kohn on CNCF [Slack](https://slack.cncf.io) for the Crunchbase and Twitter keys.
+
+For the GitHub key, please go to https://github.com/settings/tokens and create a key (you can call it `personal landscape`) with *no* permissions. That is, don't click any checkboxes, because you only need to access public repos.
+
+```sh
+export CRUNCHBASE_KEY="key-here"
+export TWITTER_KEYS=keys-here
+export GITHUB_KEY=key-here
+```
+
 ## Bash Shortcuts
 
 If you are working with more than one landscape, there's a trick to run the standard landscapeapp `package.json` functions. Add the following to your `~/.bash_profile`:
