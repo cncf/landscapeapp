@@ -11,7 +11,7 @@ bash build.sh cncf/landscape cncf master
 bash build.sh lf-edge/lfedge-landscape lf-edge 260-remove-members.yml
 bash build.sh AcademySoftwareFoundation/aswf-landscape aswf 260-remove-members.yml
 bash build.sh graphql/graphql-landscape graphql 260-remove-members.yml
-bash build.sh ZeusTheTrueGod/omp-landscape omp 260-remove-members.yml
+bash build.sh openmainframeproject/omp-landscape omp 260-remove-members.yml
 
 # bash build.sh lf-edge/lfedge-landscape lf-edge
 echo "User-agent: *" > dist/robots.txt
