@@ -42,9 +42,9 @@ async function readGithubStats({repo, branch}) {
   }
 }
 export async function getReleaseDate({repo}) {
-  var url = `https://api.github.com/repos/${repo}/releases/latest?access_token=${process.env.GITHUB_KEY}`;
+  const url = `https://api.github.com/repos/${repo}/releases?access_token=${process.env.GITHUB_KEY}`;
   try {
-    var releaseInfo = await rp({
+    const releases = await rp({
       uri: url,
       followRedirect: true,
       timeout: 10 * 1000,
@@ -53,11 +53,10 @@ export async function getReleaseDate({repo}) {
       },
       json: true
     });
-    return releaseInfo.published_at;
-  } catch(e) {
-    if (e.statusCode === 404) {
-      return null;
+    if (releases.length > 0) {
+      return releases[0].published_at;
     }
+  } catch(e) {
     throw e;
   }
 }
