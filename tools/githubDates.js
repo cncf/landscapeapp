@@ -1,6 +1,24 @@
 import rp from './rpRetry';
 import { JSDOM } from 'jsdom';
 
+const makeApiRequest = ({ path = null, url = null, method = 'GET' }) => {
+  if (path) {
+    url = `https://api.github.com${path}`;
+  }
+
+  return rp({
+    method: method,
+    uri: url,
+    followRedirect: true,
+    timeout: 10 * 1000,
+    headers: {
+      'User-agent': 'CNCF',
+      'Authorization': `token ${process.env.GITHUB_KEY}`
+    },
+    json: true
+  })
+}
+
 async function readGithubStats({repo, branch}) {
   var url = `https://github.com/${repo}/commits/${branch}`;
   var response
@@ -128,29 +146,43 @@ export async function getRepoLatestDate({repo, branch}) {
     commitLink: info.firstCommitLink
   }
 }
-export async function getRepoStartDate({repo, branch}) {
-  const info = await readGithubStats({repo, branch});
-  if (info.lastCommitLink) {
-    return {
-      date: await getCommitDate(info.lastCommitLink),
-      commitLink: info.lastCommitLink
-    };
+
+const getBranchSha = (repo, branch) => {
+  return makeApiRequest({ path: `/repos/${repo}/branches/${branch}` }).then(({commit}) => commit.sha );
+}
+
+const getUrlFromLinkHeader = (link, rel) => {
+  if (link) {
+    return link.split(',')
+      .find((text) => text.indexOf(`rel="${rel}"`) > -1)
+      .split(';')[0]
+      .replace(/<|>/g, '');
   }
-  const getScore = async function(i) {
-    const result = await getPageStats({base: info.base, offset: i});
-    // console.info('result for ', i, ' is ', result);
-    if (!result) {
-      return 2;
-    }
-    if (result.nextPageHref) {
-      return 0;
-    }
-    return 1;
-  };
-  const offset = await promiseBinarySearch(0, 256000, getScore);
-  const stats = await getPageStats({base: info.base, offset: offset});
-  const firstCommitDate = await getCommitDate(stats.lastHref); //last row on the page
-  return { date: firstCommitDate, commitLink: stats.lastHref};
+}
+
+const getCommitsLastPagePath = (repo, branchSha) => {
+  const path = `/repos/${repo}/commits?sha=${branchSha}`;
+
+  return makeApiRequest({ path, method: 'HEAD' })
+    .then(({link}) => {
+      const url = getUrlFromLinkHeader(link, 'last');
+      if (!url) {
+        return path
+      }
+      const { pathname, search } = new URL(url);
+      return pathname + search;
+    });
+}
+
+export async function getRepoStartDate({repo, branch}) {
+  const branchSha = await getBranchSha(repo, branch);
+  const commitsLastPagePath = await getCommitsLastPagePath(repo, branchSha);
+
+  return await makeApiRequest({ path: commitsLastPagePath }).then((commits) => {
+    const lastCommit = commits[commits.length - 1];
+    const commitLink = (new URL(lastCommit.html_url)).pathname;
+    return { date: lastCommit.commit.author.date, commitLink: commitLink };
+  });
 }
 // getRepoStartDate({repo: 'rails/rails'}).then(console.info).catch(console.info);
 // getRepoLatestDate({repo: 'theforeman/foreman', branch: 'develop'}).then(console.info).catch(console.info);
