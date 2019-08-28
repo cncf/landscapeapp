@@ -9,9 +9,9 @@ npm ci
 bash build.sh LFDLFoundation/lfdl-landscape lfdl 260-remove-members.yml
 bash build.sh cncf/landscape cncf master
 bash build.sh lf-edge/lfedge-landscape lf-edge 260-remove-members.yml
-bash build.sh AcademySoftwareFoundation/aswf-landscape aswf master
-bash build.sh graphql/graphql-landscape master
-bash build.sh openmainframeproject/omp-landscape master
+bash build.sh AcademySoftwareFoundation/aswf-landscape aswf 260-remove-members.yml
+bash build.sh graphql/graphql-landscape 260-remove-members.yml
+bash build.sh ZeusTheTrueGod/omp-landscape 260-remove-members.yml
 
 # bash build.sh lf-edge/lfedge-landscape lf-edge
 echo "User-agent: *" > dist/robots.txt
