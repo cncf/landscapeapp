@@ -105,10 +105,8 @@ const getCommitsLastPagePath = async (repo, branchSha) => {
 export async function getRepoStartDate({repo, branch}) {
   const branchSha = await getBranchSha(repo, branch);
   const commitsLastPagePath = await getCommitsLastPagePath(repo, branchSha);
-
-  return await makeApiRequest({ path: commitsLastPagePath }).then((commits) => {
-    const lastCommit = commits[commits.length - 1];
-    const commitLink = (new URL(lastCommit.html_url)).pathname;
-    return { date: lastCommit.commit.author.date, commitLink: commitLink };
-  });
+  const commits = await makeApiRequest({ path: commitsLastPagePath })
+  const lastCommit = commits[commits.length - 1];
+  const commitLink = (new URL(lastCommit.html_url)).pathname;
+  return { date: lastCommit.commit.author.date, commitLink: commitLink };
 }
