@@ -60,22 +60,10 @@ async function readGithubStats({repo, branch}) {
   }
 }
 export async function getReleaseDate({repo}) {
-  const url = `https://api.github.com/repos/${repo}/releases?access_token=${process.env.GITHUB_KEY}`;
-  try {
-    const releases = await rp({
-      uri: url,
-      followRedirect: true,
-      timeout: 10 * 1000,
-      headers: {
-        'User-agent': 'CNCF'
-      },
-      json: true
-    });
-    if (releases.length > 0) {
-      return releases[0].published_at;
-    }
-  } catch(e) {
-    throw e;
+  const releases = await makeApiRequest({ path: `/repos/${repo}/releases` });
+
+  if (releases.length > 0) {
+    return releases[0].published_at;
   }
 }
 
