@@ -147,8 +147,9 @@ export async function getRepoLatestDate({repo, branch}) {
   }
 }
 
-const getBranchSha = (repo, branch) => {
-  return makeApiRequest({ path: `/repos/${repo}/branches/${branch}` }).then(({commit}) => commit.sha );
+const getBranchSha = async (repo, branch) => {
+  const { commit } = await makeApiRequest({ path: `/repos/${repo}/branches/${branch}` });
+  return commit.sha;
 }
 
 const getUrlFromLinkHeader = (link, rel) => {
@@ -160,18 +161,16 @@ const getUrlFromLinkHeader = (link, rel) => {
   }
 }
 
-const getCommitsLastPagePath = (repo, branchSha) => {
+const getCommitsLastPagePath = async (repo, branchSha) => {
   const path = `/repos/${repo}/commits?sha=${branchSha}`;
 
-  return makeApiRequest({ path, method: 'HEAD' })
-    .then(({link}) => {
-      const url = getUrlFromLinkHeader(link, 'last');
-      if (!url) {
-        return path
-      }
-      const { pathname, search } = new URL(url);
-      return pathname + search;
-    });
+  const { link } = await makeApiRequest({ path, method: 'HEAD' });
+  const url = getUrlFromLinkHeader(link, 'last');
+  if (!url) {
+    return path;
+  }
+  const { pathname, search } = new URL(url);
+  return pathname + search;
 }
 
 export async function getRepoStartDate({repo, branch}) {
