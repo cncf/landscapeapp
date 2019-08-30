@@ -68,41 +68,6 @@ else if (key.toLowerCase() === 'complete') {
   console.info('Unknown level. Should be one of easy, medium, hard or complete');
 }
 
-function getItemMembershipKey(item) {
-  if (item.crunchbase === 'https://www.cncf.io') {
-    return item.crunchbase + ':' + item.name;
-  } else {
-    return item.crunchbase;
-  }
-}
-
-function getMembers() {
-  const membershipFile = path.resolve(projectPath, 'members.yml');
-  const hasMembershipFile = require('fs').existsSync(membershipFile);
-  const membershipCategoryName = settings.global.membership;
-  if (hasMembershipFile) {
-    console.info(`FATAL: members.yml is not supported anymore. Instead, we need a 'membership' key in a 'global' setting of a settings.yml file`);
-    process.exit(1);
-  }
-  if (!membershipCategoryName) {
-    console.info(`FATAL: membership category (global.membership in settings.yml) is not present. Please add a category to the settings.yml file`);
-    process.exit(1);
-
-  }
-  console.info(`Fetching members from ${membershipCategoryName} category`);
-  const result = {};
-  const tree = traverse(source);
-  console.info('Processing the tree');
-  tree.map(function(node) {
-    if (node && node.category === null && node.name === settings.global.membership) {
-      node.subcategories.forEach(function(subcategory) {
-        result[subcategory.name] = subcategory.items.map( (item) => getItemMembershipKey(item));
-      });
-    }
-  });
-  return result;
-}
-const members = getMembers();
 
 async function main() {
 
@@ -194,11 +159,6 @@ async function main() {
         node.github_start_commit_data = dateEntry;
         delete node.github_start_commit_data.url;
         delete node.github_start_commit_data.branch;
-      }
-      //membership
-      const membership = _.findKey(members, (v) => v && v.indexOf(getItemMembershipKey(node)) !== -1);
-      node.membership_data = {
-        member: membership || false
       }
       //yahoo finance. we will just extract it
       if (node.crunchbase_data && node.crunchbase_data.effective_ticker) {

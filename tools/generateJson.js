@@ -16,6 +16,54 @@ function sortFn(x) {
   return x;
 }
 
+function getItemMembershipKey(item) {
+  if (item.crunchbase === 'https://www.cncf.io') {
+    return item.crunchbase + ':' + item.name;
+  } else {
+    return item.crunchbase;
+  }
+}
+
+function getMemberCrunchbaseUrls(item) {
+  if (item.crunchbase === 'https://www.cncf.io') {
+    return [item.crunchbase + ':' + item.name];
+  } else {
+    return [item.crunchbase].concat(item.crunchbase_data.acquisited);
+  }
+}
+
+function getMembers() {
+  const membershipFile = require('path').resolve(projectPath, 'members.yml');
+  const hasMembershipFile = require('fs').existsSync(membershipFile);
+  const membershipCategoryName = settings.global.membership;
+  if (hasMembershipFile) {
+    console.info(`FATAL: members.yml is not supported anymore. Instead, we need a 'membership' key in a 'global' setting of a settings.yml file`);
+    process.exit(1);
+  }
+  if (!membershipCategoryName) {
+    console.info(`FATAL: membership category (global.membership in settings.yml) is not present. Please add a category to the settings.yml file`);
+    process.exit(1);
+
+  }
+  console.info(`Fetching members from ${membershipCategoryName} category`);
+  const result = {};
+  const tree = traverse(source);
+  console.info('Processing the tree');
+  tree.map(function(node) {
+    if (node && node.category === null && node.name === settings.global.membership) {
+      node.subcategories.forEach(function(subcategory) {
+        result[subcategory.name] = _.flatten(subcategory.items.map( (item) => getMemberCrunchbaseUrls(item)));
+      });
+    }
+  });
+  return result;
+}
+const members = getMembers();
+// console.info(members);
+
+
+
+
 const formatDate = function(x) {
   let result;
   if (!x) {
@@ -141,13 +189,17 @@ tree.map(function(node) {
       return 'https://github.com' + link;
     }
 
+    // calculating a membership
+    const membership = _.findKey(members, (v) => v && v.indexOf(getItemMembershipKey(node)) !== -1);
+    node.member =  membership || false;
+
     const {relation, isSubsidiaryProject} = (function() {
       let result;
       result = node.project === 'sandbox' && settings.global.flags.cncf_sandbox ? 'member' : node.project;
       if (result) {
         return {relation: result, isSubsidiaryProject: false};
       }
-      if (node.membership_data.member) {
+      if (node.member) {
         return {relation: 'member', isSubsidiaryProject: false};
       }
       if (node.crunchbase === settings.global.self) {
@@ -158,7 +210,6 @@ tree.map(function(node) {
 
     items.push({...node,
       project: node.project,
-      member: node.membership_data.member,
       relation: relation,
       isSubsidiaryProject: isSubsidiaryProject,
       firstCommitDate: formatDate((node.github_start_commit_data || {}).start_date),
@@ -197,6 +248,8 @@ const itemsWithExtraFields = items.map(function(item) {
     }
     return el.linkedin.replace(/\?.*/, '');
   }
+
+
   if (item.crunchbase_data) {
     item.crunchbaseData.numEmployeesMin = item.crunchbaseData.num_employees_min;
     item.crunchbaseData.numEmployeesMax = item.crunchbaseData.num_employees_max;
@@ -211,7 +264,6 @@ const itemsWithExtraFields = items.map(function(item) {
     delete item.crunchbaseData.ticker_symbol;
   }
   delete item.best_practice_data;
-  delete item.membership_data;
   delete item.market_cap;
   delete item.first_commit_date;
   delete item.latest_commit_date;
