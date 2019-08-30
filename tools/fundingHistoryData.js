@@ -29,6 +29,8 @@ function getFileFromFs() {
   return source;
 }
 
+const dataJson = JSON.parse(require('fs').readFileSync(path.resolve(projectPath, 'data.json'), 'utf-8'));
+
 const getItems = function(yaml) {
   return _.flattenDeep( yaml.landscape.map( (category) => category.subcategories.map( (sc) => sc.items))).filter( (x) => !!x);
 }
@@ -47,12 +49,13 @@ function buildDiff({currentItems, prevItems, date, result}) {
     }
     const previousEntry = _.find(prevItems, (prevItem) => prevItem.crunchbase_data && prevItem.crunchbase_data.name === item.crunchbase_data.name);
     if (previousEntry && item.crunchbase_data.funding !== previousEntry.crunchbase_data.funding) {
+      const membership = _.find(dataJson, {crunchbase: item.crunchbase}).member;
       result.push({
         name: item.crunchbase_data.name,
         currentAmount: item.crunchbase_data.funding,
         previousAmount: previousEntry.crunchbase_data.funding,
         date: date,
-        membership: item.membership_data.member,
+        membership,
         link: `${base}/grouping=organization&organization=${saneName(item.crunchbase_data.name)}`,
         url: item.crunchbase + '#section-funding-rounds'
       });
