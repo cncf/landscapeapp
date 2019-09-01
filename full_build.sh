@@ -8,6 +8,11 @@ npm install -g npm
 npm ci
 bash build.sh LFDLFoundation/lfdl-landscape lfdl master
 bash build.sh cncf/landscape cncf master
+bash build.sh lf-edge/lfedge-landscape lf-edge master
+bash build.sh AcademySoftwareFoundation/aswf-landscape aswf master
+bash build.sh graphql/graphql-landscape graphql master
+bash build.sh openmainframeproject/omp-landscape omp master
+
 # bash build.sh lf-edge/lfedge-landscape lf-edge
 echo "User-agent: *" > dist/robots.txt
 # comment below when about to test a googlebot rendering
@@ -35,5 +40,8 @@ if [ $BRANCH = "master" ]; then
   echo 'Npm package published'
   curl -X POST -d {} https://api.netlify.com/build_hooks/5c1bd8e14ed62f166e8d9f7f
   curl -X POST -d {} https://api.netlify.com/build_hooks/5c1bd968fdd72a78a54bdcd1
-  # curl -X POST -d {} https://api.netlify.com/build_hooks/5c80e31894c5c7758edb31e4
+  curl -X POST -d {} https://api.netlify.com/build_hooks/5c80e31894c5c7758edb31e4
+  curl -X POST -d {} https://api.netlify.com/build_hooks/5d5c7ca6dc2c51cf02381f63
+  curl -X POST -d {} https://api.netlify.com/build_hooks/5d5c7ccf64ecb5bd3d2592f7
+  curl -X POST -d {} https://api.netlify.com/build_hooks/5d6a6f73080982abfbd46290
 fi

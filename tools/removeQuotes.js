@@ -42,6 +42,7 @@ const landscapeKeys = [
   'stock_ticker',
   'logo',
   'enduser',
+  'open_source',
   'twitter',
   'crunchbase'
 ];

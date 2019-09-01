@@ -25,7 +25,7 @@ const relationField = (function() {
   if (!firstEntry.children) {
     throw new Error('First entry of relation settings should have children!');
   }
-  const values = [{
+  const options = [{
     id: firstEntry.id,
     label: firstEntry.label,
     tag: firstEntry.tag,
@@ -48,7 +48,12 @@ const relationField = (function() {
     }
   }));
 
-  return { ...rootEntry, values: values};
+  return {
+    ...rootEntry,
+    values: options,
+    processValuesBeforeSaving: (values) => processValuesBeforeSaving({options, values}),
+    processValuesBeforeLoading: (values) => processValuesBeforeLoading({options, values})
+  };
 
 })();
 
@@ -183,6 +188,11 @@ const fields = {
       }
     },
     values: [{id: true, label: 'Yes', url: 'yes'}, {id: false, label: 'No', url: 'no'}]
+  },
+  googlebot: {
+    id: 'googlebot',
+    url: 'googlebot',
+    values: [{ id: true, url: 'yes' }, { id: false, url: 'no' }]
   }
 };
 _.each(fields, function(field, key) {
