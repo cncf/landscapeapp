@@ -46,19 +46,24 @@ function getMembers() {
 
   }
   console.info(`Fetching members from ${membershipCategoryName} category`);
-  const result = {};
+  const directResult = {};
+  const indirectResult = {};
   const tree = traverse(source);
   console.info('Processing the tree');
   tree.map(function(node) {
     if (node && node.category === null && node.name === settings.global.membership) {
       node.subcategories.forEach(function(subcategory) {
-        result[subcategory.name] = _.flatten(subcategory.items.map( (item) => getMemberCrunchbaseUrls(item)));
+        directResult[subcategory.name] = subcategory.items.map( (item) => getItemMembershipKey(item));
+        indirectResult[subcategory.name] = _.flatten(subcategory.items.map( (item) => getMemberCrunchbaseUrls(item)));
       });
     }
   });
-  return result;
+  return {
+    directMembers: directResult,
+    indirectMembers: indirectResult
+  };
 }
-const members = getMembers();
+const {directMembers, indirectMembers } = getMembers();
 // console.info(members);
 
 
@@ -190,7 +195,7 @@ tree.map(function(node) {
     }
 
     // calculating a membership
-    const membership = _.findKey(members, (v) => v && v.indexOf(getItemMembershipKey(node)) !== -1);
+    const membership = _.findKey(directMembers, (v) => v && v.indexOf(getItemMembershipKey(node)) !== -1) || _.findKey(indirectMembers, (v) => v.indexOf(getItemMembershipKey(node)) !== -1);
     node.member =  membership || false;
 
     const {relation, isSubsidiaryProject} = (function() {
