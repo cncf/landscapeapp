@@ -9,7 +9,7 @@ describe('Twitter URL', () => {
     })
   });
 
-  describe('when node data not set', () => {
+  describe('when node does not have twitter URL', () => {
     const crunchbaseData = { twitter: 'https://twitter.com/foo' };
 
     test('returns URL from node', async () => {
@@ -17,7 +17,16 @@ describe('Twitter URL', () => {
     })
   });
 
-  describe('when both node and crunchbase data are set', () => {
+  describe('when node has twitter URL set to null', () => {
+    const crunchbaseData = { twitter: 'https://twitter.com/foo' };
+    const node = { twitter: null };
+
+    test('returns undefined', async () => {
+      expect(actualTwitter(node, crunchbaseData)).toBe(undefined)
+    })
+  });
+
+  describe('when both node and crunchbase have twitter URL', () => {
     const node = { twitter: 'https://twitter.com/main' };
     const crunchbaseData = { twitter: 'https://twitter.com/other' };
 

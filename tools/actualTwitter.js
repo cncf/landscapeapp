@@ -1,5 +1,5 @@
 export default function actualTwitter(node, crunchbaseEntry) {
-  const twitterUrl = node.twitter || (crunchbaseEntry || {}).twitter;
+  const twitterUrl = 'twitter' in node ? node.twitter : (crunchbaseEntry || {}).twitter;
 
   if (twitterUrl) {
     return twitterUrl.replace(/^http(?:s)?\:\/\/(?:www\.)?/, 'https://')
