@@ -97,6 +97,34 @@ alias all='for path in /Users/your-username/dev/{landscapeapp,landscape,lfdl-lan
 
 ```
 
+## Adding a new landscape to the autoupdater.
+So, we have an https://github.com/AcademySoftwareFoundation/aswf-landscape repo and we want to set up automatic updates for it
+1. Lets guess that landscapeapp is exctracted to the ~/Documents/landscapeapp, and we will clone that new https://github.com/AcademySoftwareFoundation/aswf-landscape to ~/Documents/aswf-landscape
+2. go to the ~/Documents/landscapeapp and add `export PROJECT_PATH=../aswf-landscape` so all further commands will use that one
+3. run `./node_modules/.bin/babel-node tools/setupServer
+4  ssh into our setup server (root@147.75.106.211) and then ensure that `ls`
+shows a new `ASWF.settings as well as ASWF.settings.private`. Now you need to
+fill in ASWF.settings.private, usually, copy everything and change the slack
+channel from the CNCF.settings.private. You can a slack channel id the
+netlify project configuration, Build&Deploy, slack notifications in post processing.
+5. that is all we need, you can run `update.sh` manually to ensure that it will pick up the settings files and build that repo too. Log is stored in the update.ASWF.settings.log
+
+Absolutely exact steps are used for a GraphQL project.
+
+
+## Adding to a google search console
+  Go to the google search console, add a new property, enter the url of the
+  given project, for example, https://landscape.cncf.io
+
+  Next, google will want to verify that it is your site, thus you need to choose
+  an `html tag verification` option and copy a secret code from it and put it to
+  the `settings.yml` of a given landscape project. Then commit the change to the master branch and
+  wait till Netlify deploys the master branch. The key is named `google_site_veryfication` and it is
+  somewhere around line 14 in settings.yml. After netlify succesfully deploys
+  that dashbaord, verify the html tag in a google console. Do not forget to add
+  Dan@linuxfoundation.org as someone who has a full access from a `Settings`
+  menu for a given search console.
+
 ## Vulnerability reporting
 
 Please open an [issue](https://github.com/cncf/landscapeapp/issues/new) or, for sensitive information, email info@cncf.io.
