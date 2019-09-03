@@ -60,7 +60,7 @@ const projectTag = function({relation, member, isSubsidiaryProject, project, end
   if (relation === false) {
     return null;
   }
-  const { prefix, tag } = _.find(fields.relation.values, {id: project});
+  const { prefix, tag } = _.find(fields.relation.values, {id: project}) || {};
 
   if (prefix && tag) {
     return (<InternalLink to={filtersToUrl({filters:{relation: project}})} className="tag tag-blue">
