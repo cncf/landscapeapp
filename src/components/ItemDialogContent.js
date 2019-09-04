@@ -60,16 +60,15 @@ const projectTag = function({relation, member, isSubsidiaryProject, project, end
   if (relation === false) {
     return null;
   }
-  const { prefix, tag } = _.find(fields.relation.values, {id: relation});
+  const { prefix, tag } = _.find(fields.relation.values, {id: project}) || {};
 
-  if (settings.global.flags.cncf_sandbox) {
-    if (project === 'sandbox') {
-      return (<InternalLink to={filtersToUrl({filters:{relation: project}})} className="tag tag-blue">
-        <span className="tag-name">Cloud Native</span>
-        <span className="tag-value">Sandbox Project</span>
-      </InternalLink>)
-    }
+  if (prefix && tag) {
+    return (<InternalLink to={filtersToUrl({filters:{relation: project}})} className="tag tag-blue">
+      <span className="tag-name">{prefix}</span>
+      <span className="tag-value">{tag}</span>
+    </InternalLink>)
   }
+
   if (isSubsidiaryProject) {
     return (<div className="tag tag-blue">
       <span className="tag-value">Subsidiary CNCF Project</span>
@@ -87,11 +86,6 @@ const projectTag = function({relation, member, isSubsidiaryProject, project, end
       <span className="tag-value">{label}</span>
     </InternalLink>)
   }
-
-  return (<InternalLink to={filtersToUrl({filters:{relation: relation}})} className="tag tag-blue">
-    <span className="tag-name">{prefix}</span>
-    <span className="tag-value">{tag}</span>
-  </InternalLink>)
 };
 
 const openSourceTag = function(oss) {
