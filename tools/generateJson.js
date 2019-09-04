@@ -549,7 +549,7 @@ const generateHeadquarters = function() {
       return {headquarters: item.headquarters, country: item.crunchbaseData.country};
   }));
   const grouped  = _.groupBy(values, (x) => x.country);
-  const keys = _.orderBy(_.keys(grouped));
+  const keys = _.sortBy(_.keys(grouped), (country) => country === 'Antarctica' ? 'ZZZ' : country);
   const result = [];
   _.each(keys, function(key) {
     const value = grouped[key];
