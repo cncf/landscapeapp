@@ -28,7 +28,7 @@ function getMemberCrunchbaseUrls(item) {
   if (item.crunchbase === 'https://www.cncf.io') {
     return [item.crunchbase + ':' + item.name];
   } else {
-    return [item.crunchbase].concat(item.crunchbase_data.acquisited);
+    return [item.crunchbase].concat(item.crunchbase_data.subsidiary);
   }
 }
 
