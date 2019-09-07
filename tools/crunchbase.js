@@ -75,7 +75,7 @@ async function getSubsidiaryCompanies(companyInfo) {
     json: true
   });
   const items = data.data.items.filter(function(item) {
-    return item.acquisition_type === 'subsidiary'
+    return item.properties.disposition_of_acquired === 'subsidiary'
   }).map(function(item) {
     return 'https://www.crunchbase.com/' + item.relationships.acquiree.properties.web_path
   });
