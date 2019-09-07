@@ -195,7 +195,7 @@ tree.map(function(node) {
     }
 
     // calculating a membership
-    const memebership = (function() {
+    const membership = (function() {
       // direct membership
       const directMembership = _.findKey(directMembers, (v) => v && v.indexOf(getItemMembershipKey(node)) !== -1);
       if (directMembership) {
@@ -217,6 +217,7 @@ tree.map(function(node) {
       }
       return false;
     })();
+    node.member = membership;
 
     const {relation, isSubsidiaryProject} = (function() {
       let result;
