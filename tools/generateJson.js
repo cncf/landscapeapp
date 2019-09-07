@@ -26,9 +26,9 @@ function getItemMembershipKey(item) {
 
 function getMemberCrunchbaseUrls(item) {
   if (item.crunchbase === 'https://www.cncf.io') {
-    return [item.crunchbase + ':' + item.name];
+    return [];
   } else {
-    return [item.crunchbase].concat(item.crunchbase_data.subsidiary);
+    return item.crunchbase_data.subsidiary;
   }
 }
 
@@ -195,8 +195,28 @@ tree.map(function(node) {
     }
 
     // calculating a membership
-    const membership = _.findKey(directMembers, (v) => v && v.indexOf(getItemMembershipKey(node)) !== -1) || _.findKey(indirectMembers, (v) => v.indexOf(getItemMembershipKey(node)) !== -1);
-    node.member =  membership || false;
+    const memebership = (function() {
+      // direct membership
+      const directMembership = _.findKey(directMembers, (v) => v && v.indexOf(getItemMembershipKey(node)) !== -1);
+      if (directMembership) {
+        return directMembership;
+      }
+      const parentWithMembership = _.find(node.crunchbase_data.parents, function(parent) {
+        return _.findKey(directMembers, (v) => v && v.indexOf(parent) !== -1);
+      });
+      // a first parent of a given node which has a given membership
+      if (parentWithMembership) {
+        const membership = _.findKey(directMembers, (v) => v && v.indexOf(parentWithMembership) !== -1);
+        console.info(`assigning ${membership} membership on ${node.name} because its parent ${parentWithMembership} has ${membership} membership`);
+        return membership;
+      }
+      const indirectMembership = _.findKey(indirectMembers, (v) => v.indexOf(getItemMembershipKey(node)) !== -1);
+      if (indirectMembership) {
+        console.info(`assigning ${membership} membership on ${node.name} because it is a subsidiary of a ${membership} member`);
+        return indirectMembership;
+      }
+      return false;
+    })();
 
     const {relation, isSubsidiaryProject} = (function() {
       let result;
