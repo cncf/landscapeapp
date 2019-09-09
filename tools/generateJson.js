@@ -197,11 +197,12 @@ tree.map(function(node) {
         let parentName;
         tree.map(function(node) {
           if (node && node.crunchbase === parentWithMembership) {
-            parentName = node.name
+            parentName = node.crunchbase_data.name
           }
         });
+        let myName =  node.crunchbase_data.name;
         const membership = _.findKey(members, (v) => v && v.indexOf(parentWithMembership) !== -1);
-        console.info(`Assigning ${membership} membership on ${node.name} because its parent ${parentName} has ${membership} membership`);
+        console.info(`Assigning ${membership} membership on ${node.name} (${myName}) because its parent ${parentName} has ${membership} membership`);
         return membership;
       }
       return false;
