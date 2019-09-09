@@ -4,7 +4,7 @@ import isEmbed from '../utils/isEmbed';
 import isGoogle from '../utils/isGoogle';
 import { NavLink } from 'react-router-dom';
 const skipDefaultHandler = (e) => e.preventDefault();
-const InternalLink = ({to, children, onClick, ...other}) => {
+const InternalLink = ({to, children, onClick, className, ...other}) => {
   if (onClick) {
     other.onClick = function(e) {
       skipDefaultHandler(e);
@@ -14,7 +14,7 @@ const InternalLink = ({to, children, onClick, ...other}) => {
   if (isEmbed || isGoogle) {
     return <span {...other}>{children}</span>;
   } else {
-    return <NavLink {...other} to={to}>{children}</NavLink>
+    return <NavLink className={`${className}  nav-link`} {...other} to={to}>{children}</NavLink>
   }
 }
 export default pure(InternalLink);

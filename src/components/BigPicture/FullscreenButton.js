@@ -10,7 +10,7 @@ const FullscreenButton = function({isVisible, isFullscreen, enableFullscreen, di
   if (!isVisible) {
     return null;
   }
-  return <div className="fullscreen-button" style={{position:'absolute', zIndex: 7, display: 'inline-block', width: 40}}>
+  return <div className="fullscreen-button">
         { isFullscreen ?
         <IconButton onClick={disableFullscreen}>
           <FullscreenExitIcon />
