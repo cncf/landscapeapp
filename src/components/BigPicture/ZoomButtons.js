@@ -8,12 +8,12 @@ import AddCircleIcon from '@material-ui/icons/AddCircle';
 import React from 'react';
 
 const ZoomButtons = function({canZoomIn, canZoomOut, zoomText, onZoomIn, onZoomOut, onZoomReset}) {
-  return <div className="zoom-buttons" style={{position:'absolute'}}>
-        <IconButton disabled={!canZoomOut} onClick={onZoomOut}>
+  return <div className="zoom-buttons">
+        <IconButton disabled={!canZoomOut} onClick={onZoomOut} className='zoom-change'>
           <RemoveCircleIcon />
         </IconButton>
-        <Button onClick={onZoomReset}>{zoomText}</Button>
-        <IconButton disabled={!canZoomIn} onClick={onZoomIn}>
+        <Button onClick={onZoomReset} className='zoom-reset'>{zoomText}</Button>
+        <IconButton disabled={!canZoomIn} onClick={onZoomIn} className='zoom-change'>
           <AddCircleIcon />
         </IconButton>
   </div>

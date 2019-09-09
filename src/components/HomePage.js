@@ -162,8 +162,6 @@ const HomePage = ({isEmbed, mainContentMode, ready, hasSelectedItem, filtersVisi
     }
   }
 
-  const hideTopPart = isEmbed || isFullscreen || (isMobile && isBigPicture);
-
   return (
     <div onClick={handleShadowClick} >
     <HomePageScrollerContainer/>
@@ -193,32 +191,35 @@ const HomePage = ({isEmbed, mainContentMode, ready, hasSelectedItem, filtersVisi
         <HomePageUrlContainer />
 
         <div className={classNames('main', {'embed': isEmbed})}>
-          { isMobile && <SwitchButtonContainer /> }
-          { !hideTopPart && <div className="disclaimer">
+          { !isEmbed && <div className="disclaimer">
             <span  dangerouslySetInnerHTML={{__html: settings.home.header}} />
             Please <a target="_blank" href={`https://github.com/${settings.global.repo}`}>open</a> a pull request to
             correct any issues. Greyed logos are not open source. Last Updated: {window.lastUpdated}
           </div> }
-          { !hideTopPart && <SummaryContainer /> }
-          { !isMobile && <SwitchButtonContainer /> }
-          { isBigPicture &&
-              <AutoSizer>
-                {({ height, width }) => (
-                  <div style={{minWidth: (isDesktop ? 560 : undefined), width:width, height: height, position: 'relative', background: 'rgb(134,175,188)'}}>
-                    <ZoomButtonsContainer />
-                    <FullscreenButtonContainer />
-                    <TweetButton cls="tweet-button-main" />
-                    <div style={{width: '100%', height: '100%', position: 'relative', overflow: 'scroll', padding: 10}}>
-                      { mainContentMode === mainSettings.url && <MainLandscapeContentContainer /> }
-                      { mainContentMode === extraSettings.url && <ExtraLandscapeContentContainer /> }
-                      { mainContentMode === thirdSettings.url && <ThirdLandscapeContentContainer /> }
-                    </div>
-                  </div>
-                )}
-              </AutoSizer>
+          { !isEmbed && <SummaryContainer /> }
 
-          }
-          { !isBigPicture && <MainContentContainer/> }
+          <div className="cards-section">
+            <SwitchButtonContainer />
+            <div className="right-buttons">
+              <ZoomButtonsContainer/>
+              <FullscreenButtonContainer/>
+              <TweetButton cls="tweet-button-main"/>
+            </div>
+            { isBigPicture &&
+            <AutoSizer>
+              {({ height }) => (
+                <div className='landscape-wrapper' style={{height: height}}>
+                  <div style={{width: '100%', height: '100%', position: 'relative', overflow: 'scroll', padding: 10}}>
+                    { mainContentMode === mainSettings.url && <MainLandscapeContentContainer /> }
+                    { mainContentMode === extraSettings.url && <ExtraLandscapeContentContainer /> }
+                    { mainContentMode === thirdSettings.url && <ThirdLandscapeContentContainer /> }
+                  </div>
+                </div>
+              )}
+            </AutoSizer>
+            }
+            { !isBigPicture && <MainContentContainer/> }
+          </div>
           { !isEmbed && !isBigPicture && <Footer/> }
           { isEmbed && <EmbeddedFooter/> }
         </div>

@@ -4,13 +4,14 @@ $blue: #5093e0;
 $blue-hover: #0e61c0;
 $mobilewidth: 812px;
 
-html.desktop {
-  min-width: 560px;
-}
-.desktop body {
-  min-width: 560px;
-}
-
+// Breakpoints taken from: https://material-ui.com/customization/breakpoints/
+// An xs device is less than 600px
+// An sm device is between 600px and 900px
+// ...
+$sm-screen: 576px;
+$md-screen: 768px;
+$lg-screen: 992px;
+$xl-screen: 1200px;
 
 html {-webkit-text-size-adjust: 100%;}
 body {background-color:#F4F4f4 !important; font-family: Arial, Helvetica, sans-serif;}
@@ -54,34 +55,66 @@ a {text-decoration: none; transition: all 0.5s; color: $blue;
 
 }
 
-.disclaimer {margin: -60px 5px 14px; color: $navy; font-size: 0.8em; padding-right: 220px;
+.disclaimer {
+  margin: -60px 5px 14px;
+  color: $navy;
+  font-size: 0.8em;
+  padding-right: 220px;
   color: $navy-light;
   a {color: #366fa8;}
   h1 {font-size: 2.1rem; line-height: 30px; display: block; margin: 0 0 14px; color: $navy;
-    @media (max-width: $mobilewidth) {font-size: 1.4rem; line-height: normal;}
+    @media (max-width: $lg-screen) {font-size: 1.4rem; line-height: normal;}
   }
-  @media (max-width: $mobilewidth) {padding-right: 0;}
-  @media (max-height: 750px) {padding-right: 0;}
+  @media (max-width: $lg-screen) {
+    padding-right: 0;
+  }
 }
-.summary {margin: 0 5px 14px; color: $navy; font-size: 0.8rem;}
 
+.summary {
+  margin: 0 5px 14px;
+  color: $navy;
+  font-size: 0.8rem;
+}
 
-.header_container {z-index: 2; height: 70px;
-  .header {padding: 20px;
-    .landscape-logo {position: fixed; top: 0; left: 0;  padding: 20px; width: 215px; height: 70px; z-index: 2;
+.big-picture {
+  @media (max-width: $lg-screen) {
+    .summary,
+    .disclaimer {
+      display: none;
+    }
+  }
+}
+
+.header_container {
+  z-index: 2;
+  height: 70px;
+
+  @media (max-width: $lg-screen) {height: 60px;}
+
+  .header {
+    padding: 20px;
+    .landscape-logo {
+      position: fixed;
+      top: 0;
+      left: 0;
+      padding: 20px;
+      width: 215px;
+      height: 70px;
+      z-index: 2;
       cursor: pointer;
       background: #f4f4f4;
-      img {width: 127px;
-        @media (max-width: 400px) {width: 115px;}
+      img {
+        width: 127px;
+        @media (max-width: 400px) { width: 115px; }
       }
       transform: none; transition: all 0.3s;
-      @media (max-width: $mobilewidth) {width: 100%; padding-left: 60px;}
+      @media (max-width: $lg-screen) {width: 100%; padding-left: 45px;}
 
     }
     .landscapeapp-logo {display: block; width: 170px; height: 30px; position: absolute; top: 20px; right: 20px; z-index: 3;
       img {width: 100%;}
-      @media (max-width: $mobilewidth) {position: fixed;}
-      @media (max-width: 400px) {width: 155px;}
+      @media (max-width: $lg-screen) {position: fixed;}
+      @media (max-width: $md-screen) {width: 155px;}
     }
     .info {margin-top: -32px; padding-left: 20px; height: auto;}
   }
@@ -93,7 +126,7 @@ a {text-decoration: none; transition: all 0.5s; color: $blue;
   }
   /* @media (max-height: 799px) {position: absolute; bottom: auto; top: 70px; z-index: 1;} */
   .sidebar-collapse {position: absolute; top: 11px; right: 11px; display: none; z-index: 3;}
-  @media (max-width: $mobilewidth) {
+  @media (max-width: $lg-screen) {
     position: fixed; bottom: 0; width: 215px;
     transform: translate(-215px, 0); transition: 0.3s; top: 0; z-index: 6; background: #fff;
     padding-top: 12px; overflow: auto;
@@ -112,7 +145,7 @@ a {text-decoration: none; transition: all 0.5s; color: $blue;
     svg {
       font-size: 16px;
     }
-    @media (max-width: $mobilewidth) {
+    @media (max-width: $lg-screen) {
       margin-top: 15px;
     }
   }
@@ -145,9 +178,16 @@ a {text-decoration: none; transition: all 0.5s; color: $blue;
 }
 
 .app {
-  .sidebar-show {display: none;}
-  @media (max-width: $mobilewidth) {
-    .sidebar-show {display: block; position: fixed; top: 11px; left: 11px; z-index: 3;
+  .sidebar-show {
+    display: none;
+  }
+  @media (max-width: $lg-screen) {
+    .sidebar-show {
+      display: block;
+      position: fixed;
+      top: 11px;
+      left: 0;
+      z-index: 3;
     }
   }
 }
@@ -160,7 +200,7 @@ a {text-decoration: none; transition: all 0.5s; color: $blue;
 }
 
 .main {margin-left: 205px; padding: 10px;
-  @media (max-width: $mobilewidth) {margin-left: 0; position: relative; padding-top: 70px;}
+  @media (max-width: $lg-screen) {margin-left: 0; position: relative; padding-top: 70px;}
   &-note {background: #e8e8e8; font-size: 0.7rem; color: #999; padding: 10px 15px; border-radius: 3px;}
   &.embed {
     margin-left: 0;
@@ -168,6 +208,13 @@ a {text-decoration: none; transition: all 0.5s; color: $blue;
     min-height: 500px;
   }
 }
+
+@media (max-width: $lg-screen) {
+  .big-picture .main {
+    padding-top: 0;
+  }
+}
+
 .fullscreen .main {
   margin-left: 0;
   padding-top: 0px;
@@ -290,8 +337,6 @@ a {text-decoration: none; transition: all 0.5s; color: $blue;
   }
 }
 
-
-
 .ios {
   body {
     user-select: none;
@@ -341,26 +386,6 @@ background: linear-gradient(135deg, rgb(124,170,188) 0%, rgb(92,107,156) 100%);
 filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='rgb(124,170,188)', endColorstr='rgb(92,107,156)',GradientType=1 );
 }
 
-// big picture modification
-.mobile.big-picture .main {
-  margin-top: 0px;
-  padding-top: 0px;
-}
-
-.mobile.portrait.big-picture .main {
-  margin-top: -20px;
-}
-.mobile.portrait.big-picture.fullscreen .main {
-  margin-top: 0px;
-}
-
-.mobile .big-picture-switch * {
-  font-size: 13px !important;
-  min-width: 24px;
-}
-.mobile .big-picture-switch .tweet-button.tweet-button-main a span {
-  font-size: 10px !important;
-}
 .big-picture-switch * {
   text-transform: none;
 }
@@ -368,168 +393,74 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='rgb(124,170,1
 .big-picture-switch-normal {
   display: block !important;
 }
-.big-picture-switch-short {
-  display: none !important;
+
+.MuiTab-root.nav-link {
+  @media (max-width: $xl-screen) {min-width: 120px;}
+  @media (max-width: $lg-screen) {min-width: 105px;}
+  @media (max-width: $md-screen) {min-width: 90px;}
+  @media (max-width: $sm-screen) {padding: 6px; min-width: 80px; }
 }
 
-.mobile .big-picture-switch-normal {
-  display: none !important;
-}
-.mobile .big-picture-switch-short {
-  display: block !important;
-}
-
-.mobile.portrait .big-picture-switch-short {
-  a {
-    padding-left: 4px !important;
-    padding-right: 4px !important;
-  }
-  .MuiTab-root {
-    padding-left: 4px !important;
-    padding-right: 4px !important;
-  }
+.landscape-wrapper {
+  width: 100%;
+  position: relative;
+  background: rgb(134,175,188);
 }
 
-.zoom-buttons {
-  top: -47px;
-  right: 0px;
-  z-index: 7;
+.cards-section {
+  position: relative;
 }
 
-.mobile .zoom-buttons {
-  top: -35px;
-}
-
-.mobile.portrait .zoom-buttons button:nth-child(1) {
-  padding: 5px;
-  max-width: 23px;
-  min-width: 0;
-  margin-top: -7px;
-}
-.mobile.portrait .zoom-buttons button:nth-child(2) {
-  padding: 5px;
-  max-width: 35px;
-  min-width: 0;
-  font-size: 13px;
-  font-weight: normal;
-  margin-top: -7px;
-}
-.mobile.portrait .zoom-buttons button:nth-child(3) {
-  padding: 5px;
-  max-width: 23px;
-  min-width: 0;
-  margin-top: -7px;
-}
-
-.desktop .zoom-buttons {
-  @media (max-width: 536px) {
-    button {
-      padding: 5px;
-      min-width: 0;
-      margin-top: 5px;
-    }
-  }
-}
-
-.mobile.landscape .landscapeapp-logo {
-  display: none;
-}
-
-.mobile.landscape .big-picture-switch {
-  z-index: 5;
-  position: fixed;
-  top:  4px;
-  left: 200px;
-  width: calc(100% - 200px);
-}
-.mobile.landscape.big-picture .big-picture-switch {
-  z-index: 5;
-  position: absolute;
-  top: -66px;
-  left: 200px;
-}
-
-.mobile.landscape .zoom-buttons {
-  z-index: 6;
-  position: absolute;
-}
-
-.mobile.landscape .zoom-buttons button:nth-child(1) {
-  margin-top: -35px;
-}
-.mobile.landscape .zoom-buttons button:nth-child(2) {
-  font-size: 13px;
-  font-weight: normal;
-  margin-top: -35px;
-}
-.mobile.landscape .zoom-buttons button:nth-child(3) {
-  margin-top: -35px;
-}
-
-.mobile.portrait .big-picture-switch {
-  position: absolute;
-  top: -10px;
-}
-
-.mobile.portrait.big-picture .big-picture-switch {
-  z-index: 5;
-  position: inherit;
-  top: 0px;
-}
-.mobile.portrait .main {
-  padding-top: 100px;
-}
-.mobile.portrait.big-picture .main {
-  padding-top: 0px;
-}
-
-.fullscreen-button {
-  top: -47px;
-  right: 170px;
-  z-index: 7;
-}
-.desktop .fullscreen-button {
-  @media (max-width: 536px) {
-    right: 110px;
-    top: -48px;
-  }
-}
-
-.big-picture .big-picture-switch .tweet-button.tweet-button-main {
-  display: none;
+.zoom-buttons .zoom-reset {
+  min-width: 40px;
 }
 
 .tweet-button {
-  top: 15px;
-  right: 5px;
-  height: 30px;
-  z-index: 7;
-  position: absolute;
   width: 100px;
-  > .tweet-count {
-    position: relative;
-    width: 35px;
-    height: 19px;
-    top: -22.5px;
-    left: 64px;
-    font-size: 10px;
-    line-height: 15px;
-    span {
-      display: inline-block;
-      margin-top: 2px;
-      margin-left: 6px;
 
-    }
-    svg {
-      width: 35px;
-      height: 21px;
-      position: absolute;
-      left: 0;
-      z-index: -1;
-      stroke: rgb(128, 194, 235);
-      fill: rgb(242, 250, 255);
-    }
+  .tweet-count-wrapper {
+    display: inline-block;
+    position: relative;
+    width: auto;
+    height: auto;
+    background-color: #f1faff;
+    border: 1px solid #b4dbee;
+    border-radius: 2px;
+    margin-left: 10px;
+    vertical-align: top;
   }
+
+  .tweet-count-wrapper:before {
+    content: ' ';
+    position: absolute;
+    width: 0;
+    height: 0;
+    left: -9px;
+    right: auto;
+    top: calc(50% - 4px);
+    border: 4px solid;
+    border-color: transparent #b4dbee transparent transparent;
+  }
+
+  .tweet-count-wrapper:after{
+    content: ' ';
+    position: absolute;
+    width: 0;
+    height: 0;
+    left: -8px;
+    right: auto;
+    top: calc(50% - 4px);
+    border: 4px solid;
+    border-color: transparent #f1faff transparent transparent;
+  }
+
+  .tweet-count-wrapper .tweet-count{
+    padding: 2px 4px;
+    text-align: left;
+    font-size: 10px;
+    margin: 0
+  }
+
   a {
     display: inline-block;
     border-radius: 2px;
@@ -554,170 +485,62 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='rgb(124,170,1
   }
 }
 
-.big-picture .tweet-button.tweet-button-main {
-  top: -33px;
-  right: 215px;
-  z-index: 7;
+.right-buttons {
   position: absolute;
-}
-
-.mobile.portrait .tweet-button.tweet-button-main {
-  top: 15px;
-  right: 15px;
-  z-index: 1;
-  position: absolute;
-}
-
-.mobile.landscape .tweet-button.tweet-button-main {
-  top: 18px;
-  right: 15px;
-  z-index: 7;
-  position: absolute;
-}
-
-.mobile.landscape.big-picture .tweet-button.tweet-button-main {
-  top: -53px;
-  right: 210px;
-  z-index: 7;
-  position: absolute;
-}
-
-.mobile.portrait.big-picture .tweet-button.tweet-button-main {
-  width: 18px;
-  top: -33px;
-  right: 112px;
-  z-index: 7;
-  position: absolute;
-  overflow: hidden;
-  > div {
-    position: relative;
-    width: 20px;
-    left: -2px;
-  }
-  > .tweet-count {
-    display: none;
-  }
-  a {
-    background: none;
-    svg {
-      margin-left: 0;
-      fill: rgb(89, 173, 235);
-    }
-  }
-}
-
-.desktop.big-picture .tweet-button.tweet-button-main {
-  @media (max-width: 620px) {
-    width: 18px;
-    top: -32px;
-    position: absolute;
-    overflow: hidden;
-    > div {
-      position: relative;
-      width: 20px;
-      left: -4px;
-    }
-    > .tweet-count {
-      display: none;
-    }
-    a {
-      background: inherit;
-      svg {
-        margin-top: 2px;
-        margin-left: 1px;
-        width: 16px;
-        height: 16px;
-        fill: rgb(38, 150, 221);
-      }
-    }
-  }
-  @media (max-width: 536px) {
-    right: 150px;
-    top: -34px;
-
-  }
-}
-
-
-.modal-content .tweet-button {
+  top: 10px;
+  width: auto;
   right: 0;
-  top: 0;
-  position: relative;
-}
 
-.mobile.landscape .modal-content .tweet-button {
-  right: inherit;
-  top: -25px;
-  left: 2px;
-  position: absolute;
-}
+  .zoom-buttons,
+  .fullscreen-button,
+  .tweet-button {
+    float: right;
+  }
 
-.mobile.landscape {
+  .zoom-buttons button,
+  .fullscreen-button button{
+    padding: 4px;
+  }
+
   .fullscreen-button {
-    top: -67px;
-    right: 165px;
+    margin-left: 2px;
+  }
+
+  .tweet-button {
+    margin-top: 6px;
   }
 }
 
-.mobile.portrait {
+html:not(.big-picture) .right-buttons {
+  .zoom-buttons,
   .fullscreen-button {
-    top: -48px;
-    right: 83px;
-  }
-}
-
-.mobile.portrait .big-picture-switch {
-  a > span > span {
-    padding-left: 6px;
-    padding-right: 6px;
-  }
-  width: 100%;
-}
-
-.mobile.fullscreen {
-  .fullscreen-button {
-    position: 'absolute';
-    top: -5px;
-    left: 7px;
-  }
-  .big-picture-switch {
     display: none;
   }
 }
-.mobile.fullscreen.portrait {
-  .zoom-buttons {
-    top: 8px;
-    left: 43px;
-    right: initial;
+
+@media (max-width: $md-screen) {
+  .big-picture .main {
+    padding-bottom: 40px;
   }
-}
-.mobile.fullscreen.landscape {
-  .zoom-buttons {
-    top: 27px;
-    left: 43px;
-    right: initial;
-  }
-  .zoom-buttons button:nth-child(1) {
-    padding: 5px;
-    max-width: 23px;
-    min-width: 0;
-  }
-  .zoom-buttons button:nth-child(2) {
-    padding: 5px;
-    max-width: 35px;
-    min-width: 0;
-    font-size: 13px;
-    font-weight: normal;
-  }
-  .zoom-buttons button:nth-child(3) {
-    padding: 5px;
-    max-width: 23px;
-    min-width: 0;
+
+  .big-picture .right-buttons {
+    top: initial;
+    bottom: -35px;
+    width: 100%;
   }
 }
 
-.MuiMenuItem-root {
-  padding-top: 0 !important;
-  padding-bottom: 0 !important;
-  min-height: 26px !important;
+@media (max-width: $sm-screen) {
+  html:not(.big-picture) .right-buttons {
+    position: fixed;
+    top: initial;
+    bottom: 0;
+    width: 100%;
+    background-color:#F4F4f4;
+    padding: 5px 10px;
+    z-index: 10;
+  }
 }
+
+
+
