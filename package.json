@@ -27,7 +27,7 @@
     "stop-ci": "kill -9 `cat /tmp/ci.pid` && rm /tmp/ci.pid",
     "integration-test": "jest",
     "check-landscape": "babel-node tools/checkLandscape",
-    "render-landscape": "babel-node tools/renderLandscape",
+    "render-landscape": "echo babel-node tools/renderLandscape",
     "copy-dist": "cp -r _headers _redirects \"$PROJECT_PATH\"/data.json \"$PROJECT_PATH\"/images src/embed.html \"$PROJECT_PATH\"/dist/ && cp -r \"$PROJECT_PATH\"/cached_logos \"$PROJECT_PATH\"/dist/logos && npm run copy-iframe-resizer",
     "copy-iframe-resizer": "((cp \"$PROJECT_PATH\"/node_modules/iframe-resizer/js/iframeResizer.min.js \"$PROJECT_PATH\"/dist/iframeResizer.js) || (cp node_modules/iframe-resizer/js/iframeResizer.min.js \"$PROJECT_PATH\"/dist/iframeResizer.js)) && echo \"`cat \"$PROJECT_PATH\"/dist/iframeResizer.js`\n`cat src/iframeResizer.js`\" > \"$PROJECT_PATH\"/dist/iframeResizer.js",
     "setup-robots": "babel-node tools/sitemap && babel-node tools/addRobots",

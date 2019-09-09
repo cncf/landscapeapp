@@ -24,14 +24,6 @@ function getItemMembershipKey(item) {
   }
 }
 
-function getMemberCrunchbaseUrls(item) {
-  if (item.crunchbase === 'https://www.cncf.io') {
-    return [];
-  } else {
-    return item.crunchbase_data.subsidiary;
-  }
-}
-
 function getMembers() {
   const membershipFile = require('path').resolve(projectPath, 'members.yml');
   const hasMembershipFile = require('fs').existsSync(membershipFile);
@@ -47,23 +39,18 @@ function getMembers() {
   }
   console.info(`Fetching members from ${membershipCategoryName} category`);
   const directResult = {};
-  const indirectResult = {};
   const tree = traverse(source);
   console.info('Processing the tree');
   tree.map(function(node) {
     if (node && node.category === null && node.name === settings.global.membership) {
       node.subcategories.forEach(function(subcategory) {
         directResult[subcategory.name] = subcategory.items.map( (item) => getItemMembershipKey(item));
-        indirectResult[subcategory.name] = _.flatten(subcategory.items.map( (item) => getMemberCrunchbaseUrls(item)));
       });
     }
   });
-  return {
-    directMembers: directResult,
-    indirectMembers: indirectResult
-  };
+  return directResult;
 }
-const {directMembers, indirectMembers } = getMembers();
+const members = getMembers();
 // console.info(members);
 
 
@@ -197,23 +184,25 @@ tree.map(function(node) {
     // calculating a membership
     const membership = (function() {
       // direct membership
-      const directMembership = _.findKey(directMembers, (v) => v && v.indexOf(getItemMembershipKey(node)) !== -1);
+      const directMembership = _.findKey(members, (v) => v && v.indexOf(getItemMembershipKey(node)) !== -1);
       if (directMembership) {
         return directMembership;
       }
       const parentWithMembership = _.find(node.crunchbase_data.parents, function(parent) {
-        return _.findKey(directMembers, (v) => v && v.indexOf(parent) !== -1);
+        return _.findKey(members, (v) => v && v.indexOf(parent) !== -1);
       });
       // a first parent of a given node which has a given membership
       if (parentWithMembership) {
-        const membership = _.findKey(directMembers, (v) => v && v.indexOf(parentWithMembership) !== -1);
-        console.info(`assigning ${membership} membership on ${node.name} because its parent ${parentWithMembership} has ${membership} membership`);
+        const tree = traverse(source);
+        let parentName;
+        tree.map(function(node) {
+          if (node && node.crunchbase === parentWithMembership) {
+            parentName = node.name
+          }
+        });
+        const membership = _.findKey(members, (v) => v && v.indexOf(parentWithMembership) !== -1);
+        console.info(`Assigning ${membership} membership on ${node.name} because its parent ${parentName} has ${membership} membership`);
         return membership;
-      }
-      const indirectMembership = _.findKey(indirectMembers, (v) => v.indexOf(getItemMembershipKey(node)) !== -1);
-      if (indirectMembership) {
-        console.info(`assigning ${membership} membership on ${node.name} because it is a subsidiary of a ${membership} member`);
-        return indirectMembership;
       }
       return false;
     })();
