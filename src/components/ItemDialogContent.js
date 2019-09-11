@@ -11,6 +11,7 @@ import relativeDate from 'relative-date';
 import { filtersToUrl } from '../utils/syncToUrl';
 import formatNumber from '../utils/formatNumber';
 import isMobile from '../utils/isMobile';
+import isParent from '../utils/isParent';
 import InternalLink from './InternalLink';
 import '../styles/itemModal.scss';
 import fields from '../types/fields';
@@ -54,7 +55,26 @@ const iconGithub = <svg viewBox="0 0 24 24">
     13.71,6.95 14.5,7.17C16.41,5.88 17.25,6.15 17.25,6.15C17.8,7.5 17.45,8.54 17.35,8.79C18,9.5 18.38,10.39
     18.38,11.5C18.38,15.32 16.04,16.16 13.81,16.41C14.17,16.72 14.5,17.33 14.5,18.26C14.5,19.6 14.5,20.68
     14.5,21C14.5,21.27 14.66,21.59 15.17,21.5C19.14,20.16 22,16.42 22,12A10,10 0 0,0 12,2Z" />
-    </svg>
+    </svg>;
+
+const linkTag = (label, { name, url = null, color = 'blue' }) => {
+  const options = url ? { to: url, } : {};
+  return (<InternalLink {...options} className={`tag tag-${color}`}>
+    {(name ? <span className="tag-name">{name}</span> : null)}
+    <span className="tag-value">{label}</span>
+  </InternalLink>)
+}
+
+const parentTag = (project) => {
+  const membership = Object.values(settings.membership).find(({ conditions }) => {
+    return conditions && conditions.parent && isParent(conditions.parent, project)
+  });
+
+  if (membership) {
+    const { label, name, conditions } = membership
+    return linkTag(label, {name, url: filtersToUrl({filters: conditions})});
+  }
+}
 
 const projectTag = function({relation, member, isSubsidiaryProject, project, enduser}) {
   if (relation === false) {
@@ -63,16 +83,11 @@ const projectTag = function({relation, member, isSubsidiaryProject, project, end
   const { prefix, tag } = _.find(fields.relation.values, {id: project}) || {};
 
   if (prefix && tag) {
-    return (<InternalLink to={filtersToUrl({filters:{relation: project}})} className="tag tag-blue">
-      <span className="tag-name">{prefix}</span>
-      <span className="tag-value">{tag}</span>
-    </InternalLink>)
+    return linkTag(tag, {name: prefix, url: filtersToUrl({filters:{relation: project}})})
   }
 
   if (isSubsidiaryProject) {
-    return (<div className="tag tag-blue">
-      <span className="tag-value">Subsidiary CNCF Project</span>
-    </div>)
+    return linkTag("Subsidiary CNCF Project", {})
   }
 
   if (relation === 'member' || relation === 'company') {
@@ -81,34 +96,25 @@ const projectTag = function({relation, member, isSubsidiaryProject, project, end
     const name = info.name;
     const label = enduser ? (info.end_user_label || info.label) : info.label ;
 
-    return (<InternalLink to={filtersToUrl({filters:{relation: relation}})} className="tag tag-blue">
-      <span className="tag-name">{name}</span>
-      <span className="tag-value">{label}</span>
-    </InternalLink>)
+    return linkTag(label, {name: name, url: filtersToUrl({filters: {relation: relation}})});
   }
 };
 
 const openSourceTag = function(oss) {
-  if (!oss) {
-    return null;
+  if (oss) {
+    const url = filtersToUrl({grouping: 'license', filters: {license: 'Open Source'}});
+    return linkTag("Open Source Software", { url, color: "orange" });
   }
-  return (<InternalLink to={filtersToUrl({grouping: 'license', filters: {license: 'Open Source'}})} className="tag tag-orange">
-    <span className="tag-value">Open Source Software</span>
-  </InternalLink>)
-}
+};
+
 const licenseTag = function({relation, license, hideLicense}) {
-  if (relation === 'company') {
-    return null;
-  }
-  if (hideLicense) {
+  if (relation === 'company' || hideLicense) {
     return null;
   }
 
-  const text = _.find(fields.license.values, {id: license}).label;
-  return (<InternalLink to={filtersToUrl({grouping: 'license', filters:{license: license}})} className="tag tag-purple">
-    <span className="tag-name">License</span>
-    <span className="tag-value">{text}</span>
-  </InternalLink>);
+  const { label } = _.find(fields.license.values, {id: license});
+  const url = filtersToUrl({grouping: 'license', filters:{license: license}});
+  return linkTag(label, { name: "License", url, color: "purple" });
 }
 const badgeTag = function(itemInfo) {
   if (!itemInfo.bestPracticeBadgeId) {
@@ -268,6 +274,7 @@ const ItemDialogContent = ({itemInfo, isLandscape, setIsLandscape}) => {
               <img src={itemInfo.href} className='product-logo-img'/>
             </div>,
             <div className="product-tags">
+              <div>{parentTag(itemInfo)}</div>
               <div>{projectTag(itemInfo)}</div>
               <div>{openSourceTag(itemInfo.oss)}</div>
               <div>{licenseTag(itemInfo)}</div>
