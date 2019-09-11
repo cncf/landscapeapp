@@ -13,7 +13,6 @@ import _ from 'lodash';
 import lookups from 'project/lookup.json';
 import unpack from '../utils/unpackArray';
 import settings from 'project/settings.yml';
-import projects from 'project/data.json';
 import isParent from '../utils/isParent';
 
 const relationField = (function() {
@@ -199,8 +198,8 @@ const fields = {
   parent: {
     id: 'parent',
     url: 'parent',
-    values: projects.map(({ crunchbase }) => {
-      return { id: crunchbase.split('/').pop() }
+    values: lookups.crunchbaseSlugs.map((id) => {
+      return { id: id }
     }),
     filterFn: (filter, _, record) => !filter || isParent(filter, record)
   }

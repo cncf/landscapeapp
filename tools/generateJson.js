@@ -598,11 +598,18 @@ const generateLicenses = function() {
     };
   }));
 };
+
+const generateCrunchbaseSlugs = () => {
+  const slugs = itemsWithExtraFields.map(({ crunchbase }) => crunchbase.split("/").pop());
+  return [...new Set(slugs)].sort()
+}
+
 const lookups = {
   organization: pack(extractOptions('organization')),
   landscape: pack(generateLandscapeHierarchy()),
   license: pack(generateLicenses()),
-  headquarters: pack(generateHeadquarters())
+  headquarters: pack(generateHeadquarters()),
+  crunchbaseSlugs: generateCrunchbaseSlugs()
 }
 
 require('fs').writeFileSync(`${projectPath}/data.json`, JSON.stringify(itemsWithExtraFields, null, 2));
