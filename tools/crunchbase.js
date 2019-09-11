@@ -143,6 +143,7 @@ export async function fetchCrunchbaseEntries({cache, preferCache}) {
     if (cachedEntry && preferCache) {
       debug(`returning a cached entry for ${cachedEntry.url}`);
       reporter.write(".");
+      cachedEntry.parents = cachedEntry.parents || [];
       return cachedEntry;
     }
     await Promise.delay(1 * 1000);
@@ -197,7 +198,7 @@ export async function fetchCrunchbaseEntries({cache, preferCache}) {
       var children = await getAcquisitedCompanies(result.data);
       entry.acquisited = children;
       var parents = await getParentCompanies(result.data);
-       // console.info(parents.map( (x) => x.properties.name));
+      entry.parents = parents.map(({ properties }) => `https://www.crunchbase.com/${properties.web_path}`);
       var meAndParents = [result.data].concat(parents);
       var firstWithTicker = _.find( meAndParents, (org) => !!org.properties.stock_symbol );
       var firstWithFunding = _.find( meAndParents, (org) => !!org.properties.total_funding_usd );
