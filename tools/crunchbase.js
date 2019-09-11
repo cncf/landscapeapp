@@ -143,6 +143,21 @@ export async function fetchCrunchbaseEntries({cache, preferCache}) {
     if (cachedEntry && preferCache) {
       debug(`returning a cached entry for ${cachedEntry.url}`);
       reporter.write(".");
+      // TODO: remove this, once issue #248 is finished.
+      // This is just to force fetching parents without having to fetch all crunchbase data.
+      if (!('parents' in cachedEntry) && c.crunchbase !== 'https://www.cncf.io') {
+        const result = await rp({
+          method: 'GET',
+          maxRedirects: 5,
+          followRedirect: true,
+          uri: `https://api.crunchbase.com/v3.1/organizations/${c.crunchbase.split("/").pop()}?user_key=${key}`,
+          timeout: 10 * 1000,
+          json: true
+        });
+
+        const parents = await getParentCompanies(result.data);
+        cachedEntry.parents = parents.map(({ properties }) => `https://www.crunchbase.com/${properties.web_path}`);
+      }
       cachedEntry.parents = cachedEntry.parents || [];
       return cachedEntry;
     }
