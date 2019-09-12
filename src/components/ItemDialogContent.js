@@ -274,8 +274,8 @@ const ItemDialogContent = ({itemInfo, isLandscape, setIsLandscape}) => {
               <img src={itemInfo.href} className='product-logo-img'/>
             </div>,
             <div className="product-tags">
-              <div>{parentTag(itemInfo)}</div>
               <div>{projectTag(itemInfo)}</div>
+              <div>{parentTag(itemInfo)}</div>
               <div>{openSourceTag(itemInfo.oss)}</div>
               <div>{licenseTag(itemInfo)}</div>
               <div>{badgeTag(itemInfo)}</div>
