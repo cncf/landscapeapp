@@ -609,11 +609,19 @@ const generateLicenses = function() {
     };
   }));
 };
+
+const generateCrunchbaseSlugs = () => {
+  const urls = itemsWithExtraFields.map(({crunchbase, crunchbaseData}) => [crunchbase, ...crunchbaseData.parents]).flat();
+  const slugs = urls.map((crunchbaseUrl) => crunchbaseUrl.split("/").pop());
+  return [...new Set(slugs)].sort()
+}
+
 const lookups = {
   organization: pack(extractOptions('organization')),
   landscape: pack(generateLandscapeHierarchy()),
   license: pack(generateLicenses()),
-  headquarters: pack(generateHeadquarters())
+  headquarters: pack(generateHeadquarters()),
+  crunchbaseSlugs: generateCrunchbaseSlugs()
 }
 
 require('fs').writeFileSync(`${projectPath}/data.json`, JSON.stringify(itemsWithExtraFields, null, 2));

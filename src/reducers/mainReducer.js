@@ -29,7 +29,8 @@ export const initialState = {
     landscape: [],
     bestPracticeBadgeId: null,
     enduser: null,
-    googlebot: null
+    googlebot: null,
+    parent: null,
   },
   grouping: 'relation',
   sortField: 'name',

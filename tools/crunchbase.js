@@ -129,6 +129,7 @@ export async function fetchCrunchbaseEntries({cache, preferCache}) {
     if (cachedEntry && preferCache) {
       debug(`returning a cached entry for ${cachedEntry.url}`);
       reporter.write(".");
+      cachedEntry.parents = cachedEntry.parents || [];
       return cachedEntry;
     }
     await Promise.delay(1 * 1000);

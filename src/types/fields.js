@@ -13,6 +13,7 @@ import _ from 'lodash';
 import lookups from 'project/lookup.json';
 import unpack from '../utils/unpackArray';
 import settings from 'project/settings.yml';
+import isParent from '../utils/isParent';
 
 const relationField = (function() {
   const rootEntry = {
@@ -193,6 +194,14 @@ const fields = {
     id: 'googlebot',
     url: 'googlebot',
     values: [{ id: true, url: 'yes' }, { id: false, url: 'no' }]
+  },
+  parent: {
+    id: 'parent',
+    url: 'parent',
+    values: lookups.crunchbaseSlugs.map((id) => {
+      return { id: id }
+    }),
+    filterFn: (filter, _, record) => !filter || isParent(filter, record)
   }
 };
 _.each(fields, function(field, key) {
