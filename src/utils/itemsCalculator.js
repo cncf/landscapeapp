@@ -76,8 +76,9 @@ const getFilteredItemsForBigPicture = createSelector(
     var filterByHeadquarters = filterFn({field: 'headquarters', filters});
     var filterByBestPractices = filterFn({field: 'bestPracticeBadgeId', filters});
     var filterByEnduser = filterFn({field: 'enduser', filters});
+    var filterByParent = filterFn({field: 'parent', filters});
     return addExtraFields(data.filter(function(x) {
-      return filterHostedProject(x) && filterByLicense(x) && filterByOrganization(x) && filterByHeadquarters(x) && filterByBestPractices(x) && filterByEnduser(x);
+      return filterHostedProject(x) && filterByLicense(x) && filterByOrganization(x) && filterByHeadquarters(x) && filterByBestPractices(x) && filterByEnduser(x) && filterByParent(x);
     }));
   }
 );
