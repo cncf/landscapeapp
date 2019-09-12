@@ -66,13 +66,14 @@ const linkTag = (label, { name, url = null, color = 'blue' }) => {
 }
 
 const parentTag = (project) => {
-  const membership = Object.values(settings.membership).find(({ conditions }) => {
-    return conditions && conditions.parent && isParent(conditions.parent, project)
+  const membership = Object.values(settings.membership).find(({ crunchbase_and_children }) => {
+    return isParent(crunchbase_and_children, project)
   });
 
   if (membership) {
-    const { label, name, conditions } = membership
-    return linkTag(label, {name, url: filtersToUrl({filters: conditions})});
+    const { label, name, crunchbase_and_children } = membership;
+    const slug = crunchbase_and_children.split("/").pop();
+    return linkTag(label, {name, url: filtersToUrl({filters: {parent: slug}})});
   }
 }
 

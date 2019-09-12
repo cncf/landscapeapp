@@ -1,5 +1,7 @@
-export default (crunchbaseSlug, project) => {
-  const crunchbaseUrl = `https://www.crunchbase.com/organization/${crunchbaseSlug}`;
+export default (urlOrSlug, project) => {
+  if (urlOrSlug) {
+    const url = urlOrSlug.indexOf("crunchbase.com") > 0 ? urlOrSlug : `https://www.crunchbase.com/organization/${urlOrSlug}`;
 
-  return project.crunchbase === crunchbaseUrl || project.crunchbaseData.parents.includes(crunchbaseUrl);
+    return project.crunchbase === url || project.crunchbaseData.parents.includes(url);
+  }
 }
