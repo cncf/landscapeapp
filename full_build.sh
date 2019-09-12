@@ -9,9 +9,10 @@ npm ci
 bash build.sh LFDLFoundation/lfdl-landscape lfdl master
 bash build.sh cncf/landscape cncf master
 bash build.sh lf-edge/lfedge-landscape lf-edge master
-bash build.sh AcademySoftwareFoundation/aswf-landscape aswf master
-bash build.sh graphql/graphql-landscape graphql master
-bash build.sh openmainframeproject/omp-landscape omp master
+# Commenting this because crunchbase fetch is enabled for this issue
+# bash build.sh AcademySoftwareFoundation/aswf-landscape aswf master
+# bash build.sh graphql/graphql-landscape graphql master
+# bash build.sh openmainframeproject/omp-landscape omp master
 
 # bash build.sh lf-edge/lfedge-landscape lf-edge
 echo "User-agent: *" > dist/robots.txt

@@ -65,20 +65,6 @@ export async function extractSavedCrunchbaseEntries() {
 
   return _.uniq(organizations);
 }
-async function getAcquisitedCompanies(companyInfo) {
-  const data = await rp({
-    method: 'GET',
-    maxRedirects: 5,
-    followRedirect: true,
-    uri: `https://api.crunchbase.com/v3.1/organizations/${companyInfo.properties.permalink}/acquisitions?user_key=${key}`,
-    timeout: 10 * 1000,
-    json: true
-  });
-  const items = data.data.items.map(function(item) {
-    return 'https://www.crunchbase.com/' + item.relationships.acquiree.properties.web_path
-  });
-  return items;
-}
 
 async function getParentCompanies(companyInfo) {
   var parentInfo = companyInfo.relationships.owned_by.item;
@@ -143,21 +129,6 @@ export async function fetchCrunchbaseEntries({cache, preferCache}) {
     if (cachedEntry && preferCache) {
       debug(`returning a cached entry for ${cachedEntry.url}`);
       reporter.write(".");
-      // TODO: remove this, once issue #248 is finished.
-      // This is just to force fetching parents without having to fetch all crunchbase data.
-      if (!('parents' in cachedEntry) && c.crunchbase !== 'https://www.cncf.io') {
-        const result = await rp({
-          method: 'GET',
-          maxRedirects: 5,
-          followRedirect: true,
-          uri: `https://api.crunchbase.com/v3.1/organizations/${c.crunchbase.split("/").pop()}?user_key=${key}`,
-          timeout: 10 * 1000,
-          json: true
-        });
-
-        const parents = await getParentCompanies(result.data);
-        cachedEntry.parents = parents.map(({ properties }) => `https://www.crunchbase.com/${properties.web_path}`);
-      }
       cachedEntry.parents = cachedEntry.parents || [];
       return cachedEntry;
     }
@@ -210,10 +181,9 @@ export async function fetchCrunchbaseEntries({cache, preferCache}) {
         reporter.write(fatal("F"));
         return null;
       }
-      var children = await getAcquisitedCompanies(result.data);
-      entry.acquisited = children;
       var parents = await getParentCompanies(result.data);
-      entry.parents = parents.map(({ properties }) => `https://www.crunchbase.com/${properties.web_path}`);
+      entry.parents = parents.map( (item) =>  'https://www.crunchbase.com/' + item.properties.web_path);
+       // console.info(parents.map( (x) => x.properties.name));
       var meAndParents = [result.data].concat(parents);
       var firstWithTicker = _.find( meAndParents, (org) => !!org.properties.stock_symbol );
       var firstWithFunding = _.find( meAndParents, (org) => !!org.properties.total_funding_usd );
