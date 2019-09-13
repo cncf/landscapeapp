@@ -41,7 +41,7 @@ $mobilewidth: 710px;
       }
   }
   @media (max-width: $mobilewidth) {
-    &-content {overflow: auto; position: absolute; top: 0; left: 0; bottom: 0; right: 0; padding: 20px;}
+    &-content {overflow: auto; -webkit-overflow-scrolling: touch; position: absolute; top: 0; left: 0; bottom: 0; right: 0; padding: 20px;}
   }
   &-close {cursor: pointer; position: absolute; top: 0; right: 0; font-size: 30px; opacity: 0.4; color: #000;
     z-index: 3; width: 60px; line-height: 60px; text-align: center;
@@ -93,7 +93,7 @@ $mobilewidth: 710px;
   }
 }
 
-.iphone {
+.iphoneold {
   .modal {
     &-content {
       margin: 40px;
