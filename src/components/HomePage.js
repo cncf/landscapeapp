@@ -41,13 +41,18 @@ const mainSettings = settings.big_picture.main;
 const extraSettings = settings.big_picture.extra || {};
 const thirdSettings = settings.big_picture.third || {};
 
-const state = {
-  lastScrollPosition: 0
-};
-
 bus.on('scrollToTop', function() {
   (document.scrollingElement || document.body).scrollTop = 0;
 });
+
+function preventDefault(e){
+  const modal = e.srcElement.closest('.modal-body');
+  if (!modal) {
+    console.info(e.srcElement.className);
+    e.preventDefault();
+  }
+  // e.preventDefault();
+}
 
 
 const HomePage = ({isEmbed, mainContentMode, ready, hasSelectedItem, filtersVisible, hideFilters, showFilters, onClose, title, isFullscreen}) => {
@@ -74,6 +79,28 @@ const HomePage = ({isEmbed, mainContentMode, ready, hasSelectedItem, filtersVisi
     document.querySelector('html').classList.add('fullscreen');
   } else {
     document.querySelector('html').classList.remove('fullscreen');
+  }
+
+
+  function disableScroll(){
+    const shadow = document.querySelector('.MuiBackdrop-root');
+    if (shadow) {
+      shadow.addEventListener('touchmove', preventDefault, { passive: false });
+    }
+    document.body.addEventListener('touchmove', preventDefault, { passive: false });
+  }
+  function enableScroll(){
+    const shadow = document.querySelector('.MuiBackdrop-root');
+    if (shadow) {
+      shadow.removeEventListener('touchmove', preventDefault);
+    }
+    document.body.removeEventListener('touchmove', preventDefault);
+  }
+
+  if (hasSelectedItem) {
+    disableScroll();
+  } else {
+    enableScroll();
   }
 
   if (isEmbed) {
