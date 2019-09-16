@@ -32,6 +32,7 @@ import Footer from './Footer';
 import EmbeddedFooter from './EmbeddedFooter';
 
 import isMobile from '../utils/isMobile';
+import isIphone from '../utils/isIphone';
 import isDesktop from '../utils/isDesktop';
 import isGoogle from '../utils/isGoogle';
 import bus from '../reducers/bus';
@@ -40,6 +41,10 @@ import settings from 'project/settings.yml'
 const mainSettings = settings.big_picture.main;
 const extraSettings = settings.big_picture.extra || {};
 const thirdSettings = settings.big_picture.third || {};
+
+const state = {
+  lastScrollPosition: 0
+};
 
 bus.on('scrollToTop', function() {
   (document.scrollingElement || document.body).scrollTop = 0;
@@ -54,6 +59,21 @@ function preventDefault(e){
   // e.preventDefault();
 }
 
+function disableScroll(){
+  const shadow = document.querySelector('.MuiBackdrop-root');
+  if (shadow) {
+    shadow.addEventListener('touchmove', preventDefault, { passive: false });
+  }
+  document.body.addEventListener('touchmove', preventDefault, { passive: false });
+}
+
+function enableScroll(){
+  const shadow = document.querySelector('.MuiBackdrop-root');
+  if (shadow) {
+    shadow.removeEventListener('touchmove', preventDefault);
+  }
+  document.body.removeEventListener('touchmove', preventDefault);
+}
 
 const HomePage = ({isEmbed, mainContentMode, ready, hasSelectedItem, filtersVisible, hideFilters, showFilters, onClose, title, isFullscreen}) => {
   const isBigPicture = mainContentMode !== 'card';
@@ -81,26 +101,21 @@ const HomePage = ({isEmbed, mainContentMode, ready, hasSelectedItem, filtersVisi
     document.querySelector('html').classList.remove('fullscreen');
   }
 
-
-  function disableScroll(){
-    const shadow = document.querySelector('.MuiBackdrop-root');
-    if (shadow) {
-      shadow.addEventListener('touchmove', preventDefault, { passive: false });
+  if (isIphone) {
+    if (hasSelectedItem) {
+      if (!document.querySelector('.iphone-scroller')) {
+        state.lastScrollPosition = (document.scrollingElement || document.body).scrollTop;
+      }
+      document.querySelector('html').classList.add('has-selected-item');
+      (document.scrollingElement || document.body).scrollTop = 0;
+      disableScroll();
+    } else {
+      document.querySelector('html').classList.remove('has-selected-item');
+      if (document.querySelector('.iphone-scroller')) {
+        (document.scrollingElement || document.body).scrollTop = state.lastScrollPosition;
+      }
+      enableScroll();
     }
-    document.body.addEventListener('touchmove', preventDefault, { passive: false });
-  }
-  function enableScroll(){
-    const shadow = document.querySelector('.MuiBackdrop-root');
-    if (shadow) {
-      shadow.removeEventListener('touchmove', preventDefault);
-    }
-    document.body.removeEventListener('touchmove', preventDefault);
-  }
-
-  if (hasSelectedItem) {
-    disableScroll();
-  } else {
-    enableScroll();
   }
 
   if (isEmbed) {
@@ -150,7 +165,7 @@ const HomePage = ({isEmbed, mainContentMode, ready, hasSelectedItem, filtersVisi
     <ItemDialogContainer/>
     <div className={classNames('app',{'filters-opened' : filtersVisible})}>
       <div />
-      <div className="main-parent" >
+      <div style={{marginTop: (isIphone && hasSelectedItem) ? -state.lastScrollPosition : 0}} className={classNames({"iphone-scroller": isIphone && hasSelectedItem}, 'main-parent')} >
         { !isEmbed && !isFullscreen && <HeaderContainer/> }
         { !isEmbed && !isFullscreen && <IconButton className="sidebar-show" onClick={showFilters}><MenuIcon /></IconButton> }
         { !isEmbed && !isFullscreen && <div className="sidebar">
