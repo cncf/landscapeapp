@@ -1,5 +1,6 @@
 import React from "react";
 import Timeline from 'react-twitter-widgets/dist/components/Timeline.js';
+import currentDevice from 'current-device';
 
 class TwitterTimeline extends React.Component {
   constructor(props) {
@@ -10,18 +11,20 @@ class TwitterTimeline extends React.Component {
   componentDidMount () {
     // This is a hack to fix overflow issues on Safari iPhone
     // see https://github.com/cncf/landscapeapp/issues/331
-    this.timelineRef.addEventListener("DOMSubtreeModified", (el) => {
-      if (el.target.tagName === "IFRAME") {
-        const head = el.target.contentDocument.head;
-        const newStyle = el.target.contentDocument.createElement("style");
-        const css = [
-          ".TweetAuthor { max-width: 300px; text-overflow: ellipsis; }",
-          ".timeline-Tweet-text a:not(.customisable) { word-break: break-all; }"
-        ];
-        newStyle.innerHTML = css.join(" ");
-        head.appendChild(newStyle);
-      }
-    })
+    if (currentDevice.ios() && navigator.vendor.match(/^apple/i)) {
+      this.timelineRef.addEventListener("DOMSubtreeModified", (el) => {
+        if (el.target.tagName === "IFRAME") {
+          const head = el.target.contentDocument.head;
+          const newStyle = el.target.contentDocument.createElement("style");
+          const css = [
+            ".TweetAuthor { max-width: 300px; text-overflow: ellipsis; }",
+            ".timeline-Tweet-text a:not(.customisable) { word-break: break-all; }"
+          ];
+          newStyle.innerHTML = css.join(" ");
+          head.appendChild(newStyle);
+        }
+      })
+    }
   }
 
   render() {
