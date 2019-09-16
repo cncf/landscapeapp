@@ -15,9 +15,6 @@ const bird = ( <svg
 </svg>);
 
 const TweetButton = function({url, cls}) {
-  const countBorder = (<svg>
-    <path d="M3 1 L3 9 L 1 12 L 3 15 L 3 19 L 34 19 L 34 1 Z" />
-  </svg>);
   const params = qs.stringify({
     text: settings.twitter.text,
     url: url
@@ -25,7 +22,7 @@ const TweetButton = function({url, cls}) {
   const twitterUrl = `https://twitter.com/intent/tweet?${params}`;
   return <div className={`tweet-button ${cls}`}>
     <a href={twitterUrl}>{bird}<span>Tweet</span></a>
-    <div className="tweet-count"><span>{window.tweets}</span>{countBorder}</div>
+    <div className="tweet-count-wrapper"><div className="tweet-count">{window.tweets}</div></div>
   </div>
 }
 

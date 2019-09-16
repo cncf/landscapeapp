@@ -26,7 +26,21 @@ In addition to creating fully interactive sites, the landscapeapp builds static 
 
 The most challenging parts of creating a new landscape are pulling together the data for `landscape.yml` and finding svg images for all logos.
 
-Google images is often the best way to find a good version of the logo (but ensure it's the up-to-date version). Search for [grpc logo filetype:svg](https://www.google.com/search?q=grpc+logo&tbs=ift:svg,imgo:1&tbm=isch) but substitute your project or product name for grpc. For new landscapes of any size, you will probably need a graphic artist to rebuild some of the logos for you, especially if you (as recommended) ensure that the project name is included in the logo.
+Tips for finding high quality images:
+
+- Google images is often the best way to find a good version of the logo (but ensure it's the up-to-date version). Search for [grpc logo filetype:svg](https://www.google.com/search?q=grpc+logo&tbs=ift:svg,imgo:1&tbm=isch) but substitute your project or product name for grpc. 
+- Wikipedia also is a good source for high quality logos ( search in either the main [Wikipedia](https://en.wikipedia.org/w/index.php?sort=relevance&search=svg&title=Special%3ASearch&profile=advanced&fulltext=1&advancedSearch-current=%7B%7D&ns6=1) or [Wikipedia Commons](https://commons.wikimedia.org/w/index.php?sort=relevance&search=svg&title=Special%3ASearch&profile=advanced&fulltext=1&advancedSearch-current=%7B%7D&ns0=1&ns6=1&ns12=1&ns14=1&ns100=1&ns106=1) ).
+- Also search for 'svg' in the GitHub for the project, as often projects will embed them there.
+
+For new landscapes of any size, you will probably need a graphic artist to rebuild some of the logos for you, especially if you (as recommended) ensure that the project name is included in the logo. 
+
+If the project is hosted/sponsored by an organization but doesn't have a logo, best practice is to use that organization's logo with the title of the project underneath ( [example](https://landscape.cncf.io/selected=netflix-eureka) ). You can use a tool such as [Inkscape](https://inkscape.org/) to add the text.
+
+Tips for common issues with images:
+
+- If you get an error with the image that it has a PNG embeded, you will need to work with a graphic artist to rebuild the logo.
+- If the SVG has a 'text' element tag within it, you will get an error. You can use Inkscape to convert the text tag to a glyph ( select the text, then Ctrl+K (path combine), then Ctrl+J (dynamic offset) ) or [CloudConvert](https://cloudconvert.com) ( click the wrench icon and then checkbox 'Convert text to path' ).
+- If you get an error about the size being too large, use [svg-autocrop](https://github.com/cncf/svg-autocrop) on the image to automatically fix it.
 
 ## External Data
 
@@ -48,7 +62,19 @@ If you want to create an interactive landscape for your project or organization:
 3. For LF projects, I'll set you up in Netlify to build on every commit. Build command is `npm install -g npm && npm ci && npm run build` and publish directory is `dist`. Environment variables that need to be set are `CRUNCHBASE_KEY`, `GITHUB_KEY`, and `TWITTER_KEYS`. I recommend these notifications:
 ![image](https://user-images.githubusercontent.com/3083270/62425480-87c36000-b6a8-11e9-9882-e84c4e2cdfb4.png)
 5. Edit `settings.yml`, `landscape.yml`, and `members.yml` for your topic.
-6. [Generate](https://ventipix.com/designer-qr-code-generator.php) a QR code, setting colors to black and embedding the LF Landscape [icon](https://github.com/lf-edge/artwork/blob/master/lfedge-landscape/icon/color/lfedge-landscape-icon-color.png). Save as SVG and overwrite images/qr.svg with it.
+6. [Generate](https://ventipix.com/designer-qr-code-generator.php) a QR code, setting colors to black and embedding the LF Landscape [icon](https://github.com/lf-edge/artwork/blob/master/lfedge-landscape/icon/color/lfedge-landscape-icon-color.png). Save as SVG and overwrite images/qr.svg with it. Note if you are having trouble with the SVG being generated being valid, save as an EPS file and convert to an SVG.
+
+## API Keys
+
+You want to add the following to your `~/.bash_profile`. If you're with the LF, ask Dan Kohn on CNCF [Slack](https://slack.cncf.io) for the Crunchbase and Twitter keys.
+
+For the GitHub key, please go to https://github.com/settings/tokens and create a key (you can call it `personal landscape`) with *no* permissions. That is, don't click any checkboxes, because you only need to access public repos.
+
+```sh
+export CRUNCHBASE_KEY="key-here"
+export TWITTER_KEYS=keys-here
+export GITHUB_KEY=key-here
+```
 
 ## Bash Shortcuts
 
@@ -70,6 +96,34 @@ If you want to fetch updates to the landscapeapp and both the CNCF and LFAI land
 alias all='for path in /Users/your-username/dev/{landscapeapp,landscape,lfdl-landscape}; do git -C $path pull -p; npm --prefix $path run latest; done;'
 
 ```
+
+## Adding a new landscape to the autoupdater.
+So, we have an https://github.com/AcademySoftwareFoundation/aswf-landscape repo and we want to set up automatic updates for it
+1. Lets guess that landscapeapp is exctracted to the ~/Documents/landscapeapp, and we will clone that new https://github.com/AcademySoftwareFoundation/aswf-landscape to ~/Documents/aswf-landscape
+2. go to the ~/Documents/landscapeapp and add `export PROJECT_PATH=../aswf-landscape` so all further commands will use that one
+3. run `./node_modules/.bin/babel-node tools/setupServer
+4  ssh into our setup server (root@147.75.106.211) and then ensure that `ls`
+shows a new `ASWF.settings as well as ASWF.settings.private`. Now you need to
+fill in ASWF.settings.private, usually, copy everything and change the slack
+channel from the CNCF.settings.private. You can a slack channel id the
+netlify project configuration, Build&Deploy, slack notifications in post processing.
+5. that is all we need, you can run `update.sh` manually to ensure that it will pick up the settings files and build that repo too. Log is stored in the update.ASWF.settings.log
+
+Absolutely exact steps are used for a GraphQL project.
+
+
+## Adding to a google search console
+  Go to the google search console, add a new property, enter the url of the
+  given project, for example, https://landscape.cncf.io
+
+  Next, google will want to verify that it is your site, thus you need to choose
+  an `html tag verification` option and copy a secret code from it and put it to
+  the `settings.yml` of a given landscape project. Then commit the change to the master branch and
+  wait till Netlify deploys the master branch. The key is named `google_site_veryfication` and it is
+  somewhere around line 14 in settings.yml. After netlify succesfully deploys
+  that dashbaord, verify the html tag in a google console. Do not forget to add
+  Dan@linuxfoundation.org as someone who has a full access from a `Settings`
+  menu for a given search console.
 
 ## Vulnerability reporting
 

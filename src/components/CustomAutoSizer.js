@@ -1,17 +1,9 @@
 import * as React from 'react';
-import isMobile from '../utils/isMobile';
+import { connect } from "react-redux";
 
-export default class AutoSizer extends React.PureComponent {
-  static defaultProps = {
-    onResize: () => {},
-    disableHeight: false,
-    disableWidth: false,
-    style: {},
-  };
-
+class AutoSizer extends React.PureComponent {
   state = {
-    height: this.props.defaultHeight || 0,
-    width: this.props.defaultWidth || 0,
+    height: this.props.defaultHeight || 0
   };
 
   componentDidMount() {
@@ -31,66 +23,35 @@ export default class AutoSizer extends React.PureComponent {
       // Defer requiring resize handler in order to support server-side rendering.
       // See issue #41
       this._onResize();
-      this._timerId = setInterval( () => this._onResize(), 1000);
+      window.addEventListener("resize", this._onResize);
     }
   }
 
   componentWillUnmount() {
-    if (this._detectElementResize && this._parentNode) {
-      this._detectElementResize.removeResizeListener(
-        this._parentNode,
-        this._onResize,
-      );
+    window.removeEventListener("resize", this._onResize);
+  }
+
+  componentDidUpdate (prevProps) {
+    if (this.props.locaiton != prevProps.location) {
+      this._onResize();
     }
-    clearTimeout(this._timerId);
   }
 
   render() {
-    const {
-      children,
-      className,
-      disableHeight,
-      disableWidth,
-      style,
-    } = this.props;
-    const {height, width} = this.state;
+    const { children } = this.props;
+    const { height } = this.state;
 
     // Outer div should not force width/height since that may prevent containers from shrinking.
     // Inner component should overflow and use calculated width/height.
     // See issue #68 for more information.
-    const outerStyle = {overflow: 'visible'};
-    const childParams = {};
-
-    if (!disableHeight) {
-      outerStyle.height = 0;
-      childParams.height = height;
-    }
-
-    if (!disableWidth) {
-      outerStyle.width = 0;
-      childParams.width = width;
-    }
-
-    /**
-     * TODO: Avoid rendering children before the initial measurements have been collected.
-     * At best this would just be wasting cycles.
-     * Add this check into version 10 though as it could break too many ref callbacks in version 9.
-     * Note that if default width/height props were provided this would still work with SSR.
-    if (
-      height !== 0 &&
-      width !== 0
-    ) {
-      child = children({ height, width })
-    }
-    */
+    const childParams = { height };
 
     return (
       <div
-        className={className}
         ref={this._setRef}
         style={{
-          ...outerStyle,
-          ...style,
+          overflow: 'visible',
+          width: '100%',
         }}>
         {children(childParams)}
       </div>
@@ -98,42 +59,10 @@ export default class AutoSizer extends React.PureComponent {
   }
 
   _onResize = () => {
-    const {disableHeight, disableWidth, onResize} = this.props;
-
     if (this._parentNode) {
-      // Guard against AutoSizer component being removed from the DOM immediately after being added.
-      // This can result in invalid style values which can result in NaN values if we don't handle them.
-      // See issue #150 for more context.
+      const height = this.state.height + window.innerHeight - document.body.offsetHeight;
 
-
-      const style = window.getComputedStyle(this._parentNode) || {};
-      const paddingLeft = parseInt(style.paddingLeft, 10) || 0;
-      const paddingRight = parseInt(style.paddingRight, 10) || 0;
-      const paddingTop = parseInt(style.paddingTop, 10) || 0;
-      const paddingBottom = parseInt(style.paddingBottom, 10) || 0;
-
-      const height = window.innerHeight;
-      const width = window.innerWidth;
-
-      const rect = this._parentNode.getBoundingClientRect();
-      const isFullscreen = document.querySelector('html').classList.contains('fullscreen');
-
-      const offset = isMobile ? 10 : isFullscreen ? 0 : 25;
-
-      const newHeight = height - paddingTop - paddingBottom - rect.bottom + offset;
-      const newWidth = width - paddingLeft - paddingRight - rect.left;
-
-      if (
-        (!disableHeight && this.state.height !== newHeight) ||
-        (!disableWidth && this.state.width !== newWidth)
-      ) {
-        this.setState({
-          height: newHeight,
-          width: newWidth
-        });
-
-        onResize({height, width});
-      }
+      this.setState({ height: height });
     }
   };
 
@@ -141,3 +70,9 @@ export default class AutoSizer extends React.PureComponent {
     this._autoSizer = autoSizer;
   };
 }
+
+const mapStateToProps = ({ router }) => ({
+  location: router.location
+});
+
+export default connect(mapStateToProps)(AutoSizer);

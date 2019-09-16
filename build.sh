@@ -2,6 +2,9 @@ set -e
 rm -rf $2 || true
 git clone https://github.com/$1 $2
 cd $2
+git remote -v
+# git remote rm origin 2>/dev/null 1>/dev/null || true
+# git remote add origin https://github.com/$1
 git checkout origin/$3
 cd ..
 export PROJECT_PATH=$2

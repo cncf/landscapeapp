@@ -2,11 +2,13 @@ import process from 'process';
 import path from 'path';
 import { projectPath } from './settings';
 const source = require('js-yaml').safeLoad(require('fs').readFileSync(path.resolve(projectPath,'landscape.yml')));
+import actualTwitter from './actualTwitter';
 const traverse = require('traverse');
 const _ = require('lodash');
 
 console.info('Processing the tree');
-const errors = [];
+let errors = [];
+let hasInvalidKeys = false;
 
 const allowedKeys = [
   'name',
@@ -24,10 +26,20 @@ const allowedKeys = [
   'open_source'
 ];
 
-const categoryKeys = [
-  'name',
-  'subcategores'
-];
+const addKeyError = (title, key) => {
+  hasInvalidKeys = true;
+  errors.push(`${title} has an unknown key: ${key}`);
+}
+
+const validateTwitterUrl = (item) => {
+  if (item.twitter) {
+    const normalizedTwitterUrl = actualTwitter(item);
+
+    if (normalizedTwitterUrl.indexOf("https://twitter.com/") === -1) {
+      errors.push(`item ${item.name} has an invalid twitter URL: ${item.twitter}`);
+    }
+  }
+}
 
 function checkItem(item) {
   if (item.item !== null) {
@@ -42,10 +54,10 @@ function checkItem(item) {
     return allowedKeys.indexOf(key) === -1
   });
   wrongKeys.forEach(function(key) {
-    errors.push(`entry ${item.name} has an unkown key: ${key}`);
+    addKeyError(`item ${item.name}`, key);
   });
 
-
+  validateTwitterUrl(item);
 }
 
 function checkCategoryEntry(item) {
@@ -60,7 +72,7 @@ function checkCategoryEntry(item) {
     return ['category', 'name', 'subcategories'].indexOf(key) === -1;
   });
   wrongKeys.forEach(function(key) {
-    errors.push(`category entry ${item.name} has an unkown key: ${key}`);
+    addKeyError(`category ${item.name}`, key);
   });
 }
 
@@ -76,7 +88,7 @@ function checkSubcategoryEntry(item) {
     return ['subcategory', 'name', 'items'].indexOf(key) === -1;
   });
   wrongKeys.forEach(function(key) {
-    errors.push(`subcategory entry ${item.name} has an unkown key: ${key}`);
+    addKeyError(`subcategory ${item.name}`, key);
   });
 }
 
@@ -92,13 +104,12 @@ _.each(rootElement, function(category) {
   });
 });
 
-
-
-
 errors.forEach(function(error) {
   console.info('FATAL: ', error);
 });
 if (errors.length > 0) {
-  console.info('Valid item keys are', JSON.stringify(allowedKeys));
+  if (hasInvalidKeys) {
+    console.info('Valid item keys are', JSON.stringify(allowedKeys));
+  }
   process.exit(1);
 }

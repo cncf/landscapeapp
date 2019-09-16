@@ -13,6 +13,7 @@ import _ from 'lodash';
 import lookups from 'project/lookup.json';
 import unpack from '../utils/unpackArray';
 import settings from 'project/settings.yml';
+import isParent from '../utils/isParent';
 
 const relationField = (function() {
   const rootEntry = {
@@ -25,7 +26,7 @@ const relationField = (function() {
   if (!firstEntry.children) {
     throw new Error('First entry of relation settings should have children!');
   }
-  const values = [{
+  const options = [{
     id: firstEntry.id,
     label: firstEntry.label,
     tag: firstEntry.tag,
@@ -48,7 +49,12 @@ const relationField = (function() {
     }
   }));
 
-  return { ...rootEntry, values: values};
+  return {
+    ...rootEntry,
+    values: options,
+    processValuesBeforeSaving: (values) => processValuesBeforeSaving({options, values}),
+    processValuesBeforeLoading: (values) => processValuesBeforeLoading({options, values})
+  };
 
 })();
 
@@ -188,6 +194,14 @@ const fields = {
     id: 'googlebot',
     url: 'googlebot',
     values: [{ id: true, url: 'yes' }, { id: false, url: 'no' }]
+  },
+  parent: {
+    id: 'parent',
+    url: 'parent',
+    values: lookups.crunchbaseSlugs.map((id) => {
+      return { id: id }
+    }),
+    filterFn: (filter, _, record) => !filter || isParent(filter, record)
   }
 };
 _.each(fields, function(field, key) {

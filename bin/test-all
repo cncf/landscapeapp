@@ -1,0 +1,12 @@
+#!/usr/bin/env bash
+
+set -eu
+
+binpath=$(dirname $0)
+landscapes=$($binpath/list-all)
+
+for landscape in $landscapes
+do
+  kill -9 `ps ux | grep srcServer | grep -v grep | awk -F ' ' '{print $2}'` 2>/dev/null || true
+  (PROJECT_PATH=$landscape npm run open:src &) && sleep 10 && PROJECT_PATH=$landscape PORT=3000 npm run integration-test
+done

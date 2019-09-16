@@ -1,6 +1,9 @@
 import puppeteer from "puppeteer";
+require('expect-puppeteer');
 import devices from 'puppeteer/DeviceDescriptors';
-import { settings } from '../tools/settings'
+import { paramCase } from 'change-case';
+import { settings } from '../tools/settings';
+import { projects } from '../tools/loadData';
 const port = process.env.PORT || '4000';
 const appUrl = `http://localhost:${port}`;
 const width = 1920;
@@ -125,6 +128,21 @@ describe("Normal browser", function() {
   mainTest();
   landscapeTest();
   embedTest();
+
+  test("Filtering by organization", async () => {
+    const project = projects[0];
+    const organizationSlug = paramCase(project.organization);
+    const otherProject = projects.find(({ organization }) => organization !== project.organization);
+    const otherOrganizationSlug = paramCase(otherProject.organization);
+
+    console.log(`Checking we see ${project.name} when filtering by organization ${project.organization}`);
+    const page = await makePage(`${appUrl}/organization=${organizationSlug}&format=card-mode`);
+    await expect(page).toMatch(project.name);
+
+    console.log(`Checking we don't see ${project.name} when filtering by organization ${otherProject.organization}`);
+    await page.goto(`${appUrl}/organization=${otherOrganizationSlug}&format=card-mode`);
+    await expect(page).not.toMatch(project.name);
+  }, 6 * 60 * 1000);
 });
 
 describe("iPhone simulator", function() {

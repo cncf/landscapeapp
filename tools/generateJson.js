@@ -16,6 +16,46 @@ function sortFn(x) {
   return x;
 }
 
+function getItemMembershipKey(item) {
+  if (item.crunchbase === 'https://www.cncf.io') {
+    return item.crunchbase + ':' + item.name;
+  } else {
+    return item.crunchbase;
+  }
+}
+
+function getMembers() {
+  const membershipFile = require('path').resolve(projectPath, 'members.yml');
+  const hasMembershipFile = require('fs').existsSync(membershipFile);
+  const membershipCategoryName = settings.global.membership;
+  if (hasMembershipFile) {
+    console.info(`FATAL: members.yml is not supported anymore. Instead, we need a 'membership' key in a 'global' setting of a settings.yml file`);
+    process.exit(1);
+  }
+  if (!membershipCategoryName) {
+    console.info(`FATAL: membership category (global.membership in settings.yml) is not present. Please add a category to the settings.yml file`);
+    process.exit(1);
+
+  }
+  console.info(`Fetching members from ${membershipCategoryName} category`);
+  const directResult = {};
+  const tree = traverse(source);
+  console.info('Processing the tree');
+  tree.map(function(node) {
+    if (node && node.category === null && node.name === settings.global.membership) {
+      node.subcategories.forEach(function(subcategory) {
+        directResult[subcategory.name] = subcategory.items.map( (item) => getItemMembershipKey(item));
+      });
+    }
+  });
+  return directResult;
+}
+const members = getMembers();
+// console.info(members);
+
+
+
+
 const formatDate = function(x) {
   let result;
   if (!x) {
@@ -141,13 +181,41 @@ tree.map(function(node) {
       return 'https://github.com' + link;
     }
 
+    // calculating a membership
+    const membership = (function() {
+      // direct membership
+      const directMembership = _.findKey(members, (v) => v && v.indexOf(getItemMembershipKey(node)) !== -1);
+      if (directMembership) {
+        return directMembership;
+      }
+      const parentWithMembership = _.find(node.crunchbase_data.parents, function(parent) {
+        return _.findKey(members, (v) => v && v.indexOf(parent) !== -1);
+      });
+      // a first parent of a given node which has a given membership
+      if (parentWithMembership) {
+        const tree = traverse(source);
+        let parentName;
+        tree.map(function(node) {
+          if (node && node.crunchbase === parentWithMembership) {
+            parentName = node.crunchbase_data.name
+          }
+        });
+        let myName =  node.crunchbase_data.name;
+        const membership = _.findKey(members, (v) => v && v.indexOf(parentWithMembership) !== -1);
+        console.info(`Assigning ${membership} membership on ${node.name} (${myName}) because its parent ${parentName} has ${membership} membership`);
+        return membership;
+      }
+      return false;
+    })();
+    node.member = membership;
+
     const {relation, isSubsidiaryProject} = (function() {
       let result;
       result = node.project === 'sandbox' && settings.global.flags.cncf_sandbox ? 'member' : node.project;
       if (result) {
         return {relation: result, isSubsidiaryProject: false};
       }
-      if (node.membership_data.member) {
+      if (node.member) {
         return {relation: 'member', isSubsidiaryProject: false};
       }
       if (node.crunchbase === settings.global.self) {
@@ -158,7 +226,6 @@ tree.map(function(node) {
 
     items.push({...node,
       project: node.project,
-      member: node.membership_data.member,
       relation: relation,
       isSubsidiaryProject: isSubsidiaryProject,
       firstCommitDate: formatDate((node.github_start_commit_data || {}).start_date),
@@ -197,6 +264,8 @@ const itemsWithExtraFields = items.map(function(item) {
     }
     return el.linkedin.replace(/\?.*/, '');
   }
+
+
   if (item.crunchbase_data) {
     item.crunchbaseData.numEmployeesMin = item.crunchbaseData.num_employees_min;
     item.crunchbaseData.numEmployeesMax = item.crunchbaseData.num_employees_max;
@@ -211,7 +280,6 @@ const itemsWithExtraFields = items.map(function(item) {
     delete item.crunchbaseData.ticker_symbol;
   }
   delete item.best_practice_data;
-  delete item.membership_data;
   delete item.market_cap;
   delete item.first_commit_date;
   delete item.latest_commit_date;
@@ -492,7 +560,7 @@ const generateHeadquarters = function() {
       return {headquarters: item.headquarters, country: item.crunchbaseData.country};
   }));
   const grouped  = _.groupBy(values, (x) => x.country);
-  const keys = _.orderBy(_.keys(grouped));
+  const keys = _.sortBy(_.keys(grouped), (country) => country === 'Antarctica' ? 'ZZZ' : country);
   const result = [];
   _.each(keys, function(key) {
     const value = grouped[key];
@@ -541,11 +609,19 @@ const generateLicenses = function() {
     };
   }));
 };
+
+const generateCrunchbaseSlugs = () => {
+  const urls = itemsWithExtraFields.map(({crunchbase, crunchbaseData}) => [crunchbase, ...crunchbaseData.parents]).flat();
+  const slugs = urls.map((crunchbaseUrl) => crunchbaseUrl.split("/").pop());
+  return [...new Set(slugs)].sort()
+}
+
 const lookups = {
   organization: pack(extractOptions('organization')),
   landscape: pack(generateLandscapeHierarchy()),
   license: pack(generateLicenses()),
-  headquarters: pack(generateHeadquarters())
+  headquarters: pack(generateHeadquarters()),
+  crunchbaseSlugs: generateCrunchbaseSlugs()
 }
 
 require('fs').writeFileSync(`${projectPath}/data.json`, JSON.stringify(itemsWithExtraFields, null, 2));

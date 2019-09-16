@@ -129,6 +129,7 @@ export async function fetchCrunchbaseEntries({cache, preferCache}) {
     if (cachedEntry && preferCache) {
       debug(`returning a cached entry for ${cachedEntry.url}`);
       reporter.write(".");
+      cachedEntry.parents = cachedEntry.parents || [];
       return cachedEntry;
     }
     await Promise.delay(1 * 1000);
@@ -181,6 +182,7 @@ export async function fetchCrunchbaseEntries({cache, preferCache}) {
         return null;
       }
       var parents = await getParentCompanies(result.data);
+      entry.parents = parents.map( (item) =>  'https://www.crunchbase.com/' + item.properties.web_path);
        // console.info(parents.map( (x) => x.properties.name));
       var meAndParents = [result.data].concat(parents);
       var firstWithTicker = _.find( meAndParents, (org) => !!org.properties.stock_symbol );
