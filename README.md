@@ -4,23 +4,7 @@
 
 The landscapeapp is an upstream NPM [module](https://www.npmjs.com/package/interactive-landscape) that supports building interactive landscape websites such as the [CNCF Cloud Native Landscape](https://landscape.cncf.io) ([source](https://github.com/cncf/landscape)) and the [LF Artificial Intelligence Landscape](https://landscape.lfai.foundation) ([source](https://github.com/lfai/lfai-landscape)). The application has been developed by [Andrey Kozlov](https://github.com/ZeusTheTrueGod) and [Dan Kohn](https://www.dankohn.com) of [CNCF](https://www.cncf.io).
 
-In addition to creating fully interactive sites, the landscapeapp builds static images on each update:
-
-## Cloud Native Landscape
-
-[![Cloud Native Landscape](https://landscape.cncf.io/images/landscape.png)](https://landscape.cncf.io/images/landscape.png)
-
-## Serverless Landscape
-
-[![CNCF Serverless Landscape](https://landscape.cncf.io/images/serverless.png)](https://landscape.cncf.io/images/serverless.png)
-
-## CNCF Member Landscape
-
-[![CNCF Member Landscape](https://landscape.cncf.io/images/members.png)](https://landscape.cncf.io/images/members.png)
-
-## LF Artificial Intelligence Landscape
-
-[![LF Artificial Intelligence Landscape](https://landscape.lfai.foundation/images/landscape.png)](https://landscape.lfai.foundation/images/landscape.png)
+In addition to creating fully interactive sites, the landscapeapp builds static images on each update. See examples in [ADOPTERS.md](ADOPTERS.md)
 
 ## Images
 
@@ -83,9 +67,16 @@ If you are working with more than one landscape, there's a trick to run the stan
 ```sh
 function y { PROJECT_PATH=$PWD npm explore interactive-landscape -- npm run "$@"; }
 export -f y
+# yf does a normal build and full test run
 alias yf='y fetch'
 alias yl='y check-links'
 alias yq='y remove-quotes'
+# yp does a build and then opens up the landscape in your browser ( can view the PDF and PNG files )
+alias yp='y build && y open:dist'
+# yo does a quick build and opens up the landscape in your browser
+alias yo='y open:src'
+# yc does a full clean out of the local npm modules and the yf. Use only if you are getting weird errors on yf
+alias yc='PROJECT_PATH=$PWD rm -rf node_modules && npm install && yf'
 ```
 
 Reload with `. ~/.bash_profile` and then use `y open:src`, `yf`, etc. to run functions on the landscape in your current directory.
