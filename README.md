@@ -72,7 +72,7 @@ alias yf='y fetch'
 alias yl='y check-links'
 alias yq='y remove-quotes'
 # yp does a build and then opens up the landscape in your browser ( can view the PDF and PNG files )
-alias yc='y build && y open:dist'
+alias yp='y build && y open:dist'
 # yo does a quick build and opens up the landscape in your browser
 alias yo='y open:src'
 # yc does a full clean out of the local npm modules and the yf. Use only if you are getting weird errors on yf
