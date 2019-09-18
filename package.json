@@ -10,6 +10,7 @@
     "autocrop-images": "babel-node tools/autocropImages",
     "open:src": "npm run yaml2json && babel-node tools/srcServer.js",
     "open:dist": "babel-node tools/distServer.js",
+    "landscapes": "babel-node tools/landscapes.js",
     "lint": "esw webpack.config.* src tools --color",
     "lint:watch": "npm run lint -- --watch",
     "fetch": "babel-node tools/validateLandscape && babel-node tools/addExternalInfo.js && npm run yaml2json",
