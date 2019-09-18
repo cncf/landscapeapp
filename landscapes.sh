@@ -13,4 +13,4 @@ nvm install `cat .nvmrc`
 nvm use
 npm install -g npm
 npm install
-npm run "landscapes"
+npm run landscapes

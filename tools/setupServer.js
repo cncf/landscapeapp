@@ -1,4 +1,3 @@
-import { settings } from './settings';
 import ejs from 'ejs';
 const file = require('fs').readFileSync('update_server/setup.bash', 'utf-8');
 const landscapes = require('js-yaml').safeLoad(require('fs').readFileSync('landscapes.yml'));
