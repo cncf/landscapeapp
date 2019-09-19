@@ -21,6 +21,20 @@ window.prefix = prefix;
 // version of hot reloading won't hot reload a stateless
 // component at the top-level.
 class App extends React.Component {
+  componentDidMount() {
+    window.addEventListener("touchmove", this.disablePinchZoom, { passive: false });
+  }
+
+  componentWillUnmount() {
+    window.removeEventListener("touchmove", this.disablePinchZoom);
+  }
+
+  disablePinchZoom = (e) => {
+    if (e.touches.length === 2) {
+      e.preventDefault();
+    }
+  }
+
   render() {
     return (
       <div>
