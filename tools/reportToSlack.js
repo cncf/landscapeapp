@@ -23,7 +23,17 @@ export async function report({ returnCode, logs, slackChannel}) {
     return remainingLines.join('\n');
   })();
 
-  const checkLinksData = JSON.parse(require('fs').readFileSync('/tmp/links.json', 'utf-8'));
+  const checkLinksData = (function() {
+    try {
+      return JSON.parse(require('fs').readFileSync('/tmp/links.json', 'utf-8'));
+    } catch(ex) {
+      return {
+        messages: '',
+        numberOfRedirects: '',
+        numberOfErrors: ''
+      }
+    }
+  })();
 
   const payload = {
     text: `Update from ${new Date().toISOString()} finished with ${errorStatus}`,
