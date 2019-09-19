@@ -1,4 +1,4 @@
-import { report } form './reportToSlack';
+import { report } from './reportToSlack';
 
 const landscapesInfo = require('js-yaml').safeLoad(require('fs').readFileSync('landscapes.yml'));
 
