@@ -20,7 +20,7 @@ async function main() {
         return target.split(search).join(replacement);
       };
       for (var secret of secrets) {
-        const safeString = secret.substring(0, 2) + '***' + secret.substring(-2);
+        const safeString = secret.substring(0, 2) + '***' + secret.substring(secret.length -2);
         result = replaceAll(result, secret, safeString);
       }
       return result;
