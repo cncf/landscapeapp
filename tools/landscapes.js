@@ -1,3 +1,5 @@
+import { report } form './reportToSlack';
+
 const landscapesInfo = require('js-yaml').safeLoad(require('fs').readFileSync('landscapes.yml'));
 
 async function main() {
@@ -29,13 +31,12 @@ async function main() {
       console.info(maskSecrets(`We have a secret: ${secret}`));
     }
     // if (!require('fs').existsSync(globalSettingsFileName)) {
-      // console.info(`FATAL: ${globalSettingsFileName} does not exist.`);
-      // process.exit(1);
+    // console.info(`FATAL: ${globalSettingsFileName} does not exist.`);
+    // process.exit(1);
     // }
 
     const bashFileContent = `
   . "${globalSettingsFileName}"
-  . "${settingsFileName}" || true
   set -e
   . ~/.nvm/nvm.sh
   rm -rf /repo
@@ -70,6 +71,25 @@ async function main() {
 
     const {returnCode, logs } = await runIt();
     console.info(`${landscape.name} returned with a ${returnCode}`);
+
+    const slackChannel = (function() {
+      if (!require('fs').existsSync(settingsFileName)) {
+        console.info(`Not reporting results to slack`);
+        return null;
+      }
+      const content = require('fs').readFileSync(settingsFileName, 'utf-8');
+      const value = content.match(/SLACK_CHANNEL=(.*?)/)[1];
+      console.info(value);
+      return value;
+    })();
+
+    if (slackChannel) {
+      await report({
+        returnCode,
+        slackChannel,
+        logs
+      });
+    }
 
 
   }
