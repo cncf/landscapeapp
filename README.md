@@ -40,12 +40,12 @@ The update server enhances the source data with the fetched data and saves the r
 ## Creating a New Landscape
 
 If you want to create an interactive landscape for your project or organization:
-1. Note ahead of time that the hardest part of building a landscape is getting hi-res images for every project. You *cannot* convert from a PNG or JPEG into an SVG. You need to get an SVG, AI, or EPS file. Please review this [primer](https://www.cncf.io/blog/2019/07/17/what-image-formats-should-you-be-using-in-2019/) on image formats. 
-1. Copy the files from [LFAI landscape](https://github.com/lfai/lfai-landscape), since it is relatively simple (it only has a single landscape image) into a new repo. Call the repo `youracronym-landscape` so it's distinct from other landscapes stored in the same directory.
+1. Note ahead of time that the hardest part of building a landscape is getting hi-res images for every project. You *cannot* convert from a PNG or JPEG into an SVG. You need to get an SVG, AI, or EPS file. When those aren't available, you will probably need a graphic designer to recreate several images. Please review this [primer](https://www.cncf.io/blog/2019/07/17/what-image-formats-should-you-be-using-in-2019/) on image formats. 
+1. Create a repo `youracronym-landscape` so it's distinct from other landscapes stored in the same directory. From inside your new directory, copy over files from a simpler landscape like https://github.com/graphql/graphql-landscape with `cp -r ../graphql-landscape/* ../graphql-landscape/.gitignore ../graphql-landscape/.npmrc .`.
 2. If you're working with the [LF](https://www.linuxfoundation.org/), give [dankohn](https://github.com/dankohn) admin privleges to the new repo and ping me after creating an account at [slack.cncf.io](https://slack.cncf.io). Alex Contini and I are available there to help you recreate SVGs based on a PNG or the company's logo, if necessary, and to fix other problems.
 3. For LF projects, I'll set you up in Netlify to build on every commit. Build command is `npm install -g npm && npm ci && npm run build` and publish directory is `dist`. Environment variables that need to be set are `CRUNCHBASE_KEY`, `GITHUB_KEY`, and `TWITTER_KEYS`. I recommend these notifications:
 ![image](https://user-images.githubusercontent.com/3083270/62425480-87c36000-b6a8-11e9-9882-e84c4e2cdfb4.png)
-5. Edit `settings.yml`, `landscape.yml`, and `members.yml` for your topic.
+5. Edit `settings.yml` and `landscape.yml` for your topic.
 6. [Generate](https://ventipix.com/designer-qr-code-generator.php) a QR code, setting colors to black and embedding the LF Landscape [icon](https://github.com/lf-edge/artwork/blob/master/lfedge-landscape/icon/color/lfedge-landscape-icon-color.png). Save as SVG and overwrite images/qr.svg with it. Note if you are having trouble with the SVG being generated being valid, save as an EPS file and convert to an SVG.
 
 ## API Keys
