@@ -32,7 +32,7 @@ class AutoSizer extends React.PureComponent {
   }
 
   componentDidUpdate (prevProps) {
-    if (this.props.locaiton != prevProps.location) {
+    if (this.props.location != prevProps.location) {
       this._onResize();
     }
   }

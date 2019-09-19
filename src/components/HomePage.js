@@ -201,7 +201,7 @@ const HomePage = ({isEmbed, mainContentMode, ready, hasSelectedItem, filtersVisi
           <div className="cards-section">
             <SwitchButtonContainer />
             <div className="right-buttons">
-              <ZoomButtonsContainer/>
+              { isBigPicture && <ZoomButtonsContainer/> }
               <FullscreenButtonContainer/>
               <TweetButton cls="tweet-button-main"/>
             </div>
