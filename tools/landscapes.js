@@ -15,8 +15,8 @@ async function main() {
         return null;
       }
       const content = require('fs').readFileSync(settingsFileName, 'utf-8');
-      const value = content.match(/SLACK_CHANNEL=(.*?)/)[1];
-      console.info(value);
+      console.info(content);
+      const value = content.match(/SLACK_CHANNEL=(\S*)/)[1];
       return value;
     })();
     console.info({slackChannel});
