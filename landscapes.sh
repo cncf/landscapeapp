@@ -14,4 +14,4 @@ nvm install `cat .nvmrc`
 nvm use
 npm install -g npm
 npm install
-npm run landscapes
+./node_modules/.bin/babel-node tools/landscapes.js

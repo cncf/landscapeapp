@@ -9,6 +9,18 @@ async function main() {
     if (!require('fs').existsSync(settingsFileName)) {
       console.info(`Warning: settings file ${settingsFileName} for ${landscape.name} does not exist, we will not be able to report to slack`);
     };
+    const slackChannel = (function() {
+      if (!require('fs').existsSync(settingsFileName)) {
+        console.info(`Not reporting results to slack`);
+        return null;
+      }
+      const content = require('fs').readFileSync(settingsFileName, 'utf-8');
+      const value = content.match(/SLACK_CHANNEL=(.*?)/)[1];
+      console.info(value);
+      return value;
+    })();
+    console.info({slackChannel});
+
     const globalSettingsFileName = `${process.env.HOME}/landscapes.env`
     const content = require('fs').readFileSync(globalSettingsFileName, 'utf-8');
     const secrets = content.split('\n').map(function(line) {
@@ -72,16 +84,6 @@ async function main() {
     const {returnCode, logs } = await runIt();
     console.info(`${landscape.name} returned with a ${returnCode}`);
 
-    const slackChannel = (function() {
-      if (!require('fs').existsSync(settingsFileName)) {
-        console.info(`Not reporting results to slack`);
-        return null;
-      }
-      const content = require('fs').readFileSync(settingsFileName, 'utf-8');
-      const value = content.match(/SLACK_CHANNEL=(.*?)/)[1];
-      console.info(value);
-      return value;
-    })();
 
     if (slackChannel) {
       await report({
