@@ -46,24 +46,29 @@ async function main() {
 
     function runIt() {
       return new Promise(function(resolve) {
+        let logs = [];
         var spawn = require('child_process').spawn;
         var child = spawn('bash', ['-lc', bashFileContent ]);
         child.stdout.on('data', function(data) {
-          console.log(data.toString('utf-8'));
+          const text = maskSecrets(data.toString('utf-8'));
+          logs.push(text);
+          process.stdout.write(text);
           //Here is where the output goes
         });
         child.stderr.on('data', function(data) {
-          console.log(data.toString('utf-8'));
+          const text = maskSecrets(data.toString('utf-8'));
+          logs.push(text);
+          process.stdout.write(text);
           //Here is where the error output goes
         });
-        child.on('close', function(code) {
-          resolve(code);
+        child.on('close', function(returnCode) {
+          resolve({returnCode, logs});
           //Here you can get the exit code of the script
         });
       });
     }
 
-    const returnCode = await runIt();
+    const {returnCode, logs } = await runIt();
     console.info(`${landscape.name} returned with a ${returnCode}`);
 
 
