@@ -8,6 +8,26 @@ async function main() {
       console.info(`Warning: settings file ${settingsFileName} for ${landscape.name} does not exist, we will not be able to report to slack`);
     };
     const globalSettingsFileName = `${process.env.HOME}/landscapes.env`
+    const content = require('fs').readFileSync(globalSettingsFileName, 'utf-8');
+    const secrets = content.split('\n').map(function(line) {
+      return line.split('=')[1];
+    }).filter( (x) => !!x);
+
+    const  maskSecrets = function(x) {
+      let result = x;
+      const replaceAll = function(s, search, replacement) {
+        var target = s;
+        return target.split(search).join(replacement);
+      };
+      for (var secret of secrets) {
+        const safeString = secret.substring(0, 2) + '***' + secret.substring(-2);
+        result = replaceAll(result, secret, safeString);
+      }
+      return result;
+    }
+    for (var secret of secrets) {
+      console.info(maskSecrets(`We have a secret: ${secret}`));
+    }
     // if (!require('fs').existsSync(globalSettingsFileName)) {
       // console.info(`FATAL: ${globalSettingsFileName} does not exist.`);
       // process.exit(1);
