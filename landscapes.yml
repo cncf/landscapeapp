@@ -3,3 +3,7 @@ landscapes:
   - landscape:
     name: cncf
     repo: cncf/landscape
+  - landscape:
+    name: lfai
+    repo: lfai/landscape
+
