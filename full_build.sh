@@ -5,10 +5,7 @@ mkdir -p dist
 # uncomment below when about to test a googlebot rendering
 # echo '<head><meta name="google-site-verification" content="27ZKkPQS2PWkd_0jqsSq4yUgUZ_BBTYjABudtQpMhXI" /></head>' > dist/index.html
 npm install -g npm
-npm ci
-bash build.sh LFDLFoundation/lfdl-landscape lfdl master
-bash build.sh cncf/landscape cncf master
-# bash build.sh lf-edge/lfedge-landscape lf-edge
+bash build.sh cncf/landscape cncf 39a9949
 echo "User-agent: *" > dist/robots.txt
 # comment below when about to test a googlebot rendering
 echo "Disallow: /" >> dist/robots.txt
