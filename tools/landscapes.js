@@ -84,6 +84,7 @@ async function main() {
     const {returnCode, logs } = await runIt();
     console.info(`${landscape.name} returned with a ${returnCode}`);
 
+    require('fs').writeFileSync(`${process.env.HOME}/${landscape.name}.log`, logs.join(''));
 
     if (slackChannel) {
       await report({
