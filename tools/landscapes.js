@@ -15,11 +15,9 @@ async function main() {
         return null;
       }
       const content = require('fs').readFileSync(settingsFileName, 'utf-8');
-      console.info(content);
       const value = content.match(/SLACK_CHANNEL=(\S*)/)[1];
       return value;
     })();
-    console.info({slackChannel});
 
     const globalSettingsFileName = `${process.env.HOME}/landscapes.env`
     const content = require('fs').readFileSync(globalSettingsFileName, 'utf-8');
@@ -42,10 +40,7 @@ async function main() {
     for (var secret of secrets) {
       console.info(maskSecrets(`We have a secret: ${secret}`));
     }
-    // if (!require('fs').existsSync(globalSettingsFileName)) {
-    // console.info(`FATAL: ${globalSettingsFileName} does not exist.`);
-    // process.exit(1);
-    // }
+    console.info({slackChannel: maskSecrets(slackChannel || '')});
 
     const bashFileContent = `
   . "${globalSettingsFileName}"
