@@ -8,5 +8,14 @@ landscapes:
     repo: lfai/landscape
   - landscape:
     name: lfedge
-    repo: lfedge/lfedge-landscape
+    repo: lf-edge/lfedge-landscape
+  - landscape:
+    name: aswf
+    repo: AcademySoftwareFoundation/aswf-landscape
+  - landscape:
+    name: graphql
+    repo: graphql/graphql-landscape
+  - landscape:
+    name: omp
+    repo: openmainframeproject/omp-landscape
 
