@@ -11,6 +11,12 @@ $lg-screen: 992px;
 $xl-screen: 1200px;
 
 html {-webkit-text-size-adjust: 100%;}
+html.big-picture {
+  &, & body {
+    overflow: scroll;
+  }
+}
+
 body {background-color:#F4F4f4 !important; font-family: Arial, Helvetica, sans-serif;}
 body.popup {background-color:transparent !important;}
 
