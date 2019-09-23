@@ -185,6 +185,7 @@ a {text-decoration: none; transition: all 0.5s; color: $blue;
 }
 
 .app {
+  position: relative; 
   .sidebar-show {
     display: none;
   }
@@ -543,6 +544,16 @@ html:not(.big-picture) .right-buttons {
     top: initial;
     bottom: -35px;
     width: 100%;
+  }
+
+  .zoomed-in .right-buttons > div {
+    float: left;
+    margin-left: 0;
+    margin-right: 2px;
+  }
+
+  .zoomed-in .right-buttons .tweet-button {
+    margin-left: 7px;
   }
 }
 
