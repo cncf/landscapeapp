@@ -4,8 +4,7 @@ import { isZoomedIn } from "../utils/browserZoom";
 
 class AutoSizer extends React.PureComponent {
   state = {
-    height: this.props.defaultHeight || 0,
-    zoomedIn: false
+    height: this.props.defaultHeight || 0
   };
 
   componentDidMount() {
