@@ -11,10 +11,8 @@ $lg-screen: 992px;
 $xl-screen: 1200px;
 
 html {-webkit-text-size-adjust: 100%;}
-html.big-picture {
-  &, & body {
-    overflow: scroll;
-  }
+.big-picture .zoomed-in {
+  overflow: scroll;
 }
 
 body {background-color:#F4F4f4 !important; font-family: Arial, Helvetica, sans-serif;}
@@ -419,7 +417,7 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='rgb(124,170,1
   padding: 10px;
 }
 
-.landscape-wrapper.zoomed-in {
+.zoomed-in .landscape-wrapper {
   display: inline-block;
   width: auto;
   overflow: visible;

@@ -207,8 +207,8 @@ const HomePage = ({isEmbed, mainContentMode, ready, hasSelectedItem, filtersVisi
             </div>
             { isBigPicture &&
             <AutoSizer>
-              {({ height, zoomedIn }) => (
-                <div className={`landscape-wrapper ${zoomedIn ? 'zoomed-in' : ''}`} style={{height: height}}>
+              {({ height }) => (
+                <div className="landscape-wrapper" style={{height: height}}>
                   { mainContentMode === mainSettings.url && <MainLandscapeContentContainer /> }
                   { mainContentMode === extraSettings.url && <ExtraLandscapeContentContainer /> }
                   { mainContentMode === thirdSettings.url && <ThirdLandscapeContentContainer /> }

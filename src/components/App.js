@@ -7,6 +7,7 @@ import { Switch, Route } from 'react-router-dom';
 import { MainFullscreenLandscapeContainer, ExtraFullscreenLandscapeContainer, ThirdFullscreenLandscapeContainer } from "./BigPicture";
 import HomePageContainer from './HomePageContainer';
 import NotFoundPage from './NotFoundPage';
+import { isZoomedIn } from "../utils/browserZoom";
 import settings from 'project/settings.yml';
 const mainSettings = settings.big_picture.main;
 const extraSettings = settings.big_picture.extra;
@@ -21,9 +22,26 @@ window.prefix = prefix;
 // version of hot reloading won't hot reload a stateless
 // component at the top-level.
 class App extends React.Component {
+  state = {
+    isZoomed: false
+  }
+
+  componentDidMount () {
+    this.checkZoomedIn();
+    window.addEventListener("touchend", this.checkZoomedIn);
+  }
+
+  componentWillUnmount () {
+    window.removeEventListener("touchend", this.checkZoomedIn);
+  }
+
+  checkZoomedIn = () => {
+    this.setState({ isZoomed: isZoomedIn() })
+  }
+
   render() {
     return (
-      <div>
+      <div className={this.state.isZoomed ? "zoomed-in" : ""}>
         <CssBaseline />
         <Switch>
           <Route exact path={`/${prefix}`} component={HomePageContainer} />

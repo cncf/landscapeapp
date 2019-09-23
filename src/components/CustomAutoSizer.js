@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { connect } from "react-redux";
+import { isZoomedIn } from "../utils/browserZoom";
 
 class AutoSizer extends React.PureComponent {
   state = {
@@ -25,14 +26,13 @@ class AutoSizer extends React.PureComponent {
       // See issue #41
       this._onResize();
       window.addEventListener("resize", this._onResize);
-      window.addEventListener("touchend", this.onPossiblyZoomed);
-      this.setState({ zoomedIn: this.isZoomedIn() });
+      window.addEventListener("touchend", this.checkedZoomedIn);
     }
   }
 
   componentWillUnmount() {
     window.removeEventListener("resize", this._onResize);
-    window.removeEventListener("touchend", this.onPossiblyZoomed);
+    window.removeEventListener("touchend", this.checkedZoomedIn);
   }
 
   componentDidUpdate (prevProps) {
@@ -41,19 +41,14 @@ class AutoSizer extends React.PureComponent {
     }
   }
 
-  isZoomedIn = () => {
-    const scale = window.visualViewport ? visualViewport.scale : screen.width / window.innerWidth;
-    return scale > 1;
-  }
-
   render() {
     const { children } = this.props;
-    const { height, zoomedIn } = this.state;
+    const { height } = this.state;
 
     // Outer div should not force width/height since that may prevent containers from shrinking.
     // Inner component should overflow and use calculated width/height.
     // See issue #68 for more information.
-    const childParams = { height, zoomedIn };
+    const childParams = { height };
 
     return (
       <div
@@ -67,11 +62,9 @@ class AutoSizer extends React.PureComponent {
     );
   }
 
-  onPossiblyZoomed = (e) => {
+  checkedZoomedIn = (e) => {
     const windowHeight = window.innerHeight;
-    const zoomedIn = this.isZoomedIn();
-    this.setState({ zoomedIn }, this._onResize);
-    console.log(zoomedIn)
+    this._onResize();
 
     for (let i = 1; i < 11; i++) {
       const timeout = i * 50;
@@ -87,7 +80,7 @@ class AutoSizer extends React.PureComponent {
   _onResize = () => {
     if (this._parentNode) {
       const height = this._autoSizer.clientHeight + window.innerHeight - document.body.offsetHeight;
-      const zoomedIn = this.isZoomedIn();
+      const zoomedIn = isZoomedIn();
       this.setState({ height: zoomedIn ? 'auto' : height, zoomedIn });
     }
   };
