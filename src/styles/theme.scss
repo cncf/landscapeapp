@@ -87,6 +87,13 @@ a {text-decoration: none; transition: all 0.5s; color: $blue;
   }
 }
 
+.fullscreen {
+  .summary,
+  .disclaimer {
+    display: none;
+  }
+}
+
 .header_container {
   z-index: 2;
   height: 70px;
