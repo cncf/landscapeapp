@@ -207,13 +207,11 @@ const HomePage = ({isEmbed, mainContentMode, ready, hasSelectedItem, filtersVisi
             </div>
             { isBigPicture &&
             <AutoSizer>
-              {({ height }) => (
-                <div className='landscape-wrapper' style={{height: height}}>
-                  <div style={{width: '100%', height: '100%', position: 'relative', overflow: 'scroll', padding: 10}}>
-                    { mainContentMode === mainSettings.url && <MainLandscapeContentContainer /> }
-                    { mainContentMode === extraSettings.url && <ExtraLandscapeContentContainer /> }
-                    { mainContentMode === thirdSettings.url && <ThirdLandscapeContentContainer /> }
-                  </div>
+              {({ height, zoomedIn }) => (
+                <div className={`landscape-wrapper ${zoomedIn ? 'zoomed-in' : ''}`} style={{height: height}}>
+                  { mainContentMode === mainSettings.url && <MainLandscapeContentContainer /> }
+                  { mainContentMode === extraSettings.url && <ExtraLandscapeContentContainer /> }
+                  { mainContentMode === thirdSettings.url && <ThirdLandscapeContentContainer /> }
                 </div>
               )}
             </AutoSizer>

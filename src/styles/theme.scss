@@ -49,7 +49,6 @@ a {text-decoration: none; transition: all 0.5s; color: $blue;
     color: $blue;
     &:hover {transition: all 0.1s; color: $blue-hover;}
   }
-
 }
 
 .disclaimer {
@@ -91,7 +90,7 @@ a {text-decoration: none; transition: all 0.5s; color: $blue;
   .header {
     padding: 20px;
     .landscape-logo {
-      position: fixed;
+      position: absolute;
       top: 0;
       left: 0;
       padding: 20px;
@@ -110,7 +109,7 @@ a {text-decoration: none; transition: all 0.5s; color: $blue;
     }
     .landscapeapp-logo {display: block; width: 170px; height: 30px; position: absolute; top: 20px; right: 20px; z-index: 3;
       img {width: 100%;}
-      @media (max-width: $lg-screen) {position: fixed;}
+      @media (max-width: $lg-screen) {position: absolute;}
       @media (max-width: $md-screen) {width: 155px;}
     }
     .info {margin-top: -32px; padding-left: 20px; height: auto;}
@@ -181,7 +180,7 @@ a {text-decoration: none; transition: all 0.5s; color: $blue;
   @media (max-width: $lg-screen) {
     .sidebar-show {
       display: block;
-      position: fixed;
+      position: absolute;
       top: 11px;
       left: 0;
       z-index: 3;
@@ -399,9 +398,18 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='rgb(124,170,1
 }
 
 .landscape-wrapper {
-  width: 100%;
   position: relative;
   background: rgb(134,175,188);
+  width: 100%;
+  height: 100%;
+  overflow: scroll;
+  padding: 10px;
+}
+
+.landscape-wrapper.zoomed-in {
+  display: inline-block;
+  width: auto;
+  overflow: visible;
 }
 
 .cards-section {
