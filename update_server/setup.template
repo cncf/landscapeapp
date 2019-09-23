@@ -46,12 +46,7 @@ ls "<%= name %>.settings.private" 2>/dev/null || (
     echo "Creating a file with private settings, /root/<%= name %>.settings.private ,
 please fill it with proper keys and tokens"
     echo '
-    export TWITTER_KEYS=
-    export CRUNCHBASE_KEY=
-    export GITHUB_TOKEN=
-    export GITHUB_USER=
     export SLACK_CHANNEL=
-    export GITHUB_KEY=
     ' > "<%= name %>.settings.private"
 
 )

@@ -611,7 +611,7 @@ const generateLicenses = function() {
 };
 
 const generateCrunchbaseSlugs = () => {
-  const urls = itemsWithExtraFields.map(({crunchbase, crunchbaseData}) => [crunchbase, ...crunchbaseData.parents]).flat();
+  const urls = _.flatten(itemsWithExtraFields.map(({crunchbase, crunchbaseData}) => [crunchbase, ...crunchbaseData.parents || []]));
   const slugs = urls.map((crunchbaseUrl) => crunchbaseUrl.split("/").pop());
   return [...new Set(slugs)].sort()
 }

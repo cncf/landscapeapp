@@ -1,14 +1,11 @@
-import { settings } from './settings';
 import ejs from 'ejs';
-const file = require('fs').readFileSync('update_server/setup.template', 'utf-8');
+const file = require('fs').readFileSync('update_server/setup.bash', 'utf-8');
+const landscapes = require('js-yaml').safeLoad(require('fs').readFileSync('landscapes.yml'));
 
 const values = {
-  name: settings.global.short_name,
-  repo: settings.global.repo,
-  ip: settings.update_server.ip,
-  update_hour: settings.update_server.update_hour,
-  update_minute: settings.update_server.update_minute
+  ip: landscapes.ip,
 }
+
 const content = ejs.render(file, values);
 require('fs').writeFileSync('/tmp/update_server.bash', content);
 var spawn = require('child_process').spawn;

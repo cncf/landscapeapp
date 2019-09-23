@@ -1,6 +1,5 @@
 import React from 'react';
 import { pure, withState } from 'recompose';
-import Timeline from 'react-twitter-widgets/dist/components/Timeline.js';
 import SvgIcon from '@material-ui/core/SvgIcon';
 import StarIcon from '@material-ui/icons/Star';
 import KeyHandler from 'react-key-handler';
@@ -19,6 +18,7 @@ import isGoogle from '../utils/isGoogle';
 import settings from 'project/settings.yml';
 import TweetButton from './TweetButton';
 import currentDevice from 'current-device';
+import TwitterTimeline from "./TwitterTimeline";
 
 let productScrollEl = null;
 const formatDate = function(x) {
@@ -392,22 +392,7 @@ const ItemDialogContent = ({itemInfo, isLandscape, setIsLandscape}) => {
                 </div>
               }
 
-
-              { showTwitter && itemInfo.twitter && (
-                <div className="product-twitter">
-                <Timeline
-                  dataSource={{
-                    sourceType: 'profile',
-                    screenName: itemInfo.twitter.split('/').filter( x => !!x).slice(-1)[0]
-                  }}
-                  options={{
-                    username: itemInfo.name,
-                    tweetLimit: 3
-                  }}
-                  onLoad={() => console.log('Timeline is loaded!')}
-                />
-                </div>
-              )}
+              { showTwitter && itemInfo.twitter && <TwitterTimeline twitter={itemInfo.twitter} />}
             </div>
             { !scrollAllContent && isGoogle && productLogoAndTags }
         </div>
