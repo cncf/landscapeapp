@@ -7,7 +7,6 @@ import ItemDialogContent from './ItemDialogContent';
 import ItemDialogButtonsContainer from './ItemDialogButtonsContainer';
 
 import '../styles/itemModal.scss';
-import isIphone from '../utils/isIphone';
 import fields from '../types/fields';
 
 let lastItemInfo;
@@ -26,17 +25,6 @@ const ItemDialog = ({onClose, itemInfo}) => {
   const recentItemInfo = itemInfo || lastItemInfo || {};
   if (itemInfo) {
     lastItemInfo = itemInfo;
-  }
-  if (isIphone) {
-    if (!itemInfo) {
-      return null;
-    }
-    return (
-      <div className={classNames('modal', 'product', {nonoss : recentItemInfo.oss === false})} style={getRelationStyle(recentItemInfo.relation)} >
-          { /* Note - we move buttons away from here to the HomePage because of Safari Issues */ }
-          { <ItemDialogContent itemInfo={itemInfo || lastItemInfo}/> }
-        </div>
-    )
   }
   return (
       <Dialog open={!!itemInfo} onClose={() => onClose() } transitionDuration={400}

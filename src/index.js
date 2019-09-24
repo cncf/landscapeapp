@@ -11,7 +11,7 @@ import Root from './components/Root';
 import {loadMainData} from './reducers/mainReducer.js';
 import './styles/theme.scss';
 import ReactGA from 'react-ga';
-import isIphone from './utils/isIphone';
+import isDesktop from './utils/isDesktop';
 import iframeResizerContentWindow from 'iframe-resizer/js/iframeResizer.contentWindow';
 console.info(iframeResizerContentWindow);
 require('favicon.png'); // Tell webpack to load favicon.png
@@ -55,8 +55,8 @@ if (module.hot) {
 }
 
 // Event listener to determine change (horizontal/portrait)
-window.addEventListener("orientationchange", updateOrientation);
-if (isIphone) {
+if (!isDesktop) {
+  window.addEventListener("orientationchange", updateOrientation);
   setInterval(updateOrientation, 1000);
 }
 function updateOrientation() {
@@ -66,14 +66,6 @@ function updateOrientation() {
   } else {
     document.querySelector('html').classList.remove('portrait');
     document.querySelector('html').classList.add('landscape');
-  }
-  if (isIphone) {
-    const isWideVersion = (window.innerHeight === 622 || window.innerHeight === 559 || window.innerHeight === 553);
-    if (isWideVersion) {
-      document.querySelector('html').classList.add('wide');
-    } else {
-      document.querySelector('html').classList.remove('wide');
-    }
   }
 }
 
