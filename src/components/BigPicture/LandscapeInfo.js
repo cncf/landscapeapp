@@ -14,7 +14,7 @@ const LandscapeInfo = ({zoom, width, height, top, left, childrenInfo}) => {
         height: _.isUndefined(info.height) ? null : info.height * zoom
     };
     if (info.type === 'text') {
-      return <div style={{
+      return <div key='text' style={{
         ...positionProps,
         fontSize: info.font_size * zoom,
         fontStyle: 'italic',
@@ -22,16 +22,14 @@ const LandscapeInfo = ({zoom, width, height, top, left, childrenInfo}) => {
       }}> {info.text} </div>
     }
     if (info.type === 'title') {
-      return <div style= {{
+      return <div key='title' style= {{
         ...positionProps,
         fontSize: info.font_size * zoom,
         color: '#666'
       }}>{info.title}</div>
     }
     if (info.type === 'image') {
-      return <img src={`images/${info.image}`} style={{
-        ...positionProps
-      }} />
+      return <img src={`images/${info.image}`} style={{...positionProps}} key={info.image} />
     }
   });
 

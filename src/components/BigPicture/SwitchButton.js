@@ -1,5 +1,5 @@
 import React from 'react';
-import { pure } from 'recompose';
+import { pure, withProps, toClass } from 'recompose';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 import InternalLink from '../InternalLink';
@@ -16,9 +16,11 @@ const SwitchButton = function({mainContentMode, changeMainContentMode, cards}) {
           indicatorColor="primary"
           textColor="primary"
           onChange={(_event, value) => changeMainContentMode(value)}
+          key='tabs'
         >
-          { cards.map(function(card) {
-            return <Tab key={card.mode} label={card.title} component={(props) => <InternalLink to={card.url} {...props}></InternalLink>} value={card.mode} />
+          { cards.map(({ mode, title, url}) => {
+            const link = toClass(withProps(props => { return { to: url } })(InternalLink));
+            return <Tab key={mode} label={title} component={link} value={mode} />
           })}
     </Tabs>
   ]

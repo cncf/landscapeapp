@@ -28,7 +28,6 @@ export function addNoIndexIfRequired() {
   if (url === '/' + window.prefix || isSelectedOnMainLandscape || isSelectedOnSecondLandscape || isSelectedOnThirdLandscape
     || isMainLandscape || isSecondLandscape || isThirdLandscape || isCardMode
   ) {
-    console.info('this can be indexed');
     const existingMeta = document.querySelector('meta[name="robots"]');
     if (existingMeta) {
       const head = document.getElementsByTagName('head')[0];
@@ -47,7 +46,6 @@ export function addNoIndexIfRequired() {
     const head = document.getElementsByTagName('head')[0];
     head.insertBefore(canonicalLink, head.firstChild);
   } else {
-    console.info('adding a no index meta tag for ', url);
     const existingMeta = document.querySelector('meta[name="robots"]');
     if (!existingMeta) {
       var link=document.createElement('meta');
