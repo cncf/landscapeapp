@@ -11,7 +11,6 @@ const valueToId = (value) => value === 'any' ? null : value;
 
 const ComboboxSelector = ({value, options, onChange}) => {
   const renderValue = function(selected) {
-    console.info(selected);
     if (selected.length === 0) {
       return 'Any';
     }

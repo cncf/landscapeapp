@@ -53,10 +53,8 @@ bus.on('scrollToTop', function() {
 function preventDefault(e){
   const modal = e.srcElement.closest('.modal-body');
   if (!modal) {
-    console.info(e.srcElement.className);
     e.preventDefault();
   }
-  // e.preventDefault();
 }
 
 function disableScroll(){

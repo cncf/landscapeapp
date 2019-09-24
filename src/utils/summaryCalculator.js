@@ -25,7 +25,6 @@ const getSummary = createSelector(
     const total = filteredItems.length;
     const stars = _.sum(_.map(filteredItems, (x) => _.isNumber(x.stars) ? x.stars : 0));
     const funding = _.sumBy(organizations, 'funding');
-    console.info(organizations.map( (x) => x.marketCap));
     const marketCap = _.sumBy(organizations, 'marketCap');
     return { total, stars, funding, marketCap };
   }

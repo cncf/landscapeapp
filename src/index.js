@@ -13,15 +13,9 @@ import './styles/theme.scss';
 import ReactGA from 'react-ga';
 import isDesktop from './utils/isDesktop';
 import iframeResizerContentWindow from 'iframe-resizer/js/iframeResizer.contentWindow';
-console.info(iframeResizerContentWindow);
 require('favicon.png'); // Tell webpack to load favicon.png
 const store = configureStore();
 window.__MUI_USE_NEXT_TYPOGRAPHY_VARIANTS__ = true;
-
-import ps from 'project/settings.yml';
-console.info('project settings via yaml loader', ps);
-
-console.info(window.projectSettings);
 
 import "./styles/roboto.css";
 render(

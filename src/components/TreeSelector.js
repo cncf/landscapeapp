@@ -27,7 +27,6 @@ const TreeSelector = ({value, options, onChange}) => {
         return !isEverythingSelected;
       }
     });
-    console.info(properOptions);
     return properOptions.map( (x) => _.find(options, {id: x}).label).join(', ');
   }
   const onItemChanged = function(newSelection) {
