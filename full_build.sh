@@ -2,17 +2,10 @@ set -e
 rm -rf dist || true
 mkdir -p dist
 
-# uncomment below when about to test a googlebot rendering
-# echo '<head><meta name="google-site-verification" content="27ZKkPQS2PWkd_0jqsSq4yUgUZ_BBTYjABudtQpMhXI" /></head>' > dist/index.html
 npm install -g npm
 npm ci
-bash build.sh LFDLFoundation/lfdl-landscape lfdl master
-bash build.sh cncf/landscape cncf master
-bash build.sh lf-edge/lfedge-landscape lf-edge master
-# Commenting this because crunchbase fetch is enabled for this issue
-# bash build.sh AcademySoftwareFoundation/aswf-landscape aswf master
-# bash build.sh graphql/graphql-landscape graphql master
-# bash build.sh openmainframeproject/omp-landscape omp master
+
+./node_modules/.bin/babel-node tools/netlifyBuild.js
 
 # bash build.sh lf-edge/lfedge-landscape lf-edge
 echo "User-agent: *" > dist/robots.txt
