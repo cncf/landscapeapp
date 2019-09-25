@@ -13,7 +13,7 @@ const mainSettings = settings.big_picture.main;
 const extraSettings = settings.big_picture.extra;
 const thirdSettings = settings.big_picture.third;
 
-// detect an initial prefix, like /cncf/ or /lfdl/ , but it can be just /
+// detect an initial prefix, like /cncf/ or /lfai/ , but it can be just /
 const possiblePrefix = window.possiblePrefix || '';
 const prefix = (possiblePrefix && location.pathname.indexOf(possiblePrefix) === 1) ? (possiblePrefix + '/') : '';
 window.prefix = prefix;
