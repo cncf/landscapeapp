@@ -58,8 +58,7 @@ const iconGithub = <svg viewBox="0 0 24 24">
     </svg>;
 
 const linkTag = (label, { name, url = null, color = 'blue' }) => {
-  const options = url ? { to: url, } : {};
-  return (<InternalLink {...options} className={`tag tag-${color}`}>
+  return (<InternalLink to={url || '/'} className={`tag tag-${color}`}>
     {(name ? <span className="tag-name">{name}</span> : null)}
     <span className="tag-value">{label}</span>
   </InternalLink>)
