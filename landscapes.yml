@@ -34,4 +34,9 @@ landscapes:
     repo: openmainframeproject/omp-landscape
     netlify: skip
     hook: 5d6a6f73080982abfbd46290
+  - landscape:
+    name: hl-landscape
+    repo: hyperledger-landscape/hl-landscape
+    netlify: skip
+    hook: 5d8b7e9b2571ad2a23a392b8
 
