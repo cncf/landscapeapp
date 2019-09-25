@@ -331,7 +331,7 @@ if (settings.global.flags.hide_license_for_categories) {
 // protect us from duplicates
 var hasDuplicates = false;
 _.values(_.groupBy(itemsWithExtraFields, 'name')).forEach(function(duplicates) {
-  if (duplicates.length > 1) {
+  if (duplicates.length > 1 && duplicates.find(({allow_duplicate_repo}) => !allow_duplicate_repo)) {
     hasDuplicates = true;
     _.each(duplicates, function(duplicate) {
       console.error(`FATAL ERROR: Duplicate item: ${duplicate.organization} ${duplicate.name} at path ${duplicate.path}`);
@@ -345,7 +345,7 @@ if (hasDuplicates) {
 // protect us from duplicate repo_urls
 var hasDuplicateRepos = false;
 _.values(_.groupBy(itemsWithExtraFields.filter( (x) => !!x.repo_url), 'repo_url')).forEach(function(duplicates) {
-  if (duplicates.length > 1) {
+  if (duplicates.length > 1 && duplicates.find(({allow_duplicate_repo}) => !allow_duplicate_repo)) {
     hasDuplicateRepos = true;
     _.each(duplicates, function(duplicate) {
       console.error(`FATAL ERROR: Duplicate repo: ${duplicate.repo_url} on ${duplicate.name} at path ${duplicate.path}`);
