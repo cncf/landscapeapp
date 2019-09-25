@@ -31,8 +31,8 @@ import ExportCsvContainer from './ExportCsvContainer';
 import Footer from './Footer';
 import EmbeddedFooter from './EmbeddedFooter';
 
-import isIphone from '../utils/isIphone';
 import isMobile from '../utils/isMobile';
+import isIphone from '../utils/isIphone';
 import isDesktop from '../utils/isDesktop';
 import isGoogle from '../utils/isGoogle';
 import bus from '../reducers/bus';
@@ -50,6 +50,28 @@ bus.on('scrollToTop', function() {
   (document.scrollingElement || document.body).scrollTop = 0;
 });
 
+function preventDefault(e){
+  const modal = e.srcElement.closest('.modal-body');
+  if (!modal) {
+    e.preventDefault();
+  }
+}
+
+function disableScroll(){
+  const shadow = document.querySelector('.MuiBackdrop-root');
+  if (shadow) {
+    shadow.addEventListener('touchmove', preventDefault, { passive: false });
+  }
+  document.body.addEventListener('touchmove', preventDefault, { passive: false });
+}
+
+function enableScroll(){
+  const shadow = document.querySelector('.MuiBackdrop-root');
+  if (shadow) {
+    shadow.removeEventListener('touchmove', preventDefault);
+  }
+  document.body.removeEventListener('touchmove', preventDefault);
+}
 
 const HomePage = ({isEmbed, mainContentMode, ready, hasSelectedItem, filtersVisible, hideFilters, showFilters, onClose, title, isFullscreen}) => {
   const isBigPicture = mainContentMode !== 'card';
@@ -84,13 +106,14 @@ const HomePage = ({isEmbed, mainContentMode, ready, hasSelectedItem, filtersVisi
       }
       document.querySelector('html').classList.add('has-selected-item');
       (document.scrollingElement || document.body).scrollTop = 0;
+      disableScroll();
     } else {
       document.querySelector('html').classList.remove('has-selected-item');
       if (document.querySelector('.iphone-scroller')) {
         (document.scrollingElement || document.body).scrollTop = state.lastScrollPosition;
       }
+      enableScroll();
     }
-    //try to get a current scroll if we are in a normal mode
   }
 
   if (isEmbed) {
@@ -134,41 +157,12 @@ const HomePage = ({isEmbed, mainContentMode, ready, hasSelectedItem, filtersVisi
     document.querySelector('body').classList.add('embed');
   }
 
-  function handleShadowClick(e) {
-    if (!(isIphone && hasSelectedItem)) {
-      return;
-    }
-    if (window.matchMedia("(orientation: portrait)").matches) {
-      const x = e.clientX / window.innerWidth;
-      const y = e.clientY / window.innerHeight;
-      const marginX = 0.125;
-      const marginY = 0.06;
-      if ( x > marginX && x < 1 - marginX && y > marginY && y < 1 - marginY ) {
-        console.info('a click inside the mask, ignoring');
-      } else {
-        onClose();
-      }
-    }
-    if (window.matchMedia("(orientation: landscape)").matches) {
-      const x = e.clientX / window.innerWidth;
-      const y = e.clientY / window.innerHeight;
-      const marginX = 0.07;
-      const marginY = 0.1;
-      if ( x > marginX && x < 1 - marginX && y > marginY) {
-        console.info('a click inside the mask, ignoring');
-      } else {
-        onClose();
-      }
-    }
-  }
-
   return (
-    <div onClick={handleShadowClick} >
+    <div>
     <HomePageScrollerContainer/>
     <ItemDialogContainer/>
-    { isIphone && <ItemDialogButtonsContainer/> }
-    <div className={classNames('app',{'filters-opened' : filtersVisible, 'background': isIphone && hasSelectedItem})}>
-      <div className={classNames({"shadow": isIphone && hasSelectedItem})} />
+    <div className={classNames('app',{'filters-opened' : filtersVisible})}>
+      <div />
       <div style={{marginTop: (isIphone && hasSelectedItem) ? -state.lastScrollPosition : 0}} className={classNames({"iphone-scroller": isIphone && hasSelectedItem}, 'main-parent')} >
         { !isEmbed && !isFullscreen && <HeaderContainer/> }
         { !isEmbed && !isFullscreen && <IconButton className="sidebar-show" onClick={showFilters}><MenuIcon /></IconButton> }
@@ -208,12 +202,10 @@ const HomePage = ({isEmbed, mainContentMode, ready, hasSelectedItem, filtersVisi
             { isBigPicture &&
             <AutoSizer>
               {({ height }) => (
-                <div className='landscape-wrapper' style={{height: height}}>
-                  <div style={{width: '100%', height: '100%', position: 'relative', overflow: 'scroll', padding: 10}}>
-                    { mainContentMode === mainSettings.url && <MainLandscapeContentContainer /> }
-                    { mainContentMode === extraSettings.url && <ExtraLandscapeContentContainer /> }
-                    { mainContentMode === thirdSettings.url && <ThirdLandscapeContentContainer /> }
-                  </div>
+                <div className="landscape-wrapper" style={{height: height}}>
+                  { mainContentMode === mainSettings.url && <MainLandscapeContentContainer /> }
+                  { mainContentMode === extraSettings.url && <ExtraLandscapeContentContainer /> }
+                  { mainContentMode === thirdSettings.url && <ThirdLandscapeContentContainer /> }
                 </div>
               )}
             </AutoSizer>

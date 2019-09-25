@@ -29,22 +29,18 @@
   <meta name="msvalidate.01" content="<%= htmlWebpackPlugin.options.settings.global.meta.ms_validate %>" />
   <title><%= htmlWebpackPlugin.options.settings.global.meta.title %></title>
   <script>
-    const parts = window.location.pathname.split('/'); // for example: /cncf/members or  /lfdl/landscape or /a/s/d/f
-    console.info({parts});
+    const parts = window.location.pathname.split('/'); // for example: /cncf/members or  /lfai/landscape or /a/s/d/f
     if (parts[1] === 'cncf') {
       if (parts[3]) {
-        console.info(parts, 'cncf redirect!');
         window.location = '/cncf'
       }
     }
-    else if (parts[1] === 'lfdl') {
+    else if (parts[1] === 'lfai') {
       if (parts[3]) {
-        console.info(parts, 'lfdl redirect!');
-        window.location = '/lfdl'
+        window.location = '/lfai'
       }
     }
     else if (parts[2]) {
-      console.info(parts, 'basic redirect!');
       window.location = '/'
     }
   </script>

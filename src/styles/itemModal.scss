@@ -41,7 +41,7 @@ $mobilewidth: 710px;
       }
   }
   @media (max-width: $mobilewidth) {
-    &-content {overflow: auto; position: absolute; top: 0; left: 0; bottom: 0; right: 0; padding: 20px;}
+    &-content {overflow: auto; -webkit-overflow-scrolling: touch; position: absolute; top: 0; left: 0; bottom: 0; right: 0; padding: 20px;}
   }
   &-close {cursor: pointer; position: absolute; top: 0; right: 0; font-size: 30px; opacity: 0.4; color: #000;
     z-index: 3; width: 60px; line-height: 60px; text-align: center;
@@ -94,37 +94,14 @@ $mobilewidth: 710px;
 }
 
 .iphone {
-  .modal {
-    &-content {
-      margin: 40px;
-      padding: 40px 20px 20px;
-      position: static !important;
-      background: #fff;
-    }
-    &-prev {position: fixed; z-index: 15; left: 0;}
-    &-next {position: fixed; z-index: 15; right: 0;}
-    &-close {
-      position: fixed;
-      top: 40px;
-      right: 40px;
-      font-size: 30px;
-      opacity: 0.4;
-      color: #000;
-      z-index: 30;
-      width: 60px;
-      line-height: 60px;
-      text-align: center;
-    }
-  }
-  &.portrait .modal {
-    &-prev svg {display: none;}
-    &-next svg {display: none;}
-  }
   &.landscape .modal {
-    &-prev, &-next {margin-top: -75px;}
-    &-content {
-      padding-left: 32px;
-      padding-top: 270px;
+    &-prev {
+      left: -45px;
+      z-index: 15;
+    }
+    &-next {
+      right: -45px;
+      z-index: 15;
     }
     .product-scroll {
       left: calc(10% - 20px);
@@ -189,6 +166,7 @@ $mobilewidth: 710px;
     z-index: 30;
   }
 }
+
 .ipad.portrait .modal {
     &-close {
       position: fixed;

@@ -28,6 +28,7 @@ const LandscapeContent = ({groupedItems, onSelectItem, style, showPreview, switc
         zoom={zoom}
         showPreview={showPreview}
         onClick={switchToOther}
+        key={element.url}
       />
     }
     if (element.type === 'ThirdLandscapeLink') {
@@ -35,11 +36,13 @@ const LandscapeContent = ({groupedItems, onSelectItem, style, showPreview, switc
         zoom={zoom}
         showPreview={showPreview}
         onClick={switchToThird}
+        key={element.url}
       />
     }
     if (element.type === 'LandscapeInfo') {
       return <LandscapeInfo {..._.pick(element, ['width', 'height', 'top', 'left']) } childrenInfo={element.children}
         zoom={zoom}
+        key='landscape-info'
       />
     }
     return null;

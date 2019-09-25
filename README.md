@@ -84,7 +84,7 @@ Reload with `. ~/.bash_profile` and then use `y open:src`, `yf`, etc. to run fun
 If you want to fetch updates to the landscapeapp and both the CNCF and LFAI landscapes and update packages on all three, this alias for your `~/.bash_profile` will do so:
 
 ```sh
-alias all='for path in /Users/your-username/dev/{landscapeapp,landscape,lfdl-landscape}; do git -C $path pull -p; npm --prefix $path run latest; done;'
+alias all='for path in /Users/your-username/dev/{landscapeapp,landscape,lfai-landscape}; do git -C $path pull -p; npm --prefix $path run latest; done;'
 
 ```
 

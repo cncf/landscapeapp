@@ -9,7 +9,6 @@ const CheckboxSelector = ({value, options, onChange}) => {
     return value.indexOf(checkbox) !== -1;
   };
   const handleCheckboxChange = function(checkbox, checked) {
-    console.info(checkbox, checked);
     if (checked) {
       onChange(value.concat([checkbox]));
     } else {

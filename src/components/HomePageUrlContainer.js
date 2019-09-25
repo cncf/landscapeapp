@@ -6,15 +6,6 @@ import createSelector from '../utils/createSelector';
 import { parseUrl } from '../utils/syncToUrl';
 import { changeParameters} from '../reducers/mainReducer';
 
-// var bouncedFn = _.debounce((fn, args) => {console.info('Real Change!', args);fn(args)}, 10000);
-import { history} from '../store/configureStore';
-
-history.listen(function(x) {
-  console.info('Url changed: ', x);
-});
-
-
-
 const getParameters = createSelector(
   (state) => state.router.location.pathname.split('/').slice(-1)[0],
   function(part) {
@@ -33,7 +24,6 @@ const mapDispatchToProps = {
 const render = ({info, changeParameters}) => {
   // if we are here - url has changed
   // otherwise everything is cached
-  console.info('Want to change : ', JSON.stringify(info));
   window.setTimeout(() => changeParameters(info), 1);
   return <div/>;
 }
