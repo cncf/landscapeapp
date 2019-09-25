@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { connect } from "react-redux";
+import { isZoomedIn } from "../utils/browserZoom";
 
 class AutoSizer extends React.PureComponent {
   state = {
@@ -24,15 +25,17 @@ class AutoSizer extends React.PureComponent {
       // See issue #41
       this._onResize();
       window.addEventListener("resize", this._onResize);
+      window.addEventListener("touchend", this.checkedZoomedIn);
     }
   }
 
   componentWillUnmount() {
     window.removeEventListener("resize", this._onResize);
+    window.removeEventListener("touchend", this.checkedZoomedIn);
   }
 
   componentDidUpdate (prevProps) {
-    if (this.props.locaiton != prevProps.location) {
+    if (this.props.location !== prevProps.location) {
       this._onResize();
     }
   }
@@ -58,11 +61,26 @@ class AutoSizer extends React.PureComponent {
     );
   }
 
+  checkedZoomedIn = (e) => {
+    const windowHeight = window.innerHeight;
+    this._onResize();
+
+    for (let i = 1; i < 11; i++) {
+      const timeout = i * 50;
+
+      setTimeout(() => {
+        if (window.innerHeight !== windowHeight) {
+          this._onResize();
+        }
+      }, timeout)
+    }
+  }
+
   _onResize = () => {
     if (this._parentNode) {
-      const height = this.state.height + window.innerHeight - document.body.offsetHeight;
-
-      this.setState({ height: height });
+      const height = this._autoSizer.clientHeight + window.innerHeight - document.body.offsetHeight;
+      const zoomedIn = isZoomedIn();
+      this.setState({ height: zoomedIn ? 'auto' : height, zoomedIn });
     }
   };
 
