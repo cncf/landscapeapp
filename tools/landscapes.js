@@ -65,17 +65,23 @@ async function main() {
       });
     }
 
-    const slackChannel = (function() {
-      const settings = require('js-yaml').safeLoad(require('fs').readFileSync('/repo/settings.yml'));
-      const slackChannel = settings.global.slack_channel;
-      return slackChannel;
-    })();
-    console.info({slackChannel: maskSecrets(slackChannel || '')});
 
     const {returnCode, logs } = await runIt();
     console.info(`${landscape.name} returned with a ${returnCode}`);
 
     require('fs').writeFileSync(`${process.env.HOME}/${landscape.name}.log`, logs.join(''));
+
+    const slackChannel = (function() {
+      try {
+        const settings = require('js-yaml').safeLoad(require('fs').readFileSync('/repo/settings.yml'));
+        const slackChannel = settings.global.slack_channel;
+        return slackChannel;
+      } catch(ex) {
+        console.info('Failed to extract slack channel');
+        return '';
+      }
+    })();
+    console.info({slackChannel: maskSecrets(slackChannel || '')});
 
     if (slackChannel) {
       await report({
