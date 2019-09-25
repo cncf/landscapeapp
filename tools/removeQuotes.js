@@ -44,7 +44,8 @@ const landscapeKeys = [
   'enduser',
   'open_source',
   'twitter',
-  'crunchbase'
+  'crunchbase',
+  'allow_duplicate_repo'
 ];
 cleanupFile('landscape.yml', landscapeKeys);
 cleanupFile('settings.yml');

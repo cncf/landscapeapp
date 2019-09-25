@@ -23,7 +23,8 @@ const allowedKeys = [
   'project',
   'url_for_bestpractices',
   'enduser',
-  'open_source'
+  'open_source',
+  'allow_duplicate_repo'
 ];
 
 const addKeyError = (title, key) => {
