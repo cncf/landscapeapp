@@ -41,7 +41,8 @@
     "test:CI": "babel-node tools/testCi.js",
     "test:watch": "jest --watch",
     "analyze-bundle": "babel-node ./tools/analyzeBundle.js",
-    "latest": "npm install"
+    "latest": "npm install",
+    "reset-tweet-count": "babel-node tools/resetTweetCount.js"
   },
   "author": "CNCF",
   "license": "Apache-2.0",
