@@ -1,64 +1,31 @@
 import rp from './rpRetry';
-import { JSDOM } from 'jsdom';
 
-const makeApiRequest = ({ path = null, url = null, method = 'GET' }) => {
+let requests = {};
+
+const makeApiRequest = async ({ path = null, url = null, method = 'GET' }) => {
   if (path) {
     url = `https://api.github.com${path}`;
   }
 
-  return rp({
-    method: method,
-    uri: url,
-    followRedirect: true,
-    timeout: 10 * 1000,
-    headers: {
-      'User-agent': 'CNCF',
-      'Authorization': `token ${process.env.GITHUB_KEY}`
-    },
-    json: true
-  })
+  const key = `${method} ${url}`;
+
+  if (!requests[key]) {
+    requests[key] = rp({
+      method: method,
+      uri: url,
+      followRedirect: true,
+      timeout: 10 * 1000,
+      headers: {
+        'User-agent': 'CNCF',
+        'Authorization': `token ${process.env.GITHUB_KEY}`
+      },
+      json: true
+    })
+  } 
+
+  return await requests[key];
 }
 
-async function readGithubStats({repo, branch}) {
-  var url = `https://github.com/${repo}/commits/${branch}`;
-  var response
-  try {
-    response = await rp({
-    uri: url,
-    followRedirect: true,
-    timeout: 10 * 1000,
-    simple: true
-    });
-  } catch(ex) {
-    throw new Error(`Check if ${repo} has a branch ${branch}`);
-  }
-  const dom = new JSDOM(response);
-  const doc = dom.window.document;
-  const commitLinks = doc.querySelectorAll('.commits-list-item a.sha');
-  const firstCommitLink = commitLinks[0].href;
-  // console.info(doc.querySelector('body').innerHTML);
-  const firstCommitDateText = (doc.querySelectorAll('.commit-group-title')[0] || {}).textContent;
-  const firstCommitDate = new Date(firstCommitDateText.split(' on ')[1]).toISOString();
-  //nextPageLink may not present for small repos!
-  const nextPageLink = (Array.from(doc.querySelectorAll('.paginate-container a')).filter(function(x) {
-    return x.text === 'Older';
-  })[0] || {}).href;
-  if (!nextPageLink) {
-    return {
-      firstCommitLink,
-      firstCommitDate,
-      lastCommitLink: commitLinks[commitLinks.length - 1].href
-    };
-  }
-  const [base, offset] = nextPageLink.split('+');
-  // console.info(await getPageInfo(doc));
-  return {
-    base,
-    offset,
-    firstCommitDate,
-    firstCommitLink
-  }
-}
 export async function getReleaseDate({repo}) {
   const releases = await makeApiRequest({ path: `/repos/${repo}/releases` });
 
@@ -68,12 +35,11 @@ export async function getReleaseDate({repo}) {
 }
 
 export async function getRepoLatestDate({repo, branch}) {
-  const info = await readGithubStats({repo, branch});
-  // console.info(info);
-  return {
-    date: info.firstCommitDate,
-    commitLink: info.firstCommitLink
-  }
+  const branchSha = await getBranchSha(repo, branch);
+  const commits = await makeApiRequest({ path: `/repos/${repo}/commits?sha=${branchSha}` });
+  const firstCommit = commits[0];
+  const commitLink = (new URL(firstCommit.html_url)).pathname;
+  return { date: firstCommit.commit.author.date, commitLink: commitLink };
 }
 
 const getBranchSha = async (repo, branch) => {
