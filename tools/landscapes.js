@@ -9,16 +9,6 @@ async function main() {
     if (!require('fs').existsSync(settingsFileName)) {
       console.info(`Warning: settings file ${settingsFileName} for ${landscape.name} does not exist, we will not be able to report to slack`);
     };
-    const slackChannel = (function() {
-      if (!require('fs').existsSync(settingsFileName)) {
-        console.info(`Not reporting results to slack`);
-        return null;
-      }
-      const content = require('fs').readFileSync(settingsFileName, 'utf-8');
-      const value = content.match(/SLACK_CHANNEL=(\S*)/)[1];
-      return value;
-    })();
-
     const globalSettingsFileName = `${process.env.HOME}/landscapes.env`
     const content = require('fs').readFileSync(globalSettingsFileName, 'utf-8');
     const secrets = content.split('\n').map(function(line) {
@@ -40,7 +30,6 @@ async function main() {
     for (var secret of secrets) {
       console.info(maskSecrets(`We have a secret: ${secret}`));
     }
-    console.info({slackChannel: maskSecrets(slackChannel || '')});
 
     const bashFileContent = `
   . "${globalSettingsFileName}"
@@ -76,10 +65,23 @@ async function main() {
       });
     }
 
+
     const {returnCode, logs } = await runIt();
     console.info(`${landscape.name} returned with a ${returnCode}`);
 
     require('fs').writeFileSync(`${process.env.HOME}/${landscape.name}.log`, logs.join(''));
+
+    const slackChannel = (function() {
+      try {
+        const settings = require('js-yaml').safeLoad(require('fs').readFileSync('/repo/settings.yml'));
+        const slackChannel = settings.global.slack_channel;
+        return slackChannel;
+      } catch(ex) {
+        console.info('Failed to extract slack channel');
+        return '';
+      }
+    })();
+    console.info({slackChannel: maskSecrets(slackChannel || '')});
 
     if (slackChannel) {
       await report({
