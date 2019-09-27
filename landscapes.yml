@@ -39,4 +39,8 @@ landscapes:
     repo: hyperledger-landscape/hl-landscape
     netlify: skip
     hook: 5d8b7e9b2571ad2a23a392b8
-
+  - landscape:
+    name: cdf
+    repo: cdfoundation/cdf-landscape
+    netlify: skip
+    hook: 5d8e8ecbeb12d77369f06dba
