@@ -65,9 +65,18 @@ async function main() {
       });
     }
 
+    let returnCode;
+    let logs;
+    for (var i = 0; i < 3; i ++) {
+      {returnCode, logs } = await runIt();
+      console.info(`${landscape.name} returned with a ${returnCode}`);
+      if (returnCode === 0) {
+        break;
+      } else {
+        console.info(`Retrying!`);
+      }
+    }
 
-    const {returnCode, logs } = await runIt();
-    console.info(`${landscape.name} returned with a ${returnCode}`);
 
     require('fs').writeFileSync(`${process.env.HOME}/${landscape.name}.log`, logs.join(''));
 
