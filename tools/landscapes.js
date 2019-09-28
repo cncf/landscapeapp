@@ -68,7 +68,9 @@ async function main() {
     let returnCode;
     let logs;
     for (var i = 0; i < 3; i ++) {
-      {returnCode, logs } = await runIt();
+      const result = await runIt();
+      returnCode = result.returnCode;
+      logs = result.logs;
       console.info(`${landscape.name} returned with a ${returnCode}`);
       if (returnCode === 0) {
         break;
