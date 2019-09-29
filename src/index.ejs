@@ -49,15 +49,6 @@
   </script>
 </head>
 <body>
-  <script>
-      var isGoogle = navigator.userAgent.indexOf('bot.html') !== -1;
-      if (isGoogle) {
-        var s = document.createElement("script");
-        s.type = "text/javascript";
-        s.src = "main.googlebot.js?" + Math.random();
-        document.body.appendChild(s);
-      }
-  </script>
   <div id="app"></div>
   </body>
 </html>
