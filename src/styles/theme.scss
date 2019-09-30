@@ -101,7 +101,7 @@ a {text-decoration: none; transition: all 0.5s; color: $blue;
   .header {
     padding: 20px;
     .landscape-logo {
-      position: absolute;
+      position: fixed;
       top: 0;
       left: 0;
       padding: 20px;
@@ -120,11 +120,16 @@ a {text-decoration: none; transition: all 0.5s; color: $blue;
     }
     .landscapeapp-logo {display: block; width: 170px; height: 30px; position: absolute; top: 20px; right: 20px; z-index: 3;
       img {width: 100%;}
-      @media (max-width: $lg-screen) {position: absolute;}
+      @media (max-width: $lg-screen) {position: fixed;}
       @media (max-width: $md-screen) {width: 155px;}
     }
     .info {margin-top: -32px; padding-left: 20px; height: auto;}
   }
+}
+
+.zoomed-in .header_container .header .landscape-logo,
+.zoomed-in .header_container .header .landscapeapp-logo {
+  position: absolute;
 }
 
 .sidebar {width: 205px; position: fixed; top: 60px; left: 0; bottom: 0; overflow: hidden; z-index: 6;
@@ -192,12 +197,16 @@ a {text-decoration: none; transition: all 0.5s; color: $blue;
   @media (max-width: $lg-screen) {
     .sidebar-show {
       display: block;
-      position: absolute;
+      position: fixed;
       top: 11px;
       left: 0;
       z-index: 3;
     }
   }
+}
+
+.zoomed-in .app .sidebar-show {
+  position: absolute;
 }
 
 .app-overlay {opacity: 0; position: fixed; top: 0; left: 0; bottom: 0; width: 100%; background: #000; margin-left: -100%;
