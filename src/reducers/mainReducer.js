@@ -4,7 +4,7 @@
 // data: null | { .. Data ... }
 import settings from 'project/settings.yml';
 import { loadData} from './api';
-import { addNoIndexIfRequired, filtersToUrl } from '../utils/syncToUrl';
+import { filtersToUrl } from '../utils/syncToUrl';
 import _ from 'lodash';
 import { push, replace } from 'connected-react-router';
 import { zoomLevels } from '../utils/zoom';
@@ -187,11 +187,9 @@ export function changeParameters(value) {
       dispatch(replace(url));
       if (state.ready === true) {
         dispatch(markInitialUrlAsHandled());
-        addNoIndexIfRequired();
       }
     } else {
       dispatch(setParameters({...value}));
-      addNoIndexIfRequired();
     }
   }
 }
