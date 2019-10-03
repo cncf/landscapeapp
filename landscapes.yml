@@ -44,3 +44,8 @@ landscapes:
     repo: cdfoundation/cdf-landscape
     netlify: skip
     hook: 5d8e8ecbeb12d77369f06dba
+  - landscape:
+    name: ucf
+    repo: ucfoundation/ucf-landscape
+    netlify: skip
+    hook: 5d96662e28b476477790dd8a
