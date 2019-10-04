@@ -9,7 +9,7 @@ const values = {
 const content = ejs.render(file, values);
 require('fs').writeFileSync('/tmp/update_server.bash', content);
 var spawn = require('child_process').spawn;
-var child = spawn('bash', ['/tmp/update_server.bash']);
+var child = spawn('bash', ['/tmp/update_server.bash'], { maxBuffer: 100 * 1024 * 1024});
 child.stdout.on('data', function(data) {
     console.log(data.toString('utf-8'));
     //Here is where the output goes
