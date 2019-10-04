@@ -90,6 +90,12 @@ alias all='for path in /Users/your-username/dev/{landscapeapp,landscape,lfai-lan
 
 ```
 
+If you're making a change to `landscapeapp` (and in that directory), and you have a sibling directory of `cdf-landscape`, you can run the code you're changing on `cdf-landscape` with:
+
+```sh
+PROJECT_PATH=../cdf-landscape npm run build
+```
+
 ## Adding a new landscape to the autoupdater.
 So, we have an https://github.com/AcademySoftwareFoundation/aswf-landscape repo and we want to set up automatic updates for it
 1. Lets guess that landscapeapp is exctracted to the ~/Documents/landscapeapp, and we will clone that new https://github.com/AcademySoftwareFoundation/aswf-landscape to ~/Documents/aswf-landscape
