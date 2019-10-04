@@ -9,7 +9,7 @@ const args = [
   ...process.argv.slice(2)
 ];
 
-const testCi = spawn('node', args);
+const testCi = spawn('node', args, {maxBuffer: 100 * 1024 * 1024});
 const consoleLogger = data => console.log(`${data}`); // eslint-disable-line no-console
 
 testCi.stdout.on('data', consoleLogger);
