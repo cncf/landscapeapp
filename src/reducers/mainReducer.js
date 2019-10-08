@@ -30,7 +30,7 @@ export const initialState = {
     bestPracticeBadgeId: null,
     enduser: null,
     googlebot: null,
-    parent: null,
+    parents: [],
   },
   grouping: 'relation',
   sortField: 'name',

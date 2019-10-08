@@ -195,13 +195,14 @@ const fields = {
     url: 'googlebot',
     values: [{ id: true, url: 'yes' }, { id: false, url: 'no' }]
   },
-  parent: {
+  parents: {
     id: 'parent',
     url: 'parent',
+    isArray: true,
     values: lookups.crunchbaseSlugs.map((id) => {
       return { id: id }
     }),
-    filterFn: (filter, _, record) => !filter || isParent(filter, record)
+    filterFn: (parents, _, record) => parents.length === 0 || parents.find(parent => isParent(parent, record))
   }
 };
 _.each(fields, function(field, key) {
