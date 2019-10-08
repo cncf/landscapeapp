@@ -35,7 +35,7 @@ export const getFilteredItems = createSelector(
     var filterByLandscape = mainContentMode === 'card' ? filterFn({field: 'landscape', filters}) : (x) => true;
     var filterByBestPractices = filterFn({field: 'bestPracticeBadgeId', filters});
     var filterByEnduser = filterFn({field: 'enduser', filters});
-    var filterByParent = filterFn({field: 'parent', filters});
+    var filterByParent = filterFn({field: 'parents', filters});
     return data.filter(function(x) {
       return filterHostedProject(x) && filterByLicense(x) && filterByOrganization(x) && filterByHeadquarters(x) && filterByLandscape(x) && filterByBestPractices(x) && filterByEnduser(x) && filterByParent(x);
     });
@@ -76,7 +76,7 @@ const getFilteredItemsForBigPicture = createSelector(
     var filterByHeadquarters = filterFn({field: 'headquarters', filters});
     var filterByBestPractices = filterFn({field: 'bestPracticeBadgeId', filters});
     var filterByEnduser = filterFn({field: 'enduser', filters});
-    var filterByParent = filterFn({field: 'parent', filters});
+    var filterByParent = filterFn({field: 'parents', filters});
     return addExtraFields(data.filter(function(x) {
       return filterHostedProject(x) && filterByLicense(x) && filterByOrganization(x) && filterByHeadquarters(x) && filterByBestPractices(x) && filterByEnduser(x) && filterByParent(x);
     }));
