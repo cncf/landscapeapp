@@ -7,40 +7,50 @@ landscapes:
   - landscape:
     name: cncf
     repo: cncf/landscape
+    netlify: full
     hook: 5c1bd8e14ed62f166e8d9f7f
   - landscape:
     name: lfai
     repo: lfai/landscape
+    netlify: full
     hook: 5c1bd968fdd72a78a54bdcd1
   - landscape:
     name: lfedge
     repo: lf-edge/lfedge-landscape
+    netlify: full
     hook: 5c80e31894c5c7758edb31e4
   - landscape:
     name: aswf
     repo: AcademySoftwareFoundation/aswf-landscape
+    netlify: skip
     hook: 5d5c7ca6dc2c51cf02381f63
   - landscape:
     name: graphql
     repo: graphql/graphql-landscape
+    netlify: skip
     hook: 5d5c7ccf64ecb5bd3d2592f7
   - landscape:
     name: omp
     repo: openmainframeproject/omp-landscape
+    netlify: skip
     hook: 5d6a6f73080982abfbd46290
   - landscape:
     name: hl-landscape
     repo: hyperledger-landscape/hl-landscape
+    netlify: skip
     hook: 5d8b7e9b2571ad2a23a392b8
   - landscape:
     name: cdf
     repo: cdfoundation/cdf-landscape
+    netlify: skip
     hook: 5d8e8ecbeb12d77369f06dba
   - landscape:
     name: ucf
     repo: ucfoundation/ucf-landscape
+    netlify: skip
     hook: 5d96662e28b476477790dd8a
   - landscape:
     name: lfenergy
     repo: lf-energy/lfenergy-landscape
+    netlify: skip
     hook: 5d98c95de9ff92d31e713003
