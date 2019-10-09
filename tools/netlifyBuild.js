@@ -56,10 +56,8 @@ ${process.env.BUILDBOT_KEY.replace(/\s/g,'\n')}
       REPO_PATH=/root/${folder}
       OUTPUT_PATH=/root/${outputFolder}
 
-      ${vars.map( (v) => `${v}=${process.env[v]}` ).join('\n')}
-
       docker run --rm -t \
-        ${vars.map( (v) => ` -e ${v} `).join(' ')} \
+        ${vars.map( (v) => ` -e ${v}="${process.env[v]}" `).join(' ')} \
         -v \${REPO_PATH}:/opt/repo \
         -v \${OUTPUT_PATH}:/dist \
         -v \${BASE_PATH}/run-build.sh:/usr/local/bin/build \
