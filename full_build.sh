@@ -2,9 +2,6 @@ set -e
 rm -rf dist || true
 mkdir -p dist
 
-npm install -g npm
-npm ci
-
 ./node_modules/.bin/babel-node tools/netlifyBuild.js
 
 # bash build.sh lf-edge/lfedge-landscape lf-edge
