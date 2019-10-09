@@ -105,7 +105,7 @@ EOSSH
     const output  = await runIt();
     console.info(`Output from: ${landscape.name}, exit code: ${landscape.returnCode}`);
     const lines = output.text.split('\n');
-    const index = _.findIndex(lines, (line) => line.match(/NPM modules installed/));
+    const index = _.findIndex(lines, (line) => line.match(/added \d+ packages in/));
     const filteredLines = lines.slice(index !== -1 ? index : 0).join('\n');
     console.info(filteredLines);
     return output;
