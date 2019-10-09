@@ -49,8 +49,8 @@ landscapes:
     repo: ucfoundation/ucf-landscape
     netlify: skip
     hook: 5d96662e28b476477790dd8a
-  # - landscape:
-    # name: lfenergy
-    # repo: lf-energy/lfenergy-landscape
-    # netlify: skip
-    # hook: 5d98c95de9ff92d31e713003
+  - landscape:
+    name: lfenergy
+    repo: lf-energy/lfenergy-landscape
+    netlify: skip
+    hook: 5d98c95de9ff92d31e713003
