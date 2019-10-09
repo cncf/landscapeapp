@@ -2,9 +2,6 @@ set -e
 rm -rf dist || true
 mkdir -p dist
 
-npm install -g npm
-npm ci
-
 ./node_modules/.bin/babel-node tools/netlifyBuild.js
 
 # bash build.sh lf-edge/lfedge-landscape lf-edge
@@ -14,7 +11,7 @@ echo "Disallow: /" >> dist/robots.txt
 
 # This will increase a version and publish to an npm
 # If there is an existing package
-if [ $BRANCH = "master" ]; then
+if [ "$BRANCH" = "master" ]; then
   git config --global user.email "info@cncf.io"
   git config --global user.name "CNCF-bot"
   git remote rm github 2>/dev/null || true
