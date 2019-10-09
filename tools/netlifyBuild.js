@@ -36,7 +36,7 @@ ${process.env.BUILDBOT_KEY.replace(/\s/g,'\n')}
   const folder = new Date().getTime();
   const remote = 'root@147.75.76.177';
   const result = require('child_process').spawnSync('bash', ['-lc', `
-      rsync --exclude="node_modules" --exclude="dist" -az -e "ssh -i /tmp/buildbot " . ${remote}:/root/${folder}
+      rsync --exclude="node_modules" --exclude="dist" -az -e "ssh -i /tmp/buildbot  -o StrictHostKeyChecking=no  " . ${remote}:/root/${folder}
   `], {stdio: 'inherit'});
   if (result.status !== 0) {
     console.info(`Failed to rsync, exiting`);
@@ -72,7 +72,7 @@ ${process.env.BUILDBOT_KEY.replace(/\s/g,'\n')}
       ssh -i /tmp/buildbot $nocheck ${remote} << 'EOSSH'
       ${dockerCommand}
 EOSSH
-      rsync -az -e "ssh -i /tmp/buildbot" ${remote}:/root/${outputFolder}/dist/ dist/${landscape.name}
+      rsync -az -e "ssh -i /tmp/buildbot  -o StrictHostKeyChecking=no " ${remote}:/root/${outputFolder}/dist/ dist/${landscape.name}
     `
 
     console.info(`processing ${landscape.name} at ${landscape.repo}`);
