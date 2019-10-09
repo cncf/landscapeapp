@@ -23,11 +23,20 @@ async function main() {
     console.info(maskSecrets(`We have a secret: ${secret}`));
   }
 
+  const key = `
+-----BEGIN OPENSSH PRIVATE KEY-----
+${process.env.BUILDBOT_KEY.replace(/\s/g,'\n')}
+-----END OPENSSH PRIVATE KEY-----
+  `.split('\n').slice(1).join('\n');
+  require('fs').writeFileSync('/tmp/buildbot', key);
+  require('fs').chmodSync('/tmp/buildbot', 0o600);
+
+
   // now our goal is to run this on a remote server. Step 1 - xcopy the repo
   const folder = new Date().getTime();
   const remote = 'root@147.75.76.177';
   const result = require('child_process').spawnSync('bash', ['-lc', `
-      rsync --exclude="node_modules" -az -e ssh . ${remote}:/root/${folder}
+      rsync --exclude="node_modules" -az -e "ssh -i /tmp/buildbot " . ${remote}:/root/${folder}
   `], {stdio: 'inherit'});
   if (result.status !== 0) {
     console.info(`Failed to rsync, exiting`);
@@ -55,19 +64,18 @@ async function main() {
         -v \${OUTPUT_PATH}:/dist \
         -v \${BASE_PATH}/run-build.sh:/usr/local/bin/build \
         -v \${BASE_PATH}/run-build-functions.sh:/usr/local/bin/run-build-functions.sh \
-        buildbot /bin/bash -lc "build 'bash build.sh ${landscape.repo} ${landscape.name} master' && cp -r /opt/buildhome/repo/dist /dist"
+        buildbot /bin/bash -lc "build 'bash build.sh ${landscape.repo} ${landscape.name} master' && cp -r /opt/buildhome/repo/${landscape.name}/dist /dist"
     `;
 
     const bashCommand = `
       nocheck=" -o StrictHostKeyChecking=no "
-      ssh $nocheck ${remote} << 'EOSSH'
+      ssh -i /tmp/buildbot $nocheck ${remote} << 'EOSSH'
       ${dockerCommand}
 EOSSH
-      rsync -az -e ssh ${remote}:/root/${outputFolder}/dist/ dist/${landscape.name}
+      rsync -az -e "ssh -i /tmp/buildbot" ${remote}:/root/${outputFolder}/dist/ dist/${landscape.name}
     `
 
     console.info(`processing ${landscape.name} at ${landscape.repo}`);
-    console.info(bashCommand);
 
 
     // run a build command remotely for a given repo
@@ -97,12 +105,23 @@ EOSSH
     }
 
     const output  = await runIt();
-    return output;
-  });
-  _.each(results, function(landscape) {
     console.info(`Output from: ${landscape.landscape.name}, exit code: ${landscape.returnCode}`);
     console.info(landscape.text);
+    return output;
   });
+  if (_.find(results, (x) => x.returnCode !== 0)) {
+    process.exit(1);
+  }
+  const redirects = results.map((result) => `/${result.landscape.name}/* /${result.landscape.name}/index.html 200`).join('\n');
+  const index = results.map((result) => `<div><a href="${result.landscape.name}/"><h1>${result.landscape.name}</h1></a></div>`).join('\n');
+  const robots = `
+    User-agent: *
+    Disallow: /
+  `;
+  require('fs').writeFileSync('dist/_redirects', redirects);
+  require('fs').writeFileSync('dist/index.html', index);
+  require('fs').writeFileSync('dist/robots.html', robots);
+
 
 }
 main();
