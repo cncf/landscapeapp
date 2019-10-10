@@ -1,3 +1,6 @@
+echo $REVIEW_ID
+echo $REPOSITORY_URL
+exit 1;
 set -e
 rm -rf dist || true
 mkdir -p dist
