@@ -30,8 +30,10 @@ const ItemDialog = ({onClose, itemInfo}) => {
       <Dialog open={!!itemInfo} onClose={() => onClose() } transitionDuration={400}
         classes={{paper:'modal-body'}}
         className={classNames('modal', 'product', {nonoss : recentItemInfo.oss === false})}>
+        <div className="modal-content">
           { itemInfo && <ItemDialogButtonsContainer/> }
           { (itemInfo || lastItemInfo) && <ItemDialogContent itemInfo={itemInfo || lastItemInfo}/> }
+        </div>
       </Dialog>
   );
 }

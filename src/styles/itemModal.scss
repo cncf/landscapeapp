@@ -1,51 +1,128 @@
-$navy: #38404a;
-$navy-light: #87919a;
-$blue: #5093e0;
-$blue-hover: #0e61c0;
-$mobilewidth: 710px;
+@import "breakpoints";
+@import "colors";
+
+$arrow-size: 72px;
+$modal-padding: 20px;
+$additional-padding: 15px;
 
 .modal {
   perspective: 2000px;
-  overflow: auto;
   display: block;
-  &-prev, &-next {position: absolute; top: 50%; margin-top: -20px; font-size: 2.5rem; color: #fff; cursor: pointer;
+
+  .modal-buttons {
+    position: absolute;
+    top: 30px;
+    left: 0;
+    right: 0;
+    bottom: 30px;
+
+    @media (max-width: $md-screen) {
+      top: 20px;
+      height: 180px;
+    }
+  }
+
+  &-prev, &-next {
+    position: absolute;
+    top: 50%;
+    color: #fff;
+    cursor: pointer;
     opacity: 0.6;
-    &:hover {opacity: 1;}
-    &[disabled]  {cursor: default; opacity: 0.1;
-      &:hover {opacity: 0.1;}
+    width: $arrow-size;
+    height: $arrow-size;
+    margin-top: $arrow-size / -2;
+
+    svg {
+      width: 100%;
+      height: 100%;
+    }
+
+    &:hover {
+      opacity: 0.8;
+    }
+
+    &[disabled] {
+      cursor: default;
+      opacity: 0.1;
+
+      &:hover {
+        opacity: 0.1;
+      }
     }
   }
   &-prev {left: -60px;}
   &-next {right: -60px;}
-  @media (max-width: $mobilewidth) {
-    &-prev, &-next {width: 40px; height: 100px; line-height: 100px; margin-top: -50px;
-      font-size: 2.5rem; text-align: center; opacity: 1;
-      svg {display: none;}
-      &:before {content: ""; width: 0; height: 0; border: transparent 20px solid; position: absolute;
-        top: 0; bottom: 0; margin: auto;
-      }
+  @media (max-width: $md-screen) {
+    &-prev, &-next {
+      opacity: 0.4;
+      color: #000;
     }
-    &-prev {left: -40px;
-      &:before {border-right-color: #fff; border-left-width: 0; right: 5px;}
+
+    &-prev { left: calc(50% - 185px); }
+    &-next { right: calc(50% - 185px); }
+  }
+
+  .modal-body {
+    max-height: 720px;
+    width: 90%;
+    max-width: 1080px;
+    border-radius: 4px;
+    position: absolute;
+    top: 20px;
+    left: 0;
+    bottom: 20px;
+    right: 0;
+    margin: auto;
+    overflow: visible;
+
+    @media (max-width: $md-screen) {
+      width: auto;
+      height: auto;
+      position: absolute;
+      top: 5px;
+      left: 5px;
+      bottom: 5px;
+      right: 5px;
+      margin: 0;
+      padding: 0;
+      max-height: none;
+      border-radius: 2px;
+      -webkit-overflow-scrolling: touch;
     }
-    &-next {right: -40px;
-      &:before {border-left-color: #fff; border-right-width: 0; left: 5px;}
+  }
+
+  .modal-content {
+    position: relative;
+    height: 100%;
+    padding: $modal-padding 0;
+
+    @media (max-width: $md-screen) {
+      padding: $modal-padding;
+      overflow-y: auto;
+      overflow-x: hidden;
     }
-    .row {display: block;}
-    .col {width: 100%;}
   }
-  .modal-body {padding: 40px; overflow: visible; max-height: 640px; width: 90%; max-width: 940px;
-    border-radius: 8px; margin: 50px; position: absolute; top: 20px; left: 0; bottom: 20px; right: 0; margin: auto;
-    @media (max-width: $mobilewidth) {padding: 50px 20px 20px; width: auto; height: auto;
-      position: absolute; top: 30px; left: 40px; bottom: 30px; right: 40px; margin: 0; max-height: none;
-      }
-  }
-  @media (max-width: $mobilewidth) {
-    &-content {overflow: auto; -webkit-overflow-scrolling: touch; position: absolute; top: 0; left: 0; bottom: 0; right: 0; padding: 20px;}
-  }
-  &-close {cursor: pointer; position: absolute; top: 0; right: 0; font-size: 30px; opacity: 0.4; color: #000;
-    z-index: 3; width: 60px; line-height: 60px; text-align: center;
-    &:hover {opacity: 1;}
+
+  &-close {
+    cursor: pointer;
+    position: absolute;
+    top: -20px;
+    right: 8px;
+    font-size: 40px;
+    opacity: 0.4;
+    color: #000;
+    z-index: 3;
+    width: 48px;
+    line-height: 48px;
+    text-align: center;
+
+    @media (max-width: $md-screen) {
+      right: -5px;
+    }
+
+    &:hover {
+      opacity: 1;
+    }
   }
 }
 .embed .modal .modal-body {
@@ -53,36 +130,142 @@ $mobilewidth: 710px;
 }
 
 .product {
-  &-logo {margin-bottom: 2.5rem; box-shadow: 0 1px 4px rgba(0,0,0,0.2); border-radius: 4px; padding: 16px;
-    border: #fff 4px solid; height: 172px;
-    position: absolute; top: 40px; left: 40px; width: 30%;
-    &-img {cursor: pointer; margin: auto; display: block; width: 100%; height: 100%; position: absolute; top: 0; left: 0; bottom: 0; right: 0; }
-    .nonoss & {background: #eee; border-color: #eee;}
-    @media (max-width: $mobilewidth) {margin: 0 auto 1rem; position: relative; width: auto; max-width: 250px; height: 180px; top: 0; left: 0;}
+  &-logo {
+    position: relative;
+    width: 30%;
+    margin: $additional-padding 0 $modal-padding+$additional-padding $modal-padding+$additional-padding;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.2);
+    border-radius: 4px;
+    padding: 16px;
+    border: #fff 4px solid;
+    height: 172px;
+
+    &-img {
+      cursor: pointer;
+      margin: auto;
+      display: block;
+      width: 100%;
+      height: 100%;
+      position: absolute;
+      top: 0;
+      left: 0;
+      bottom: 0;
+      right: 0;
+    }
+
+    .nonoss & {
+      background: #eee;
+      border-color: #eee;
+    }
+
+    @media (max-width: $lg-screen) {
+      margin: 0 0 $modal-padding $modal-padding;
+    }
+
+    @media (max-width: $md-screen) {
+      margin: 0 auto $modal-padding;
+      width: auto;
+      max-width: 250px;
+      height: 180px;
+    }
   }
-  &-tags {position: absolute; left: 40px; top: 250px; margin-bottom: 1rem;
-    @media (max-width: $mobilewidth) {position: static;}
+
+  &-tags {
+    position: relative;
+    margin-left: $modal-padding+$additional-padding;
+
+    @media (max-width: $lg-screen) {
+      margin-left: $modal-padding;
+    }
+
+    @media (max-width: $md-screen) {
+      margin-left: 0;
+      margin-bottom: $modal-padding;
+    }
   }
+
+  .product-content {
+    position: absolute;
+    top: $modal-padding + $additional-padding;
+    left: calc(40% - 15px);
+    right: 0px;
+    bottom: $modal-padding + $additional-padding;
+    padding-right: $modal-padding + $additional-padding;
+    overflow-y: auto;
+    overflow-x: hidden;
+
+    @media (max-width: $lg-screen) {
+      top: $modal-padding;
+      bottom: $modal-padding;
+      padding-right: $modal-padding;
+      left: calc(40% - 35px);
+    }
+
+    @media (max-width: $md-screen) {
+      position: relative;
+      top: 0;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      padding: 0;
+      overflow-y: visible;
+    }
+  }
+
   &-main {font-size: 0.8rem; line-height: 130%; color: $navy;}
-  &-scroll {
-    position: absolute; top: 40px; left: calc(40% - 20px); bottom: 40px; right: 20px; padding-right: 20px; overflow: auto;
-    @media (max-width: $mobilewidth) {margin: 0; padding: 0; height: auto; overflow: visible; position: static; }
-  }
   &-name {font-size: 2rem; line-height: 130%;}
   &-parent {font-weight: bold; margin-bottom: 0.8rem;}
   &-category {color: $navy-light; margin-bottom: 0.8rem;
     &-separator {margin: 0 5px; font-size: 0.6rem;}
   }
   &-description {font-size: 1.1rem; line-height: 130%; margin-bottom: 0.8rem; max-height: 300px;}
-  &-properties {font-size: 0.8em; color: $navy; margin: 2rem 0;}
-  &-property {margin-bottom: 0.5rem;
-    &-value {white-space: nowrap; overflow: hidden; text-overflow: ellipsis;}
-    a {color: $blue;}
-    @media (max-width: $mobilewidth) {
-      &-name {display: block; width: 100%;}
-      &-value {display: block; width: 100%;}
+
+  &-properties {
+    font-size: 0.9rem;
+    color: $navy;
+    margin: 2rem 0 1rem;
+  }
+
+  &-property {
+    margin-bottom: 0.5rem;
+
+    &-value {
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    a {
+      color: $blue;
     }
   }
+
+  .product-property.row,
+  .product-property .col {
+    margin-left: 0;
+    margin-right: 0;
+    padding-left: 0;
+    padding-right: 0;
+  }
+
+  @media (min-width: $lg-screen) {
+    .product-property .col .product-property:first-child{
+      padding-right: 10px;
+    }
+  }
+
+  @media (max-width: $lg-screen) {
+    .product-property {
+      flex-direction: column;
+      width: 100%;
+    }
+
+    .product-property .col {
+      width: 100%;
+      display: block;
+    }
+  }
+
   &-repo {
     &-stars {color: #7b7b7b; font-size: 0.8rem; white-space: nowrap; line-height: 16px; display: inline-block;
       svg {width: 16px; height: 16px; display: inline-block; vertical-align: top; }
@@ -90,118 +273,5 @@ $mobilewidth: 710px;
   }
   &-twitter {position: relative;
     &:after {position: absolute; content: ""; top: 0; left: 0; bottom: 0; right: 0; z-index: 100; pointer-events: none;}
-  }
-}
-
-.iphone {
-  &.landscape .modal {
-    &-prev {
-      left: -45px;
-      z-index: 15;
-    }
-    &-next {
-      right: -45px;
-      z-index: 15;
-    }
-    .product-scroll {
-      left: calc(10% - 20px);
-    }
-    .landscape-layout {
-      position: relative;
-    }
-    .right-column {
-      padding-left: 40%;
-    }
-    .product-logo {
-      top: 10px;
-      height: 152px;
-      width: calc(34% - 49px);
-    }
-    .product-tags {
-      top: 195px;
-    }
-  }
-}
-.ipad {
-  .modal {
-    &-content {
-      margin: 60px;
-      padding: 10px;
-      padding-top: 20px;
-      position: static !important;
-      background: #fff;
-    }
-    &-prev {position: fixed; z-index: 15;}
-    &-next {position: fixed; z-index: 15;}
-    &-close {
-      position: fixed;
-      top: 40px;
-      right: 60px;
-      font-size: 30px;
-      opacity: 0.4;
-      color: #000;
-      z-index: 30;
-      width: 60px;
-      line-height: 60px;
-      text-align: center;
-    }
-  }
-  .product-scroll {
-      margin: 0;
-      padding-left: 380px;
-      height: auto;
-      overflow: visible;
-      position: static;
-  }
-  .product-logo {
-    position: fixed;
-    left: 120px;
-    top: 90px;
-    z-index: 30;
-  }
-  .product-tags {
-    position: fixed;
-    left: 120px;
-    top: 280px;
-    z-index: 30;
-  }
-}
-
-.ipad.portrait .modal {
-    &-close {
-      position: fixed;
-      top: 70px;
-      right: 60px;
-      font-size: 30px;
-      opacity: 0.4;
-      color: #000;
-      z-index: 30;
-      width: 60px;
-      line-height: 60px;
-      text-align: center;
-    }
-  .product-scroll {
-      margin: 0;
-      padding-left: 300px;
-      height: auto;
-      overflow: visible;
-      position: static;
-  }
-
-}
-
-.landscape {
-  .modal {
-    .single-column {
-      .product-property .col:nth-child(1) {
-        display: inline-block;
-        width: 40%;
-      }
-      .product-property .col:nth-child(2) {
-        display: inline-block;
-        width: 60%
-      }
-
-    }
   }
 }

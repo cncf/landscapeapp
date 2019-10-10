@@ -2,7 +2,6 @@ import React, { Fragment } from 'react';
 import { pure, withState } from 'recompose';
 import SvgIcon from '@material-ui/core/SvgIcon';
 import StarIcon from '@material-ui/icons/Star';
-import KeyHandler from 'react-key-handler';
 import _ from 'lodash';
 import { OutboundLink } from 'react-ga';
 import millify from 'millify';
@@ -20,7 +19,6 @@ import TweetButton from './TweetButton';
 import currentDevice from 'current-device';
 import TwitterTimeline from "./TwitterTimeline";
 
-let productScrollEl = null;
 const formatDate = function(x) {
   if (x.text) {
     return x.text;
@@ -43,8 +41,6 @@ function getRelationStyle(relation) {
   }
 }
 
-
-const showTwitter = !isGoogle;
 
 const iconGithub = <svg viewBox="0 0 24 24">
     <path d="M12,2A10,10 0 0,0 2,12C2,16.42 4.87,20.17 8.84,21.5C9.34,21.58
@@ -134,13 +130,6 @@ const badgeTag = function(itemInfo) {
   </OutboundLink>);
 }
 
-function handleUp() {
-  productScrollEl.scrollBy({top: -200, behavior: 'smooth'});
-}
-function handleDown() {
-  productScrollEl.scrollBy({top: 200, behavior: 'smooth' });
-}
-
 const $script = require('scriptjs'); // eslint-disable-line global-require
 $script('https://platform.twitter.com/widgets.js', 'twitter-widgets');
 
@@ -190,7 +179,7 @@ const ItemDialogContent = ({itemInfo, isLandscape, setIsLandscape}) => {
   const firstCommitDateElement = itemInfo.firstCommitDate  && (
     <div className="product-property row">
       <div className="product-property-name col col-40">First Commit</div>
-      <div className="product-property-value tight-col col-60">
+      <div className="product-property-value col col-60">
         <OutboundLink eventLabel={itemInfo.firstCommitLink} to={itemInfo.firstCommitLink} target="_blank">{formatDate(itemInfo.firstCommitDate)}</OutboundLink>
       </div>
     </div>
@@ -199,7 +188,7 @@ const ItemDialogContent = ({itemInfo, isLandscape, setIsLandscape}) => {
   const contributorsCountElement =  itemInfo.contributorsCount ? (
                       <div className="product-property row">
                         <div className="product-property-name col col-40">Contributors</div>
-                        <div className="product-property-value tight-col col-60">
+                        <div className="product-property-value col col-60">
                           <OutboundLink eventLabel={itemInfo.contributorsLink} to={itemInfo.contributorsLink} target="_blank">{itemInfo.contributorsCount}</OutboundLink>
                         </div>
                       </div>
@@ -208,14 +197,14 @@ const ItemDialogContent = ({itemInfo, isLandscape, setIsLandscape}) => {
   const headquartersElement =  itemInfo.headquarters && itemInfo.headquarters !== 'N/A' && (
     <div className="product-property row">
       <div className="product-property-name col col-40">Headquarters</div>
-      <div className="product-property-value tight-col col-60"><InternalLink to={filtersToUrl({grouping: 'headquarters', filters:{headquarters:itemInfo.headquarters}})}>{itemInfo.headquarters}</InternalLink></div>
+      <div className="product-property-value col col-60"><InternalLink to={filtersToUrl({grouping: 'headquarters', filters:{headquarters:itemInfo.headquarters}})}>{itemInfo.headquarters}</InternalLink></div>
     </div>
   );
   const amountElement = Number.isInteger(itemInfo.amount) && (
     <div className="product-property row">
       <div className="product-property-name col col-40">{itemInfo.amountKind === 'funding' ? 'Funding' : 'Market Cap'}</div>
       {  itemInfo.amountKind === 'funding' &&
-          <div className="product-property-value tight-col col-60">
+          <div className="product-property-value col col-60">
             <OutboundLink
               target="_blank"
               eventLabel={itemInfo.crunchbase + '#section-funding-rounds'}
@@ -225,7 +214,7 @@ const ItemDialogContent = ({itemInfo, isLandscape, setIsLandscape}) => {
           </div>
       }
       { itemInfo.amountKind !== 'funding' &&
-          <div className="product-property-value tight-col col-60">
+          <div className="product-property-value col col-60">
             <OutboundLink
               target="_blank"
               eventLabel={'https://finance.yahoo.com/quote/' + itemInfo.yahoo_finance_data.effective_ticker}
@@ -239,7 +228,7 @@ const ItemDialogContent = ({itemInfo, isLandscape, setIsLandscape}) => {
   const tickerElement = itemInfo.ticker && (
     <div className="product-property row">
       <div className="product-property-name col col-40">Ticker</div>
-      <div className="product-property-value tight-col col-60">
+      <div className="product-property-value col col-60">
         <OutboundLink target="_blank" eventLabel={"https://finance.yahoo.com/quote/" + itemInfo.yahoo_finance_data.effective_ticker} to={"https://finance.yahoo.com/quote/" + itemInfo.yahoo_finance_data.effective_ticker}>{itemInfo.yahoo_finance_data.effective_ticker}</OutboundLink>
       </div>
     </div>
@@ -267,7 +256,6 @@ const ItemDialogContent = ({itemInfo, isLandscape, setIsLandscape}) => {
     </div>
   );
 
-  const scrollAllContent = currentDevice.mobile() && isLandscape;
   const productLogoAndTags = <Fragment>
             <div className="product-logo" style={getRelationStyle(itemInfo.relation)}>
               <img src={itemInfo.href} className='product-logo-img'/>
@@ -341,58 +329,38 @@ const ItemDialogContent = ({itemInfo, isLandscape, setIsLandscape}) => {
                   </div>
                 </div>
                 }
-                <div className="row">
-                  { isMobile &&  <div className="col col-50 single-column">
-                    { twitterElement }
-                    { latestTweetDateElement }
-                    { firstCommitDateElement }
-                    { latestCommitDateElement }
-                    { contributorsCountElement }
-                    { releaseDateElement }
-                    { headquartersElement }
-                    { crunchbaseEmployeesElement }
-                    { amountElement }
-                    { tickerElement }
-                  </div> }
-                  { !isMobile && <div className="col col-50">
-                    { twitterElement }
-                    { firstCommitDateElement }
-                    { contributorsCountElement }
-                    { headquartersElement }
-                    { amountElement }
-                    { tickerElement }
-                  </div>
-                  }
-                  { !isMobile && <div className="col col-50">
-                      { latestTweetDateElement }
-                      { latestCommitDateElement }
-                      { releaseDateElement }
-                      { crunchbaseEmployeesElement }
-                    </div>
-                  }
-              </div>
-            </div>
+                <div className="product-property row margin-0">
+                  <div className="col col-50">{ twitterElement }</div>
+                  <div className="col col-50">{ latestTweetDateElement }</div>
+                </div>
+                <div className="product-property row margin-0">
+                  <div className="col col-50">{ firstCommitDateElement }</div>
+                  <div className="col col-50">{ latestCommitDateElement }</div>
+                </div>
+                <div className="product-property row margin-0">
+                  <div className="col col-50">{ contributorsCountElement }</div>
+                  <div className="col col-50">{ releaseDateElement }</div>
+                </div>
+                <div className="product-property row margin-0">
+                  <div className="col col-50">{ headquartersElement }</div>
+                  <div className="col col-50">{ crunchbaseEmployeesElement }</div>
+                </div>
+                <div className="product-property row margin-0">
+                  <div className="col col-50">{ amountElement }</div>
+                  <div className="col col-50">{ tickerElement }</div>
+                </div>
+        </div>
   </Fragment>;
 
   return (
-        <div className="modal-content">
-            <KeyHandler keyEventName="keydown" keyValue="ArrowUp" onKeyHandle={handleUp} />
-            <KeyHandler keyEventName="keydown" keyValue="ArrowDown" onKeyHandle={handleDown} />
-
-            { !scrollAllContent && !isGoogle && productLogoAndTags }
-
-            <div className="product-scroll" ref={(x) => productScrollEl = x }>
-              { !scrollAllContent && productInfo }
-              { scrollAllContent && <div className="landscape-layout">
-                  {productLogoAndTags}
-                  <div className="right-column">{productInfo}</div>
-                </div>
-              }
-
-              { showTwitter && itemInfo.twitter && <TwitterTimeline twitter={itemInfo.twitter} />}
+        <React.Fragment>
+            {!isGoogle && productLogoAndTags}
+            <div className="product-content">
+              {productInfo}
+              {!isGoogle && itemInfo.twitter && <TwitterTimeline twitter={itemInfo.twitter}/>}
             </div>
-            { !scrollAllContent && isGoogle && productLogoAndTags }
-        </div>
+            {isGoogle && productLogoAndTags}
+        </React.Fragment>
   );
 }
 const wrapper = withState('isLandscape', 'setIsLandscape', currentDevice.landscape());
