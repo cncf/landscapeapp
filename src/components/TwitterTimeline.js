@@ -1,11 +1,13 @@
 import React from "react";
 import Timeline from 'react-twitter-widgets/dist/components/Timeline.js';
 import currentDevice from 'current-device';
+import CircularProgress from '@material-ui/core/CircularProgress';
 
 class TwitterTimeline extends React.Component {
   constructor(props) {
     super(props);
     this.timelineRef = null;
+    this.state = { loading: true }
   }
 
   componentDidMount () {
@@ -40,7 +42,15 @@ class TwitterTimeline extends React.Component {
           username: name,
           tweetLimit: 3
         }}
+        onLoad={() => this.setState({ loading: false }) }
       />
+
+      {this.state.loading ?
+        <div className="loading-tweets">
+          <CircularProgress disableShrink size={20} color="inherit"/>
+          <span>Loading Tweets</span>
+        </div> : null
+      }
     </div>
   }
 }

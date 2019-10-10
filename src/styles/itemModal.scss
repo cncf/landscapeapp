@@ -124,6 +124,19 @@ $additional-padding: 15px;
       opacity: 1;
     }
   }
+
+  .loading-tweets {
+    background-color: rgba(160,200,220,.12);
+    border-radius: 5px;
+    padding: 20px 30px;
+    color: #333;
+    font-size: 16px;
+  }
+
+  .loading-tweets span {
+    margin-left: 15px;
+    vertical-align: top;
+  }
 }
 .embed .modal .modal-body {
   max-height: 480px;
