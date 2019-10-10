@@ -36,7 +36,9 @@ function runIt(task) {
 
 async function main() {
   const tasks = process.argv.slice(2);
-  const result = await Promise.map(tasks, runIt);
+  const result = await Promise.map(tasks, runIt, {
+    concurrency: process.env.PARALLEL ? 100 : 1
+  });
   for (var r of result) {
     console.info(`Task: ${r.task}`, r.text);
   }
