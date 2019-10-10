@@ -3,6 +3,7 @@ import _ from 'lodash';
 
 function runIt(task) {
   return new Promise(function(resolve) {
+    let resolved = false;
     var spawn = require('child_process').spawn;
     var child = spawn('bash', ['-lc', `npm run ${task}`]);
     const output = [];
@@ -17,9 +18,19 @@ function runIt(task) {
       //Here is where the error output goes
     });
     child.on('close', function(returnCode) {
-      resolve({task: task, text: output.join(''), returnCode});
+      if (!resolved) {
+        resolved = true;
+        resolve({task: task, text: output.join(''), returnCode});
+      }
       //Here you can get the exit code of the script
     });
+    setTimeout(function() {
+      if (!resolved) {
+        resolved = true;
+        console.info(`Timeout on ${task}`);
+        resolve({task: task, text: output.join(''), returnCode: 60000});
+      }
+    }, 10 * 60 * 1000);
   });
 }
 
