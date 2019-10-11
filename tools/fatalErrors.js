@@ -13,7 +13,7 @@ export async function reportFatalErrors() {
   }
 
   const message = `Build failed because of:\n` + fatalErrors.join('\n');
-  const repo = process.env.REPOSITORY_URL.split('/').slice(-2).join('/');
+  const repo = process.env.REPOSITORY_URL.split('/').slice(-2).join('/').split(':').slice(-1)[0];
   console.info(process.env.REPOSITORY_URL, repo);
   const pr = process.env.REVIEW_ID;
   const rp = require('request-promise');
