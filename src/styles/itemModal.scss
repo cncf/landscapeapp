@@ -236,12 +236,10 @@ $additional-padding: 15px;
   &-properties {
     font-size: 0.9rem;
     color: $navy;
-    margin: 2rem 0 1rem;
+    margin: 1rem 0 1rem;
   }
 
   &-property {
-    margin-bottom: 0.5rem;
-
     &-value {
       white-space: nowrap;
       overflow: hidden;
@@ -255,10 +253,12 @@ $additional-padding: 15px;
 
   .product-property.row,
   .product-property .col {
-    margin-left: 0;
-    margin-right: 0;
-    padding-left: 0;
-    padding-right: 0;
+    margin: 0;
+    padding: 0;
+
+    &.product-property-value {
+      margin-bottom: 5px;
+    }
   }
 
   @media (min-width: $lg-screen) {

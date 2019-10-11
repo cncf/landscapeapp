@@ -329,23 +329,23 @@ const ItemDialogContent = ({itemInfo, isLandscape, setIsLandscape}) => {
                   </div>
                 </div>
                 }
-                <div className="product-property row margin-0">
+                <div className="product-property row">
                   <div className="col col-50">{ twitterElement }</div>
                   <div className="col col-50">{ latestTweetDateElement }</div>
                 </div>
-                <div className="product-property row margin-0">
+                <div className="product-property row">
                   <div className="col col-50">{ firstCommitDateElement }</div>
                   <div className="col col-50">{ latestCommitDateElement }</div>
                 </div>
-                <div className="product-property row margin-0">
+                <div className="product-property row">
                   <div className="col col-50">{ contributorsCountElement }</div>
                   <div className="col col-50">{ releaseDateElement }</div>
                 </div>
-                <div className="product-property row margin-0">
+                <div className="product-property row">
                   <div className="col col-50">{ headquartersElement }</div>
                   <div className="col col-50">{ crunchbaseEmployeesElement }</div>
                 </div>
-                <div className="product-property row margin-0">
+                <div className="product-property row">
                   <div className="col col-50">{ amountElement }</div>
                   <div className="col col-50">{ tickerElement }</div>
                 </div>
