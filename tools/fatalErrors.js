@@ -35,4 +35,5 @@ async function main() {
   fatalErrors = ['FATAL: error number 1', 'FATAL: error number 2'];
   await reportFatalErrors();
 }
-main();
+// uncomment and set env vars to debug
+// main();

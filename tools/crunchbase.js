@@ -176,7 +176,7 @@ export async function fetchCrunchbaseEntries({cache, preferCache}) {
       if (_.isEmpty(entry.city)) {
         addError('crunchbase');
         debug(`empty city on ${c.name}`);
-        setFatalError();
+        setFatalError(`No city for a crunchbase entry for ${c.name} at ${c.crunchbase} `);
         errors.push(fatal(`No city for a crunchbase entry for ${c.name} at ${c.crunchbase} `));
         reporter.write(fatal("F"));
         return null;
@@ -215,7 +215,7 @@ export async function fetchCrunchbaseEntries({cache, preferCache}) {
         // console.info(c.name);
         addError('crunchbase');
         debug(`normal request failed, and no cached entry for ${c.name}`);
-        setFatalError();
+        setFatalError(`No cached entry, and can not fetch: ${c.name} ` );
         errors.push(fatal(`No cached entry, and can not fetch: ${c.name} ` +  ex.message.substring(0, 200)));
         reporter.write(fatal("F"));
         return null;

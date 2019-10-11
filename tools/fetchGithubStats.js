@@ -87,7 +87,7 @@ export async function fetchGithubEntries({cache, preferCache}) {
       const url = repo.url;
       if (url.split('/').length !==  5 || !url.split('/')[4]) {
         addError('github');
-        setFatalError();
+        setFatalError(`${repo.url} does not look like a github repo`);
         reporter.write(fatal('F'));
         errors.push(fatal(`${repo.url} does not look like a github repo`));
         return null;
