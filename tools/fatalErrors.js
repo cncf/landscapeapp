@@ -14,6 +14,7 @@ export async function reportFatalErrors() {
 
   const message = `Build failed because of:\n` + fatalErrors.join('\n');
   const repo = process.env.REPOSITORY_URL.split('github.com/')[1];
+  console.info(process.env.REPOSITORY_URL, repo);
   const pr = process.env.REVIEW_ID;
   const rp = require('request-promise');
   const uri = `https://api.github.com/repos/${repo}/issues/${pr}/comments`;
