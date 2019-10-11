@@ -11,8 +11,10 @@ class TwitterTimeline extends React.Component {
   }
 
   componentDidMount () {
+    setTimeout(() => this.setState({ loading: false }), 15000);
     // This is a hack to fix overflow issues on Safari iPhone
     // see https://github.com/cncf/landscapeapp/issues/331
+
     if (currentDevice.ios() && navigator.vendor.match(/^apple/i)) {
       this.timelineRef.addEventListener("DOMSubtreeModified", (el) => {
         if (el.target.tagName === "IFRAME") {
