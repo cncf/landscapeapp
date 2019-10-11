@@ -17,6 +17,7 @@ export async function reportFatalErrors() {
   const pr = process.env.REVIEW_ID;
   const rp = require('request-promise');
   const uri = `https://api.github.com/repos/${repo}/issues/${pr}/comments`;
+  console.info(uri);
   const output = await rp({
     method: 'POST',
     uri: uri,
