@@ -66,6 +66,7 @@ async function getGithubRepos() {
 
 export async function fetchStartDateEntries({cache, preferCache}) {
   const repos = await getGithubRepos();
+  const errors = [];
   const reporter = makeReporter();
   const result =  await Promise.map(repos, async function(repo) {
     const cachedEntry = _.find(cache, {url: repo.url, branch: repo.branch});
@@ -111,5 +112,6 @@ export async function fetchStartDateEntries({cache, preferCache}) {
     }
   }, {concurrency: 20});
   reporter.summary();
+  _.each(errors, (x) => console.info(x));
   return result;
 }
