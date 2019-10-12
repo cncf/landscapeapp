@@ -104,57 +104,56 @@ export async function fetchImageEntries({cache, preferCache}) {
       }
       if (!url) {
         return null;
-      } else {
-        const extWithQuery = url.split('.').slice(-1)[0];
-        var ext='.' + extWithQuery.split('?')[0];
-        var outputExt = '';
-        if (['.jpg', '.png', '.gif'].indexOf(ext) !== -1 ) {
-          setFatalError(`${item.name}: Only svg logos are supported`);
-          errors.push(fatal(`${item.name}: Only svg logos are supported`));
-          return null;
-        }
+      }
+      const extWithQuery = url.split('.').slice(-1)[0];
+      var ext='.' + extWithQuery.split('?')[0];
+      var outputExt = '';
+      if (['.jpg', '.png', '.gif'].indexOf(ext) !== -1 ) {
+        setFatalError(`${item.name}: Only svg logos are supported`);
+        errors.push(fatal(`${item.name}: Only svg logos are supported`));
+        return null;
+      }
 
-        outputExt = '.svg';
-        const fileName = `${saneName(item.id)}${outputExt}`;
-        var response = null;
-        if (url.indexOf('http://') !== 0 && url.indexOf('https://') !== 0) {
-          if (fs.readdirSync(path.resolve(projectPath, 'hosted_logos')).indexOf(url) === -1) {
-            throw new Error(`there is no file ${url} in a hosted_logos folder`);
-          }
-          response = fs.readFileSync(path.resolve(projectPath, 'hosted_logos', url));
-        } else {
-          response = await rp({
-            encoding: null,
-            uri: url,
-            followRedirect: true,
-            maxRedirects: 5,
-            simple: true,
-            timeout: 30 * 1000
-          });
+      outputExt = '.svg';
+      const fileName = `${saneName(item.id)}${outputExt}`;
+      var response = null;
+      if (url.indexOf('http://') !== 0 && url.indexOf('https://') !== 0) {
+        if (fs.readdirSync(path.resolve(projectPath, 'hosted_logos')).indexOf(url) === -1) {
+          throw new Error(`there is no file ${url} in a hosted_logos folder`);
         }
-        const croppedSvg = await autoCropSvg(response, {title: `${item.name} logo`});
-        require('fs').writeFileSync(path.resolve(projectPath, `cached_logos/${fileName}`), croppedSvg);
-        reporter.write(cacheMiss('*'));
-        return {
-          fileName: fileName,
-          name: item.name,
-          logo: item.logo,
-          hash: hash
-        };
-      } catch(ex) {
-        debug(`Cannot fetch ${url}`);
-        if (cachedEntry && imageExist(cachedEntry)) {
-          addWarning('image');
-          reporter.write(error('E'));
-          errors.push(error(`Using cached entry, because ${item.name} has issues with logo: ${url}, ${ex.message.substring(0, 200)}`));
-          return cachedEntry;
-        } else {
-          addError('image');
-          setFatalError(`No cached entry, and ${item.name} has issues with logo: ${url}, ${ex.message.substring(0, 200)}`);
-          reporter.write(fatal('F'));
-          errors.push(fatal(`No cached entry, and ${item.name} has issues with logo: ${url}, ${ex.message.substring(0, 200)}`));
-          return null;
-        }
+        response = fs.readFileSync(path.resolve(projectPath, 'hosted_logos', url));
+      } else {
+        response = await rp({
+          encoding: null,
+          uri: url,
+          followRedirect: true,
+          maxRedirects: 5,
+          simple: true,
+          timeout: 30 * 1000
+        });
+      }
+      const croppedSvg = await autoCropSvg(response, {title: `${item.name} logo`});
+      require('fs').writeFileSync(path.resolve(projectPath, `cached_logos/${fileName}`), croppedSvg);
+      reporter.write(cacheMiss('*'));
+      return {
+        fileName: fileName,
+        name: item.name,
+        logo: item.logo,
+        hash: hash
+      };
+    } catch(ex) {
+      debug(`Cannot fetch ${url}`);
+      if (cachedEntry && imageExist(cachedEntry)) {
+        addWarning('image');
+        reporter.write(error('E'));
+        errors.push(error(`Using cached entry, because ${item.name} has issues with logo: ${url}, ${ex.message.substring(0, 200)}`));
+        return cachedEntry;
+      } else {
+        addError('image');
+        setFatalError(`No cached entry, and ${item.name} has issues with logo: ${url}, ${ex.message.substring(0, 200)}`);
+        reporter.write(fatal('F'));
+        errors.push(fatal(`No cached entry, and ${item.name} has issues with logo: ${url}, ${ex.message.substring(0, 200)}`));
+        return null;
       }
     }
   }, {concurrency: 5});
