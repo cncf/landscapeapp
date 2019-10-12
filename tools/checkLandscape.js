@@ -1,7 +1,7 @@
 import _ from 'lodash';
 import Promise from 'bluebird';
 import { settings } from './settings';
-import { hasFatalErrors, setFatalError, reportFatalErrors } from './fatalErrors};
+import { hasFatalErrors, setFatalError, reportFatalErrors } from './fatalErrors';
 const urls = _.map(settings.big_picture, (section) => section.url);
 const port = process.env.PORT || '4000';
 async function main() {
