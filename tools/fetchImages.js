@@ -82,39 +82,40 @@ export async function fetchImageEntries({cache, preferCache}) {
   const errors = [];
   const reporter = makeReporter();
   const result = await Promise.map(items, async function(item) {
-    const hash = getItemHash(item);
-    const searchOptions = {logo: item.logo, name: item.name};
-    if (hash) {
-      searchOptions.hash = hash;
-    }
-    // console.info(searchOptions);
-    const cachedEntry = _.find(cache, searchOptions);
-    if (preferCache && cachedEntry && imageExist(cachedEntry)) {
-      debug(`Found cached entry for ${item.name} with logo ${item.logo}`);
-      reporter.write('.');
-      return cachedEntry;
-    }
-    debug(`Fetching data for ${item.name} with logo ${item.logo}`);
-    var url = item.logo;
-    if (url && url.indexOf('//github.com/') !== -1) {
-      url = url.replace('github.com', 'raw.githubusercontent.com');
-      url = url.replace('blob/', '');
-    }
-    if (!url) {
-      return null;
-    } else {
-      const extWithQuery = url.split('.').slice(-1)[0];
-      var ext='.' + extWithQuery.split('?')[0];
-      var outputExt = '';
-      if (['.jpg', '.png', '.gif'].indexOf(ext) !== -1 ) {
-        setFatalError(`${item.name}: Only svg logos are supported`);
-        errors.push(fatal(`${item.name}: Only svg logos are supported`));
-        return null;
+    let cachedEntry;
+    let url = item.logo;
+    try {
+      const hash = getItemHash(item);
+      const searchOptions = {logo: item.logo, name: item.name};
+      if (hash) {
+        searchOptions.hash = hash;
       }
+      // console.info(searchOptions);
+      cachedEntry = _.find(cache, searchOptions);
+      if (preferCache && cachedEntry && imageExist(cachedEntry)) {
+        debug(`Found cached entry for ${item.name} with logo ${item.logo}`);
+        reporter.write('.');
+        return cachedEntry;
+      }
+      debug(`Fetching data for ${item.name} with logo ${item.logo}`);
+      if (url && url.indexOf('//github.com/') !== -1) {
+        url = url.replace('github.com', 'raw.githubusercontent.com');
+        url = url.replace('blob/', '');
+      }
+      if (!url) {
+        return null;
+      } else {
+        const extWithQuery = url.split('.').slice(-1)[0];
+        var ext='.' + extWithQuery.split('?')[0];
+        var outputExt = '';
+        if (['.jpg', '.png', '.gif'].indexOf(ext) !== -1 ) {
+          setFatalError(`${item.name}: Only svg logos are supported`);
+          errors.push(fatal(`${item.name}: Only svg logos are supported`));
+          return null;
+        }
 
-      outputExt = '.svg';
-      const fileName = `${saneName(item.id)}${outputExt}`;
-      try {
+        outputExt = '.svg';
+        const fileName = `${saneName(item.id)}${outputExt}`;
         var response = null;
         if (url.indexOf('http://') !== 0 && url.indexOf('https://') !== 0) {
           if (fs.readdirSync(path.resolve(projectPath, 'hosted_logos')).indexOf(url) === -1) {
