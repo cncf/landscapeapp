@@ -122,6 +122,7 @@ async function main() {
   }
 }
 main().catch(async function(ex) {
+  console.info(ex.message);
   setFatalError(ex.message);
   await reportFatalErrors();
   process.exit(1);

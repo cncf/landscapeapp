@@ -160,9 +160,9 @@ export async function fetchGithubEntries({cache, preferCache}) {
         return cachedEntry;
       } else {
         addError('github');
-        setFatalError();
         reporter.write(fatal('F'));
         errors.push(fatal(`No cached entry, and ${repo.url} has issues with stats fetching: ${ex.message.substring(0, 100)}`));
+        setFatalError(`No cached entry, and ${repo.url} has issues with stats fetching: ${ex.message.substring(0, 100)}`);
         return null;
       }
     }
