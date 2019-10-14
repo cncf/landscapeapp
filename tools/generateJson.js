@@ -342,7 +342,7 @@ async function main () {
 
   // protect us from duplicates
   var hasDuplicates = false;
-  _.values(_.groupBy(itemsWithExtraFields, 'name')).forEach(function(duplicates) {
+  await Promise.mapSeries(_.values(_.groupBy(itemsWithExtraFields, 'name')),async function(duplicates) {
     if (duplicates.length > 1 && duplicates.find(({allow_duplicate_repo}) => !allow_duplicate_repo)) {
       hasDuplicates = true;
       await Promise.mapSeries(duplicates, async function(duplicate) {
@@ -357,7 +357,7 @@ async function main () {
 
   // protect us from duplicate repo_urls
   var hasDuplicateRepos = false;
-  _.values(_.groupBy(itemsWithExtraFields.filter( (x) => !!x.repo_url), 'repo_url')).forEach(function(duplicates) {
+  await Promise.mapSeries(_.values(_.groupBy(itemsWithExtraFields.filter( (x) => !!x.repo_url), 'repo_url')), async function(duplicates) {
     if (duplicates.length > 1 && duplicates.find(({allow_duplicate_repo}) => !allow_duplicate_repo)) {
       hasDuplicateRepos = true;
       await Promise.mapSeries(duplicates, async function(duplicate) {
@@ -471,7 +471,7 @@ async function main () {
   }
 
 
-  function removeNonReferencedImages() {
+  async function removeNonReferencedImages() {
     const fs = require('fs');
     const existingFiles = fs.readdirSync(`${projectPath}/hosted_logos`);
     const allowedFiles = itemsWithExtraFields.map( (e) => e.logo ).filter( (e) => !!e);
@@ -482,7 +482,7 @@ async function main () {
       }
     })
   }
-  removeNonReferencedImages();
+  await removeNonReferencedImages();
 
   var hasBadLandscape = false;
   await Promise.mapSeries(settings.big_picture.main.elements, async function(element) {
