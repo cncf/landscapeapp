@@ -49,6 +49,8 @@ ${process.env.BUILDBOT_KEY.replace(/\s/g,'\n')}
     const vars = ['NODE_VERSION', 'RUBY_VERSION', 'CRUNCHBASE_KEY', 'GITHUB_KEY', 'TWITTER_KEYS'];
 
     const outputFolder = landscape.name + new Date().getTime();
+    const nvmrc = require('fs').readFileSync('.nvmrc', 'utf-8').trim();
+    const buildCommand = `mkdir -p /opt/buildhome/repo && cp -r /opt/repo /opt/buildhome && cd /opt/buildhome/repo && export NETLIFY=1 && . ~/.nvm/nvm.sh && nvm install ${nvmrc} && nvm use && bash build.sh ${landscape.repo} ${landscape.name} master && cp -r /opt/buildhome/repo/${landscape.name}/dist /dist`
     const dockerCommand = `
       mkdir -p /root/${outputFolder}
       chmod -R 777 /root/${outputFolder}
@@ -63,7 +65,7 @@ ${process.env.BUILDBOT_KEY.replace(/\s/g,'\n')}
         -v \${OUTPUT_PATH}:/dist \
         -v \${BASE_PATH}/run-build.sh:/usr/local/bin/build \
         -v \${BASE_PATH}/run-build-functions.sh:/usr/local/bin/run-build-functions.sh \
-        buildbot /bin/bash -lc "build 'bash build.sh ${landscape.repo} ${landscape.name} master' && cp -r /opt/buildhome/repo/${landscape.name}/dist /dist"
+        buildbot /bin/bash -lc "${buildCommand}"
     `;
 
     const bashCommand = `
@@ -74,6 +76,7 @@ EOSSH
       rsync -az -e "ssh -i /tmp/buildbot  -o StrictHostKeyChecking=no " ${remote}:/root/${outputFolder}/dist/ dist/${landscape.name}
     `
 
+    // console.info(bashCommand);
     console.info(`processing ${landscape.name} at ${landscape.repo}`);
 
 
