@@ -1,6 +1,6 @@
 set -e
-npm install -g npm
-npm ci
+npm install -g npm --no-progress
+npm ci --no-progress --silent
 rm -rf $2 || true
 git clone --quiet https://github.com/$1 $2
 cd $2
