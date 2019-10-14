@@ -6,7 +6,7 @@ import path from 'path'
 import _ from 'lodash';
 import colors from 'colors';
 import { settings, projectPath } from './settings';
-import { addWarning } from './reporter';
+import { addWarning, addError } from './reporter';
 import getRepositoryInfo from './getRepositoryInfo';
 import makeReporter from './progressReporter';
 const error = colors.red;
@@ -66,6 +66,7 @@ async function getGithubRepos() {
 
 export async function fetchStartDateEntries({cache, preferCache}) {
   const repos = await getGithubRepos();
+  const errors = [];
   const reporter = makeReporter();
   const result =  await Promise.map(repos, async function(repo) {
     const cachedEntry = _.find(cache, {url: repo.url, branch: repo.branch});
@@ -77,30 +78,40 @@ export async function fetchStartDateEntries({cache, preferCache}) {
     debug(`Cache not found for ${repo.url}`);
     await Promise.delay(1 * 1000);
     const url = repo.url;
-    const apiInfo  = await getRepositoryInfo(repo.url);
-    const branch = repo.branch || apiInfo.default_branch;
-    if (url.split('/').length !==  5 || !url.split('/')[4]) {
-      if (url.split('/').length !==  5 || !url.split('/')[4]) {
-        addError('github');
-        reporter.write(fatal('F'));
-        errors.push(fatal(`${repo.url} does not look like a github repo`));
-        setFatalError();
-        return null;
-      }
-    }
-    const repoName = url.split('/').slice(3,5).join('/');
     try {
+      const apiInfo  = await getRepositoryInfo(repo.url);
+      const branch = repo.branch || apiInfo.default_branch;
+      if (url.split('/').length !==  5 || !url.split('/')[4]) {
+        if (url.split('/').length !==  5 || !url.split('/')[4]) {
+          addError('github');
+          reporter.write(fatal('F'));
+          errors.push(fatal(`${repo.url} does not look like a github repo`));
+          setFatalError(`${repo.url} does not look like a github repo`);
+          return null;
+        }
+      }
+      const repoName = url.split('/').slice(3,5).join('/');
       const { date, commitLink } = await getRepoStartDate({repo: repoName, branch});
       reporter.write(cacheMiss("*"));
       return ({url: repo.url, start_commit_link: commitLink, start_date: date});
     } catch (ex) {
-      addWarning('githubStartDate');
-      reporter.write(error('E'));
-      debug(`Fetch failed for ${repo.url}, attempt to use a cached entry`);
-      console.info(`Cannot fetch: ${repo.url} `, ex.message.substring(0, 200));
-      return cachedEntry || null;
+      if (cachedEntry) {
+        addWarning('githubStartDate');
+        reporter.write(error('E'));
+        debug(`Fetch failed for ${repo.url}, attempt to use a cached entry`);
+        errors.push(`Cannot fetch: ${repo.url} `, ex.message.substring(0, 200));
+        return cachedEntry;
+      } else {
+        addError('githubStartDate');
+        reporter.write(fatal('F'));
+        debug(`Fetch failed for ${repo.url}, can not use a cached entry`);
+        errors.push(fatal(`No cached entry, and ${repo.url} has issues with start date fetching:, ${ex.message.substring(0, 200)}`));
+        setFatalError(`No cached entry, and ${repo.url} has issues with start date fetching:, ${ex.message.substring(0, 200)}`);
+        return null;
+      }
     }
   }, {concurrency: 20});
   reporter.summary();
+  _.each(errors, (x) => console.info(x));
   return result;
 }

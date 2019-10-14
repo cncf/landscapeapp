@@ -1,4 +1,4 @@
-import { hasFatalErrors } from './fatalErrors';
+import { hasFatalErrors, reportFatalErrors } from './fatalErrors';
 import process from 'process';
 import path from 'path';
 import { projectPath, settings } from './settings';
@@ -124,6 +124,7 @@ async function main() {
   });
 
   if (hasFatalErrors()) {
+    await reportFatalErrors();
     process.exit(1);
   }
 

@@ -82,78 +82,78 @@ export async function fetchImageEntries({cache, preferCache}) {
   const errors = [];
   const reporter = makeReporter();
   const result = await Promise.map(items, async function(item) {
-    const hash = getItemHash(item);
-    const searchOptions = {logo: item.logo, name: item.name};
-    if (hash) {
-      searchOptions.hash = hash;
-    }
-    // console.info(searchOptions);
-    const cachedEntry = _.find(cache, searchOptions);
-    if (preferCache && cachedEntry && imageExist(cachedEntry)) {
-      debug(`Found cached entry for ${item.name} with logo ${item.logo}`);
-      reporter.write('.');
-      return cachedEntry;
-    }
-    debug(`Fetching data for ${item.name} with logo ${item.logo}`);
-    var url = item.logo;
-    if (url && url.indexOf('//github.com/') !== -1) {
-      url = url.replace('github.com', 'raw.githubusercontent.com');
-      url = url.replace('blob/', '');
-    }
-    if (!url) {
-      return null;
-    } else {
+    let cachedEntry;
+    let url = item.logo;
+    try {
+      const hash = getItemHash(item);
+      const searchOptions = {logo: item.logo, name: item.name};
+      if (hash) {
+        searchOptions.hash = hash;
+      }
+      // console.info(searchOptions);
+      cachedEntry = _.find(cache, searchOptions);
+      if (preferCache && cachedEntry && imageExist(cachedEntry)) {
+        debug(`Found cached entry for ${item.name} with logo ${item.logo}`);
+        reporter.write('.');
+        return cachedEntry;
+      }
+      debug(`Fetching data for ${item.name} with logo ${item.logo}`);
+      if (url && url.indexOf('//github.com/') !== -1) {
+        url = url.replace('github.com', 'raw.githubusercontent.com');
+        url = url.replace('blob/', '');
+      }
+      if (!url) {
+        return null;
+      }
       const extWithQuery = url.split('.').slice(-1)[0];
       var ext='.' + extWithQuery.split('?')[0];
       var outputExt = '';
       if (['.jpg', '.png', '.gif'].indexOf(ext) !== -1 ) {
-        setFatalError();
+        setFatalError(`${item.name}: Only svg logos are supported`);
         errors.push(fatal(`${item.name}: Only svg logos are supported`));
         return null;
       }
 
       outputExt = '.svg';
       const fileName = `${saneName(item.id)}${outputExt}`;
-      try {
-        var response = null;
-        if (url.indexOf('http://') !== 0 && url.indexOf('https://') !== 0) {
-          if (fs.readdirSync(path.resolve(projectPath, 'hosted_logos')).indexOf(url) === -1) {
-            throw new Error(`there is no file ${url} in a hosted_logos folder`);
-          }
-          response = fs.readFileSync(path.resolve(projectPath, 'hosted_logos', url));
-        } else {
-          response = await rp({
-            encoding: null,
-            uri: url,
-            followRedirect: true,
-            maxRedirects: 5,
-            simple: true,
-            timeout: 30 * 1000
-          });
+      var response = null;
+      if (url.indexOf('http://') !== 0 && url.indexOf('https://') !== 0) {
+        if (fs.readdirSync(path.resolve(projectPath, 'hosted_logos')).indexOf(url) === -1) {
+          throw new Error(`there is no file ${url} in a hosted_logos folder`);
         }
-        const croppedSvg = await autoCropSvg(response, {title: `${item.name} logo`});
-        require('fs').writeFileSync(path.resolve(projectPath, `cached_logos/${fileName}`), croppedSvg);
-        reporter.write(cacheMiss('*'));
-        return {
-          fileName: fileName,
-          name: item.name,
-          logo: item.logo,
-          hash: hash
-        };
-      } catch(ex) {
-        debug(`Cannot fetch ${url}`);
-        if (cachedEntry && imageExist(cachedEntry)) {
-          addWarning('image');
-          reporter.write(error('E'));
-          errors.push(error(`Using cached entry, because ${item.name} has issues with logo: ${url}, ${ex.message.substring(0, 200)}`));
-          return cachedEntry;
-        } else {
-          addError('image');
-          setFatalError();
-          reporter.write(fatal('F'));
-          errors.push(fatal(`No cached entry, and ${item.name} has issues with logo: ${url}, ${ex.message.substring(0, 200)}`));
-          return null;
-        }
+        response = fs.readFileSync(path.resolve(projectPath, 'hosted_logos', url));
+      } else {
+        response = await rp({
+          encoding: null,
+          uri: url,
+          followRedirect: true,
+          maxRedirects: 5,
+          simple: true,
+          timeout: 30 * 1000
+        });
+      }
+      const croppedSvg = await autoCropSvg(response, {title: `${item.name} logo`});
+      require('fs').writeFileSync(path.resolve(projectPath, `cached_logos/${fileName}`), croppedSvg);
+      reporter.write(cacheMiss('*'));
+      return {
+        fileName: fileName,
+        name: item.name,
+        logo: item.logo,
+        hash: hash
+      };
+    } catch(ex) {
+      debug(`Cannot fetch ${url}`);
+      if (cachedEntry && imageExist(cachedEntry)) {
+        addWarning('image');
+        reporter.write(error('E'));
+        errors.push(error(`Using cached entry, because ${item.name} has issues with logo: ${url}, ${ex.message.substring(0, 200)}`));
+        return cachedEntry;
+      } else {
+        addError('image');
+        setFatalError(`No cached entry, and ${item.name} has issues with logo: ${url}, ${ex.message.substring(0, 200)}`);
+        reporter.write(fatal('F'));
+        errors.push(fatal(`No cached entry, and ${item.name} has issues with logo: ${url}, ${ex.message.substring(0, 200)}`));
+        return null;
       }
     }
   }, {concurrency: 5});
