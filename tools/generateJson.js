@@ -1,3 +1,4 @@
+import Promise from 'bluebird';
 import { setFatalError, reportFatalErrors } from './fatalErrors';
 import { projectPath, settings } from './settings';
 console.info('processed', projectPath);
@@ -344,7 +345,7 @@ async function main () {
   _.values(_.groupBy(itemsWithExtraFields, 'name')).forEach(function(duplicates) {
     if (duplicates.length > 1 && duplicates.find(({allow_duplicate_repo}) => !allow_duplicate_repo)) {
       hasDuplicates = true;
-      _.each(duplicates, function(duplicate) {
+      await Promise.mapSeries(duplicates, async function(duplicate) {
         await failOnMultipleErrors(`Duplicate item: ${duplicate.organization} ${duplicate.name} at path ${duplicate.path}`);
       });
     }
@@ -359,7 +360,7 @@ async function main () {
   _.values(_.groupBy(itemsWithExtraFields.filter( (x) => !!x.repo_url), 'repo_url')).forEach(function(duplicates) {
     if (duplicates.length > 1 && duplicates.find(({allow_duplicate_repo}) => !allow_duplicate_repo)) {
       hasDuplicateRepos = true;
-      _.each(duplicates, function(duplicate) {
+      await Promise.mapSeries(duplicates, async function(duplicate) {
         await failOnMultipleErrors(`Duplicate repo: ${duplicate.repo_url} on ${duplicate.name} at path ${duplicate.path}`);
       });
     }
@@ -370,7 +371,7 @@ async function main () {
   }
 
   var hasEmptyCrunchbase = false;
-  _.each(itemsWithExtraFields, function(item) {
+  await Promise.mapSeries(itemsWithExtraFields, async function(item) {
     if (!item.crunchbaseData) {
       hasEmptyCrunchbase = true;
       await failOnMultipleErrors(`${item.name} either has no crunchbase entry or it is invalid`);
@@ -382,7 +383,7 @@ async function main () {
   }
 
   var hasBadCrunchbase = false;
-  _.each(itemsWithExtraFields, function(item) {
+  await Promise.mapSeries(itemsWithExtraFields, async function(item) {
     if (item.crunchbase.indexOf('https://www.crunchbase.com/organization/') !== 0 && item.crunchbase !== 'https://www.cncf.io') {
       hasBadCrunchbase = true;
       await failOnMultipleErrors(`${item.name}  has a crunchbase ${item.crunchbase} which does not start with 'https://www.crunchbase.com/organization'`);
@@ -394,7 +395,7 @@ async function main () {
   }
 
   var hasBadHomepage = false;
-  _.each(itemsWithExtraFields, function(item) {
+  await Promise.mapSeries(itemsWithExtraFields, async function(item) {
     if (!item.homepage_url) {
       hasBadHomepage = true;
       await failOnMultipleErrors(`${item.name}  has an empty or missing homepage_url`);
@@ -405,7 +406,7 @@ async function main () {
     require('process').exit(1);
   }
 
-  _.each(itemsWithExtraFields, function(item) {
+  await Promise.mapSeries(itemsWithExtraFields, async function(item) {
     if (item.twitter && !item.latestTweetDate) {
       if (item.latestTweetDate === null) {
         console.info(`Warning: ${item.name} has a twitter ${item.twitter} with no entries`);
@@ -416,7 +417,7 @@ async function main () {
   });
 
   var hasWrongTwitterUrls = false;
-  _.each(itemsWithExtraFields, function(item) {
+  await Promise.mapSeries(itemsWithExtraFields, async function(item) {
     if (item.twitter && item.twitter.split('/').slice(-1)[0] === '') {
       await failOnMultipleErrors(`${item.name} has a twitter ${item.twitter} which ends with /`);
       hasWrongTwitterUrls = true;
@@ -432,7 +433,7 @@ async function main () {
   }
 
   var hasBadRepoUrl = false;
-  _.each(itemsWithExtraFields, function(item) {
+  await Promise.mapSeries(itemsWithExtraFields, async function(item) {
     if (item.repo_url
       && (item.repo_url.indexOf('https://github.com') !== 0 || item.repo_url.split('/').filter( (x) => !!x).length !== 4)
     ) {
@@ -446,7 +447,7 @@ async function main () {
   }
 
   var hasBadImages = false;
-  _.each(itemsWithExtraFields, function(item) {
+  await Promise.mapSeries(itemsWithExtraFields, async function(item) {
     if (!item.image_data) {
       await failOnMultipleErrors(`Item ${item.name} has no image_data`);
       hasBadImages = true;
@@ -474,7 +475,7 @@ async function main () {
     const fs = require('fs');
     const existingFiles = fs.readdirSync(`${projectPath}/hosted_logos`);
     const allowedFiles = itemsWithExtraFields.map( (e) => e.logo ).filter( (e) => !!e);
-    _.each(existingFiles, function(existingFile) {
+    await Promise.mapSeries(existingFiles, async function(existingFile) {
       const fileName = existingFile;
       if (allowedFiles.indexOf(fileName) === -1){
         fs.unlinkSync(`${projectPath}/hosted_logos/` + existingFile);
@@ -484,7 +485,7 @@ async function main () {
   removeNonReferencedImages();
 
   var hasBadLandscape = false;
-  _.each(settings.big_picture.main.elements, function(element) {
+  await Promise.mapSeries(settings.big_picture.main.elements, async function(element) {
     const hasCompanyCategory = (function() {
       var result = false;
       tree.map(function(node) {
@@ -506,7 +507,7 @@ async function main () {
   }
 
   var hasBadFieldWithSpaces = false;
-  _.each(itemsWithExtraFields, function(item) {
+  await Promise.mapSeries(itemsWithExtraFields, async function(item) {
     if (!_.isEmpty(item.twitter) && item.twitter.indexOf(' ') !== -1) {
       hasBadFieldWithSpaces = true;
       await failOnMultipleErrors(`${item.name} has a twitter ${item.twitter} with spaces`);
