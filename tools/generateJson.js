@@ -649,7 +649,9 @@ async function main () {
   require('fs').writeFileSync(`${projectPath}/data.json`, JSON.stringify(itemsWithExtraFields, null, 2));
   require('fs').writeFileSync(`${projectPath}/lookup.json`, JSON.stringify(lookups, null, 2));
 }
-main().catch(function(ex) {
+main().catch(async function(ex) {
   console.info(ex);
+  setFatalError(ex.message);
+  await reportFatalErrors();
   process.exit(1);
 });
