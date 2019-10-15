@@ -14,20 +14,34 @@ const LandscapeInfo = ({zoom, width, height, top, left, childrenInfo}) => {
         height: _.isUndefined(info.height) ? null : info.height * zoom
     };
     if (info.type === 'text') {
-      return <div key='text' style={{
-        ...positionProps,
-        fontSize: info.font_size * zoom * 4,
-        fontStyle: 'italic',
-        textAlign: 'justify'
-      }}><div style={{
-        position: 'absolute',
-        left: 0,
-        top: 0,
-        width: '400%',
-        height: '100%',
-        transform: 'scale(0.25)',
-        transformOrigin: 'left'
-      }}> {info.text} </div></div>
+      // pdf requires a normal version without a zoom trick
+      if (window.location.href.indexOf('&pdf') !== -1) {
+        return <div key='text' style={{
+          ...positionProps,
+          fontSize: info.font_size * zoom,
+          fontStyle: 'italic',
+          textAlign: 'justify'
+        }}>{info.text}</div>
+      // while in a browser we use a special version which renders fonts
+      // properly on a small zoom
+      } else {
+        return <div key='text' style={{
+          ...positionProps,
+          fontSize: info.font_size * zoom * 4,
+          fontStyle: 'italic',
+          textAlign: 'justify'
+        }}><div style={{
+          position: 'absolute',
+          left: 0,
+          top: 0,
+          width: '400%',
+          height: '100%',
+          transform: 'scale(0.25)',
+          transformOrigin: 'left'
+        }}> {info.text} </div></div>
+
+
+      }
     }
     if (info.type === 'title') {
       return <div key='title' style= {{
