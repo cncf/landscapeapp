@@ -3,7 +3,7 @@ import { pure } from 'recompose';
 import _ from 'lodash';
 
 function strip(text) {
-  return text.replace(/\s+/g,' ');
+  return text.replace(/\s+/g,'!!! ');
 }
 
 const LandscapeInfo = ({zoom, width, height, top, left, childrenInfo}) => {
