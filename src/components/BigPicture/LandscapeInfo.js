@@ -15,7 +15,7 @@ const LandscapeInfo = ({zoom, width, height, top, left, childrenInfo}) => {
     };
     if (info.type === 'text') {
       // pdf requires a normal version without a zoom trick
-      if (window.location.href.indexOf('?pdf') !== -1) {
+      if (window.location.href.indexOf('&pdf') !== -1) {
         return <div key='text' style={{
           ...positionProps,
           fontSize: info.font_size * zoom,
