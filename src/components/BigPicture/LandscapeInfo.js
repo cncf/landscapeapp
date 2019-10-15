@@ -27,9 +27,9 @@ const LandscapeInfo = ({zoom, width, height, top, left, childrenInfo}) => {
         position: 'absolute',
         left: 0,
         top: 0,
-        width: '400%',
+        width: '100%',
         height: '100%',
-        transform: 'scale(0.25)',
+        transform: 'scale(1)',
         transformOrigin: 'left'
       }}> {strip(info.text)} </div></div>
     }
