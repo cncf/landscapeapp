@@ -58,6 +58,7 @@ const LargeItem = (function({zoom, item, x, y, onSelectItem}) {
   return <div style={{
     cursor: 'pointer',
     position: 'absolute',
+    background: item.oss ? '' : '#eee',
     border: `${z(2)}px solid ${color}`,
     left: (itemWidth * x + 3) * zoom,
     top: (itemHeight * y + 3) * zoom,
