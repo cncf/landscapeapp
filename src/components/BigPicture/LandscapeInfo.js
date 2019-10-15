@@ -2,6 +2,10 @@ import React from 'react';
 import { pure } from 'recompose';
 import _ from 'lodash';
 
+function strip(text) {
+  return text.replace(/\s+/g,' ');
+}
+
 const LandscapeInfo = ({zoom, width, height, top, left, childrenInfo}) => {
   const children = childrenInfo.map(function(info) {
     const positionProps = {
@@ -27,7 +31,7 @@ const LandscapeInfo = ({zoom, width, height, top, left, childrenInfo}) => {
         height: '100%',
         transform: 'scale(0.25)',
         transformOrigin: 'left'
-      }}> {info.text} </div></div>
+      }}> {strip(info.text)} </div></div>
     }
     if (info.type === 'title') {
       return <div key='title' style= {{
