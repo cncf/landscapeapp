@@ -55,9 +55,12 @@ const LargeItem = (function({zoom, item, x, y, onSelectItem}) {
   const relationInfo = _.find(fields.relation.values, {id: item.relation});
   const color = relationInfo.big_picture_color;
   const label = relationInfo.big_picture_label;
+  const isMember = item.category === settings.global.membership;
+
   return <div style={{
     cursor: 'pointer',
     position: 'absolute',
+    background: isMember ? '' : item.oss ? '' : '#eee',
     border: `${z(2)}px solid ${color}`,
     left: (itemWidth * x + 3) * zoom,
     top: (itemHeight * y + 3) * zoom,
