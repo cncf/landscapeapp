@@ -146,3 +146,22 @@ is usually done:
 6. Do not forget to read README about those npm packages, which are mentioned in
    a red color, i.e. have a major update. They may require to implement certain
    changes in our code.
+
+# Embed landscape in a web site
+
+You can embed the landscape in a website in a few different ways...
+
+- If you want just a full visual of the landscape in landscape mode, you can do:
+
+```
+<!-- Embed ASWF landscape as a PNG -->
+<img src="https://landscape.aswf.io/images/landscape.png" alt="Academy Software Foundation Landscape Image">
+```
+
+- If you want to embed the card mode for listing a category of entries ( for example members in a foundation or entries in a certain program ), you can do:
+
+```
+<!-- Embed list of all Open Mainframe Project members -->  
+<iframe src="https://landscape.openmainframeproject.org/category=open-mainframe-project-member-company&amp;format=logo-mode&amp;grouping=category&amp;embed=yes" frameborder="0" id="landscape" scrolling="no" style="width: 1px; min-width: 100%; opacity: 1; visibility: visible; overflow: hidden; height: 1717px;"></iframe>
+<script src="https://landscape.openmainframeproject.org/iframeResizer.js"></script>
+```
