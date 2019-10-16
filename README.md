@@ -163,5 +163,5 @@ You can embed the landscape in a website in a few different ways...
 ```
 <!-- Embed list of all Open Mainframe Project members -->  
 <iframe src="https://landscape.openmainframeproject.org/category=open-mainframe-project-member-company&amp;format=logo-mode&amp;grouping=category&amp;embed=yes" frameborder="0" id="landscape" scrolling="no" style="width: 1px; min-width: 100%; opacity: 1; visibility: visible; overflow: hidden; height: 1717px;"></iframe>
-<script src="https://landscape.cncf.io/iframeResizer.js"></script>
+<script src="https://landscape.openmainframeproject.org/iframeResizer.js"></script>
 ```
