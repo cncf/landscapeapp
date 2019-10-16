@@ -124,6 +124,7 @@ async function main() {
   });
 
   if (hasFatalErrors()) {
+    console.info('Reporting fatal errors');
     await reportFatalErrors();
     process.exit(1);
   }
@@ -224,6 +225,7 @@ async function main() {
   require('fs').writeFileSync(path.resolve(projectPath, 'processed_landscape.yml'), newContent);
 }
 main().catch(function(x) {
+  console.info('Reporting exception');
   console.info(x);
   process.exit(1);
 });

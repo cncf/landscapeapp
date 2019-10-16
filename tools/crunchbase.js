@@ -207,7 +207,7 @@ export async function fetchCrunchbaseEntries({cache, preferCache}) {
     } catch (ex) {
       if (cachedEntry) {
         addWarning('crunchbase');
-        debug(`normal request failed, so returning a cached entry for ${c.name}`);
+        debug(`normal request failed, so returning a cached entry for ${c.name} ${ex.message.substring(0, 200)}`);
         errors.push(error(`Using cached entry, because can not fetch: ${c.name} ` +  ex.message.substring(0, 200)));
         reporter.write(error("E"));
         return cachedEntry;
@@ -215,7 +215,7 @@ export async function fetchCrunchbaseEntries({cache, preferCache}) {
         // console.info(c.name);
         addError('crunchbase');
         debug(`normal request failed, and no cached entry for ${c.name}`);
-        setFatalError(`No cached entry, and can not fetch: ${c.name} ` );
+        setFatalError(`No cached entry, and can not fetch: ${c.name} ` + ex.message.substring(0, 200));
         errors.push(fatal(`No cached entry, and can not fetch: ${c.name} ` +  ex.message.substring(0, 200)));
         reporter.write(fatal("F"));
         return null;
