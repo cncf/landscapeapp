@@ -155,7 +155,7 @@ You can embed the landscape in a website in a few different ways...
 
 ```
 <!-- Embed ASWF landscape as a PNG -->
-<img src="https://landscape.aswf.io/images/landscape.png" alt="">
+<img src="https://landscape.aswf.io/images/landscape.png" alt="Academy Software Foundation Landscape Image">
 ```
 
 - If you want to embed the card mode for listing a category of entries ( for example members in a foundation or entries in a certain program ), you can do:
@@ -163,4 +163,5 @@ You can embed the landscape in a website in a few different ways...
 ```
 <!-- Embed list of all Open Mainframe Project members -->  
 <iframe src="https://landscape.openmainframeproject.org/category=open-mainframe-project-member-company&amp;format=logo-mode&amp;grouping=category&amp;embed=yes" frameborder="0" id="landscape" scrolling="no" style="width: 1px; min-width: 100%; opacity: 1; visibility: visible; overflow: hidden; height: 1717px;"></iframe>
+<script src="https://landscape.cncf.io/iframeResizer.js"></script>
 ```
