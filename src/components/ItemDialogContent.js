@@ -72,7 +72,7 @@ const parentTag = (project) => {
   if (membership) {
     const { label, name, crunchbase_and_children } = membership;
     const slug = crunchbase_and_children.split("/").pop();
-    return linkTag(label, {name, url: filtersToUrl({filters: {parent: slug}})});
+    return linkTag(label, {name, url: filtersToUrl({filters: {parents: slug}, grouping: 'organization'})});
   }
 }
 
