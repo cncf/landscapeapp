@@ -132,3 +132,17 @@ Please open an [issue](https://github.com/cncf/landscapeapp/issues/new) or, for 
 ## Continuous Integration and NPM Publishing
 
 On every commit, Netlify builds landscapeapp, clones the CNCF and LFAI repos, and builds their landscapes and verifies that their tests pass with the updated landscapeapp. When that succeeds, it [generates](./full_build.sh) and pushes an updated NPM module.
+
+## Keeping Project Up to Date
+We have an issue #75, where we update all out packages. This is how an update
+is usually done:
+1. Create a new folder like 75-update-2019-10-16
+2. Run `ncu -u` which is same as `node-check-updates -u`, do not forget to
+   isntall `npm install -g node-check-updates`
+3. Run `npm install` , commit and push and make a PR
+4. Check that everything runs locally, i.e. `npm run open:src should still work
+   well`
+5. Check that there are no layout issues on generated landscapes
+6. Do not forget to read README about those npm packages, which are mentioned in
+   a red color, i.e. have a major update. They may require to implement certain
+   changes in our code.
