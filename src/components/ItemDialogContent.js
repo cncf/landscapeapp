@@ -281,6 +281,9 @@ const ItemDialogContent = ({itemInfo, isLandscape, setIsLandscape}) => {
               <TweetButton/>
             </div>
   </Fragment>;
+
+  const shortenUrl = (url) => url.replace(/http(s)?:\/\/(www\.)?/, "").replace(/\/$/, "");
+
   const productInfo = <Fragment>
               <div className="product-main">
                 { !isGoogle && <React.Fragment>
@@ -302,14 +305,18 @@ const ItemDialogContent = ({itemInfo, isLandscape, setIsLandscape}) => {
                 <div className="product-property row">
                   <div className="product-property-name col col-20">Website</div>
                   <div className="product-property-value col col-80">
-                    <OutboundLink eventLabel={itemInfo.homepage_url} to={itemInfo.homepage_url} target="_blank">{itemInfo.homepage_url}</OutboundLink>
+                    <OutboundLink eventLabel={itemInfo.homepage_url} to={itemInfo.homepage_url} target="_blank">
+                      {shortenUrl(itemInfo.homepage_url)}
+                    </OutboundLink>
                   </div>
                 </div>
                 {itemInfo.repo_url &&
                 <div className="product-property row">
                   <div className="product-property-name col col-20">Repository</div>
                   <div className="product-property-value product-repo col col-80">
-                    <OutboundLink eventLabel={itemInfo.repo_url} to={itemInfo.repo_url} target="_blank">{itemInfo.repo_url}</OutboundLink>
+                    <OutboundLink eventLabel={itemInfo.repo_url} to={itemInfo.repo_url} target="_blank">
+                      {shortenUrl(itemInfo.repo_url)}
+                    </OutboundLink>
                   </div>
                 </div>
                 }
@@ -329,7 +336,9 @@ const ItemDialogContent = ({itemInfo, isLandscape, setIsLandscape}) => {
                 <div className="product-property row">
                   <div className="product-property-name col col-20">Crunchbase</div>
                   <div className="product-property-value col col-80">
-                    <OutboundLink eventLabel={itemInfo.crunchbase} to={itemInfo.crunchbase} target="_blank">{itemInfo.crunchbase}</OutboundLink>
+                    <OutboundLink eventLabel={itemInfo.crunchbase} to={itemInfo.crunchbase} target="_blank">
+                      {shortenUrl(itemInfo.crunchbase)}
+                    </OutboundLink>
                   </div>
                 </div>
                 }
@@ -337,7 +346,9 @@ const ItemDialogContent = ({itemInfo, isLandscape, setIsLandscape}) => {
                 <div className="product-property row">
                   <div className="product-property-name col col-20">LinkedIn</div>
                   <div className="product-property-value col col-80">
-                    <OutboundLink eventLabel={itemInfo.crunchbaseData.linkedin} to={itemInfo.crunchbaseData.linkedin} target="_blank">{itemInfo.crunchbaseData.linkedin}</OutboundLink>
+                    <OutboundLink eventLabel={itemInfo.crunchbaseData.linkedin} to={itemInfo.crunchbaseData.linkedin} target="_blank">
+                      {shortenUrl(itemInfo.crunchbaseData.linkedin)}
+                    </OutboundLink>
                   </div>
                 </div>
                 }
