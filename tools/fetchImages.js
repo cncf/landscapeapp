@@ -143,16 +143,17 @@ export async function fetchImageEntries({cache, preferCache}) {
       };
     } catch(ex) {
       debug(`Cannot fetch ${url}`);
+      const message = ex.message || ex || 'Unknown error';
       if (cachedEntry && imageExist(cachedEntry)) {
         addWarning('image');
         reporter.write(error('E'));
-        errors.push(error(`Using cached entry, because ${item.name} has issues with logo: ${url}, ${ex.message.substring(0, 200)}`));
+        errors.push(error(`Using cached entry, because ${item.name} has issues with logo: ${url}, ${message}`));
         return cachedEntry;
       } else {
         addError('image');
-        setFatalError(`No cached entry, and ${item.name} has issues with logo: ${url}, ${ex.message.substring(0, 200)}`);
+        setFatalError(`No cached entry, and ${item.name} has issues with logo: ${url}, ${message}`);
         reporter.write(fatal('F'));
-        errors.push(fatal(`No cached entry, and ${item.name} has issues with logo: ${url}, ${ex.message.substring(0, 200)}`));
+        errors.push(fatal(`No cached entry, and ${item.name} has issues with logo: ${url}, ${message}`));
         return null;
       }
     }
