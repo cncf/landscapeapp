@@ -63,7 +63,6 @@ async function getMembers() {
 }
 
 async function main () {
-  const members = await getMembers();
   // console.info(members);
 
 
@@ -195,52 +194,10 @@ async function main () {
       }
 
       // calculating a membership
-      const membership = (function() {
-        // direct membership
-        const directMembership = _.findKey(members, (v) => v && v.indexOf(getItemMembershipKey(node)) !== -1);
-        if (directMembership) {
-          return directMembership;
-        }
-        const parentWithMembership = _.find(node.crunchbase_data.parents, function(parent) {
-          return _.findKey(members, (v) => v && v.indexOf(parent) !== -1);
-        });
-        // a first parent of a given node which has a given membership
-        if (parentWithMembership) {
-          const tree = traverse(source);
-          let parentName;
-          tree.map(function(node) {
-            if (node && node.crunchbase === parentWithMembership) {
-              parentName = node.crunchbase_data.name
-            }
-          });
-          let myName =  node.crunchbase_data.name;
-          const membership = _.findKey(members, (v) => v && v.indexOf(parentWithMembership) !== -1);
-          console.info(`Assigning ${membership} membership on ${node.name} (${myName}) because its parent ${parentName} has ${membership} membership`);
-          return membership;
-        }
-        return false;
-      })();
-      node.member = membership;
 
-      const {relation, isSubsidiaryProject} = (function() {
-        let result;
-        result = node.project === 'sandbox' && settings.global.flags.cncf_sandbox ? 'member' : node.project;
-        if (result) {
-          return {relation: result, isSubsidiaryProject: false};
-        }
-        if (node.member) {
-          return {relation: 'member', isSubsidiaryProject: false};
-        }
-        if (node.crunchbase === settings.global.self) {
-          return {relation: 'member', isSubsidiaryProject: true};
-        }
-        return {relation: false, isSubsidiaryProject: false};
-      })();
 
       items.push({...node,
         project: node.project,
-        relation: relation,
-        isSubsidiaryProject: isSubsidiaryProject,
         firstCommitDate: formatDate((node.github_start_commit_data || {}).start_date),
         firstCommitLink: getCommitLink((node.github_start_commit_data || {}).start_commit_link),
         latestCommitDate: formatDate((node.github_data || {}).latest_commit_date),
@@ -529,6 +486,54 @@ async function main () {
     await reportFatalErrors();
     process.exit(-1);
   }
+
+
+  // now update membership, only after we've checked crunchbase issues properly
+  const members = await getMembers();
+  _.each(itemsWithExtraFields, function(item) {
+    const membership = (function() {
+      // direct membership
+      const directMembership = _.findKey(members, (v) => v && v.indexOf(getItemMembershipKey(item)) !== -1);
+      if (directMembership) {
+        return directMembership;
+      }
+      const parentWithMembership = _.find(item.crunchbaseData.parents, function(parent) {
+        return _.findKey(members, (v) => v && v.indexOf(parent) !== -1);
+      });
+      // a first parent of a given item which has a given membership
+      if (parentWithMembership) {
+        const tree = traverse(source);
+        let parentName;
+        tree.map(function(node) {
+          if (node && node.crunchbase === parentWithMembership) {
+            parentName = node.crunchbase_data.name
+          }
+        });
+        let myName =  item.crunchbaseData.name;
+        const membership = _.findKey(members, (v) => v && v.indexOf(parentWithMembership) !== -1);
+        console.info(`Assigning ${membership} membership on ${item.name} (${myName}) because its parent ${parentName} has ${membership} membership`);
+        return membership;
+      }
+      return false;
+    })();
+    item.member = membership;
+    const {relation, isSubsidiaryProject} = (function() {
+      let result;
+      result = item.project === 'sandbox' && settings.global.flags.cncf_sandbox ? 'member' : item.project;
+      if (result) {
+        return {relation: result, isSubsidiaryProject: false};
+      }
+      if (item.member) {
+        return {relation: 'member', isSubsidiaryProject: false};
+      }
+      if (item.crunchbase === settings.global.self) {
+        return {relation: 'member', isSubsidiaryProject: true};
+      }
+      return {relation: false, isSubsidiaryProject: false};
+    })();
+    item.relation = item.relation || relation; //could be set before explicitly as a 'company'
+    item.isSubsidiaryProject = isSubsidiaryProject;
+  });
 
 
   const extractOptions = function(name) {
