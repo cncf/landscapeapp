@@ -2,7 +2,7 @@
 
 [![CII Best Practices](https://bestpractices.coreinfrastructure.org/projects/2434/badge)](https://bestpractices.coreinfrastructure.org/projects/2434) [![npm version](https://img.shields.io/npm/v/interactive-landscape.svg)](https://www.npmjs.com/package/interactive-landscape) [![Dependency Status](https://img.shields.io/david/cncf/landscapeapp.svg?style=flat-square)](https://david-dm.org/cncf/landscapeapp) [![Netlify Status](https://api.netlify.com/api/v1/badges/50d760a8-5b21-4319-aa01-2ad54e453fd6/deploy-status)](https://app.netlify.com/sites/landscapeapp/deploys)
 
-The landscapeapp is an upstream NPM [module](https://www.npmjs.com/package/interactive-landscape) that supports building interactive landscape websites such as the [CNCF Cloud Native Landscape](https://landscape.cncf.io) ([source](https://github.com/cncf/landscape)) and the [LF Artificial Intelligence Landscape](https://landscape.lfai.foundation) ([source](https://github.com/lfai/lfai-landscape)). The application has been developed by [Andrey Kozlov](https://github.com/ZeusTheTrueGod) and [Dan Kohn](https://www.dankohn.com) of [CNCF](https://www.cncf.io).
+The landscapeapp is an upstream NPM [module](https://www.npmjs.com/package/interactive-landscape) that supports building interactive landscape websites such as the [CNCF Cloud Native Landscape](https://landscape.cncf.io) ([source](https://github.com/cncf/landscape)) and the [LF Artificial Intelligence Landscape](https://landscape.lfai.foundation) ([source](https://github.com/lfai/lfai-landscape)). The application is managed by [Dan Kohn](https://www.dankohn.com) of [CNCF](https://www.cncf.io) has is under active development by [Andrey Kozlov](https://github.com/ZeusTheTrueGod) (who did most of the development to date) and [Jordi Noguera](https://jordinl.com).
 
 In addition to creating fully interactive sites, the landscapeapp builds static images on each update. See examples in [ADOPTERS.md](ADOPTERS.md)
 
@@ -25,6 +25,10 @@ Tips for common issues with images:
 - If you get an error with the image that it has a PNG embeded, you will need to work with a graphic artist to rebuild the logo.
 - If the SVG has a 'text' element tag within it, you will get an error. You can use Inkscape to convert the text tag to a glyph ( select the text, then Ctrl+K (path combine), then Ctrl+J (dynamic offset) ) or [CloudConvert](https://cloudconvert.com) ( click the wrench icon and then checkbox 'Convert text to path' ).
 - If you get an error about the size being too large, use [svg-autocrop](https://github.com/cncf/svg-autocrop) on the image to automatically fix it.
+
+## New Entries
+
+When creating new entries, the only 4 required fields are `name`, `homepage_url`, `logo`, and `crunchbase`. It's generally easier to have the landscape fetch an SVG by adding it's URL rather than saving it yourself in the `hosted_logos` folder. Only add a `twitter` if the value in Crunchbase is incorrect. For delisted and many foreign countries, you'll need to add `stock_ticker` with the value to look up on Yahoo Finance to find the market cap. If you add a `repo_url` the card will be white instead of grey.
 
 ## External Data
 
@@ -146,3 +150,22 @@ is usually done:
 6. Do not forget to read README about those npm packages, which are mentioned in
    a red color, i.e. have a major update. They may require to implement certain
    changes in our code.
+
+# Embed landscape in a web site
+
+You can embed the landscape in a website in a few different ways...
+
+- If you want just a full visual of the landscape in landscape mode, you can do:
+
+```
+<!-- Embed ASWF landscape as a PNG -->
+<img src="https://landscape.aswf.io/images/landscape.png" alt="Academy Software Foundation Landscape Image">
+```
+
+- If you want to embed the card mode for listing a category of entries ( for example members in a foundation or entries in a certain program ), you can do:
+
+```
+<!-- Embed list of all Open Mainframe Project members -->  
+<iframe src="https://landscape.openmainframeproject.org/category=open-mainframe-project-member-company&amp;format=logo-mode&amp;grouping=category&amp;embed=yes" frameborder="0" id="landscape" scrolling="no" style="width: 1px; min-width: 100%; opacity: 1; visibility: visible; overflow: hidden; height: 1717px;"></iframe>
+<script src="https://landscape.openmainframeproject.org/iframeResizer.js"></script>
+```
