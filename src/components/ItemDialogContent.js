@@ -21,22 +21,6 @@ import currentDevice from 'current-device';
 import TwitterTimeline from "./TwitterTimeline";
 import {Pie} from 'react-chartjs-2';
 
-const data = {
-	labels: [
-		'JS',
-		'C#',
-		'Ruby'
-	],
-	datasets: [{
-		data: [30, 50, 100],
-		backgroundColor: [
-		'#FF6384',
-		'#36A2EB',
-		'#FFCE56'
-		]
-	}]
-};
-
 let productScrollEl = null;
 const formatDate = function(x) {
   if (x.text) {
@@ -151,14 +135,20 @@ const badgeTag = function(itemInfo) {
   </OutboundLink>);
 }
 
-var simpleLineChartData = {
-  labels: ['Mo', 'Tu', 'We'],
-  series: [20, 15, 40]
-}
-
 const chart = function(itemInfo) {
-  return <div></div>;
-  // return <ChartistGraph data={simpleLineChartData} type={'Line'} />;
+  if (!itemInfo.github_data || !itemInfo.github_data.languages) {
+    return null;
+  }
+  const languages = itemInfo.github_data.languages;
+  const data = {
+    labels: languages.map( (x) => x.name),
+    datasets: [{
+      data: languages.map( (x) => x.value),
+      backgroundColor: languages.map( (x) => x.color)
+    }]
+  };
+
+  return <Pie data={data} />
 }
 
 function handleUp() {
@@ -305,7 +295,7 @@ const ItemDialogContent = ({itemInfo, isLandscape, setIsLandscape}) => {
               <div>{openSourceTag(itemInfo.oss)}</div>
               <div>{licenseTag(itemInfo)}</div>
               <div>{badgeTag(itemInfo)}</div>
-              <Pie data={data} />
+              {chart(itemInfo)}
               <TweetButton/>
             </div>
   </Fragment>;

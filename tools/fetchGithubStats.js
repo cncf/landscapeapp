@@ -16,6 +16,8 @@ import getRepositoryInfo , { getLanguages}  from './getRepositoryInfo';
 
 import { getRepoLatestDate ,getReleaseDate } from './githubDates';
 
+const githubColors = JSON.parse(require('fs').readFileSync('tools/githubColors.json', 'utf-8'));
+
 const error = colors.red;
 const fatal = (x) => colors.red(colors.inverse(x));
 const cacheMiss = colors.green;
@@ -94,7 +96,14 @@ export async function fetchGithubEntries({cache, preferCache}) {
       }
       const repoName = shortRepoName(url);
       const apiInfo = await getRepositoryInfo(url);
-      const languages = await getLanguages(url);
+      const languagesInfo = await getLanguages(url);
+      const languages = _.keys(languagesInfo).map(function(key) {
+        return {
+          name: key,
+          value: languagesInfo[key],
+          color: githubColors[key]
+        }
+      });
       const stars = apiInfo.stargazers_count || 0;
       let license = (apiInfo.license || {}).name || 'Unknown License';
       if (license === 'NOASSERTION') {
