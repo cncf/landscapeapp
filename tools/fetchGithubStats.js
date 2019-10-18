@@ -12,7 +12,7 @@ import { settings, projectPath } from './settings';
 import makeReporter from './progressReporter';
 const debug = require('debug')('github');
 import shortRepoName from '../src/utils/shortRepoName';
-import getRepositoryInfo from './getRepositoryInfo';
+import getRepositoryInfo , { getLanguages}  from './getRepositoryInfo';
 
 import { getRepoLatestDate ,getReleaseDate } from './githubDates';
 
@@ -94,6 +94,7 @@ export async function fetchGithubEntries({cache, preferCache}) {
       }
       const repoName = shortRepoName(url);
       const apiInfo = await getRepositoryInfo(url);
+      const languages = await getLanguages(url);
       const stars = apiInfo.stargazers_count || 0;
       let license = (apiInfo.license || {}).name || 'Unknown License';
       if (license === 'NOASSERTION') {
@@ -141,6 +142,7 @@ export async function fetchGithubEntries({cache, preferCache}) {
       reporter.write(cacheMiss('*'));
       return ({
         url: repo.url,
+        languages,
         stars,
         license,
         description,
