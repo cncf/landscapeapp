@@ -19,6 +19,28 @@ import settings from 'project/settings.yml';
 import TweetButton from './TweetButton';
 import currentDevice from 'current-device';
 import TwitterTimeline from "./TwitterTimeline";
+import {Pie} from 'react-chartjs-2';
+
+const data = {
+	labels: [
+		'Red',
+		'Blue',
+		'Yellow'
+	],
+	datasets: [{
+		data: [300, 50, 100],
+		backgroundColor: [
+		'#FF6384',
+		'#36A2EB',
+		'#FFCE56'
+		],
+		hoverBackgroundColor: [
+		'#FF6384',
+		'#36A2EB',
+		'#FFCE56'
+		]
+	}]
+};
 
 let productScrollEl = null;
 const formatDate = function(x) {
@@ -132,6 +154,16 @@ const badgeTag = function(itemInfo) {
     <span className="tag-name">CII Best Practices</span>
     <span className="tag-value">{label}</span>
   </OutboundLink>);
+}
+
+var simpleLineChartData = {
+  labels: ['Mo', 'Tu', 'We'],
+  series: [20, 15, 40]
+}
+
+const chart = function(itemInfo) {
+  return <div></div>;
+  // return <ChartistGraph data={simpleLineChartData} type={'Line'} />;
 }
 
 function handleUp() {
@@ -278,6 +310,7 @@ const ItemDialogContent = ({itemInfo, isLandscape, setIsLandscape}) => {
               <div>{openSourceTag(itemInfo.oss)}</div>
               <div>{licenseTag(itemInfo)}</div>
               <div>{badgeTag(itemInfo)}</div>
+              <Pie data={data} />
               <TweetButton/>
             </div>
   </Fragment>;
