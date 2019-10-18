@@ -148,7 +148,7 @@ const chart = function(itemInfo) {
     }]
   };
 
-  return <Pie data={data} />
+  return <Pie height={200} data={data} />
 }
 
 function handleUp() {
