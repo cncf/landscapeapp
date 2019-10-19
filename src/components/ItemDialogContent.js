@@ -147,10 +147,9 @@ const chart = function(itemInfo) {
       backgroundColor: languages.map( (x) => x.color)
     }]
   };
-  const legend = <div style={{width: 300, marginTop: 5, marginBottom: 5}}>
+  const legend = <div style={{position: 'absolute', width: 100, marginTop: 5, marginBottom: 5}}>
     {languages.map(function(language) {
       return <div style = {{
-        display: 'inline-block',
         padding: 6,
         fontSize: 12,
         height: 12
@@ -161,10 +160,10 @@ const chart = function(itemInfo) {
     })}
   </div>
 
-  return <React.Fragment>
+  return <div style={{width: 220, height: 150, position: 'absolute'}}>
+    <Pie height={150} width={150} data={data} legend={{display: false}} />
     { legend }
-    <Pie height={200} data={data} legend={{display: false}} />
-  </React.Fragment>
+  </div>
 }
 
 function handleUp() {
@@ -306,13 +305,15 @@ const ItemDialogContent = ({itemInfo, isLandscape, setIsLandscape}) => {
               <img src={itemInfo.href} className='product-logo-img'/>
             </div>
             <div className="product-tags">
-              <div>{projectTag(itemInfo)}</div>
-              <div>{parentTag(itemInfo)}</div>
-              <div>{openSourceTag(itemInfo.oss)}</div>
-              <div>{licenseTag(itemInfo)}</div>
-              <div>{badgeTag(itemInfo)}</div>
-              {chart(itemInfo)}
+              <div style = {{width: 230}} >
+              {projectTag(itemInfo)}
+              {parentTag(itemInfo)}
+              {openSourceTag(itemInfo.oss)}
+              {licenseTag(itemInfo)}
+              {badgeTag(itemInfo)}
+              </div>
               <TweetButton/>
+              {chart(itemInfo)}
             </div>
   </Fragment>;
 
