@@ -147,8 +147,24 @@ const chart = function(itemInfo) {
       backgroundColor: languages.map( (x) => x.color)
     }]
   };
+  const legend = <div style={{width: 300, marginTop: 5, marginBottom: 5}}>
+    {languages.map(function(language) {
+      return <div style = {{
+        display: 'inline-block',
+        padding: 6,
+        fontSize: 12,
+        height: 12
+      }} >
+        <div style={{display: 'inline-block', position: 'relative', height: 12, width: 12, background: language.color, top: 2, marginRight: 4}} />
+        <div style={{display: 'inline-block'}}>{ language.name }</div>
+      </div>
+    })}
+  </div>
 
-  return <Pie height={200} data={data} />
+  return <React.Fragment>
+    { legend }
+    <Pie height={200} data={data} legend={{display: false}} />
+  </React.Fragment>
 }
 
 function handleUp() {
