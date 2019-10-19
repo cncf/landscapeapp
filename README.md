@@ -2,9 +2,9 @@
 
 [![CII Best Practices](https://bestpractices.coreinfrastructure.org/projects/2434/badge)](https://bestpractices.coreinfrastructure.org/projects/2434) [![npm version](https://img.shields.io/npm/v/interactive-landscape.svg)](https://www.npmjs.com/package/interactive-landscape) [![Dependency Status](https://img.shields.io/david/cncf/landscapeapp.svg?style=flat-square)](https://david-dm.org/cncf/landscapeapp) [![Netlify Status](https://api.netlify.com/api/v1/badges/50d760a8-5b21-4319-aa01-2ad54e453fd6/deploy-status)](https://app.netlify.com/sites/landscapeapp/deploys)
 
-The landscapeapp is an upstream NPM [module](https://www.npmjs.com/package/interactive-landscape) that supports building interactive landscape websites such as the [CNCF Cloud Native Landscape](https://landscape.cncf.io) ([source](https://github.com/cncf/landscape)) and the [LF Artificial Intelligence Landscape](https://landscape.lfai.foundation) ([source](https://github.com/lfai/lfai-landscape)). The application is managed by [Dan Kohn](https://www.dankohn.com) of [CNCF](https://www.cncf.io) has is under active development by [Andrey Kozlov](https://github.com/ZeusTheTrueGod) (who did most of the development to date) and [Jordi Noguera](https://jordinl.com).
+The landscapeapp is an upstream NPM [module](https://www.npmjs.com/package/interactive-landscape) that supports building interactive landscape websites such as the [CNCF Cloud Native Landscape](https://landscape.cncf.io) ([source](https://github.com/cncf/landscape)) and the [LF Artificial Intelligence Landscape](https://landscape.lfai.foundation) ([source](https://github.com/lfai/lfai-landscape)). The application is managed by [Dan Kohn](https://www.dankohn.com) of [CNCF](https://www.cncf.io) and is under active development by [Andrey Kozlov](https://github.com/ZeusTheTrueGod) (who did most of the development to date) and [Jordi Noguera](https://jordinl.com).
 
-In addition to creating fully interactive sites, the landscapeapp builds static images on each update. See examples in [ADOPTERS.md](ADOPTERS.md)
+In addition to creating fully interactive sites, the landscapeapp builds static images on each update. See examples in [ADOPTERS.md](ADOPTERS.md). All current [Linux Foundation](https://linuxfoundation.org) landscapes are listed in [landscapes.yml](landscapes.yml).
 
 ## Images
 
