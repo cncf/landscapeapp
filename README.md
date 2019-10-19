@@ -47,15 +47,16 @@ The update server enhances the source data with the fetched data and saves the r
 
 If you want to create an interactive landscape for your project or organization:
 1. Note ahead of time that the hardest part of building a landscape is getting hi-res images for every project. You *cannot* convert from a PNG or JPEG into an SVG. You need to get an SVG, AI, or EPS file. When those aren't available, you will  need a graphic designer to recreate several images. Don't just use an auto-tracer to try to convert PNG to SVG because there is some artistry involved in making it look good. Please review this [primer](https://www.cncf.io/blog/2019/07/17/what-image-formats-should-you-be-using-in-2019/) on image formats. 
-1. Create a repo `youracronym-landscape` so it's distinct from other landscapes stored in the same directory. From inside your new directory, copy over files from a simpler landscape like https://github.com/graphql/graphql-landscape with `cp -r ../graphql-landscape/* ../graphql-landscape/.github ../graphql-landscape/.gitignore ../graphql-landscape/.npmrc .`.
-2. If you're working with the [LF](https://www.linuxfoundation.org/), give admin privileges to the new repo to [dankohn](https://github.com/dankohn), [AndreyKozlov1984](https://github.com/AndreyKozlov1984), [jordinl83](https://github.com/jordinl83), and [CNCF-Bot](https://github.com/CNCF-Bot) and ping me after creating an account at [slack.cncf.io](https://slack.cncf.io). Alex Contini and I are available there to help you recreate SVGs based on a PNG or the company's logo, if necessary, and to fix other problems.
+1. Create a repo `youracronym-landscape` so it's distinct from other landscapes stored in the same directory. From inside your new directory, copy over files from a simpler landscape like https://github.com/graphql/graphql-landscape with `cp -r ../graphql-landscape/* ../graphql-landscape/.github ../graphql-landscape/.gitignore ../graphql-landscape/.npmrc ../graphql-landscape/.nvmrc .`.
+2. If you're working with the [LF](https://www.linuxfoundation.org/), give admin privileges to the new repo to [dankohn](https://github.com/dankohn) and write privleges to [AndreyKozlov1984](https://github.com/AndreyKozlov1984), [jordinl83](https://github.com/jordinl83), and [CNCF-Bot](https://github.com/CNCF-Bot) and ping me after creating an account at [slack.cncf.io](https://slack.cncf.io). Alex Contini and I are available there to help you recreate SVGs based on a PNG or the company's logo, if necessary, and to fix other problems.
 2. Set the repo to only support merge commits and turn off DCO support, since it doesn't work well with the GitHub web interface:
 ![image](https://user-images.githubusercontent.com/3083270/66166276-dd62ad00-e604-11e9-87db-fd9ae7a80d1a.png)
 3. For LF projects, I'll set you up in Netlify to build on every commit. Build command is `npm install -g npm && npm ci && npm run build` and publish directory is `dist`. Environment variables that need to be set are `CRUNCHBASE_KEY`, `GITHUB_KEY`, and `TWITTER_KEYS`. I recommend these notifications:
 ![image](https://user-images.githubusercontent.com/3083270/62425480-87c36000-b6a8-11e9-9882-e84c4e2cdfb4.png)
 5. Edit `settings.yml` and `landscape.yml` for your topic.
-6. [Generate](https://ventipix.com/designer-qr-code-generator.php) a QR code, setting colors to black. Save as EPS, convert to SVG using cloudconvert.com and overwrite images/qr.svg with the SVG (the SVGs it generates have invalid headers).
+6. [Generate](https://www.qrcode-monkey.com) a QR code, setting colors to black. Save as SVG and overwrite images/qr.svg.
 7. Run `y reset-tweet-count` to start the count of tweets mentioning your landscape at zero.
+8. Edit [landscapes.yml](landscapes.yml) to add your project.
 
 ## API Keys
 
@@ -102,20 +103,6 @@ If you're making a change to `landscapeapp` (and in that directory), and you hav
 ```sh
 PROJECT_PATH=../cdf-landscape npm run build
 ```
-
-## Adding a new landscape to the autoupdater.
-So, we have an https://github.com/AcademySoftwareFoundation/aswf-landscape repo and we want to set up automatic updates for it
-1. Lets guess that landscapeapp is exctracted to the ~/Documents/landscapeapp, and we will clone that new https://github.com/AcademySoftwareFoundation/aswf-landscape to ~/Documents/aswf-landscape
-2. go to the ~/Documents/landscapeapp and add `export PROJECT_PATH=../aswf-landscape` so all further commands will use that one
-3. run `./node_modules/.bin/babel-node tools/setupServer
-4  ssh into our setup server (root@147.75.106.211) and then ensure that `ls`
-shows a new `ASWF.settings as well as ASWF.settings.private`. Now you need to
-fill in ASWF.settings.private, usually, copy everything and change the slack
-channel from the CNCF.settings.private. You can a slack channel id the
-netlify project configuration, Build&Deploy, slack notifications in post processing.
-5. that is all we need, you can run `update.sh` manually to ensure that it will pick up the settings files and build that repo too. Log is stored in the update.ASWF.settings.log
-
-Absolutely exact steps are used for a GraphQL project.
 
 
 ## Adding to a google search console
