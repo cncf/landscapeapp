@@ -64,7 +64,7 @@ const linkTag = (label, { name, url = null, color = 'blue' }) => {
   </InternalLink>)
 }
 
-const memberTag = (project) => {
+const parentTag = (project) => {
   const membership = Object.values(settings.membership).find(({ crunchbase_and_children }) => {
     return isParent(crunchbase_and_children, project)
   });
@@ -89,15 +89,18 @@ const projectTag = function({relation, member, isSubsidiaryProject, project, end
   if (isSubsidiaryProject) {
     return linkTag("Subsidiary CNCF Project", {})
   }
+  return null;
+};
 
+const memberTag = function({relation, member, enduser}) {
   if (relation === 'member' || relation === 'company') {
     const info = settings.membership[member];
     const name = info.name;
     const label = enduser ? (info.end_user_label || info.label) : info.label ;
-
     return linkTag(label, {name: name, url: filtersToUrl({filters: {relation: relation}})});
   }
-};
+  return null;
+}
 
 const openSourceTag = function(oss) {
   if (oss) {
