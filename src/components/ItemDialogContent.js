@@ -19,7 +19,7 @@ import settings from 'project/settings.yml';
 import TweetButton from './TweetButton';
 import currentDevice from 'current-device';
 import TwitterTimeline from "./TwitterTimeline";
-import {Pie} from 'react-chartjs-2';
+import {Pie, defaults} from 'react-chartjs-2';
 
 let productScrollEl = null;
 const formatDate = function(x) {
@@ -139,15 +139,51 @@ const chart = function(itemInfo) {
   if (!itemInfo.github_data || !itemInfo.github_data.languages) {
     return null;
   }
+  const callbacks = defaults.global.tooltips.callbacks;
+  const newCallbacks =  {...callbacks, label: function(tooltipItem, data) {
+    const v = data.datasets[0].data[tooltipItem.index];
+    const value =  millify(v, {precision: 1});
+    const language = languages[tooltipItem.index];
+    const percents = Math.round(language.value / total * 100);
+    return `${percents}% (${value})`;
+  }};
+  /*{
+    label: function(tooltipItem, data) {
+      debugger
+                    var label = data.datasets[tooltipItem.datasetIndex].label || '';
+
+                    if (label) {
+                        label += ': ';
+                    }
+                    label += Math.round(tooltipItem.yLabel * 100) / 100;
+                    return label;
+                }
+  }; */
   const languages = itemInfo.github_data.languages;
   const data = {
-    labels: languages.map( (x) => x.name),
+    labels: languages.map((x) => x.name),
     datasets: [{
       data: languages.map( (x) => x.value),
       backgroundColor: languages.map( (x) => x.color)
     }]
   };
-  const legend = <div style={{position: 'absolute', width: 100, left: 0, top: 0, marginTop: 5, marginBottom: 5}}>
+  const total = _.sumBy(languages, 'value');
+
+  function getLegendText(language) {
+    const millify = require('millify').default;
+    const total = _.sumBy(languages, 'value');
+    const percents = Math.round(language.value / total * 100);
+    return `${language.name} ${percents}%`;
+  }
+
+  function getPopupText(language) {
+    const millify = require('millify').default;
+    const percents = Math.round(language.value / total * 100);
+    return `${language.name} ${millify(language.value, {precision: 1})}`;
+  }
+
+
+  const legend = <div style={{position: 'absolute', width: 120, left: 0, top: 0, marginTop: 5, marginBottom: 5}}>
     {languages.map(function(language) {
       return <div style = {{
         fontSize: 12,
@@ -155,14 +191,14 @@ const chart = function(itemInfo) {
         height: 12
       }} >
         <div style={{display: 'inline-block', position: 'relative', height: 12, width: 12, background: language.color, top: 2, marginRight: 4}} />
-        <div style={{display: 'inline-block'}}>{ language.name }</div>
+        <div style={{display: 'inline-block'}}>{ getLegendText(language) }</div>
       </div>
     })}
   </div>
 
   return <div style={{width: 220, height: 150, position: 'relative'}}>
-    <div style={{marginLeft: 100}}>
-      <Pie height={150} width={150} data={data} legend={{display: false}} />
+    <div style={{marginLeft: 130, width: 150, height: 150}}>
+      <Pie height={150} width={150} data={data} legend={{display: false}} options={{tooltips: {callbacks: newCallbacks}}} />
     </div>
     { legend }
   </div>
