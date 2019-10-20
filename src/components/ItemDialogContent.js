@@ -90,15 +90,18 @@ const projectTag = function({relation, member, isSubsidiaryProject, project, end
   if (isSubsidiaryProject) {
     return linkTag("Subsidiary CNCF Project", {})
   }
+  return null;
+};
 
+const memberTag = function({relation, member, enduser}) {
   if (relation === 'member' || relation === 'company') {
     const info = settings.membership[member];
     const name = info.name;
     const label = enduser ? (info.end_user_label || info.label) : info.label ;
-
     return linkTag(label, {name: name, url: filtersToUrl({filters: {relation: relation}})});
   }
-};
+  return null;
+}
 
 const openSourceTag = function(oss) {
   if (oss) {
@@ -358,7 +361,7 @@ const ItemDialogContent = ({itemInfo, isLandscape, setIsLandscape}) => {
             <div className="product-tags">
               <div style = {{width: 300}} >
               <div style={cellStyle}>{projectTag(itemInfo)}</div>
-              <div style={cellStyle}>{parentTag(itemInfo)}</div>
+              <div style={cellStyle}></div>
               <div style={cellStyle}>{openSourceTag(itemInfo.oss)}</div>
               <div style={cellStyle}>{licenseTag(itemInfo)}</div>
               <div style={cellStyle}>{badgeTag(itemInfo)}</div>
@@ -374,7 +377,7 @@ const ItemDialogContent = ({itemInfo, isLandscape, setIsLandscape}) => {
               <div className="product-main">
                 { !isGoogle && <React.Fragment>
                     <div className="product-name">{itemInfo.name}</div>
-                    <div className="product-parent"><InternalLink to={linkToOrganization}>{itemInfo.organization}</InternalLink></div>
+                    <div className="product-parent"><InternalLink to={linkToOrganization}><span>{itemInfo.organization}</span>{memberTag(itemInfo)}</InternalLink></div>
                     <div className="product-category">{itemCategory(itemInfo.landscape)}</div>
                     <div className="product-description">{itemInfo.description}</div>
                   </React.Fragment>

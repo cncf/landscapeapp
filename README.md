@@ -2,21 +2,23 @@
 
 [![CII Best Practices](https://bestpractices.coreinfrastructure.org/projects/2434/badge)](https://bestpractices.coreinfrastructure.org/projects/2434) [![npm version](https://img.shields.io/npm/v/interactive-landscape.svg)](https://www.npmjs.com/package/interactive-landscape) [![Dependency Status](https://img.shields.io/david/cncf/landscapeapp.svg?style=flat-square)](https://david-dm.org/cncf/landscapeapp) [![Netlify Status](https://api.netlify.com/api/v1/badges/50d760a8-5b21-4319-aa01-2ad54e453fd6/deploy-status)](https://app.netlify.com/sites/landscapeapp/deploys)
 
-The landscapeapp is an upstream NPM [module](https://www.npmjs.com/package/interactive-landscape) that supports building interactive landscape websites such as the [CNCF Cloud Native Landscape](https://landscape.cncf.io) ([source](https://github.com/cncf/landscape)) and the [LF Artificial Intelligence Landscape](https://landscape.lfai.foundation) ([source](https://github.com/lfai/lfai-landscape)). The application is managed by [Dan Kohn](https://www.dankohn.com) of [CNCF](https://www.cncf.io) has is under active development by [Andrey Kozlov](https://github.com/ZeusTheTrueGod) (who did most of the development to date) and [Jordi Noguera](https://jordinl.com).
+The landscapeapp is an upstream NPM [module](https://www.npmjs.com/package/interactive-landscape) that supports building interactive landscape websites such as the [CNCF Cloud Native Landscape](https://landscape.cncf.io) ([source](https://github.com/cncf/landscape)) and the [LF Artificial Intelligence Landscape](https://landscape.lfai.foundation) ([source](https://github.com/lfai/lfai-landscape)). The application is managed by [Dan Kohn](https://www.dankohn.com) of [CNCF](https://www.cncf.io) and is under active development by [Andrey Kozlov](https://github.com/ZeusTheTrueGod) (who did most of the development to date) and [Jordi Noguera](https://jordinl.com).
 
-In addition to creating fully interactive sites, the landscapeapp builds static images on each update. See examples in [ADOPTERS.md](ADOPTERS.md)
+In addition to creating fully interactive sites, the landscapeapp builds static images on each update. See examples in [ADOPTERS.md](ADOPTERS.md). All current [Linux Foundation](https://linuxfoundation.org) landscapes are listed in [landscapes.yml](landscapes.yml).
 
 ## Images
 
-The most challenging parts of creating a new landscape are pulling together the data for `landscape.yml` and finding svg images for all logos.
+The most challenging part of creating a new landscape is finding SVG images for all projects and companies. These landscapes represent a valuable resource to a community in assembling all related projects, creating a taxonomy, and providing the up-to-date logos, and unfortunately, there are no shortcuts.
+
+Do *not* try to convert PNGs to SVGs. You can't automatically go from a low-res to a high-res format, and you'll just waste time and come up with a substandard result. Instead, invest your time finding SVGs and then (when necessary) having a graphic designer recreate images when high res ones are not available.
 
 Tips for finding high quality images:
 
 - Google images is often the best way to find a good version of the logo (but ensure it's the up-to-date version). Search for [grpc logo filetype:svg](https://www.google.com/search?q=grpc+logo&tbs=ift:svg,imgo:1&tbm=isch) but substitute your project or product name for grpc. 
 - Wikipedia also is a good source for high quality logos ( search in either the main [Wikipedia](https://en.wikipedia.org/w/index.php?sort=relevance&search=svg&title=Special%3ASearch&profile=advanced&fulltext=1&advancedSearch-current=%7B%7D&ns6=1) or [Wikipedia Commons](https://commons.wikimedia.org/w/index.php?sort=relevance&search=svg&title=Special%3ASearch&profile=advanced&fulltext=1&advancedSearch-current=%7B%7D&ns0=1&ns6=1&ns12=1&ns14=1&ns100=1&ns106=1) ).
-- Also search for 'svg' in the GitHub for the project, as often projects will embed them there.
+- Also search for 'svg' in the GitHub for the project, as sometimes projects will embed them there.
 
-For new landscapes of any size, you will probably need a graphic artist to rebuild some of the logos for you, especially if you (as recommended) ensure that the project name is included in the logo. 
+For new landscapes of any size, you will probably need a graphic artist to rebuild some of the logos for you. 
 
 If the project is hosted/sponsored by an organization but doesn't have a logo, best practice is to use that organization's logo with the title of the project underneath ( [example](https://landscape.cncf.io/selected=netflix-eureka) ). You can use a tool such as [Inkscape](https://inkscape.org/) to add the text.
 
@@ -45,15 +47,16 @@ The update server enhances the source data with the fetched data and saves the r
 
 If you want to create an interactive landscape for your project or organization:
 1. Note ahead of time that the hardest part of building a landscape is getting hi-res images for every project. You *cannot* convert from a PNG or JPEG into an SVG. You need to get an SVG, AI, or EPS file. When those aren't available, you will  need a graphic designer to recreate several images. Don't just use an auto-tracer to try to convert PNG to SVG because there is some artistry involved in making it look good. Please review this [primer](https://www.cncf.io/blog/2019/07/17/what-image-formats-should-you-be-using-in-2019/) on image formats. 
-1. Create a repo `youracronym-landscape` so it's distinct from other landscapes stored in the same directory. From inside your new directory, copy over files from a simpler landscape like https://github.com/graphql/graphql-landscape with `cp -r ../graphql-landscape/* ../graphql-landscape/.github ../graphql-landscape/.gitignore ../graphql-landscape/.npmrc .`.
-2. If you're working with the [LF](https://www.linuxfoundation.org/), give admin privileges to the new repo to [dankohn](https://github.com/dankohn), [AndreyKozlov1984](https://github.com/AndreyKozlov1984), [jordinl83](https://github.com/jordinl83), and [CNCF-Bot](https://github.com/CNCF-Bot) and ping me after creating an account at [slack.cncf.io](https://slack.cncf.io). Alex Contini and I are available there to help you recreate SVGs based on a PNG or the company's logo, if necessary, and to fix other problems.
+1. Create a repo `youracronym-landscape` so it's distinct from other landscapes stored in the same directory. From inside your new directory, copy over files from a simpler landscape like https://github.com/graphql/graphql-landscape with `cp -r ../graphql-landscape/* ../graphql-landscape/.github ../graphql-landscape/.gitignore ../graphql-landscape/.npmrc ../graphql-landscape/.nvmrc .`.
+2. If you're working with the [LF](https://www.linuxfoundation.org/), give admin privileges to the new repo to [dankohn](https://github.com/dankohn) and write privleges to [AndreyKozlov1984](https://github.com/AndreyKozlov1984), [jordinl83](https://github.com/jordinl83), and [CNCF-Bot](https://github.com/CNCF-Bot) and ping me after creating an account at [slack.cncf.io](https://slack.cncf.io). Alex Contini and I are available there to help you recreate SVGs based on a PNG or the company's logo, if necessary, and to fix other problems.
 2. Set the repo to only support merge commits and turn off DCO support, since it doesn't work well with the GitHub web interface:
 ![image](https://user-images.githubusercontent.com/3083270/66166276-dd62ad00-e604-11e9-87db-fd9ae7a80d1a.png)
 3. For LF projects, I'll set you up in Netlify to build on every commit. Build command is `npm install -g npm && npm ci && npm run build` and publish directory is `dist`. Environment variables that need to be set are `CRUNCHBASE_KEY`, `GITHUB_KEY`, and `TWITTER_KEYS`. I recommend these notifications:
 ![image](https://user-images.githubusercontent.com/3083270/62425480-87c36000-b6a8-11e9-9882-e84c4e2cdfb4.png)
 5. Edit `settings.yml` and `landscape.yml` for your topic.
-6. [Generate](https://ventipix.com/designer-qr-code-generator.php) a QR code, setting colors to black. Save as EPS, convert to SVG using cloudconvert.com and overwrite images/qr.svg with the SVG (the SVGs it generates have invalid headers).
+6. [Generate](https://www.qrcode-monkey.com) a QR code, setting colors to black. Save as SVG and overwrite images/qr.svg.
 7. Run `y reset-tweet-count` to start the count of tweets mentioning your landscape at zero.
+8. Edit [landscapes.yml](landscapes.yml) to add your project.
 
 ## API Keys
 
@@ -100,20 +103,6 @@ If you're making a change to `landscapeapp` (and in that directory), and you hav
 ```sh
 PROJECT_PATH=../cdf-landscape npm run build
 ```
-
-## Adding a new landscape to the autoupdater.
-So, we have an https://github.com/AcademySoftwareFoundation/aswf-landscape repo and we want to set up automatic updates for it
-1. Lets guess that landscapeapp is exctracted to the ~/Documents/landscapeapp, and we will clone that new https://github.com/AcademySoftwareFoundation/aswf-landscape to ~/Documents/aswf-landscape
-2. go to the ~/Documents/landscapeapp and add `export PROJECT_PATH=../aswf-landscape` so all further commands will use that one
-3. run `./node_modules/.bin/babel-node tools/setupServer
-4  ssh into our setup server (root@147.75.106.211) and then ensure that `ls`
-shows a new `ASWF.settings as well as ASWF.settings.private`. Now you need to
-fill in ASWF.settings.private, usually, copy everything and change the slack
-channel from the CNCF.settings.private. You can a slack channel id the
-netlify project configuration, Build&Deploy, slack notifications in post processing.
-5. that is all we need, you can run `update.sh` manually to ensure that it will pick up the settings files and build that repo too. Log is stored in the update.ASWF.settings.log
-
-Absolutely exact steps are used for a GraphQL project.
 
 
 ## Adding to a google search console
