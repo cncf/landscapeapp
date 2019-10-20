@@ -64,7 +64,7 @@ const linkTag = (label, { name, url = null, color = 'blue' }) => {
   </InternalLink>)
 }
 
-const parentTag = (project) => {
+const memberTag = (project) => {
   const membership = Object.values(settings.membership).find(({ crunchbase_and_children }) => {
     return isParent(crunchbase_and_children, project)
   });
@@ -274,7 +274,6 @@ const ItemDialogContent = ({itemInfo, isLandscape, setIsLandscape}) => {
             </div>
             <div className="product-tags">
               <div>{projectTag(itemInfo)}</div>
-              <div>{parentTag(itemInfo)}</div>
               <div>{openSourceTag(itemInfo.oss)}</div>
               <div>{licenseTag(itemInfo)}</div>
               <div>{badgeTag(itemInfo)}</div>
@@ -287,7 +286,7 @@ const ItemDialogContent = ({itemInfo, isLandscape, setIsLandscape}) => {
   const productInfo = <Fragment>
               <div className="product-main">
                 { !isGoogle && <React.Fragment>
-                    <div className="product-name">{itemInfo.name}</div>
+                    <div className="product-name"><span>{itemInfo.name}</span>{memberTag(itemInfo)}</div>
                     <div className="product-parent"><InternalLink to={linkToOrganization}>{itemInfo.organization}</InternalLink></div>
                     <div className="product-category">{itemCategory(itemInfo.landscape)}</div>
                     <div className="product-description">{itemInfo.description}</div>
