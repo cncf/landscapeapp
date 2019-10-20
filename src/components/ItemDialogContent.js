@@ -169,7 +169,19 @@ const chart = function(itemInfo) {
                     return label;
                 }
   }; */
-  const languages = itemInfo.github_data.languages;
+  const allLanguages = itemInfo.github_data.languages;
+  const languages = (function() {
+    const maxEntries = 8;
+    if (allLanguages.length <= maxEntries) {
+      return allLanguages
+    } else {
+      return allLanguages.slice(0, maxEntries - 1).concat([{
+        name: 'Other',
+        value: _.sum( allLanguages.slice(maxEntries - 1).map( (x) => x.value)),
+        color: 'Grey'
+      }]);
+    }
+  })();
   const data = {
     labels: languages.map((x) => x.name),
     datasets: [{
