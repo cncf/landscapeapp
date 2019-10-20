@@ -183,15 +183,16 @@ const chart = function(itemInfo) {
   }
 
 
-  const legend = <div style={{position: 'absolute', width: 120, left: 0, top: 0, marginTop: 5, marginBottom: 5}}>
+  const legend = <div style={{position: 'absolute', width: 120, left: -17, top: 0, marginTop: 5, marginBottom: 5}}>
     {languages.map(function(language) {
       return <div style = {{
+        position: 'relative',
         fontSize: 12,
         marginTop: 5,
         height: 12
       }} >
-        <div style={{display: 'inline-block', position: 'relative', height: 12, width: 12, background: language.color, top: 2, marginRight: 4}} />
-        <div style={{display: 'inline-block'}}>{ getLegendText(language) }</div>
+        <div style={{display: 'inline-block', position: 'absolute', height: 12, width: 12, background: language.color, top: 2, marginRight: 4}} />
+        <div style={{display: 'inline-block', position: 'relative', width: 125, left: 16,  whiteSpace: 'nowrap', textOverflow: 'ellipsis', overflow: 'hidden'}}>{ getLegendText(language) }</div>
       </div>
     })}
   </div>
