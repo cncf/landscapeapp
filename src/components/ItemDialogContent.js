@@ -140,12 +140,19 @@ const chart = function(itemInfo) {
     return null;
   }
   const callbacks = defaults.global.tooltips.callbacks;
+  function percents(v) {
+    const p = Math.round(v / total * 100);
+    if (p === 0) {
+      return '<1%';
+    } else {
+      return p + '%';
+    }
+  }
   const newCallbacks =  {...callbacks, label: function(tooltipItem, data) {
     const v = data.datasets[0].data[tooltipItem.index];
     const value =  millify(v, {precision: 1});
     const language = languages[tooltipItem.index];
-    const percents = Math.round(language.value / total * 100);
-    return `${percents}% (${value})`;
+    return `${percents(language.value)} (${value})`;
   }};
   /*{
     label: function(tooltipItem, data) {
@@ -172,13 +179,11 @@ const chart = function(itemInfo) {
   function getLegendText(language) {
     const millify = require('millify').default;
     const total = _.sumBy(languages, 'value');
-    const percents = Math.round(language.value / total * 100);
-    return `${language.name} ${percents}%`;
+    return `${language.name} ${percents(language.value)}`;
   }
 
   function getPopupText(language) {
     const millify = require('millify').default;
-    const percents = Math.round(language.value / total * 100);
     return `${language.name} ${millify(language.value, {precision: 1})}`;
   }
 
