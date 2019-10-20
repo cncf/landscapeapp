@@ -147,11 +147,11 @@ const chart = function(itemInfo) {
       backgroundColor: languages.map( (x) => x.color)
     }]
   };
-  const legend = <div style={{position: 'absolute', width: 100, marginTop: 5, marginBottom: 5}}>
+  const legend = <div style={{position: 'absolute', width: 100, left: 0, top: 0, marginTop: 5, marginBottom: 5}}>
     {languages.map(function(language) {
       return <div style = {{
-        padding: 6,
         fontSize: 12,
+        marginTop: 5,
         height: 12
       }} >
         <div style={{display: 'inline-block', position: 'relative', height: 12, width: 12, background: language.color, top: 2, marginRight: 4}} />
@@ -160,8 +160,10 @@ const chart = function(itemInfo) {
     })}
   </div>
 
-  return <div style={{width: 220, height: 150, position: 'absolute'}}>
-    <Pie height={150} width={150} data={data} legend={{display: false}} />
+  return <div style={{width: 220, height: 150, position: 'relative'}}>
+    <div style={{marginLeft: 100}}>
+      <Pie height={150} width={150} data={data} legend={{display: false}} />
+    </div>
     { legend }
   </div>
 }
