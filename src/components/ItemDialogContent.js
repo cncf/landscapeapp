@@ -344,19 +344,26 @@ const ItemDialogContent = ({itemInfo, isLandscape, setIsLandscape}) => {
   );
 
   const scrollAllContent = currentDevice.mobile() && isLandscape;
+  const cellStyle = {
+    width: 146,
+    marginRight: 4,
+    height: 20,
+    display: 'inline-block',
+    overflow: 'hidden'
+  };
   const productLogoAndTags = <Fragment>
             <div className="product-logo" style={getRelationStyle(itemInfo.relation)}>
               <img src={itemInfo.href} className='product-logo-img'/>
             </div>
             <div className="product-tags">
-              <div style = {{width: 230}} >
-              {projectTag(itemInfo)}
-              {parentTag(itemInfo)}
-              {openSourceTag(itemInfo.oss)}
-              {licenseTag(itemInfo)}
-              {badgeTag(itemInfo)}
+              <div style = {{width: 300}} >
+              <div style={cellStyle}>{projectTag(itemInfo)}</div>
+              <div style={cellStyle}>{parentTag(itemInfo)}</div>
+              <div style={cellStyle}>{openSourceTag(itemInfo.oss)}</div>
+              <div style={cellStyle}>{licenseTag(itemInfo)}</div>
+              <div style={cellStyle}>{badgeTag(itemInfo)}</div>
+              <div style={cellStyle}><TweetButton/></div>
               </div>
-              <TweetButton/>
               {chart(itemInfo)}
             </div>
   </Fragment>;
