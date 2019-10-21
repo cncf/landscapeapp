@@ -75,7 +75,7 @@ export GITHUB_KEY=key-here
 If you are working with more than one landscape, there's a trick to run the standard landscapeapp `package.json` functions. Add the following to your `~/.bash_profile`:
 
 ```sh
-function y { PROJECT_PATH=$PWD npm explore interactive-landscape -- npm run "$@"; }
+function y { PROJECT_PATH=$PWD BABEL_DISABLE_CACHE=1 npm explore interactive-landscape -- npm run "$@"; }
 export -f y
 # yf does a normal build and full test run
 alias yf='y fetch'
