@@ -30,11 +30,11 @@ const cleanupFile = function() {
           process.exit(1);
         }
         if (item.twitter && processed.crunchbase_data.twitter === item.twitter) {
-          console.info(`No need to have a twitter ${item.twitter} for ${item.name} because it is available at ${item.crunchbase} page`);
+          console.info(`Deleted ${item.twitter} for ${item.name} because it is available from ${item.crunchbase}`);
           delete item.twitter;
         }
         if (item.stock_ticker && processed.crunchbase_data.ticker === item.stock_ticker) {
-          console.info(`No need to have a stock_ticker ${item.stock_ticker} for ${item.name} because it is available at ${item.crunchbase} page`);
+          console.info(`Deleted ${item.stock_ticker} for ${item.name} because it is available from ${item.crunchbase}`);
           delete item.stock_ticker;
         }
       });
