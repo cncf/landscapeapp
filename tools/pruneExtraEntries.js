@@ -29,7 +29,13 @@ const cleanupFile = function() {
           console.info(`FATAL: entry ${item.name} at ${category.name}/${subcategory.name} not found in the processed_landscape.yml`);
           process.exit(1);
         }
-        if (item.twitter && processed.crunchbase_data.twitter === item.twitter) {
+        const fn = function(s) {
+          if (!s) {
+            return '';
+          }
+          return s.split('/').slice(-1)[0];
+        }
+        if (item.twitter && fn(processed.crunchbase_data.twitter) === fn(item.twitter)) {
           console.info(`Deleted ${item.twitter} for ${item.name} because it is available from ${item.crunchbase}`);
           delete item.twitter;
         }
