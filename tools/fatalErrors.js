@@ -1,3 +1,4 @@
+import _ from 'lodash';
 let fatalErrors = [];
 export function hasFatalErrors() {
   return fatalErrors.length > 0;
@@ -29,13 +30,15 @@ export async function reportFatalErrors() {
         'user': 'CNCF-Bot',
         'pass': process.env.GITHUB_TOKEN
     },
-    body: JSON.stringify({ body: message})
+    body: JSON.stringify({ body: '<pre>' + _.escape(message) + '</pre>'})
   });
 }
 
 async function main() {
-  fatalErrors = ['FATAL: error number 1', 'FATAL: error number 2'];
+  fatalErrors = ['FATAL: <div> *b* </div> error number 1', 'FATAL: error number 2'];
   await reportFatalErrors();
 }
 // uncomment and set env vars to debug
-// main();
+if (process.env.TESTITNOW) {
+  main();
+}
