@@ -88,6 +88,7 @@
     "babel-preset-latest-node": "3.2.1",
     "bluebird": "3.7.1",
     "browser-sync": "2.26.7",
+    "caniuse-lite": "1.0.30001002",
     "chalk": "2.4.2",
     "change-case": "3.1.0",
     "classnames": "2.2.6",
