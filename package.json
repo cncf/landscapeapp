@@ -14,7 +14,7 @@
     "lint": "esw webpack.config.* src tools --color",
     "lint:watch": "npm run lint -- --watch",
     "fetch": "babel-node tools/validateLandscape && babel-node tools/addExternalInfo.js && npm run yaml2json",
-    "update": "(rm /tmp/landscape.json || true) && babel-node tools/validateLandscape && npm run remove-quotes && LEVEL=medium babel-node tools/addExternalInfo.js && npm run yaml2json && babel-node tools/calculateNumberOfTweets",
+    "update": "(rm /tmp/landscape.json || true) && babel-node tools/validateLandscape && npm run remove-quotes && LEVEL=medium babel-node tools/addExternalInfo.js && npm run yaml2json && babel-node tools/pruneExtraEntries && babel-node tools/calculateNumberOfTweets",
     "yaml2json": "babel-node tools/generateJson.js",
     "remove-quotes": "babel-node tools/removeQuotes",
     "check-links": "pkill -9 chrome; pkill -9 chrome; babel-node tools/checkLinks",
