@@ -19,7 +19,7 @@ import settings from 'project/settings.yml';
 import TweetButton from './TweetButton';
 import currentDevice from 'current-device';
 import TwitterTimeline from "./TwitterTimeline";
-import {Pie, defaults} from 'react-chartjs-2';
+import {Bar, Pie, defaults} from 'react-chartjs-2';
 
 let productScrollEl = null;
 const formatDate = function(x) {
@@ -225,6 +225,21 @@ const chart = function(itemInfo) {
   </div>
 }
 
+const participation = function(itemInfo) {
+  if (!itemInfo.github_data || !itemInfo.github_data.contributions) {
+    return null;
+  }
+  const data = {
+    labels: _.range(0, 52),
+    datasets: [{
+      labels: [],
+      data: itemInfo.github_data.contributions.split(';').map( (x)=> +x)
+    }]
+  };
+  return <Bar data={data} legend={{display: false}} />
+
+}
+
 function handleUp() {
   productScrollEl.scrollBy({top: -200, behavior: 'smooth'});
 }
@@ -381,6 +396,7 @@ const ItemDialogContent = ({itemInfo, isLandscape, setIsLandscape}) => {
                 <div style={cellStyle}><TweetButton/></div>
               </div>
               {chart(itemInfo)}
+              {participation(itemInfo)}
             </div>
   </Fragment>;
 

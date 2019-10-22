@@ -12,7 +12,7 @@ import { settings, projectPath } from './settings';
 import makeReporter from './progressReporter';
 const debug = require('debug')('github');
 import shortRepoName from '../src/utils/shortRepoName';
-import getRepositoryInfo , { getLanguages}  from './getRepositoryInfo';
+import getRepositoryInfo , { getLanguages, getWeeklyContributions}  from './getRepositoryInfo';
 
 import { getRepoLatestDate ,getReleaseDate } from './githubDates';
 
@@ -104,6 +104,8 @@ export async function fetchGithubEntries({cache, preferCache}) {
           color: githubColors[key]
         }
       });
+      const contributionsInfo = await getWeeklyContributions(url);
+      const contributions = contributionsInfo.all.join(';');
       const stars = apiInfo.stargazers_count || 0;
       let license = (apiInfo.license || {}).name || 'Unknown License';
       if (license === 'NOASSERTION') {
@@ -152,6 +154,7 @@ export async function fetchGithubEntries({cache, preferCache}) {
       return ({
         url: repo.url,
         languages,
+        contributions,
         stars,
         license,
         description,

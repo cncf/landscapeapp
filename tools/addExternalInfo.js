@@ -71,14 +71,14 @@ else if (key.toLowerCase() === 'complete') {
 //a temporary solution, disable it
 (function forceUpdate() {
   const source = require('js-yaml').safeLoad(require('fs').readFileSync(path.resolve(projectPath, 'processed_landscape.yml')));
-  let nodeWithLanguage = false;
+  let nodeWithLanguages = false;
   traverse(source).map(function(node) {
-    if (node && node.github_stats && node.github_stats.language) {
-      nodeWithLanguage = true;
+    if (node && node.github_data && node.github_data.languages) {
+      nodeWithLanguages = true;
     }
   });
-  if (!nodeWithLanguage) {
-    console.info(`No node with language found, ignoring GITHUB cache!`);
+  if (!nodeWithLanguages) {
+    console.info(`No node with languages found, ignoring GITHUB cache!`);
     useGithubCache=false;
   }
 })();
