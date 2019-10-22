@@ -4199,11 +4199,6 @@
         "moment": "^2.10.2"
       }
     },
-    "chartist": {
-      "version": "0.11.4",
-      "resolved": "https://registry.npmjs.org/chartist/-/chartist-0.11.4.tgz",
-      "integrity": "sha512-H4AimxaUD738/u9Mq8t27J4lh6STsLi4BQHt65nOtpLk3xyrBPaLiLMrHw7/WV9CmsjGA02WihjuL5qpSagLYw=="
-    },
     "chartjs-color": {
       "version": "2.3.0",
       "resolved": "https://registry.npmjs.org/chartjs-color/-/chartjs-color-2.3.0.tgz",
@@ -13543,14 +13538,6 @@
         "loose-envify": "^1.1.0",
         "object-assign": "^4.1.1",
         "prop-types": "^15.6.2"
-      }
-    },
-    "react-chartist": {
-      "version": "0.13.3",
-      "resolved": "https://registry.npmjs.org/react-chartist/-/react-chartist-0.13.3.tgz",
-      "integrity": "sha512-lHA2JKy6S81/4KNhr1kXXXVyfeSOPVaxLX9Ohf31ntOj7XNGu5392qIvss+zfUWUuj5XCO1fy7w2fUCCUXkjBA==",
-      "requires": {
-        "prop-types": "^15.5.8"
       }
     },
     "react-chartjs-2": {
