@@ -2,7 +2,7 @@ $navy: #38404a;
 $navy-light: #87919a;
 $blue: #5093e0;
 $blue-hover: #0e61c0;
-$mobilewidth: 710px;
+$mobilewidth: 1000px;
 
 .modal {
   perspective: 2000px;
@@ -123,73 +123,74 @@ $mobilewidth: 710px;
     }
   }
 }
-.ipad {
-  .modal {
-    &-content {
-      margin: 60px;
-      padding: 10px;
-      padding-top: 20px;
-      position: static !important;
-      background: #fff;
-    }
-    &-prev {position: fixed; z-index: 15;}
-    &-next {position: fixed; z-index: 15;}
-    &-close {
-      position: fixed;
-      top: 40px;
-      right: 60px;
-      font-size: 30px;
-      opacity: 0.4;
-      color: #000;
-      z-index: 30;
-      width: 60px;
-      line-height: 60px;
-      text-align: center;
-    }
-  }
-  .product-scroll {
-      margin: 0;
-      padding-left: 380px;
-      height: auto;
-      overflow: visible;
-      position: static;
-  }
-  .product-logo {
-    position: fixed;
-    left: 120px;
-    top: 90px;
-    z-index: 30;
-  }
-  .product-tags {
-    position: fixed;
-    left: 120px;
-    top: 280px;
-    z-index: 30;
-  }
-}
 
-.ipad.portrait .modal {
-    &-close {
-      position: fixed;
-      top: 70px;
-      right: 60px;
-      font-size: 30px;
-      opacity: 0.4;
-      color: #000;
-      z-index: 30;
-      width: 60px;
-      line-height: 60px;
-      text-align: center;
-    }
-  .product-scroll {
-      margin: 0;
-      padding-left: 300px;
-      height: auto;
-      overflow: visible;
-      position: static;
-  }
+// .ipad {
+  // .modal {
+    // &-content {
+      // margin: 60px;
+      // padding: 10px;
+      // padding-top: 20px;
+      // position: static !important;
+      // background: #fff;
+    // }
+    // &-prev {position: fixed; z-index: 15;}
+    // &-next {position: fixed; z-index: 15;}
+    // &-close {
+      // position: fixed;
+      // top: 40px;
+      // right: 60px;
+      // font-size: 30px;
+      // opacity: 0.4;
+      // color: #000;
+      // z-index: 30;
+      // width: 60px;
+      // line-height: 60px;
+      // text-align: center;
+    // }
+  // }
+  // .product-scroll {
+      // margin: 0;
+      // padding-left: 380px;
+      // height: auto;
+      // overflow: visible;
+      // position: static;
+  // }
+  // .product-logo {
+    // position: fixed;
+    // left: 120px;
+    // top: 90px;
+    // z-index: 30;
+  // }
+  // .product-tags {
+    // position: fixed;
+    // left: 120px;
+    // top: 280px;
+    // z-index: 30;
+  // }
+// }
 
-}
+// .ipad.portrait .modal {
+    // &-close {
+      // position: fixed;
+      // top: 70px;
+      // right: 60px;
+      // font-size: 30px;
+      // opacity: 0.4;
+      // color: #000;
+      // z-index: 30;
+      // width: 60px;
+      // line-height: 60px;
+      // text-align: center;
+    // }
+  // .product-scroll {
+      // margin: 0;
+      // padding-left: 300px;
+      // height: auto;
+      // overflow: visible;
+      // position: static;
+  // }
+
+// }
 
 .landscape {
   .modal {

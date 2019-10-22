@@ -362,8 +362,9 @@ const ItemDialogContent = ({itemInfo, isLandscape, setIsLandscape}) => {
   const cellStyle = {
     width: 146,
     marginRight: 4,
-    height: 20,
+    height: 26,
     display: 'inline-block',
+    layout: 'relative',
     overflow: 'hidden'
   };
   const productLogoAndTags = <Fragment>
@@ -371,13 +372,13 @@ const ItemDialogContent = ({itemInfo, isLandscape, setIsLandscape}) => {
               <img src={itemInfo.href} className='product-logo-img'/>
             </div>
             <div className="product-tags">
-              <div style = {{width: 300}} >
-              <div style={cellStyle}>{projectTag(itemInfo)}</div>
-              <div style={cellStyle}>{parentTag(itemInfo)}</div>
-              <div style={cellStyle}>{openSourceTag(itemInfo.oss)}</div>
-              <div style={cellStyle}>{licenseTag(itemInfo)}</div>
-              <div style={cellStyle}>{badgeTag(itemInfo)}</div>
-              <div style={cellStyle}><TweetButton/></div>
+              <div className="product-badges" style = {{width: 300}} >
+                <div style={cellStyle}>{projectTag(itemInfo)}</div>
+                <div style={cellStyle}>{parentTag(itemInfo)}</div>
+                <div style={cellStyle}>{openSourceTag(itemInfo.oss)}</div>
+                <div style={cellStyle}>{licenseTag(itemInfo)}</div>
+                <div style={cellStyle}>{badgeTag(itemInfo)}</div>
+                <div style={cellStyle}><TweetButton/></div>
               </div>
               {chart(itemInfo)}
             </div>
