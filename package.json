@@ -1,6 +1,6 @@
 {
   "name": "interactive-landscape",
-  "version": "1.0.298",
+  "version": "1.0.302",
   "description": "Visualization tool for building interactive landscapes",
   "engines": {
     "npm": ">=3",
@@ -15,9 +15,10 @@
     "lint:watch": "npm run lint -- --watch",
     "update-github-colors": "curl https://raw.githubusercontent.com/Diastro/github-colors/master/github-colors.json > tools/githubColors.json",
     "fetch": "babel-node tools/validateLandscape && babel-node tools/addExternalInfo.js && npm run yaml2json",
-    "update": "(rm /tmp/landscape.json || true) && babel-node tools/validateLandscape && npm run remove-quotes && LEVEL=medium babel-node tools/addExternalInfo.js && npm run yaml2json && babel-node tools/calculateNumberOfTweets",
+    "update": "(rm /tmp/landscape.json || true) && babel-node tools/validateLandscape && npm run remove-quotes && LEVEL=medium babel-node tools/addExternalInfo.js && npm run yaml2json && npm run prune && babel-node tools/calculateNumberOfTweets",
     "yaml2json": "babel-node tools/generateJson.js",
     "remove-quotes": "babel-node tools/removeQuotes",
+    "prune": "babel-node tools/pruneExtraEntries",
     "check-links": "pkill -9 chrome; pkill -9 chrome; babel-node tools/checkLinks",
     "fetchAll": "LEVEL=complete npm run fetch",
     "clean-dist": "npm run remove-dist && mkdir \"$PROJECT_PATH\"/dist",
@@ -89,6 +90,7 @@
     "babel-preset-latest-node": "3.2.1",
     "bluebird": "3.7.1",
     "browser-sync": "2.26.7",
+    "caniuse-lite": "1.0.30001002",
     "chalk": "2.4.2",
     "change-case": "3.1.0",
     "chart.js": "2.8.0",

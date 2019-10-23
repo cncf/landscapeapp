@@ -21,15 +21,6 @@ const cleanupFile = function(filename, orderKeys) {
   }
   require('fs').writeFileSync(path.resolve(projectPath, filename), dump(source));
 }
-const cleanupMembers = function() {
-  const filename = 'members.yml';
-  const fullFilename = path.resolve(projectPath, filename);
-  if (require('fs').existsSync(fullFilename)) {
-    const data = require('js-yaml').safeLoad(require('fs').readFileSync(fullFilename));
-    const sortedData = _.mapValues(data, (value, key) => _.orderBy(value));
-    require('fs').writeFileSync(path.resolve(projectPath, filename), dump(sortedData));
-  }
-}
 
 const landscapeKeys = [
   'name',
@@ -49,4 +40,3 @@ const landscapeKeys = [
 ];
 cleanupFile('landscape.yml', landscapeKeys);
 cleanupFile('settings.yml');
-cleanupMembers();

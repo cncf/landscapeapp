@@ -50,7 +50,8 @@ ${process.env.BUILDBOT_KEY.replace(/\s/g,'\n')}
 
     const outputFolder = landscape.name + new Date().getTime();
     const nvmrc = require('fs').readFileSync('.nvmrc', 'utf-8').trim();
-    const buildCommand = `mkdir -p /opt/buildhome/repo && cp -r /opt/repo /opt/buildhome && cd /opt/buildhome/repo && export NETLIFY=1 && . ~/.nvm/nvm.sh && nvm install ${nvmrc} && nvm use && bash build.sh ${landscape.repo} ${landscape.name} master && cp -r /opt/buildhome/repo/${landscape.name}/dist /dist`
+    const r = () => _.random(30) + 10;
+    const buildCommand = `mkdir -p /opt/buildhome/repo && cp -r /opt/repo /opt/buildhome && cd /opt/buildhome/repo && export NETLIFY=1 && . ~/.nvm/nvm.sh && (nvm install ${nvmrc} || (sleep ${r()} && nvm install ${nvmrc}) || (sleep ${r()} && nvm install ${nvmrc})) && nvm use && bash build.sh ${landscape.repo} ${landscape.name} master && cp -r /opt/buildhome/repo/${landscape.name}/dist /dist`
     const dockerCommand = `
       mkdir -p /root/${outputFolder}
       chmod -R 777 /root/${outputFolder}
@@ -60,6 +61,7 @@ ${process.env.BUILDBOT_KEY.replace(/\s/g,'\n')}
 
       docker run --rm -t \
         ${vars.map( (v) => ` -e ${v}="${process.env[v]}" `).join(' ')} \
+        -e NVM_NO_PROGRESS=1 \
         -e PARALLEL=TRUE \
         -v \${REPO_PATH}:/opt/repo \
         -v \${OUTPUT_PATH}:/dist \
