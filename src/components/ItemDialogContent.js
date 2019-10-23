@@ -570,7 +570,7 @@ const ItemDialogContent = ({itemInfo, isLandscape, setIsLandscape}) => {
 
               { showTwitter && itemInfo.twitter && <TwitterTimeline twitter={itemInfo.twitter} />}
             </div>
-            { !scrollAllContent && isGoogle && productLogoAndTagsAndCharts }
+            { !scrollAllContent && isGoogle && productLogoAndTags }
         </div>
   );
 }
