@@ -60,8 +60,12 @@ $mobilewidth: 1000px;
     .nonoss & {background: #eee; border-color: #eee;}
     @media (max-width: $mobilewidth) {margin: 0 auto 1rem; position: relative; width: auto; max-width: 250px; height: 180px; top: 0; left: 0;}
   }
-  &-tags {position: absolute; left: 40px; top: 230px; margin-bottom: 1rem;
-    @media (max-width: $mobilewidth) {position: static;}
+  &-tags {
+    position: absolute; left: 40px; top: 230px; margin-bottom: 1rem;
+    @media (max-width: $mobilewidth) {
+      position: static;
+      margin-left: calc(50% - 125px);
+    }
   }
   &-main {font-size: 0.8rem; line-height: 130%; color: $navy;}
   &-scroll {

@@ -20,6 +20,7 @@ import TweetButton from './TweetButton';
 import currentDevice from 'current-device';
 import TwitterTimeline from "./TwitterTimeline";
 import {Bar, Pie, defaults} from 'react-chartjs-2';
+import useWindowSize from "@rooks/use-window-size"
 
 let productScrollEl = null;
 const formatDate = function(x) {
@@ -139,6 +140,7 @@ const badgeTag = function(itemInfo) {
 }
 
 const chart = function(itemInfo) {
+  const { innerWidth } = useWindowSize();
   if (!itemInfo.github_data || !itemInfo.github_data.languages) {
     return null;
   }
@@ -258,7 +260,9 @@ const participation = function(itemInfo) {
       }]
     }
   }
-  return <Bar data={data} legend={{display: false}} options={options} />
+  return <div style={{width: 300, height: 150}}>
+    <Bar height={150} width={300} data={data} legend={{display: false}} options={options} />
+  </div>;
 
 }
 

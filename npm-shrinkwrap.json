@@ -2459,6 +2459,11 @@
         }
       }
     },
+    "@rooks/use-window-size": {
+      "version": "3.4.0",
+      "resolved": "https://registry.npmjs.org/@rooks/use-window-size/-/use-window-size-3.4.0.tgz",
+      "integrity": "sha512-lu54L9aAn4cRu3KcodSggRXoBY/4smf/WEQ67q8KK+Fb+xcpgYE0n6yt+KnyC8/nK2icDbRkpqpJusuC2D/bwg=="
+    },
     "@types/babel__core": {
       "version": "7.1.3",
       "resolved": "https://registry.npmjs.org/@types/babel__core/-/babel__core-7.1.3.tgz",
