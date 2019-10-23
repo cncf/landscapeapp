@@ -37,6 +37,7 @@ ${process.env.BUILDBOT_KEY.replace(/\s/g,'\n')}
   const remote = 'root@147.75.76.177';
   const result = require('child_process').spawnSync('bash', ['-lc', `
       rsync --exclude="node_modules" --exclude="dist" -az -e "ssh -i /tmp/buildbot  -o StrictHostKeyChecking=no  " . ${remote}:/root/${folder}
+      rsync -az -e "ssh -i /tmp/buildbot  -o StrictHostKeyChecking=no  " /opt/buildhome/.nvm/versions {remote}:/root/nvm-${folder}
   `], {stdio: 'inherit'});
   if (result.status !== 0) {
     console.info(`Failed to rsync, exiting`);
@@ -55,6 +56,7 @@ ${process.env.BUILDBOT_KEY.replace(/\s/g,'\n')}
     const dockerCommand = `
       mkdir -p /root/${outputFolder}
       chmod -R 777 /root/${outputFolder}
+      chmod -R 777 /root/nvm-${folder}
       BASE_PATH=/root/build-image
       REPO_PATH=/root/${folder}
       OUTPUT_PATH=/root/${outputFolder}
@@ -63,6 +65,7 @@ ${process.env.BUILDBOT_KEY.replace(/\s/g,'\n')}
         ${vars.map( (v) => ` -e ${v}="${process.env[v]}" `).join(' ')} \
         -e NVM_NO_PROGRESS=1 \
         -e PARALLEL=TRUE \
+        -v /root/nvm-${folder}:/opt/buildhome/.nvm/versions
         -v \${REPO_PATH}:/opt/repo \
         -v \${OUTPUT_PATH}:/dist \
         -v \${BASE_PATH}/run-build.sh:/usr/local/bin/build \
