@@ -277,6 +277,7 @@ const ItemDialogContent = ({itemInfo, isLandscape, setIsLandscape}) => {
             </div>
             <div className="product-tags">
               <div>{projectTag(itemInfo)}</div>
+              <div>{parentTag(itemInfo)}</div>
               <div>{openSourceTag(itemInfo.oss)}</div>
               <div>{licenseTag(itemInfo)}</div>
               <div>{badgeTag(itemInfo)}</div>
