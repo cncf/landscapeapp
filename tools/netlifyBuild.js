@@ -61,6 +61,7 @@ ${process.env.BUILDBOT_KEY.replace(/\s/g,'\n')}
 
       docker run --rm -t \
         ${vars.map( (v) => ` -e ${v}="${process.env[v]}" `).join(' ')} \
+        -e NVM_NO_PROGRESS=1 \
         -e PARALLEL=TRUE \
         -v \${REPO_PATH}:/opt/repo \
         -v \${OUTPUT_PATH}:/dist \
