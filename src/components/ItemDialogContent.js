@@ -230,13 +230,35 @@ const participation = function(itemInfo) {
     return null;
   }
   const data = {
-    labels: _.range(0, 52),
+    labels: _.range(0, 52).map(function(week) {
+      const firstWeek = new Date(itemInfo.github_data.firstWeek);
+      firstWeek.setDate(firstWeek.getDate() + week * 7);
+      const s = firstWeek.toISOString();
+      return s.substr(5, 2) + '/' + s.substr(8, 2);
+    }),
     datasets: [{
+      backgroundColor: 'darkblue',
       labels: [],
       data: itemInfo.github_data.contributions.split(';').map( (x)=> +x)
     }]
   };
-  return <Bar data={data} legend={{display: false}} />
+  const options = {
+    scales: {
+      xAxes: [{
+        gridLines: false,
+        ticks: {
+          backdropPaddingY: 15,
+          autoSkip: true,
+          minRotation: 0,
+          maxRotation: 0
+        },
+        scaleLabel: {
+          display: false
+        }
+      }]
+    }
+  }
+  return <Bar data={data} legend={{display: false}} options={options} />
 
 }
 

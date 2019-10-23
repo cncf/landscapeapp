@@ -106,6 +106,8 @@ export async function fetchGithubEntries({cache, preferCache}) {
       });
       const contributionsInfo = await getWeeklyContributions(url);
       const contributions = contributionsInfo.all.join(';');
+      const firstWeek = new Date();
+      firstWeek.setDate(firstWeek.getDate() - firstWeek.getDay() - 51 * 7);
       const stars = apiInfo.stargazers_count || 0;
       let license = (apiInfo.license || {}).name || 'Unknown License';
       if (license === 'NOASSERTION') {
@@ -155,6 +157,7 @@ export async function fetchGithubEntries({cache, preferCache}) {
         url: repo.url,
         languages,
         contributions,
+        firstWeek: firstWeek.toISOString().substring(0, 10) + 'Z',
         stars,
         license,
         description,
