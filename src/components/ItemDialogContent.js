@@ -140,7 +140,6 @@ const badgeTag = function(itemInfo) {
 }
 
 const chart = function(itemInfo) {
-  const { innerWidth } = useWindowSize();
   if (!itemInfo.github_data || !itemInfo.github_data.languages) {
     return null;
   }
@@ -283,6 +282,8 @@ const ItemDialogContent = ({itemInfo, isLandscape, setIsLandscape}) => {
       setIsLandscape(currentDevice.landscape());
     }, 1000);
   }
+  const { innerWidth } = useWindowSize();
+
 
 
 
@@ -399,7 +400,7 @@ const ItemDialogContent = ({itemInfo, isLandscape, setIsLandscape}) => {
     </div>
   );
 
-  const scrollAllContent = currentDevice.mobile() && isLandscape;
+  const scrollAllContent = innerWidth < 1000;
   const cellStyle = {
     width: 146,
     marginRight: 4,
@@ -408,6 +409,7 @@ const ItemDialogContent = ({itemInfo, isLandscape, setIsLandscape}) => {
     layout: 'relative',
     overflow: 'hidden'
   };
+
   const productLogoAndTags = <Fragment>
             <div className="product-logo" style={getRelationStyle(itemInfo.relation)}>
               <img src={itemInfo.href} className='product-logo-img'/>
@@ -421,8 +423,29 @@ const ItemDialogContent = ({itemInfo, isLandscape, setIsLandscape}) => {
                 <div style={cellStyle}>{badgeTag(itemInfo)}</div>
                 <div style={cellStyle}><TweetButton/></div>
               </div>
-              {chart(itemInfo)}
-              {participation(itemInfo)}
+            </div>
+  </Fragment>;
+
+  const charts = <Fragment>
+    {chart(itemInfo)}
+    {participation(itemInfo)}
+  </Fragment>
+
+  const productLogoAndTagsAndCharts = <Fragment>
+            <div className="product-logo" style={getRelationStyle(itemInfo.relation)}>
+              <img src={itemInfo.href} className='product-logo-img'/>
+            </div>
+            <div className="product-tags">
+              <div className="product-badges" style = {{width: 300}} >
+                <div style={cellStyle}>{projectTag(itemInfo)}</div>
+                <div style={cellStyle}>{parentTag(itemInfo)}</div>
+                <div style={cellStyle}>{openSourceTag(itemInfo.oss)}</div>
+                <div style={cellStyle}>{licenseTag(itemInfo)}</div>
+                <div style={cellStyle}>{badgeTag(itemInfo)}</div>
+                <div style={cellStyle}><TweetButton/></div>
+                {chart(itemInfo)}
+                {participation(itemInfo)}
+              </div>
             </div>
   </Fragment>;
 
@@ -534,19 +557,20 @@ const ItemDialogContent = ({itemInfo, isLandscape, setIsLandscape}) => {
             <KeyHandler keyEventName="keydown" keyValue="ArrowUp" onKeyHandle={handleUp} />
             <KeyHandler keyEventName="keydown" keyValue="ArrowDown" onKeyHandle={handleDown} />
 
-            { !scrollAllContent && !isGoogle && productLogoAndTags }
+            { !scrollAllContent && !isGoogle && productLogoAndTagsAndCharts }
 
             <div className="product-scroll" ref={(x) => productScrollEl = x }>
               { !scrollAllContent && productInfo }
               { scrollAllContent && <div className="landscape-layout">
                   {productLogoAndTags}
                   <div className="right-column">{productInfo}</div>
+                  {charts}
                 </div>
               }
 
               { showTwitter && itemInfo.twitter && <TwitterTimeline twitter={itemInfo.twitter} />}
             </div>
-            { !scrollAllContent && isGoogle && productLogoAndTags }
+            { !scrollAllContent && isGoogle && productLogoAndTagsAndCharts }
         </div>
   );
 }
