@@ -37,7 +37,7 @@ ${process.env.BUILDBOT_KEY.replace(/\s/g,'\n')}
   const remote = 'root@147.75.76.177';
   const result = require('child_process').spawnSync('bash', ['-lc', `
       rsync --exclude="node_modules" --exclude="dist" -az -e "ssh -i /tmp/buildbot  -o StrictHostKeyChecking=no  " . ${remote}:/root/${folder}
-      rsync -az -e "ssh -i /tmp/buildbot  -o StrictHostKeyChecking=no  " /opt/buildhome/.nvm/versions {remote}:/root/nvm-${folder}
+      rsync -az -e "ssh -i /tmp/buildbot  -o StrictHostKeyChecking=no  " /opt/buildhome/.nvm/versions ${remote}:/root/nvm-${folder}
   `], {stdio: 'inherit'});
   if (result.status !== 0) {
     console.info(`Failed to rsync, exiting`);
