@@ -81,7 +81,7 @@ EOSSH
       rsync -az -e "ssh -i /tmp/buildbot  -o StrictHostKeyChecking=no " ${remote}:/root/${outputFolder}/dist/ dist/${landscape.name}
     `
 
-    // console.info(bashCommand);
+    console.info(bashCommand);
     console.info(`processing ${landscape.name} at ${landscape.repo}`);
 
 
