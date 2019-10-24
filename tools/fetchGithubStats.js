@@ -12,9 +12,11 @@ import { settings, projectPath } from './settings';
 import makeReporter from './progressReporter';
 const debug = require('debug')('github');
 import shortRepoName from '../src/utils/shortRepoName';
-import getRepositoryInfo from './getRepositoryInfo';
+import getRepositoryInfo , { getLanguages, getWeeklyContributions}  from './getRepositoryInfo';
 
 import { getRepoLatestDate ,getReleaseDate } from './githubDates';
+
+const githubColors = JSON.parse(require('fs').readFileSync('tools/githubColors.json', 'utf-8'));
 
 const error = colors.red;
 const fatal = (x) => colors.red(colors.inverse(x));
@@ -94,6 +96,18 @@ export async function fetchGithubEntries({cache, preferCache}) {
       }
       const repoName = shortRepoName(url);
       const apiInfo = await getRepositoryInfo(url);
+      const languagesInfo = await getLanguages(url);
+      const languages = _.keys(languagesInfo).map(function(key) {
+        return {
+          name: key,
+          value: languagesInfo[key],
+          color: githubColors[key]
+        }
+      });
+      const contributionsInfo = await getWeeklyContributions(url);
+      const contributions = contributionsInfo.all.join(';');
+      const firstWeek = new Date();
+      firstWeek.setDate(firstWeek.getDate() - firstWeek.getDay() - 51 * 7);
       const stars = apiInfo.stargazers_count || 0;
       let license = (apiInfo.license || {}).name || 'Unknown License';
       if (license === 'NOASSERTION') {
@@ -141,6 +155,9 @@ export async function fetchGithubEntries({cache, preferCache}) {
       reporter.write(cacheMiss('*'));
       return ({
         url: repo.url,
+        languages,
+        contributions,
+        firstWeek: firstWeek.toISOString().substring(0, 10) + 'Z',
         stars,
         license,
         description,

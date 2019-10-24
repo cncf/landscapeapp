@@ -68,6 +68,21 @@ else if (key.toLowerCase() === 'complete') {
   console.info('Unknown level. Should be one of easy, medium, hard or complete');
 }
 
+//a temporary solution, disable it
+(function forceUpdate() {
+  const source = require('js-yaml').safeLoad(require('fs').readFileSync(path.resolve(projectPath, 'processed_landscape.yml')));
+  let nodeWithLanguages = false;
+  traverse(source).map(function(node) {
+    if (node && node.github_data && node.github_data.languages) {
+      nodeWithLanguages = true;
+    }
+  });
+  if (!nodeWithLanguages) {
+    console.info(`No node with languages found, ignoring GITHUB cache!`);
+    useGithubCache=false;
+  }
+})();
+
 
 async function main() {
 
