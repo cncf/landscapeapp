@@ -68,7 +68,6 @@ else if (key.toLowerCase() === 'complete') {
   console.info('Unknown level. Should be one of easy, medium, hard or complete');
 }
 
-
 async function main() {
 
   var crunchbaseEntries;
