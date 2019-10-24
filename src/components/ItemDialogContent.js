@@ -520,7 +520,7 @@ const ItemDialogContent = ({itemInfo, isLandscape, setIsLandscape}) => {
                 </div>
                 }
                 <div className="row">
-                  { isMobile &&  <div className="col col-50 single-column">
+                  { innerWidth <= 1000 &&  <div className="col col-50 single-column">
                     { twitterElement }
                     { latestTweetDateElement }
                     { firstCommitDateElement }
@@ -532,7 +532,7 @@ const ItemDialogContent = ({itemInfo, isLandscape, setIsLandscape}) => {
                     { amountElement }
                     { tickerElement }
                   </div> }
-                  { !isMobile && <div className="col col-50">
+                  { innerWidth > 1000 && <div className="col col-50">
                     { twitterElement }
                     { firstCommitDateElement }
                     { contributorsCountElement }
@@ -541,7 +541,7 @@ const ItemDialogContent = ({itemInfo, isLandscape, setIsLandscape}) => {
                     { tickerElement }
                   </div>
                   }
-                  { !isMobile && <div className="col col-50">
+                  { innerWidth > 1000 && <div className="col col-50">
                       { latestTweetDateElement }
                       { latestCommitDateElement }
                       { releaseDateElement }
