@@ -231,7 +231,7 @@ const participation = function(itemInfo) {
   }
   let lastMonth = null;
   const data = {
-    labels: _.range(0, 52).map(function(week) {
+    labels: _.range(0, 51).map(function(week) {
       const firstWeek = new Date(itemInfo.github_data.firstWeek);
       firstWeek.setDate(firstWeek.getDate() + week * 7);
       const m = firstWeek.getMonth();
@@ -246,7 +246,7 @@ const participation = function(itemInfo) {
     datasets: [{
       backgroundColor: 'darkblue',
       labels: [],
-      data: itemInfo.github_data.contributions.split(';').map( (x)=> +x)
+      data: itemInfo.github_data.contributions.split(';').map( (x)=> +x).slice(-51)
     }]
   };
   const callbacks = defaults.global.tooltips.callbacks;
