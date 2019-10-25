@@ -204,11 +204,10 @@ const chart = function(itemInfo) {
   }
 
 
-  const legend = <div style={{position: 'absolute', width: 120, left: -17, top: 0, marginTop: 5, marginBottom: 5}}>
+  const legend = <div style={{position: 'absolute', width: 170, left: 0, top: 0, marginTop: -5, marginBottom: 5, fontSize: '0.8em'  }}>
     {languages.map(function(language) {
       return <div style = {{
         position: 'relative',
-        fontSize: 12,
         marginTop: 5,
         height: 12
       }} >
@@ -219,8 +218,8 @@ const chart = function(itemInfo) {
   </div>
 
   return <div style={{width: 220, height: 150, position: 'relative'}}>
-    <div style={{marginLeft: 130, width: 150, height: 150}}>
-      <Pie height={150} width={150} data={data} legend={{display: false}} options={{tooltips: {callbacks: newCallbacks}}} />
+    <div style={{marginLeft: 170, width: 100, height: 100}}>
+      <Pie height={100} width={100} data={data} legend={{display: false}} options={{tooltips: {callbacks: newCallbacks}}} />
     </div>
     { legend }
   </div>
