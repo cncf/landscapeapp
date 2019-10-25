@@ -208,7 +208,7 @@ const chart = function(itemInfo) {
     {languages.map(function(language) {
       return <div style = {{
         position: 'relative',
-        marginTop: 5,
+        marginTop: 2,
         height: 12
       }} >
         <div style={{display: 'inline-block', position: 'absolute', height: 12, width: 12, background: language.color, top: 2, marginRight: 4}} />
@@ -217,7 +217,7 @@ const chart = function(itemInfo) {
     })}
   </div>
 
-  return <div style={{width: 220, height: 150, position: 'relative'}}>
+  return <div style={{width: 220, height: 120, position: 'relative'}}>
     <div style={{marginLeft: 170, width: 100, height: 100}}>
       <Pie height={100} width={100} data={data} legend={{display: false}} options={{tooltips: {callbacks: newCallbacks}}} />
     </div>
