@@ -233,8 +233,8 @@ const participation = function(itemInfo) {
     labels: _.range(0, 52).map(function(week) {
       const firstWeek = new Date(itemInfo.github_data.firstWeek);
       firstWeek.setDate(firstWeek.getDate() + week * 7);
-      const s = firstWeek.toISOString();
-      return s.substr(5, 2) + '/' + s.substr(8, 2);
+      const m = firstWeek.getMonth();
+      return 'Jan Feb Mar Apr May Jun Jul Aug Sep Oct Nov Dec'.split(' ')[m];
     }),
     datasets: [{
       backgroundColor: 'darkblue',
@@ -242,7 +242,16 @@ const participation = function(itemInfo) {
       data: itemInfo.github_data.contributions.split(';').map( (x)=> +x)
     }]
   };
+  const callbacks = defaults.global.tooltips.callbacks;
+  const newCallbacks =  {...callbacks, title: function(data) {
+    const firstWeek = new Date(itemInfo.github_data.firstWeek);
+    const week = data[0].index;
+    firstWeek.setDate(firstWeek.getDate() + week * 7);
+    const s = firstWeek.toISOString().substring(0, 10);
+    return s;
+  }};
   const options = {
+    tooltips: {callbacks: newCallbacks},
     scales: {
       xAxes: [{
         gridLines: false,
@@ -257,7 +266,7 @@ const participation = function(itemInfo) {
         }
       }]
     }
-  }
+  };
   return <div style={{width: 300, height: 150}}>
     <Bar height={150} width={300} data={data} legend={{display: false}} options={options} />
   </div>;
