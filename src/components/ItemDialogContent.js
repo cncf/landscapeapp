@@ -229,12 +229,19 @@ const participation = function(itemInfo) {
   if (!itemInfo.github_data || !itemInfo.github_data.contributions) {
     return null;
   }
+  let lastMonth = null;
   const data = {
     labels: _.range(0, 52).map(function(week) {
       const firstWeek = new Date(itemInfo.github_data.firstWeek);
       firstWeek.setDate(firstWeek.getDate() + week * 7);
       const m = firstWeek.getMonth();
-      return 'Jan Feb Mar Apr May Jun Jul Aug Sep Oct Nov Dec'.split(' ')[m];
+      if (lastMonth === null || m % 12 === (lastMonth + 2) % 12) {
+        lastMonth = m;
+      } else {
+        return '';
+      }
+      const result = 'Jan Feb Mar Apr May Jun Jul Aug Sep Oct Nov Dec'.split(' ')[m];
+      return result;
     }),
     datasets: [{
       backgroundColor: 'darkblue',
@@ -257,7 +264,7 @@ const participation = function(itemInfo) {
         gridLines: false,
         ticks: {
           backdropPaddingY: 15,
-          autoSkip: true,
+          autoSkip: false,
           minRotation: 0,
           maxRotation: 0
         },
