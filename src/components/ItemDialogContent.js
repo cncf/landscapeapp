@@ -99,6 +99,9 @@ const memberTag = function({relation, member, enduser}) {
     const info = settings.membership[member];
     const name = info.name;
     const label = enduser ? (info.end_user_label || info.label) : info.label ;
+    if (!label) {
+      return null;
+    }
     return linkTag(label, {name: name, url: filtersToUrl({filters: {relation: relation}})});
   }
   return null;
