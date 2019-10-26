@@ -36,7 +36,7 @@ $mobilewidth: 1000px;
       &:before {border-left-color: #fff; border-right-width: 0; left: 5px;}
     }
     .row {display: block;}
-    .col {width: 100%;}
+    .col {width: 100% !important;}
   }
   .modal-body {padding: 40px; overflow: visible; max-height: 640px; width: 90%; max-width: 940px;
     border-radius: 8px; margin: 50px; position: absolute; top: 20px; left: 0; bottom: 20px; right: 0; margin: auto;
