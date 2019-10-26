@@ -230,13 +230,23 @@ const participation = function(itemInfo) {
     return null;
   }
   let lastMonth = null;
+  let lastWeek = null;
   const data = {
     labels: _.range(0, 51).map(function(week) {
       const firstWeek = new Date(itemInfo.github_data.firstWeek);
       firstWeek.setDate(firstWeek.getDate() + week * 7);
       const m = firstWeek.getMonth();
-      if (lastMonth === null || m % 12 === (lastMonth + 2) % 12) {
+      if (lastMonth === null) {
         lastMonth = m;
+        lastWeek = week;
+      }
+      else if (m % 12 === (lastMonth + 2) % 12) {
+        if (week > lastWeek + 6) {
+          lastMonth = m;
+          lastWeek = week;
+        } else {
+          return '';
+        }
       } else {
         return '';
       }
