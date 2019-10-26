@@ -88,7 +88,7 @@ $mobilewidth: 1000px;
   &-property {margin-bottom: 0.5rem;
     &-value {white-space: nowrap; overflow: hidden; text-overflow: ellipsis;}
     a {color: $blue;}
-    @media (max-width: $mobilewidth) {
+    @media (max-width: 750px) {
       &-name {display: block; width: 100%;}
       &-value {display: block; width: 100%;}
     }
