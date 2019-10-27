@@ -135,7 +135,7 @@ const badgeTag = function(itemInfo) {
     }
   }
   const url = `https://bestpractices.coreinfrastructure.org/en/projects/${itemInfo.bestPracticeBadgeId}`;
-  const label = itemInfo.bestPracticePercentage === 100 ? 'passing' : ('In progress: ' + itemInfo.bestPracticePercentage + '%');
+  const label = itemInfo.bestPracticePercentage === 100 ? 'passing' : (itemInfo.bestPracticePercentage + '%');
   return (<OutboundLink eventLabel={url} to={url} target="_blank" className="tag tag-grass">
     <span className="tag-name">CII Best Practices</span>
     <span className="tag-value">{label}</span>
