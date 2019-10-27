@@ -236,7 +236,7 @@ const participation = function(itemInfo) {
   let lastWeek = null;
   const data = {
     labels: _.range(0, 51).map(function(week) {
-      const firstWeek = new Date(itemInfo.github_data.firstWeek);
+      const firstWeek = new Date(itemInfo.github_data.firstWeek.replace('Z', 'T00:00:00Z'));
       firstWeek.setDate(firstWeek.getDate() + week * 7);
       const m = firstWeek.getMonth();
       if (lastMonth === null) {
@@ -264,7 +264,7 @@ const participation = function(itemInfo) {
   };
   const callbacks = defaults.global.tooltips.callbacks;
   const newCallbacks =  {...callbacks, title: function(data) {
-    const firstWeek = new Date(itemInfo.github_data.firstWeek);
+    const firstWeek = new Date(itemInfo.github_data.firstWeek.replace('Z', 'T00:00:00Z'));
     const week = data[0].index;
     firstWeek.setDate(firstWeek.getDate() + week * 7);
     const s = firstWeek.toISOString().substring(0, 10);
