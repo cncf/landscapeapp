@@ -121,27 +121,16 @@ export async function fetchGithubEntries({cache, preferCache}) {
       const releaseLink = releaseDate && `${url}/releases`;
       const getContributorsCount = async function() {
         var response = await rp({
-          uri: url,
+          uri: `${url}/contributors_size`,
           followRedirect: true,
           timeout: 30 * 1000,
           simple: true
         });
         const dom = new JSDOM(response);
         const doc = dom.window.document;
-        var element = doc.querySelector('.numbers-summary .octicon-organization').parentElement.querySelector('span');
-        var count = +element.textContent.replace(/\n/g, '').replace(',', '').trim();
-        if (!count) {
-          const puppeteer = require('puppeteer');
-          const browser = await puppeteer.launch({args: ['--no-sandbox', '--disable-setuid-sandbox']});
-          const page = await browser.newPage();
-          await page.goto(url);
-          await Promise.delay(5000);
-          const content = await page.evaluate( () => document.querySelector('.numbers-summary .octicon-organization+span').textContent );
-          await browser.close();
-          count = +content.replace(/\n/g, '').replace(',', '').trim();
-          return count;
-        }
-        return count;
+        var element = doc.querySelector('.num');
+        var count = element.textContent.replace(/[^\d]/g, '').trim();
+        return parseInt(count);
       };
       const contributorsCount = await getContributorsCount();
       const contributorsLink = `${url}/graphs/contributors`;
