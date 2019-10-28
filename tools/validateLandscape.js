@@ -1,6 +1,6 @@
 import process from 'process';
 import path from 'path';
-import { projectPath } from './settings';
+import { projectPath, settings } from './settings';
 import actualTwitter from './actualTwitter';
 import { setFatalError, reportFatalErrors } from './fatalErrors';
 
@@ -108,6 +108,22 @@ async function main() {
       });
     });
   });
+
+  const membershipKey = settings.global.membership;
+  if (membershipKey) {
+    const membershipCategory = source.landscape.find(({ name }) => name === membershipKey);
+    if (!membershipCategory) {
+      errors.push(`Membership category "${membershipKey}" does not have corresponding category in landscape.yml`);
+    } else {
+      const membershipSubcategories = membershipCategory.subcategories.map(({ name }) => name);
+      const settingsMemberships = Object.keys(settings.membership);
+      membershipSubcategories.forEach((subcategory) => {
+        if (!settingsMemberships.includes(subcategory)) {
+          errors.push(`Membership subcategory "${subcategory}" does not have corresponding entry in settings.membership`);
+        }
+      });
+    }
+  }
 
   errors.forEach(function(error) {
     setFatalError(error);
