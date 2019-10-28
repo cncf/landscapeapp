@@ -229,6 +229,7 @@ const chart = function(itemInfo) {
 }
 
 const participation = function(itemInfo) {
+  const { innerWidth } = useWindowSize();
   if (!itemInfo.github_data || !itemInfo.github_data.contributions) {
     return null;
   }
@@ -293,10 +294,10 @@ const participation = function(itemInfo) {
       }]
     }
   };
-  return <div style={{width: 300, height: 150}}>
-    <Bar height={150} width={300} data={data} legend={{display: false}} options={options} />
+  const width = Math.min(innerWidth - 110, 300);
+  return <div style={{width: width, height: 150}}>
+    <Bar height={150} width={width} data={data} legend={{display: false}} options={options} />
   </div>;
-
 }
 
 function handleUp() {
@@ -449,7 +450,7 @@ const ItemDialogContent = ({itemInfo, isLandscape, setIsLandscape}) => {
               <img src={itemInfo.href} className='product-logo-img'/>
             </div>
             <div className="product-tags">
-              <div className="product-badges" style = {{width: 300}} >
+              <div className="product-badges" style = {{width: Math.min(300, innerWidth - 110)}} >
                 <div style={cellStyle}>{projectTag(itemInfo)}</div>
                 <div style={cellStyle}>{parentTag(itemInfo)}</div>
                 <div style={cellStyle}>{openSourceTag(itemInfo.oss)}</div>
