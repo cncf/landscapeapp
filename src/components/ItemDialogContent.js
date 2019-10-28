@@ -15,6 +15,7 @@ import InternalLink from './InternalLink';
 import '../styles/itemModal.scss';
 import fields from '../types/fields';
 import isGoogle from '../utils/isGoogle';
+import isEmbed from '../utils/isEmbed';
 import settings from 'project/settings.yml';
 import TweetButton from './TweetButton';
 import currentDevice from 'current-device';
@@ -144,7 +145,7 @@ const badgeTag = function(itemInfo) {
 }
 
 const chart = function(itemInfo) {
-  if (!itemInfo.github_data || !itemInfo.github_data.languages) {
+  if (isEmbed || !itemInfo.github_data || !itemInfo.github_data.languages) {
     return null;
   }
   const callbacks = defaults.global.tooltips.callbacks;
@@ -231,7 +232,7 @@ const chart = function(itemInfo) {
 
 const participation = function(itemInfo) {
   const { innerWidth } = useWindowSize();
-  if (!itemInfo.github_data || !itemInfo.github_data.contributions) {
+  if (isEmbed || !itemInfo.github_data || !itemInfo.github_data.contributions) {
     return null;
   }
   let lastMonth = null;
