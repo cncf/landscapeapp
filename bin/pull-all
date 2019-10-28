@@ -1,0 +1,14 @@
+#!/usr/bin/env bash
+
+set -eu
+
+binpath=$(dirname $0)
+landscapes=$($binpath/list-all)
+
+for landscape in $landscapes
+do
+  cd $landscape
+  git reset --hard
+  git checkout master
+  git pull
+done
