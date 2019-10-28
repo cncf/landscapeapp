@@ -21,6 +21,7 @@ import currentDevice from 'current-device';
 import TwitterTimeline from "./TwitterTimeline";
 import {Bar, Pie, defaults} from 'react-chartjs-2';
 import useWindowSize from "@rooks/use-window-size"
+import classNames from 'classnames'
 
 let productScrollEl = null;
 const formatDate = function(x) {
@@ -317,11 +318,7 @@ const ItemDialogContent = ({itemInfo, isLandscape, setIsLandscape}) => {
       setIsLandscape(currentDevice.landscape());
     }, 1000);
   }
-  const { innerWidth } = useWindowSize();
-
-
-
-
+  const { innerWidth, innerHeight } = useWindowSize();
 
   const linkToOrganization = filtersToUrl({grouping: 'organization', filters: {organization: itemInfo.organization}});
   const itemCategory = function(path) {
@@ -435,7 +432,7 @@ const ItemDialogContent = ({itemInfo, isLandscape, setIsLandscape}) => {
     </div>
   );
 
-  const scrollAllContent = innerWidth < 1000;
+  const scrollAllContent = innerWidth < 1000 || innerHeight < 630;
   const cellStyle = {
     width: 146,
     marginRight: 4,
@@ -588,7 +585,7 @@ const ItemDialogContent = ({itemInfo, isLandscape, setIsLandscape}) => {
   </Fragment>;
 
   return (
-        <div className="modal-content">
+        <div className={classNames("modal-content", {'scroll-all-content': scrollAllContent})} >
             <KeyHandler keyEventName="keydown" keyValue="ArrowUp" onKeyHandle={handleUp} />
             <KeyHandler keyEventName="keydown" keyValue="ArrowDown" onKeyHandle={handleDown} />
 
