@@ -156,6 +156,12 @@ const fields = {
     url: 'contributors',
     hideInGrouping: true
   },
+  commitsThisYear: {
+    id: 'commitsThisYear',
+    label: 'Commits this year',
+    url: 'commits',
+    hideInGrouping: true
+  },
   bestPracticeBadgeId: {
     id: 'bestPracticeBadgeId',
     label: 'Badge Id',
