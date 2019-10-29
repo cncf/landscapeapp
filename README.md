@@ -32,6 +32,12 @@ Tips for common issues with images:
 
 When creating new entries, the only 4 required fields are `name`, `homepage_url`, `logo`, and `crunchbase`. It's generally easier to have the landscape fetch an SVG by adding it's URL rather than saving it yourself in the `hosted_logos` folder. Only add a `twitter` if the value in Crunchbase is incorrect. For delisted and many foreign countries, you'll need to add `stock_ticker` with the value to look up on Yahoo Finance to find the market cap. If you add a `repo_url` the card will be white instead of grey.
 
+## Crunchbase Requirement
+
+We require all entries to include a [Crunchbase](https://www.crunchbase.com/) entry. We use the Crunchbase API to fetch the backing organization and headquarters location and (if they exist), Twitter, LinkedIn, funding, parent organization, and stock ticker. For open source projects, we will just create a nonprofit organization representing the project (if one doesn't already exist), and set the location to the lead developer.
+
+Using an external source for this info saves effort in most cases, because it's data is being independently maintained and updated over time.
+
 ## External Data
 
 The canonical source for all data is `landscape.yml`. Once a day, the landscapeapp update_server pulls data for projects and companies from the following sources:

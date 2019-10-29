@@ -78,7 +78,7 @@ async function main() {
       await Promise.delay(10000);
       await page.screenshot({ path: path.resolve(projectPath, 'dist/images/' + pageInfo.fileName), fullPage: false });
       if (pageInfo.pdfFileName) {
-        await page.emulateMedia('screen');
+        await page.emulateMediaType('screen');
         await page.pdf({path: path.resolve(projectPath, 'dist/images/' + pageInfo.pdfFileName), ...pageInfo.size, printBackground: true, pageRanges: '1' });
       }
       await browser.close();

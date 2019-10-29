@@ -81,8 +81,10 @@ export default {
       lastUpdated: new Date().toISOString().substring(0, 19).replace('T', ' ') + 'Z',
       settings: settings
     }),
+    // Generate manifest and logos
     new WebappWebpackPlugin({
         logo: path.resolve(projectPath, 'images/favicon.png'),
+        prefix: '',
         favicons: {
           appName: settings.global.name,
           icons: {
