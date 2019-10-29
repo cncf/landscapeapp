@@ -204,6 +204,7 @@ async function main () {
         latestCommitLink: getCommitLink((node.github_data || {}).latest_commit_link),
         releaseDate: formatDate((node.github_data || {}).release_date),
         releaseLink: (node.github_data || {}).release_link,
+        commitsThisYear: _.sum(((node.github_data || {}).contributions || '').split(';').map( (x) => +x)),
         contributorsCount: (node.github_data || {}).contributors_count,
         contributorsLink: (node.github_data || {}).contributors_link,
         stars: (node.github_data || {}).stars,

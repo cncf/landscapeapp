@@ -23,6 +23,9 @@ export const options = [{
 }, {
   id: {field: 'contributorsCount', direction: 'desc'},
   label: 'Contributors # (high to low)',
+}, {
+  id: {field: 'commitsThisYear', direction: 'desc'},
+  label: 'Commits this year (high to low)',
 }].map(function(x) {
   return {
     id: JSON.stringify(x.id),
