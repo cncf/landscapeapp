@@ -15,10 +15,14 @@ import InternalLink from './InternalLink';
 import '../styles/itemModal.scss';
 import fields from '../types/fields';
 import isGoogle from '../utils/isGoogle';
+import isEmbed from '../utils/isEmbed';
 import settings from 'project/settings.yml';
 import TweetButton from './TweetButton';
 import currentDevice from 'current-device';
 import TwitterTimeline from "./TwitterTimeline";
+import {Bar, Pie, defaults} from 'react-chartjs-2';
+import useWindowSize from "@rooks/use-window-size"
+import classNames from 'classnames'
 
 let productScrollEl = null;
 const formatDate = function(x) {
@@ -97,6 +101,9 @@ const memberTag = function({relation, member, enduser}) {
     const info = settings.membership[member];
     const name = info.name;
     const label = enduser ? (info.end_user_label || info.label) : info.label ;
+    if (!label) {
+      return null;
+    }
     return linkTag(label, {name: name, url: filtersToUrl({filters: {relation: relation}})});
   }
   return null;
@@ -130,11 +137,169 @@ const badgeTag = function(itemInfo) {
     }
   }
   const url = `https://bestpractices.coreinfrastructure.org/en/projects/${itemInfo.bestPracticeBadgeId}`;
-  const label = itemInfo.bestPracticePercentage === 100 ? 'passing' : ('In progress: ' + itemInfo.bestPracticePercentage + '%');
+  const label = itemInfo.bestPracticePercentage === 100 ? 'passing' : (itemInfo.bestPracticePercentage + '%');
   return (<OutboundLink eventLabel={url} to={url} target="_blank" className="tag tag-grass">
     <span className="tag-name">CII Best Practices</span>
     <span className="tag-value">{label}</span>
   </OutboundLink>);
+}
+
+const chart = function(itemInfo) {
+  if (isEmbed || !itemInfo.github_data || !itemInfo.github_data.languages) {
+    return null;
+  }
+  const callbacks = defaults.global.tooltips.callbacks;
+  function percents(v) {
+    const p = Math.round(v / total * 100);
+    if (p === 0) {
+      return '<1%';
+    } else {
+      return p + '%';
+    }
+  }
+  const newCallbacks =  {...callbacks, label: function(tooltipItem, data) {
+    const v = data.datasets[0].data[tooltipItem.index];
+    const value =  millify(v, {precision: 1});
+    const language = languages[tooltipItem.index];
+    return `${percents(language.value)} (${value})`;
+  }};
+  /*{
+    label: function(tooltipItem, data) {
+      debugger
+                    var label = data.datasets[tooltipItem.datasetIndex].label || '';
+
+                    if (label) {
+                        label += ': ';
+                    }
+                    label += Math.round(tooltipItem.yLabel * 100) / 100;
+                    return label;
+                }
+  }; */
+  const allLanguages = itemInfo.github_data.languages;
+  const languages = (function() {
+    const maxEntries = 8;
+    if (allLanguages.length <= maxEntries) {
+      return allLanguages
+    } else {
+      return allLanguages.slice(0, maxEntries - 1).concat([{
+        name: 'Other',
+        value: _.sum( allLanguages.slice(maxEntries - 1).map( (x) => x.value)),
+        color: 'Grey'
+      }]);
+    }
+  })();
+  const data = {
+    labels: languages.map((x) => x.name),
+    datasets: [{
+      data: languages.map( (x) => x.value),
+      backgroundColor: languages.map( (x) => x.color)
+    }]
+  };
+  const total = _.sumBy(languages, 'value');
+
+  function getLegendText(language) {
+    const millify = require('millify').default;
+    const total = _.sumBy(languages, 'value');
+    return `${language.name} ${percents(language.value)}`;
+  }
+
+  function getPopupText(language) {
+    const millify = require('millify').default;
+    return `${language.name} ${millify(language.value, {precision: 1})}`;
+  }
+
+
+  const legend = <div style={{position: 'absolute', width: 170, left: 0, top: 0, marginTop: -5, marginBottom: 5, fontSize: '0.8em'  }}>
+    {languages.map(function(language) {
+      return <div style = {{
+        position: 'relative',
+        marginTop: 2,
+        height: 12
+      }} >
+        <div style={{display: 'inline-block', position: 'absolute', height: 12, width: 12, background: language.color, top: 2, marginRight: 4}} />
+        <div style={{display: 'inline-block', position: 'relative', width: 125, left: 16,  whiteSpace: 'nowrap', textOverflow: 'ellipsis', overflow: 'hidden'}}>{ getLegendText(language) }</div>
+      </div>
+    })}
+  </div>
+
+  return <div style={{width: 220, height: 120, position: 'relative'}}>
+    <div style={{marginLeft: 170, width: 100, height: 100}}>
+      <Pie height={100} width={100} data={data} legend={{display: false}} options={{tooltips: {callbacks: newCallbacks}}} />
+    </div>
+    { legend }
+  </div>
+}
+
+const participation = function(itemInfo) {
+  const { innerWidth } = useWindowSize();
+  if (isEmbed || !itemInfo.github_data || !itemInfo.github_data.contributions) {
+    return null;
+  }
+  let lastMonth = null;
+  let lastWeek = null;
+  const data = {
+    labels: _.range(0, 51).map(function(week) {
+      const firstWeek = new Date(itemInfo.github_data.firstWeek.replace('Z', 'T00:00:00Z'));
+      firstWeek.setDate(firstWeek.getDate() + week * 7);
+      const m = firstWeek.getMonth();
+      if (lastMonth === null) {
+        lastMonth = m;
+        lastWeek = week;
+      }
+      else if (m % 12 === (lastMonth + 2) % 12) {
+        if (week > lastWeek + 6) {
+          lastMonth = m;
+          lastWeek = week;
+        } else {
+          return '';
+        }
+      } else {
+        return '';
+      }
+      const result = 'Jan Feb Mar Apr May Jun Jul Aug Sep Oct Nov Dec'.split(' ')[m];
+      return result;
+    }),
+    datasets: [{
+      backgroundColor: 'darkblue',
+      labels: [],
+      data: itemInfo.github_data.contributions.split(';').map( (x)=> +x).slice(-51)
+    }]
+  };
+  const callbacks = defaults.global.tooltips.callbacks;
+  const newCallbacks =  {...callbacks, title: function(data) {
+    const firstWeek = new Date(itemInfo.github_data.firstWeek.replace('Z', 'T00:00:00Z'));
+    const week = data[0].index;
+    firstWeek.setDate(firstWeek.getDate() + week * 7);
+    const s = firstWeek.toISOString().substring(0, 10);
+    return s;
+  }};
+  const options = {
+    tooltips: {callbacks: newCallbacks},
+    scales: {
+      xAxes: [{
+        gridLines: false,
+        ticks: {
+          backdropPaddingY: 15,
+          autoSkip: false,
+          minRotation: 0,
+          maxRotation: 0
+        },
+        scaleLabel: {
+          display: false
+        }
+      }],
+      yAxes: [{
+        ticks: {
+          beginAtZero: true,
+          callback: function (value) { if (Number.isInteger(value)) { return value; } }
+        }
+      }]
+    }
+  };
+  const width = Math.min(innerWidth - 110, 300);
+  return <div style={{width: width, height: 150}}>
+    <Bar height={150} width={width} data={data} legend={{display: false}} options={options} />
+  </div>;
 }
 
 function handleUp() {
@@ -154,9 +319,7 @@ const ItemDialogContent = ({itemInfo, isLandscape, setIsLandscape}) => {
       setIsLandscape(currentDevice.landscape());
     }, 1000);
   }
-
-
-
+  const { innerWidth, innerHeight } = useWindowSize();
 
   const linkToOrganization = filtersToUrl({grouping: 'organization', filters: {organization: itemInfo.organization}});
   const itemCategory = function(path) {
@@ -270,18 +433,52 @@ const ItemDialogContent = ({itemInfo, isLandscape, setIsLandscape}) => {
     </div>
   );
 
-  const scrollAllContent = currentDevice.mobile() && isLandscape;
+  const scrollAllContent = innerWidth < 1000 || innerHeight < 630;
+  const cellStyle = {
+    width: 146,
+    marginRight: 4,
+    height: 26,
+    display: 'inline-block',
+    layout: 'relative',
+    overflow: 'hidden'
+  };
+
   const productLogoAndTags = <Fragment>
             <div className="product-logo" style={getRelationStyle(itemInfo.relation)}>
               <img src={itemInfo.href} className='product-logo-img'/>
             </div>
             <div className="product-tags">
-              <div>{projectTag(itemInfo)}</div>
-              <div>{parentTag(itemInfo)}</div>
-              <div>{openSourceTag(itemInfo.oss)}</div>
-              <div>{licenseTag(itemInfo)}</div>
-              <div>{badgeTag(itemInfo)}</div>
-              <TweetButton/>
+              <div className="product-badges" style = {{width: Math.min(300, innerWidth - 110)}} >
+                <div style={cellStyle}>{projectTag(itemInfo)}</div>
+                <div style={cellStyle}>{parentTag(itemInfo)}</div>
+                <div style={cellStyle}>{openSourceTag(itemInfo.oss)}</div>
+                <div style={cellStyle}>{licenseTag(itemInfo)}</div>
+                <div style={cellStyle}>{badgeTag(itemInfo)}</div>
+                <div style={cellStyle}><TweetButton/></div>
+              </div>
+            </div>
+  </Fragment>;
+
+  const charts = <Fragment>
+    {chart(itemInfo)}
+    {participation(itemInfo)}
+  </Fragment>
+
+  const productLogoAndTagsAndCharts = <Fragment>
+            <div className="product-logo" style={getRelationStyle(itemInfo.relation)}>
+              <img src={itemInfo.href} className='product-logo-img'/>
+            </div>
+            <div className="product-tags">
+              <div className="product-badges" style = {{width: 300}} >
+                <div style={cellStyle}>{projectTag(itemInfo)}</div>
+                <div style={cellStyle}>{parentTag(itemInfo)}</div>
+                <div style={cellStyle}>{openSourceTag(itemInfo.oss)}</div>
+                <div style={cellStyle}>{licenseTag(itemInfo)}</div>
+                <div style={cellStyle}>{badgeTag(itemInfo)}</div>
+                <div style={cellStyle}><TweetButton/></div>
+                {chart(itemInfo)}
+                {participation(itemInfo)}
+              </div>
             </div>
   </Fragment>;
 
@@ -356,7 +553,7 @@ const ItemDialogContent = ({itemInfo, isLandscape, setIsLandscape}) => {
                 </div>
                 }
                 <div className="row">
-                  { isMobile &&  <div className="col col-50 single-column">
+                  { innerWidth <= 1000 &&  <div className="col col-50 single-column">
                     { twitterElement }
                     { latestTweetDateElement }
                     { firstCommitDateElement }
@@ -368,7 +565,7 @@ const ItemDialogContent = ({itemInfo, isLandscape, setIsLandscape}) => {
                     { amountElement }
                     { tickerElement }
                   </div> }
-                  { !isMobile && <div className="col col-50">
+                  { innerWidth > 1000 && <div className="col col-50">
                     { twitterElement }
                     { firstCommitDateElement }
                     { contributorsCountElement }
@@ -377,7 +574,7 @@ const ItemDialogContent = ({itemInfo, isLandscape, setIsLandscape}) => {
                     { tickerElement }
                   </div>
                   }
-                  { !isMobile && <div className="col col-50">
+                  { innerWidth > 1000 && <div className="col col-50">
                       { latestTweetDateElement }
                       { latestCommitDateElement }
                       { releaseDateElement }
@@ -389,17 +586,18 @@ const ItemDialogContent = ({itemInfo, isLandscape, setIsLandscape}) => {
   </Fragment>;
 
   return (
-        <div className="modal-content">
+        <div className={classNames("modal-content", {'scroll-all-content': scrollAllContent})} >
             <KeyHandler keyEventName="keydown" keyValue="ArrowUp" onKeyHandle={handleUp} />
             <KeyHandler keyEventName="keydown" keyValue="ArrowDown" onKeyHandle={handleDown} />
 
-            { !scrollAllContent && !isGoogle && productLogoAndTags }
+            { !scrollAllContent && !isGoogle && productLogoAndTagsAndCharts }
 
             <div className="product-scroll" ref={(x) => productScrollEl = x }>
               { !scrollAllContent && productInfo }
               { scrollAllContent && <div className="landscape-layout">
                   {productLogoAndTags}
                   <div className="right-column">{productInfo}</div>
+                  {charts}
                 </div>
               }
 
