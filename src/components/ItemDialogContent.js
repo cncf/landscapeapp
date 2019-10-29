@@ -80,7 +80,7 @@ const parentTag = (project) => {
   }
 }
 
-const projectTag = function({relation, member, isSubsidiaryProject, project, enduser}) {
+const projectTag = function({relation, isSubsidiaryProject, project, ...item}) {
   if (relation === false) {
     return null;
   }
@@ -91,7 +91,8 @@ const projectTag = function({relation, member, isSubsidiaryProject, project, end
   }
 
   if (isSubsidiaryProject) {
-    return linkTag("Subsidiary CNCF Project", {})
+    const url = filtersToUrl({filters: {format: 'card-mode', relation: 'member', organization: item.organization}});
+    return linkTag("Subsidiary Project", { name: settings.global.short_name, url: url });
   }
   return null;
 };
