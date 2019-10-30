@@ -1,6 +1,7 @@
 import { setFatalError } from './fatalErrors';
 import colors from 'colors';
 import Promise from 'bluebird';
+import { stringify } from 'query-string';
 import _ from 'lodash';
 import path from 'path';
 import { projectPath } from './settings';
@@ -8,12 +9,24 @@ import { addError, addWarning } from './reporter';
 import actualTwitter from './actualTwitter';
 const debug = require('debug')('twitter');
 import twitterClient from './twitterClient';
-import retry from './retry';
 import makeReporter from './progressReporter';
 
 const error = colors.red;
 const fatal = (x) => colors.red(colors.inverse(x));
 const cacheMiss = colors.green;
+
+let requests = {};
+
+const makeApiRequest = async ({ path, params = {}, method = 'GET' }) => {
+  const key = `${method} ${path}?${stringify(params)}`;
+
+  if (!requests[key]) {
+    await Promise.delay(100); // rate limit
+    requests[key] = twitterClient({ path, params, method });
+  }
+
+  return await requests[key];
+};
 
 async function getLandscapeItems(crunchbaseEntries) {
   const source = require('js-yaml').safeLoad(require('fs').readFileSync(path.resolve(projectPath, 'landscape.yml')));
@@ -63,29 +76,19 @@ export async function extractSavedTwitterEntries() {
   return _.uniq(items);
 }
 
-async function readDateOriginal(url) {
-  await Promise.delay(100); // rate limit
+async function readDate(url) {
   const lastPart = url.split('/').slice(-1)[0];
   const [screenName, extraPart] = lastPart.split('?');
   if (extraPart) {
     throw new Error(`wrong url: ${url}, because of ${extraPart}`);
   }
   const params = {screen_name: screenName};
-  try {
-    const tweets = await twitterClient.get('statuses/user_timeline', params);
-    if (tweets.length === 0) {
-      return null;
-    }
-    return new Date(tweets[0].created_at);
-  } catch(ex) {
-    throw new Error(`fetching ${url}: @${screenName} ${ex[0].message}`);
+  const tweets = await makeApiRequest({ path: '/statuses/user_timeline', params });
+  if (tweets.length === 0) {
+    return null;
   }
+  return new Date(tweets[0].created_at);
 }
-
-const readDate = async function(url) {
-  return await retry(() => readDateOriginal(url), 5, 1000);
-}
-
 
 export async function fetchTwitterEntries({cache, preferCache, crunchbaseEntries}) {
   const items = (await getLandscapeItems(crunchbaseEntries));
