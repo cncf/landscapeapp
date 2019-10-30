@@ -1,32 +1,18 @@
 import { setFatalError } from './fatalErrors';
 import colors from 'colors';
 import Promise from 'bluebird';
-import { stringify } from 'query-string';
 import _ from 'lodash';
 import path from 'path';
 import { projectPath } from './settings';
 import { addError, addWarning } from './reporter';
 import actualTwitter from './actualTwitter';
 const debug = require('debug')('twitter');
-import twitterClient from './twitterClient';
 import makeReporter from './progressReporter';
+import { TwitterClient} from './apiClients';
 
 const error = colors.red;
 const fatal = (x) => colors.red(colors.inverse(x));
 const cacheMiss = colors.green;
-
-let requests = {};
-
-const makeApiRequest = async ({ path, params = {}, method = 'GET' }) => {
-  const key = `${method} ${path}?${stringify(params)}`;
-
-  if (!requests[key]) {
-    await Promise.delay(100); // rate limit
-    requests[key] = twitterClient({ path, params, method });
-  }
-
-  return await requests[key];
-};
 
 async function getLandscapeItems(crunchbaseEntries) {
   const source = require('js-yaml').safeLoad(require('fs').readFileSync(path.resolve(projectPath, 'landscape.yml')));
@@ -83,7 +69,7 @@ async function readDate(url) {
     throw new Error(`wrong url: ${url}, because of ${extraPart}`);
   }
   const params = {screen_name: screenName};
-  const tweets = await makeApiRequest({ path: '/statuses/user_timeline', params });
+  const tweets = await TwitterClient.request({ path: '/statuses/user_timeline', params });
   if (tweets.length === 0) {
     return null;
   }

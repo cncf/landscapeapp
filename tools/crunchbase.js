@@ -1,6 +1,5 @@
 import { setFatalError } from './fatalErrors';
 import colors from 'colors';
-import process from 'process'
 import rp from './rpRetry'
 import Promise from 'bluebird'
 import _ from 'lodash';
@@ -13,33 +12,8 @@ const error = colors.red;
 const fatal = (x) => colors.red(colors.inverse(x));
 const cacheMiss = colors.green;
 const debug = require('debug')('cb');
-const { CRUNCHBASE_KEY } = process.env;
-if (!CRUNCHBASE_KEY) {
-  console.info('key not provided');
-}
+import { CrunchbaseClient } from './apiClients';
 
-let requests = {};
-
-const makeApiRequest = async ({ path = null, url = null, method = 'GET' }) => {
-  if (path) {
-    url = `https://api.crunchbase.com/v3.1${path}`;
-  }
-
-  const key = `${method} ${url}`;
-
-  if (!requests[key]) {
-    requests[key] = rp({
-      method: method,
-      uri: `${url}?user_key=${CRUNCHBASE_KEY}`,
-      followRedirect: true,
-      maxRedirects: 5,
-      timeout: 10 * 1000,
-      json: true
-    })
-  }
-
-  return await requests[key];
-};
 
 export async function getCrunchbaseOrganizationsList() {
   const traverse = require('traverse');
@@ -101,7 +75,7 @@ async function getParentCompanies(companyInfo) {
     if (parentId === companyInfo.uuid) {
       return []; //we are the parent and this hangs up the algorythm
     }
-    var fullParentInfo = await makeApiRequest({ path: `/organizations/${parentId}` });
+    var fullParentInfo = await CrunchbaseClient.request({ path: `/organizations/${parentId}` });
     var cbInfo = fullParentInfo.data;
     return [parentInfo].concat(await getParentCompanies(cbInfo));
   }
@@ -162,7 +136,7 @@ export async function fetchCrunchbaseEntries({cache, preferCache}) {
       return entry;
     }
     try {
-      const result = await makeApiRequest({ path: `/organizations/${c.name}` });
+      const result = await CrunchbaseClient.request({ path: `/organizations/${c.name}` });
       var cbInfo = result.data.properties;
       var twitterEntry = _.find(result.data.relationships.websites.items, (x) => x.properties.website_name === 'twitter');
       var linkedInEntry = _.find(result.data.relationships.websites.items, (x) => x.properties.website_name === 'linkedin');
