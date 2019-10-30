@@ -10,7 +10,7 @@ async function getLatestTweets(sinceId) {
   let count = 0;
   async function getTweets(maxId) {
     const params = {q: settings.twitter.search, count: 100, max_id: maxId, since_id: sinceId};
-    const result = await TwitterClient.request({ path: 'search/tweets', params });
+    const result = await TwitterClient.request({ path: 'search/tweets.json', params });
     const withoutLastId = result.statuses.filter( (x) => x.id_str !== maxId);
     count += withoutLastId.length;
     if (withoutLastId.length === 0) {

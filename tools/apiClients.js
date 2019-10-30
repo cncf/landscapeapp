@@ -17,7 +17,7 @@ const ApiClient = ({ baseUrl, defaultOptions = {}, defaultParams = {}, retryStat
       const qs = { ...defaultParams, ...params };
 
       if (path) {
-        url = `${baseUrl}${path}`;
+        url = `${baseUrl}${path[0] === '/' ? '' : '/' }${path}`;
       }
 
       const key = `${method} ${url}?${stringify(qs)}`;
