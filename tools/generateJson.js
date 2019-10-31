@@ -644,12 +644,18 @@ async function main () {
     return [...new Set(slugs)].sort()
   }
 
+  const generateLanguages = () => {
+    const languages = _.flatten(itemsWithExtraFields.map(({github_data}) => ((github_data || {}).languages || []).map( (x) => x.name ) ));
+    return _.uniq(languages);
+  }
+
   const lookups = {
     organization: pack(extractOptions('organization')),
     landscape: pack(generateLandscapeHierarchy()),
     license: pack(generateLicenses()),
     headquarters: pack(generateHeadquarters()),
-    crunchbaseSlugs: generateCrunchbaseSlugs()
+    crunchbaseSlugs: generateCrunchbaseSlugs(),
+    languages: generateLanguages(),
   }
 
   require('fs').writeFileSync(`${projectPath}/data.json`, JSON.stringify(itemsWithExtraFields, null, 2));
