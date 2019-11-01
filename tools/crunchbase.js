@@ -1,6 +1,5 @@
 import { setFatalError } from './fatalErrors';
 import colors from 'colors';
-import process from 'process'
 import rp from './rpRetry'
 import Promise from 'bluebird'
 import _ from 'lodash';
@@ -13,10 +12,8 @@ const error = colors.red;
 const fatal = (x) => colors.red(colors.inverse(x));
 const cacheMiss = colors.green;
 const debug = require('debug')('cb');
-const key = process.env.CRUNCHBASE_KEY;
-if (!key) {
-  console.info('key not provided');
-}
+import { CrunchbaseClient } from './apiClients';
+
 
 export async function getCrunchbaseOrganizationsList() {
   const traverse = require('traverse');
@@ -78,16 +75,8 @@ async function getParentCompanies(companyInfo) {
     if (parentId === companyInfo.uuid) {
       return []; //we are the parent and this hangs up the algorythm
     }
-    var fullParentInfo =  await rp({
-      method: 'GET',
-      maxRedirects: 5,
-      followRedirect: true,
-      uri: `https://api.crunchbase.com/v3.1/organizations/${parentId}?user_key=${key}`,
-      timeout: 10 * 1000,
-      json: true
-    });
+    var fullParentInfo = await CrunchbaseClient.request({ path: `/organizations/${parentId}` });
     var cbInfo = fullParentInfo.data;
-    await Promise.delay(1 * 1000);
     return [parentInfo].concat(await getParentCompanies(cbInfo));
   }
 }
@@ -132,7 +121,6 @@ export async function fetchCrunchbaseEntries({cache, preferCache}) {
       cachedEntry.parents = cachedEntry.parents || [];
       return cachedEntry;
     }
-    await Promise.delay(1 * 1000);
     if (c.crunchbase === 'https://www.cncf.io') {
       const entry = {
         url: c.crunchbase,
@@ -148,14 +136,7 @@ export async function fetchCrunchbaseEntries({cache, preferCache}) {
       return entry;
     }
     try {
-      const result = await rp({
-        method: 'GET',
-        maxRedirects: 5,
-        followRedirect: true,
-        uri: `https://api.crunchbase.com/v3.1/organizations/${c.name}?user_key=${key}`,
-        timeout: 10 * 1000,
-        json: true
-      });
+      const result = await CrunchbaseClient.request({ path: `/organizations/${c.name}` });
       var cbInfo = result.data.properties;
       var twitterEntry = _.find(result.data.relationships.websites.items, (x) => x.properties.website_name === 'twitter');
       var linkedInEntry = _.find(result.data.relationships.websites.items, (x) => x.properties.website_name === 'linkedin');

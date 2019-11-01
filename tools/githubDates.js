@@ -1,33 +1,8 @@
-import rp from './rpRetry';
+import { GithubClient } from './apiClients';
 
-let requests = {};
-
-const makeApiRequest = async ({ path = null, url = null, method = 'GET' }) => {
-  if (path) {
-    url = `https://api.github.com${path}`;
-  }
-
-  const key = `${method} ${url}`;
-
-  if (!requests[key]) {
-    requests[key] = rp({
-      method: method,
-      uri: url,
-      followRedirect: true,
-      timeout: 10 * 1000,
-      headers: {
-        'User-agent': 'CNCF',
-        'Authorization': `token ${process.env.GITHUB_KEY}`
-      },
-      json: true
-    })
-  } 
-
-  return await requests[key];
-}
 
 export async function getReleaseDate({repo}) {
-  const releases = await makeApiRequest({ path: `/repos/${repo}/releases` });
+  const releases = await GithubClient.request({ path: `/repos/${repo}/releases` });
 
   if (releases.length > 0) {
     return releases[0].published_at;
@@ -36,14 +11,14 @@ export async function getReleaseDate({repo}) {
 
 export async function getRepoLatestDate({repo, branch}) {
   const branchSha = await getBranchSha(repo, branch);
-  const commits = await makeApiRequest({ path: `/repos/${repo}/commits?sha=${branchSha}` });
+  const commits = await GithubClient.request({ path: `/repos/${repo}/commits?sha=${branchSha}` });
   const firstCommit = commits[0];
   const commitLink = (new URL(firstCommit.html_url)).pathname;
   return { date: firstCommit.commit.author.date, commitLink: commitLink };
 }
 
 const getBranchSha = async (repo, branch) => {
-  const { commit } = await makeApiRequest({ path: `/repos/${repo}/branches/${branch}` });
+  const { commit } = await GithubClient.request({ path: `/repos/${repo}/branches/${branch}` });
   return commit.sha;
 }
 
@@ -59,7 +34,7 @@ const getUrlFromLinkHeader = (link, rel) => {
 const getCommitsLastPagePath = async (repo, branchSha) => {
   const path = `/repos/${repo}/commits?sha=${branchSha}`;
 
-  const { link } = await makeApiRequest({ path, method: 'HEAD' });
+  const { link } = await GithubClient.request({ path, method: 'HEAD' });
   const url = getUrlFromLinkHeader(link, 'last');
   if (!url) {
     return path;
@@ -71,7 +46,7 @@ const getCommitsLastPagePath = async (repo, branchSha) => {
 export async function getRepoStartDate({repo, branch}) {
   const branchSha = await getBranchSha(repo, branch);
   const commitsLastPagePath = await getCommitsLastPagePath(repo, branchSha);
-  const commits = await makeApiRequest({ path: commitsLastPagePath })
+  const commits = await GithubClient.request({ path: commitsLastPagePath })
   const lastCommit = commits[commits.length - 1];
   const commitLink = (new URL(lastCommit.html_url)).pathname;
   return { date: lastCommit.commit.author.date, commitLink: commitLink };

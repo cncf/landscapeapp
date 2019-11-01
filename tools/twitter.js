@@ -7,9 +7,8 @@ import { projectPath } from './settings';
 import { addError, addWarning } from './reporter';
 import actualTwitter from './actualTwitter';
 const debug = require('debug')('twitter');
-import twitterClient from './twitterClient';
-import retry from './retry';
 import makeReporter from './progressReporter';
+import { TwitterClient} from './apiClients';
 
 const error = colors.red;
 const fatal = (x) => colors.red(colors.inverse(x));
@@ -63,29 +62,19 @@ export async function extractSavedTwitterEntries() {
   return _.uniq(items);
 }
 
-async function readDateOriginal(url) {
-  await Promise.delay(100); // rate limit
+async function readDate(url) {
   const lastPart = url.split('/').slice(-1)[0];
   const [screenName, extraPart] = lastPart.split('?');
   if (extraPart) {
     throw new Error(`wrong url: ${url}, because of ${extraPart}`);
   }
   const params = {screen_name: screenName};
-  try {
-    const tweets = await twitterClient.get('statuses/user_timeline', params);
-    if (tweets.length === 0) {
-      return null;
-    }
-    return new Date(tweets[0].created_at);
-  } catch(ex) {
-    throw new Error(`fetching ${url}: @${screenName} ${ex[0].message}`);
+  const tweets = await TwitterClient.request({ path: '/statuses/user_timeline', params });
+  if (tweets.length === 0) {
+    return null;
   }
+  return new Date(tweets[0].created_at);
 }
-
-const readDate = async function(url) {
-  return await retry(() => readDateOriginal(url), 5, 1000);
-}
-
 
 export async function fetchTwitterEntries({cache, preferCache, crunchbaseEntries}) {
   const items = (await getLandscapeItems(crunchbaseEntries));

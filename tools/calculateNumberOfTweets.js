@@ -1,7 +1,7 @@
 import _ from 'lodash';
 import fs from 'fs';
 import path from 'path';
-import client from './twitterClient';
+import { TwitterClient } from './apiClients';
 import { projectPath, settings } from './settings';
 import {dump} from './yaml';
 
@@ -9,7 +9,8 @@ import {dump} from './yaml';
 async function getLatestTweets(sinceId) {
   let count = 0;
   async function getTweets(maxId) {
-    const result = await client.get('search/tweets', {q: settings.twitter.search, count: 100, max_id: maxId, since_id: sinceId});
+    const params = {q: settings.twitter.search, count: 100, max_id: maxId, since_id: sinceId};
+    const result = await TwitterClient.request({ path: 'search/tweets.json', params });
     const withoutLastId = result.statuses.filter( (x) => x.id_str !== maxId);
     count += withoutLastId.length;
     if (withoutLastId.length === 0) {
