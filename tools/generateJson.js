@@ -207,6 +207,7 @@ async function main () {
         commitsThisYear: _.sum(((node.github_data || {}).contributions || '').split(';').map( (x) => +x)),
         contributorsCount: (node.github_data || {}).contributors_count,
         contributorsLink: (node.github_data || {}).contributors_link,
+        language: (((node.github_data || {}).languages || [])[0] || {}).name || null,
         stars: (node.github_data || {}).stars,
         license: getLicense(),
         headquarters: getHeadquarters(),
@@ -646,7 +647,7 @@ async function main () {
 
   const generateLanguages = () => {
     const languages = _.flatten(itemsWithExtraFields.map(({github_data}) => ((github_data || {}).languages || []).map( (x) => x.name ) ));
-    return _.uniq(languages);
+    return _.orderBy(_.uniq(languages));
   }
 
   const lookups = {

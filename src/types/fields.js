@@ -208,7 +208,11 @@ const fields = {
   language: {
     id: 'language',
     url: 'language',
-    values: lookups.languages.map( (id) => ({id: id})),
+    values: lookups.languages.map( (id) => ({id: id})).concat({
+      id: null,
+      url: 'no',
+      label: 'No information'
+    }),
     filterFn:  function(filter, value, record) {
       if (!filter) {
         return true;
