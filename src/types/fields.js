@@ -120,8 +120,7 @@ const fields = {
         return x.value;
       }
       return x;
-    },
-    hideInGrouping: true
+    }
   },
   latestCommitDate: {
     id: 'latestCommitDate',
@@ -132,8 +131,7 @@ const fields = {
         return x.value;
       }
       return x;
-    },
-    hideInGrouping: true
+    }
   },
   latestTweetDate: {
     id: 'latestTweetDate',
@@ -147,20 +145,17 @@ const fields = {
         return x.value;
       }
       return x;
-    },
-    hideInGrouping: true
+    }
   },
   contributorsCount: {
     id: 'contributorsCount',
     label: 'Contributors #',
-    url: 'contributors',
-    hideInGrouping: true
+    url: 'contributors'
   },
   commitsThisYear: {
     id: 'commitsThisYear',
     label: 'Commits this year',
-    url: 'commits',
-    hideInGrouping: true
+    url: 'commits'
   },
   bestPracticeBadgeId: {
     id: 'bestPracticeBadgeId',
@@ -209,6 +204,20 @@ const fields = {
       return { id: id }
     }),
     filterFn: (parents, _, record) => parents.length === 0 || parents.find(parent => isParent(parent, record))
+  },
+  language: {
+    id: 'language',
+    url: 'language',
+    values: lookups.languages.map( (id) => ({id: id})),
+    filterFn:  function(filter, value, record) {
+      if (!filter) {
+        return true;
+      }
+      if (!(record.github_data || {}).languages) {
+        return false;
+      }
+      return !! _.find(record.github_data.languages, { name: filter })
+    }
   }
 };
 _.each(fields, function(field, key) {
