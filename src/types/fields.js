@@ -223,7 +223,7 @@ const fields = {
       if (!(record.github_data || {}).languages) {
         return false;
       }
-      return !! _.find(record.github_data.languages, { name: filter })
+      return !! _.find(record.github_data.languages.slice(0, 7), { name: filter })
     }
   }
 };

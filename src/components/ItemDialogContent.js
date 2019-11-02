@@ -178,11 +178,11 @@ const chart = function(itemInfo) {
   }; */
   const allLanguages = itemInfo.github_data.languages;
   const languages = (function() {
-    const maxEntries = 8;
+    const maxEntries = 7;
     if (allLanguages.length <= maxEntries) {
       return allLanguages
     } else {
-      return allLanguages.slice(0, maxEntries - 1).concat([{
+      return allLanguages.slice(0, maxEntries).concat([{
         name: 'Other',
         value: _.sum( allLanguages.slice(maxEntries - 1).map( (x) => x.value)),
         color: 'Grey'
