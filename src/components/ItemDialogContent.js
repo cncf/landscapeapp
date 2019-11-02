@@ -212,13 +212,15 @@ const chart = function(itemInfo) {
 
   const legend = <div style={{position: 'absolute', width: 170, left: 0, top: 0, marginTop: -5, marginBottom: 5, fontSize: '0.8em'  }}>
     {languages.map(function(language) {
+      const url = language.name === 'Other' ? null : filtersToUrl({grouping: 'language', filters: {language: language.name }});
       return <div style = {{
         position: 'relative',
         marginTop: 2,
         height: 12
       }} >
         <div style={{display: 'inline-block', position: 'absolute', height: 12, width: 12, background: language.color, top: 2, marginRight: 4}} />
-        <div style={{display: 'inline-block', position: 'relative', width: 125, left: 16,  whiteSpace: 'nowrap', textOverflow: 'ellipsis', overflow: 'hidden'}}>{ getLegendText(language) }</div>
+        <div style={{display: 'inline-block', position: 'relative', width: 125, left: 16,  whiteSpace: 'nowrap', textOverflow: 'ellipsis', overflow: 'hidden'}}>
+          <InternalLink to={url}>{ getLegendText(language) } </InternalLink></div>
       </div>
     })}
   </div>

@@ -75,6 +75,7 @@ function addFieldToParams({field, filters, params}) {
   if (_.isUndefined(value)) {
     return;
   }
+  console.info({field, value});
   if (JSON.stringify(value) !== JSON.stringify(initialState.filters[field])) {
     if (!_.isArray(value)) {
       value = [value];
