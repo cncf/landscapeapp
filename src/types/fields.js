@@ -208,15 +208,22 @@ const fields = {
   language: {
     id: 'language',
     url: 'language',
-    values: lookups.languages.map( (id) => ({id: id})),
+    values: lookups.languages.map( (id) => ({id: decodeURIComponent(id), url: id})).concat({
+      id: null,
+      url: 'no',
+      label: 'No information'
+    }),
     filterFn:  function(filter, value, record) {
+      if (filter === null) {
+        return record.language === null;
+      }
       if (!filter) {
         return true;
       }
       if (!(record.github_data || {}).languages) {
         return false;
       }
-      return !! _.find(record.github_data.languages, { name: filter })
+      return !! _.find(record.github_data.languages.slice(0, 7), { name: filter })
     }
   }
 };
