@@ -214,6 +214,9 @@ const fields = {
       label: 'No information'
     }),
     filterFn:  function(filter, value, record) {
+      if (filter === null) {
+        return record.language === null;
+      }
       if (!filter) {
         return true;
       }
