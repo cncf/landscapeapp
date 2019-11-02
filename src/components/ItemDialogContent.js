@@ -212,7 +212,7 @@ const chart = function(itemInfo) {
 
   const legend = <div style={{position: 'absolute', width: 170, left: 0, top: 0, marginTop: -5, marginBottom: 5, fontSize: '0.8em'  }}>
     {languages.map(function(language) {
-      const url = language.name === 'Other' ? null : filtersToUrl({grouping: 'language', filters: {language: language.name }});
+      const url = language.name === 'Other' ? null : filtersToUrl({grouping: 'no', filters: {language: language.name }});
       return <div style = {{
         position: 'relative',
         marginTop: 2,
