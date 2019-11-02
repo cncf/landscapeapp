@@ -174,7 +174,9 @@ function setFieldFromParams({field, filters, params}) {
   const parts = urlValue.split(',');
   const values = parts.map(function(part) {
     return _.find(fieldInfo.values, function(x) {
-      return x.url.toLowerCase() === part.toLowerCase();
+      const v = x.url.toLowerCase();
+      const p = part.toLowerCase();
+      return v === p || decodeURIComponent(v) === p || qs.parse(decodeURIComponent(v)) === p;
     });
   }).filter(function(x) { return !!x}).map(function(x) {
     return x.id;

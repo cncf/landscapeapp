@@ -646,7 +646,7 @@ async function main () {
   }
 
   const generateLanguages = () => {
-    const languages = _.flatten(itemsWithExtraFields.map(({github_data}) => ((github_data || {}).languages || []).map( (x) => x.name ) ));
+    const languages = _.flatten(itemsWithExtraFields.map(({github_data}) => ((github_data || {}).languages || []).map( (x) => encodeURIComponent(x.name) ) ));
     return _.orderBy(_.uniq(languages));
   }
 

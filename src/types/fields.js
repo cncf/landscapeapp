@@ -208,7 +208,7 @@ const fields = {
   language: {
     id: 'language',
     url: 'language',
-    values: lookups.languages.map( (id) => ({id: id})).concat({
+    values: lookups.languages.map( (id) => ({id: decodeURIComponent(id), url: id})).concat({
       id: null,
       url: 'no',
       label: 'No information'
