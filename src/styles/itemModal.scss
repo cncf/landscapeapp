@@ -110,6 +110,30 @@ $mobilewidth: 1000px;
   }
 }
 
+.multiline {
+  height: 22px !important;
+  width: 146px !important;
+  position: relative !important;
+  .tag-name {
+    position: absolute !important;
+    top: 4px !important;
+    left: 4px !important;
+    padding: 0 !important;
+    margin: 0 !important;
+  }
+  .tag-value {
+    font-size: 0.5rem !important;
+    white-space: normal !important;
+    width: 110px !important;
+    padding: 0 2px !important;
+    position: relative !important;
+    display: table-cell !important;
+    vertical-align: middle !important;
+    left: 40px !important;
+    height: 22px;
+  }
+}
+
 .modal {
   .single-column {
     .product-property .col:nth-child(1) {
