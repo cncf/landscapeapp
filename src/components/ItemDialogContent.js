@@ -130,7 +130,7 @@ const licenseTag = function({relation, license, hideLicense}) {
   const url = filtersToUrl({grouping: 'license', filters:{license: license}});
   const width = measureWidth(label);
   console.info({width: width});
-  return linkTag(label, { name: "License", url, color: "purple", multiline: width > 70 });
+  return linkTag(label, { name: "License", url, color: "purple", multiline: width > 90 });
 }
 const badgeTag = function(itemInfo) {
   if (!itemInfo.bestPracticeBadgeId) {
