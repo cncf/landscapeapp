@@ -74,8 +74,7 @@ async function main() {
       const page = await browser.newPage();
       page.setViewport(pageInfo.size)
       console.info(`visiting http://localhost:${port}${pageInfo.url}`);
-      await page.goto(`http://localhost:${port}${pageInfo.url}&pdf`);
-      await Promise.delay(10000);
+      await page.goto(`http://localhost:${port}${pageInfo.url}&pdf`, { waitUntil: 'networkidle0'});
       await page.screenshot({ path: path.resolve(projectPath, 'dist/images/' + pageInfo.fileName), fullPage: false });
       if (pageInfo.pdfFileName) {
         await page.emulateMediaType('screen');
