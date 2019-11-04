@@ -19,6 +19,7 @@ export const getFilteredItems = createSelector(
   ],
   function(data, filters, mainContentMode) {
     var filterHostedProject = filterFn({field: 'relation', filters});
+    // TODO: REMOVE CNCF
     if (settings.global.flags.cncf_sandbox) {
       filterHostedProject = function(x) {
         const oldValue = filterFn({field: 'relation', filters})(x);
@@ -62,6 +63,7 @@ const getFilteredItemsForBigPicture = createSelector(
   ],
   function(data, filters) {
     var filterHostedProject = filterFn({field: 'relation', filters});
+    // TODO: REMOVE CNCF
     if (settings.global.flags.cncf_sandbox) {
       filterHostedProject = function(x) {
         const oldValue = filterFn({field: 'relation', filters})(x);
@@ -158,6 +160,7 @@ const getGroupedItems = createSelector(
       return getGroupingValue({item: item, grouping: grouping});
     });
 
+    // TODO: REMOVE CNCF
     if (settings.global.flags.cncf_sandbox) {
       if (grouping === 'relation' && filters.relation.indexOf('sandbox') !== -1) {
         grouped = _.groupBy(items, function(item) {
@@ -210,6 +213,7 @@ export const getGroupedItemsForBigPicture = function(state) {
   return bigPictureMethods[currentSettings.method](state);
 }
 
+// TODO: REMOVE CNCF
 const getGroupedItemsForCncfBigPicture = createSelector(
   [ getFilteredItemsForBigPicture,
     (state) => state.main.data,
@@ -325,6 +329,7 @@ const getGroupedItemsForServerlessBigPicture = createSelector([
   }
 );
 
+// TODO: REMOVE CNCF
 const getGroupedItemsForCncfMembers = createSelector([
      getFilteredItemsForBigPicture,
     (state) => state.main.data,
@@ -333,6 +338,7 @@ const getGroupedItemsForCncfMembers = createSelector([
     (state) => state.main.sortField
   ],
   function(items, allItems, grouping, filters, sortField) {
+    // TODO: REMOVE CNCF
     const membersCategory = sharedGetCategoriesForCncfMembers({landscape})[0];
     const subcategories = landscape.filter( (l) => l.parentId === membersCategory.id);
 
@@ -372,6 +378,7 @@ export function getItemsForExport(state) {
   return _.flatten(getGroupedItems(state).map((x) => x.items));
 }
 
+// TODO: REMOVE CNCF
 export const bigPictureMethods = {
   getGroupedItemsForCncfBigPicture,
   getGroupedItemsForServerlessBigPicture,

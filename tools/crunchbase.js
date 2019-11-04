@@ -121,6 +121,7 @@ export async function fetchCrunchbaseEntries({cache, preferCache}) {
       cachedEntry.parents = cachedEntry.parents || [];
       return cachedEntry;
     }
+    // TODO: REMOVE CNCF
     if (c.crunchbase === 'https://www.cncf.io') {
       const entry = {
         url: c.crunchbase,

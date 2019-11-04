@@ -182,6 +182,7 @@ const fields = {
       if (filter === null) {
         return true;
       }
+      // TODO: REMOVE CNCF
       if (filter === true) {
         return !!value || record.landscape === 'CNCF Members / End User Supporter' ;
       }

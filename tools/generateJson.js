@@ -31,6 +31,7 @@ function sortFn(x) {
 }
 
 function getItemMembershipKey(item) {
+  // TODO: REMOVE CNCF
   if (item.crunchbase === 'https://www.cncf.io') {
     return item.crunchbase + ':' + item.name;
   } else {
@@ -343,6 +344,7 @@ async function main () {
 
   var hasBadCrunchbase = false;
   await Promise.mapSeries(itemsWithExtraFields, async function(item) {
+    // TODO REMOVE CNCF
     if (item.crunchbase.indexOf('https://www.crunchbase.com/organization/') !== 0 && item.crunchbase !== 'https://www.cncf.io') {
       hasBadCrunchbase = true;
       await failOnMultipleErrors(`${item.name}  has a crunchbase ${item.crunchbase} which does not start with 'https://www.crunchbase.com/organization'`);
@@ -521,6 +523,7 @@ async function main () {
     item.member = membership;
     const {relation, isSubsidiaryProject} = (function() {
       let result;
+      // TODO: REMOVE CNCF
       result = item.project === 'sandbox' && settings.global.flags.cncf_sandbox ? 'member' : item.project;
       if (result) {
         return {relation: result, isSubsidiaryProject: false};
