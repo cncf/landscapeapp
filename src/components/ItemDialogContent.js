@@ -23,6 +23,10 @@ import TwitterTimeline from "./TwitterTimeline";
 import {Bar, Pie, defaults} from 'react-chartjs-2';
 import useWindowSize from "@rooks/use-window-size"
 import classNames from 'classnames'
+import CreateWidthMeasurer from 'measure-text-width';
+
+const measureWidth = CreateWidthMeasurer(window).setFont('0.6rem Roboto');
+
 
 let productScrollEl = null;
 const formatDate = function(x) {
@@ -61,8 +65,8 @@ const iconGithub = <svg viewBox="0 0 24 24">
     14.5,21C14.5,21.27 14.66,21.59 15.17,21.5C19.14,20.16 22,16.42 22,12A10,10 0 0,0 12,2Z" />
     </svg>;
 
-const linkTag = (label, { name, url = null, color = 'blue' }) => {
-  return (<InternalLink to={url || '/'} className={`tag tag-${color}`}>
+const linkTag = (label, { name, url = null, color = 'blue', multiline = false }) => {
+  return (<InternalLink to={url || '/'} className={`tag tag-${color} ${multiline ? 'multiline' : ''}`}>
     {(name ? <span className="tag-name">{name}</span> : null)}
     <span className="tag-value">{label}</span>
   </InternalLink>)
@@ -124,7 +128,9 @@ const licenseTag = function({relation, license, hideLicense}) {
 
   const { label } = _.find(fields.license.values, {id: license});
   const url = filtersToUrl({grouping: 'license', filters:{license: license}});
-  return linkTag(label, { name: "License", url, color: "purple" });
+  const width = measureWidth(label);
+  console.info({width: width});
+  return linkTag(label, { name: "License", url, color: "purple", multiline: width > 90 });
 }
 const badgeTag = function(itemInfo) {
   if (!itemInfo.bestPracticeBadgeId) {

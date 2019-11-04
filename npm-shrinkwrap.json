@@ -11551,6 +11551,11 @@
       "resolved": "https://registry.npmjs.org/mdn-data/-/mdn-data-1.1.4.tgz",
       "integrity": "sha512-FSYbp3lyKjyj3E7fMl6rYvUdX0FBXaluGqlFoYESWQlyUTq8R+wp0rkFxoYFqZlHCvsUXGjyJmLQSnXToYhOSA=="
     },
+    "measure-text-width": {
+      "version": "0.0.4",
+      "resolved": "https://registry.npmjs.org/measure-text-width/-/measure-text-width-0.0.4.tgz",
+      "integrity": "sha512-+zAbH5iUdTmLEPB6vF6ebZCET2N2czmjXLSbmvwWONob+4RykNWSZ7vJf+pJOnowpM2TNa/JqbEIhRdxY08CyA=="
+    },
     "media-typer": {
       "version": "0.3.0",
       "resolved": "https://registry.npmjs.org/media-typer/-/media-typer-0.3.0.tgz",
