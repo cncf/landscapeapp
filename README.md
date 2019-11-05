@@ -118,6 +118,9 @@ the `../lfai` folder, you should type these commands:
 `PROJECT_PATH=../lfai npm run build` to build a project
 Do not forget to run `git pull` on a `../lfai` project first to ensure that you
 work with latest data or with a certain branch
+If you want to run this from a `lfai` project itself, try this:
+```PROJECT_PATH=`pwd` npm run open:src --prefix ../landscapeapp```
+
 
 
 ## Adding to a google search console
