@@ -7,7 +7,7 @@ import formatAmount from '../utils/formatAmount';
 import formatNumber from 'format-number';
 import { filtersToUrl } from '../utils/syncToUrl';
 import stringOrSpecial from '../utils/stringOrSpecial';
-import  {sharedGetCategoriesForBigPicture, sharedGetCategoriesForServerlessBigPicture, sharedGetCategoriesForCncfMembers } from './sharedItemsCalculator';
+import  {sharedGetCategoriesForBigPicture, sharedGetCategoriesForServerlessBigPicture } from './sharedItemsCalculator';
 import settings from 'project/settings.yml';
 
 const landscape = fields.landscape.values;
@@ -338,9 +338,8 @@ const getGroupedItemsForCncfMembers = createSelector([
     (state) => state.main.sortField
   ],
   function(items, allItems, grouping, filters, sortField) {
-    // TODO: REMOVE CNCF
-    const membersCategory = sharedGetCategoriesForCncfMembers({landscape})[0];
-    const subcategories = landscape.filter( (l) => l.parentId === membersCategory.id);
+    const { membership } = settings.global;
+    const subcategories = landscape.filter( ({parentId}) => membership && parentId === membership);
 
     const itemsFrom = function(subcategoryId) {
       return _.orderBy(items.filter(function(item) {

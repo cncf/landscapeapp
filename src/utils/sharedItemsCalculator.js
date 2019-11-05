@@ -17,14 +17,7 @@ export function sharedGetCategoriesForServerlessBigPicture({landscape}) {
   return [serverlessCategory];
 }
 
-// TODO: REMOVE CNCF
-export function sharedGetCategoriesForCncfMembers({landscape}) {
-  const membersCategory = landscape.filter( (l) => l.label === 'CNCF Members')[0];
-  return [membersCategory];
-}
-
 export const bigPictureMethods = {
   getGroupedItemsForCncfBigPicture: sharedGetCategoriesForBigPicture,
   getGroupedItemsForServerlessBigPicture: sharedGetCategoriesForServerlessBigPicture,
-  getGroupedItemsForCncfMembers: sharedGetCategoriesForCncfMembers
 }
