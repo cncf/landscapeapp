@@ -81,7 +81,7 @@ export GITHUB_KEY=key-here
 If you are working with more than one landscape, there's a trick to run the standard landscapeapp `package.json` functions. Add the following to your `~/.bash_profile`:
 
 ```sh
-function y { PROJECT_PATH=$PWD BABEL_DISABLE_CACHE=1 npm explore interactive-landscape -- npm run "$@"; }
+function y { PROJECT_PATH=`pwd` npm run --prefix ../landscapeapp "$@"; }
 export -f y
 # yf does a normal build and full test run
 alias yf='y fetch'
@@ -109,6 +109,18 @@ If you're making a change to `landscapeapp` (and in that directory), and you hav
 ```sh
 PROJECT_PATH=../cdf-landscape npm run build
 ```
+
+An alternative approach is to work only with a landscapeapp project, you switch
+to the landscapeapp folder, and, for example, if you have an `lfai` project in
+the `../lfai` folder, you should type these commands:
+`PROJECT_PATH=../lfai npm run open:src` to run a dev server
+`PROJECT_PATH=../lfai npm run fetch` to update data
+`PROJECT_PATH=../lfai npm run build` to build a project
+Do not forget to run `git pull` on a `../lfai` project first to ensure that you
+work with latest data or with a certain branch
+If you want to run this from a `lfai` project itself, try this:
+```PROJECT_PATH=`pwd` npm run open:src --prefix ../landscapeapp```
+
 
 
 ## Adding to a google search console
