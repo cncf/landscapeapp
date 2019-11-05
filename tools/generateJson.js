@@ -194,6 +194,16 @@ async function main () {
         return 'https://github.com' + link;
       }
 
+      const isEndUserSupporter = () => {
+        if (node.enduser) {
+          return true;
+        }
+
+        const membership = settings.membership[parts[1]];
+
+        return membership && membership.enduser;
+      };
+
       // calculating a membership
 
 
@@ -226,7 +236,8 @@ async function main () {
         oss: getLicense() !== 'NotOpenSource',
         href: `logos/${(node.image_data || {}).fileName}`,
         bestPracticeBadgeId: (node.best_practice_data || {}).badge,
-        bestPracticePercentage: (node.best_practice_data || {}).percentage
+        bestPracticePercentage: (node.best_practice_data || {}).percentage,
+        enduser: isEndUserSupporter()
       });
     }
   });

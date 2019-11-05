@@ -178,17 +178,11 @@ const fields = {
     id: 'enduser',
     label: 'End User',
     url: 'enduser',
-    filterFn: function(filter, value, record) {
+    filterFn: function(filter, value) {
       if (filter === null) {
         return true;
       }
-      // TODO: REMOVE CNCF
-      if (filter === true) {
-        return !!value || record.landscape === 'CNCF Members / End User Supporter' ;
-      }
-      if (filter === false) {
-        return !value && record.landscape !== 'CNCF Members / End User Supporter';
-      }
+      return filter === true ? value : !value;
     },
     values: [{id: true, label: 'Yes', url: 'yes'}, {id: false, label: 'No', url: 'no'}]
   },
