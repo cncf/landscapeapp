@@ -110,6 +110,15 @@ If you're making a change to `landscapeapp` (and in that directory), and you hav
 PROJECT_PATH=../cdf-landscape npm run build
 ```
 
+An alternative approach is to work only with a landscapeapp project, you switch
+to the landscapeapp folder, and, for example, if you have an `lfai` project in
+the `../lfai` folder, you should type these commands:
+`PROJECT_PATH=../lfai npm run open:src` to run a dev server
+`PROJECT_PATH=../lfai npm run fetch` to update data
+`PROJECT_PATH=../lfai npm run build` to build a project
+Do not forget to run `git pull` on a `../lfai` project first to ensure that you
+work with latest data or with a certain branch
+
 
 ## Adding to a google search console
   Go to the google search console, add a new property, enter the url of the
