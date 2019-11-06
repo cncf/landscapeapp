@@ -76,10 +76,16 @@ export TWITTER_KEYS=keys-here
 export GITHUB_KEY=key-here
 ```
 
-## Bash Shortcuts
+## Installing Locally
 
-If you are working with more than one landscape, there's a trick to run the standard landscapeapp `package.json` functions. Add the following to your `~/.bash_profile`:
-
+You can administer a landscape without ever needing to install the software locally. However, a local install is helpful for rapid development, as it reduces the 5 minute build time on Netlify to 10 seconds or less locally. In particular, you want a local install when you're reconfiguring the layout. We recommend installing one or more landscapes as sibling directories to the landscapeapp. Then, you want to install the npm modules for landscapeapp but not for any of the landscapes. So, if you're in a directory called `dev`, you would do:
+```sh
+dev$ git clone git@github.com:cncf/landscapeapp.git
+dev$ git clone git@github.com:cdfoundation/cdf-landscape.git
+dev$ cd landscapeapp
+dev$ npm install
+```
+Now, to use the local landscapeapp you can add the following to your `~/.bash_profile`:
 ```sh
 function y { PROJECT_PATH=`pwd` npm run --prefix ../landscapeapp "$@"; }
 export -f y
@@ -91,37 +97,10 @@ alias yq='y remove-quotes'
 alias yp='y build && y open:dist'
 # yo does a quick build and opens up the landscape in your browser
 alias yo='y open:src'
-# yc does a full clean out of the local npm modules and the yf. Use only if you are getting weird errors on yf
-alias yc='PROJECT_PATH=$PWD rm -rf node_modules && npm install && yf'
-```
-
-Reload with `. ~/.bash_profile` and then use `y open:src`, `yf`, etc. to run functions on the landscape in your current directory.
-
-If you want to fetch updates to the landscapeapp and both the CNCF and LFAI landscapes and update packages on all three, this alias for your `~/.bash_profile` will do so:
-
-```sh
-alias all='for path in /Users/your-username/dev/{landscapeapp,landscape,lfai-landscape}; do git -C $path pull -p; npm --prefix $path run latest; done;'
+alias a='for path in /Users/your-username/dev/{landscapeapp,cdf-landscape,lfai-landscape}; do echo $path; git -C $path pull -p; done; npm --prefix /Users/your-username/dev/landscapeapp update;'
 
 ```
-
-If you're making a change to `landscapeapp` (and in that directory), and you have a sibling directory of `cdf-landscape`, you can run the code you're changing on `cdf-landscape` with:
-
-```sh
-PROJECT_PATH=../cdf-landscape npm run build
-```
-
-An alternative approach is to work only with a landscapeapp project, you switch
-to the landscapeapp folder, and, for example, if you have an `lfai` project in
-the `../lfai` folder, you should type these commands:
-`PROJECT_PATH=../lfai npm run open:src` to run a dev server
-`PROJECT_PATH=../lfai npm run fetch` to update data
-`PROJECT_PATH=../lfai npm run build` to build a project
-Do not forget to run `git pull` on a `../lfai` project first to ensure that you
-work with latest data or with a certain branch
-If you want to run this from a `lfai` project itself, try this:
-```PROJECT_PATH=`pwd` npm run open:src --prefix ../landscapeapp```
-
-
+Reload with `. ~/.bash_profile` and then use `yo`, `yf`, etc. to run functions on the landscape in your landscape directory. `a` will do a git pull on each of the project directories you specify and install any necessary node modules for landscapeapp.
 
 ## Adding to a google search console
   Go to the google search console, add a new property, enter the url of the
