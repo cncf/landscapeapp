@@ -2,7 +2,6 @@ import _ from 'lodash';
 import path from 'path';
 import Promise from 'bluebird';
 import { projectPath, settings } from './settings';
-import { dump } from './yaml';
 
 import { hasFatalErrors, setFatalError, reportFatalErrors } from './fatalErrors';
 
@@ -20,7 +19,7 @@ async function main() {
   _.each(source.landscape, function(category) {
     _.each(category.subcategories, function(subcategory) {
       _.each(subcategory.items, function(item) {
-        if (item.logo.startsWith('./hosted_logos')) {
+        if (item.logo.indexOf('/') === -1) {
           const logo = item.logo;
           const processedLogo = _.deburr(logo);
           if (hasNonAscii(processedLogo)) {
@@ -29,15 +28,14 @@ async function main() {
             setFatalError(error);
           }
           else if (logo !== processedLogo) {
-            console.info(`RENAMING: ${logo} to ${processedLogo}`);
-            require('fs').renameSync(path.resolve(projectPath, logo), path.resolve(projectPath, processedLogo));
-            item.logo = processedLogo;
+            const error = `FATAL: please rename ${logo} to ${processedLogo}`;
+            console.info(error);
+            setFatalError(error);
           }
         }
       });
     });
   });
-  require('fs').writeFileSync(path.resolve(projectPath, 'landscape.yml'), dump(source));
   if (hasFatalErrors()) {
     await reportFatalErrors();
     process.exit(1);
