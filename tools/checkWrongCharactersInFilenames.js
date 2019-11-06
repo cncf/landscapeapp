@@ -2,6 +2,7 @@ import _ from 'lodash';
 import path from 'path';
 import Promise from 'bluebird';
 import { projectPath, settings } from './settings';
+import { dump } from './yaml';
 
 import { hasFatalErrors, setFatalError, reportFatalErrors } from './fatalErrors';
 
@@ -28,14 +29,17 @@ async function main() {
             setFatalError(error);
           }
           else if (logo !== processedLogo) {
-            const error = `FATAL: please rename ${logo} to ${processedLogo}`;
-            console.info(error);
-            setFatalError(error);
+            item.logo = processedLogo;
+            const oldFile = path.resolve(projectPath, 'hosted_logos', logo);
+            const newFile = path.resolve(projectPath, 'hosted_logos', processedLogo);
+            require('fs').renameSync(oldFile, newFile);
+            console.info(`RENAMED: ${logo} => ${processedLogo}`);
           }
         }
       });
     });
   });
+  require('fs').writeFileSync(path.resolve(projectPath, 'landscape.yml'), dump(source));
   if (hasFatalErrors()) {
     await reportFatalErrors();
     process.exit(1);
