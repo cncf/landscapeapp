@@ -1,24 +1,21 @@
-import { bigPictureMethods } from '../src/utils/sharedItemsCalculator';
+import { getLandscapeCategories } from '../src/utils/sharedItemsCalculator';
 import fields from '../src/types/fields';
 import {createSitemap} from 'sitemap';
 import { projectPath, settings } from './settings';
 import path from 'path';
 const items = JSON.parse(require('fs').readFileSync(path.resolve(projectPath, 'data.json')));
 import _ from 'lodash';
-import Promise from 'bluebird';
-
-
 
 async function main() {
-  const sections = _.map(settings.big_picture, (section) => section.url);
   const bigPictureElements = {};
   const landscape = fields.landscape.values;
-  for (var section of _.values(settings.big_picture)) {
-    const categories = bigPictureMethods[section.method]({bigPictureSettings: settings.big_picture, format: section.url, landscape: landscape});
-    bigPictureElements[section.url] = {
-      format: section.url,
-      urlPart:  section === settings.big_picture.main ? null : section.url,
-      categories: categories.map( (x) => x.label)
+  for (let key in settings.big_picture) {
+    const landscapeSettings = settings.big_picture[key];
+    const categories = getLandscapeCategories({landscapeSettings, landscape});
+    bigPictureElements[landscapeSettings.url] = {
+      format: landscapeSettings.url,
+      urlPart: key === "main" ? null : landscapeSettings.url,
+      categories: categories.map( ({ label }) => label)
     }
   }
 

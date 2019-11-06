@@ -7,7 +7,7 @@ import formatAmount from '../utils/formatAmount';
 import formatNumber from 'format-number';
 import { filtersToUrl } from '../utils/syncToUrl';
 import stringOrSpecial from '../utils/stringOrSpecial';
-import  {sharedGetCategoriesForBigPicture, sharedGetCategoriesForServerlessBigPicture } from './sharedItemsCalculator';
+import { getLandscapeCategories } from './sharedItemsCalculator';
 import settings from 'project/settings.yml';
 
 const landscape = fields.landscape.values;
@@ -208,23 +208,19 @@ export const getGroupedItemsForBigPicture = function(state) {
   if (state.main.mainContentMode === 'card') {
     return [];
   }
-  const bigPictureSettings = _.values(settings.big_picture);
-  const currentSettings = _.find(bigPictureSettings, {url: state.main.mainContentMode});
-  return bigPictureMethods[currentSettings.method](state);
+  return landscapeMethods[state.main.mainContentMode](state);
 }
 
-// TODO: REMOVE CNCF
-const getGroupedItemsForCncfBigPicture = createSelector(
+export const getGroupedItemsForMainLandscape = createSelector(
   [ getFilteredItemsForBigPicture,
     (state) => state.main.data,
     (state) => state.main.grouping,
     (state) => state.main.filters,
-    (state) => state.main.sortField,
-    (state) => state.main.mainContentMode
+    (state) => state.main.sortField
   ],
-  function(items, allItems, grouping, filters, sortField, mainContentMode) {
-    const bigPictureSettings = _.values(settings.big_picture);
-    const categories = sharedGetCategoriesForBigPicture({bigPictureSettings, format: mainContentMode, landscape });
+  function(items, allItems, grouping, filters, sortField) {
+    const landscapeSettings = settings.big_picture.main;
+    const categories = getLandscapeCategories({landscapeSettings, landscape });
     return categories.map(function(category) {
       const newFilters = {...filters, landscape: category.id };
       return {
@@ -249,8 +245,7 @@ const getGroupedItemsForCncfBigPicture = createSelector(
   }
 );
 
-
-const getGroupedItemsForServerlessBigPicture = createSelector([
+export const getGroupedItemsForServerlessLandscape = createSelector([
      getFilteredItemsForBigPicture,
     (state) => state.main.data,
     (state) => state.main.grouping,
@@ -258,7 +253,8 @@ const getGroupedItemsForServerlessBigPicture = createSelector([
     (state) => state.main.sortField
   ],
   function(items, allItems, grouping, filters, sortField) {
-    const serverlessCategory = sharedGetCategoriesForServerlessBigPicture({landscape})[0];
+    const landscapeSettings = settings.big_picture.extra;
+    const serverlessCategory = getLandscapeCategories({landscapeSettings, landscape})[0];
     const hostedPlatformSubcategory = _.find(landscape, {label: 'Hosted Platform'});
     const installablePlatformSubcategory = _.find(landscape, {label: 'Installable Platform'});
 
@@ -329,8 +325,7 @@ const getGroupedItemsForServerlessBigPicture = createSelector([
   }
 );
 
-// TODO: REMOVE CNCF
-const getGroupedItemsForCncfMembers = createSelector([
+export const getGroupedItemsForMembersLandscape = createSelector([
      getFilteredItemsForBigPicture,
     (state) => state.main.data,
     (state) => state.main.grouping,
@@ -338,8 +333,9 @@ const getGroupedItemsForCncfMembers = createSelector([
     (state) => state.main.sortField
   ],
   function(items, allItems, grouping, filters, sortField) {
-    const { membership } = settings.global;
-    const subcategories = landscape.filter( ({parentId}) => membership && parentId === membership);
+    const landscapeSettings = settings.big_picture.third;
+    const membersCategory = getLandscapeCategories({ landscapeSettings, landscape })[0];
+    const subcategories = landscape.filter((l) => l.parentId === membersCategory.id);
 
     const itemsFrom = function(subcategoryId) {
       return _.orderBy(items.filter(function(item) {
@@ -373,15 +369,18 @@ const getGroupedItemsForCncfMembers = createSelector([
     return result;
   }
 );
+
+let landscapeMethods = {};
+landscapeMethods[settings.big_picture.main.url] = getGroupedItemsForMainLandscape;
+if (settings.big_picture.extra) {
+  landscapeMethods[settings.big_picture.extra.url] = getGroupedItemsForServerlessLandscape;
+}
+if (settings.big_picture.third) {
+  landscapeMethods[settings.big_picture.third.url] = getGroupedItemsForMembersLandscape;
+}
+
 export function getItemsForExport(state) {
   return _.flatten(getGroupedItems(state).map((x) => x.items));
 }
-
-// TODO: REMOVE CNCF
-export const bigPictureMethods = {
-  getGroupedItemsForCncfBigPicture,
-  getGroupedItemsForServerlessBigPicture,
-  getGroupedItemsForCncfMembers
-};
 
 export default getGroupedItems;

@@ -10,7 +10,7 @@ import { push, replace } from 'connected-react-router';
 import { zoomLevels } from '../utils/zoom';
 import bus from './bus';
 import { getItemsForExport } from '../utils/itemsCalculator';
-import { bigPictureMethods } from '../utils/sharedItemsCalculator';
+import { getLandscapeCategories } from '../utils/sharedItemsCalculator';
 import exportItems from '../utils/csvExporter';
 import fields from '../types/fields';
 
@@ -165,11 +165,11 @@ export function changeParameters(value) {
         const mainContentMode = value.mainContentMode || state.mainContentMode;
         const item = _.find(state.data, {id: value.selectedItemId});
         if (mainContentMode !== 'card') {
-          const bigPictureSettings = _.find(_.values(settings.big_picture), function(bigPicture) {
+          const landscapeSettings = _.find(_.values(settings.big_picture), function(bigPicture) {
             return bigPicture.url === mainContentMode
           });
           const landscape = fields.landscape.values;
-          const categories = bigPictureMethods[bigPictureSettings.method]({bigPictureSettings: settings.big_picture, format: mainContentMode, landscape: landscape });
+          const categories = getLandscapeCategories({ landscapeSettings, landscape });
           const itemInCategories = _.find(categories, function(category) {
             return item && item.category === category.label;
           });
