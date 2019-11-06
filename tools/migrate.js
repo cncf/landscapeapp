@@ -1,4 +1,6 @@
 import { settings, saveSettings } from './settings';
+import { landscape, saveLandscape } from './landscape';
+import traverse from 'traverse';
 
 const endUserMembership = settings.membership['End User Supporter'];
 if (endUserMembership) {
@@ -32,4 +34,12 @@ if (settings.global.flags) {
   delete settings.global.flags.cncf_sandbox;
 }
 
+traverse(landscape).forEach((node) => {
+  if (node && node.crunchbase && node.crunchbase === 'https://www.cncf.io') {
+    delete node.crunchbase;
+    node.unnamed_organization = true;
+  }
+});
+
 saveSettings(settings);
+saveLandscape(landscape);

@@ -31,12 +31,7 @@ function sortFn(x) {
 }
 
 function getItemMembershipKey(item) {
-  // TODO: REMOVE CNCF
-  if (item.crunchbase === 'https://www.cncf.io') {
-    return item.crunchbase + ':' + item.name;
-  } else {
-    return item.crunchbase;
-  }
+  return item.unnamed_organization ? item.name : item.crunchbase;
 }
 
 async function getMembers() {
@@ -355,8 +350,7 @@ async function main () {
 
   var hasBadCrunchbase = false;
   await Promise.mapSeries(itemsWithExtraFields, async function(item) {
-    // TODO REMOVE CNCF
-    if (item.crunchbase.indexOf('https://www.crunchbase.com/organization/') !== 0 && item.crunchbase !== 'https://www.cncf.io') {
+    if (!item.unnamed_organization && item.crunchbase.indexOf('https://www.crunchbase.com/organization/') !== 0) {
       hasBadCrunchbase = true;
       await failOnMultipleErrors(`${item.name}  has a crunchbase ${item.crunchbase} which does not start with 'https://www.crunchbase.com/organization'`);
     }
@@ -652,7 +646,7 @@ async function main () {
 
   const generateCrunchbaseSlugs = () => {
     const urls = _.flatten(itemsWithExtraFields.map(({crunchbase, crunchbaseData}) => [crunchbase, ...crunchbaseData.parents || []]));
-    const slugs = urls.map((crunchbaseUrl) => crunchbaseUrl.split("/").pop());
+    const slugs = urls.filter((url) => url).map((crunchbaseUrl) => crunchbaseUrl.split("/").pop());
     return [...new Set(slugs)].sort()
   }
 

@@ -121,20 +121,8 @@ export async function fetchCrunchbaseEntries({cache, preferCache}) {
       cachedEntry.parents = cachedEntry.parents || [];
       return cachedEntry;
     }
-    // TODO: REMOVE CNCF
-    if (c.crunchbase === 'https://www.cncf.io') {
-      const entry = {
-        url: c.crunchbase,
-        name: 'Non-Public Unnamed Organization',
-        description: '',
-        homepage: 'https://www.cncf.io',
-        city: 'Bouvet Island',
-        region: 'Antarctica',
-        country: 'Antarctica',
-        twitter: 'https://twitter.com/CloudNativeFdn',
-        linkedin: null
-      }
-      return entry;
+    if (c.unnamed_organization) {
+      return {};
     }
     try {
       const result = await CrunchbaseClient.request({ path: `/organizations/${c.name}` });
