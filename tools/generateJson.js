@@ -533,11 +533,8 @@ async function main () {
     })();
     item.member = membership;
     const {relation, isSubsidiaryProject} = (function() {
-      let result;
-      // TODO: REMOVE CNCF
-      result = item.project === 'sandbox' && settings.global.flags.cncf_sandbox ? 'member' : item.project;
-      if (result) {
-        return {relation: result, isSubsidiaryProject: false};
+      if (item.project) {
+        return {relation: item.project, isSubsidiaryProject: false};
       }
       if (item.member) {
         return {relation: 'member', isSubsidiaryProject: false};

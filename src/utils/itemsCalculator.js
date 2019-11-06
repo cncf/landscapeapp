@@ -19,17 +19,6 @@ export const getFilteredItems = createSelector(
   ],
   function(data, filters, mainContentMode) {
     var filterHostedProject = filterFn({field: 'relation', filters});
-    // TODO: REMOVE CNCF
-    if (settings.global.flags.cncf_sandbox) {
-      filterHostedProject = function(x) {
-        const oldValue = filterFn({field: 'relation', filters})(x);
-        if (filters.relation.indexOf('sandbox') !== -1) {
-          return oldValue || x.project === 'sandbox';
-        } else {
-          return oldValue;
-        }
-      }
-    }
     var filterByLicense = filterFn({field: 'license', filters});
     var filterByOrganization = filterFn({field: 'organization', filters});
     var filterByHeadquarters = filterFn({field: 'headquarters', filters});
@@ -63,17 +52,6 @@ const getFilteredItemsForBigPicture = createSelector(
   ],
   function(data, filters) {
     var filterHostedProject = filterFn({field: 'relation', filters});
-    // TODO: REMOVE CNCF
-    if (settings.global.flags.cncf_sandbox) {
-      filterHostedProject = function(x) {
-        const oldValue = filterFn({field: 'relation', filters})(x);
-        if (filters.relation.indexOf('sandbox') !== -1) {
-          return oldValue || x.project === 'sandbox';
-        } else {
-          return oldValue;
-        }
-      }
-    }
     var filterByLicense = filterFn({field: 'license', filters});
     var filterByOrganization = filterFn({field: 'organization', filters});
     var filterByHeadquarters = filterFn({field: 'headquarters', filters});
@@ -157,22 +135,8 @@ const getGroupedItems = createSelector(
     }
 
     let grouped = _.groupBy(items, function(item) {
-      return getGroupingValue({item: item, grouping: grouping});
+      return getGroupingValue({item, grouping, filters});
     });
-
-    // TODO: REMOVE CNCF
-    if (settings.global.flags.cncf_sandbox) {
-      if (grouping === 'relation' && filters.relation.indexOf('sandbox') !== -1) {
-        grouped = _.groupBy(items, function(item) {
-          const oldValue = getGroupingValue({item: item, grouping: grouping});
-          if (item.project === 'sandbox') {
-            return 'sandbox'
-          } else {
-            return oldValue;
-          }
-        });
-      }
-    }
 
     const fieldInfo = fields[grouping];
     return _.orderBy(_.map(grouped, function(value, key) {
