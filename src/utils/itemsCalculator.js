@@ -219,8 +219,6 @@ export const getGroupedItemsForServerlessLandscape = createSelector([
   function(items, allItems, grouping, filters, sortField) {
     const landscapeSettings = settings.big_picture.extra;
     const serverlessCategory = getLandscapeCategories({landscapeSettings, landscape})[0];
-    const hostedPlatformSubcategory = _.find(landscape, {label: 'Hosted Platform'});
-    const installablePlatformSubcategory = _.find(landscape, {label: 'Installable Platform'});
 
     const subcategories = landscape.filter( (l) => l.parentId === serverlessCategory.id);
 
@@ -253,39 +251,7 @@ export const getGroupedItemsForServerlessLandscape = createSelector([
       };
     });
 
-    // merge platforms
-    const merged = {
-      key: stringOrSpecial('Platform'),
-      header: 'Platform',
-      href: filtersToUrl({
-        filters: {...filters,  landscape: [hostedPlatformSubcategory.id, installablePlatformSubcategory.id]},
-        grouping: 'landscape', sortField, mainContentMode: 'card'
-      }),
-      subcategories: [
-        {
-          name: 'Hosted',
-          href: filtersToUrl({
-            filters: {...filters, landscape: hostedPlatformSubcategory.id},
-            grouping: 'landscape', sortField, mainContentMode: 'card'
-          }),
-          items: itemsFrom(hostedPlatformSubcategory.id),
-          allItems: allItemsFrom(hostedPlatformSubcategory.id)
-        },
-        {
-          name: 'Installable',
-          href: filtersToUrl({
-            filters: {...filters, landscape: installablePlatformSubcategory.id},
-            grouping: 'landscape', sortField, mainContentMode: 'card'
-          }),
-          items: itemsFrom(installablePlatformSubcategory.id),
-          allItems: allItemsFrom(installablePlatformSubcategory.id)
-        }
-      ]
-    };
-
-    return result.filter(function(x) { return x.header !== 'Hosted Platform'}).filter(function(x) { return x.header !== 'Installable Platform'}).concat([merged]);
-
-
+    return result;
   }
 );
 

@@ -10,6 +10,19 @@ if (endUserMembership) {
 const extraLandscape = settings.big_picture.extra;
 if (extraLandscape) {
   extraLandscape.category = "Serverless";
+
+  const index = extraLandscape.elements.findIndex(({ category }) => category === "Platform");
+
+  if (index > -1) {
+    const platformCategory = extraLandscape.elements[index];
+    platformCategory.category = "Hosted Platform";
+
+    const width = (platformCategory.width - 20) / 2;
+    platformCategory.width = width;
+
+    const newCategory = { ...platformCategory, category: "Installable Platform", left: width + 20 };
+    extraLandscape.elements.splice(index + 1, 0, newCategory);
+  }
 }
 
 const thirdLandscape = settings.big_picture.third;
