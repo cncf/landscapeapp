@@ -8,7 +8,7 @@ const mainSettings = settings.big_picture.main;
 const thirdSettings = settings.big_picture.third || {};
 
 const mapStateToProps = (state) => ({
-  groupedItems: getGroupedItemsForBigPicture(state),
+  groupedItems: getGroupedItemsForBigPicture(state, settings.big_picture.third),
   zoom: state.main.zoom,
   landscapeSettings: thirdSettings,
   showPreview: true

@@ -168,25 +168,28 @@ const bigPictureSortOrder = [
   }
 ];
 
-export const getGroupedItemsForBigPicture = function(state) {
+export const getGroupedItemsForBigPicture = function(state, landscapeSettings = null) {
+  if (!landscapeSettings) {
+    landscapeSettings = Object.values(settings.big_picture).find(({ url }) => url === state.main.mainContentMode);
+  }
   if (state.main.mainContentMode === 'card') {
     return [];
-  } else if (state.main.mainContentMode === 'landscape') {
-    return getGroupedItemsForMainLandscape(state);
+  } else if (landscapeSettings.url === 'landscape') {
+    return getGroupedItemsForMainLandscape(state, landscapeSettings);
   } else {
-    return getGroupedItemsForAdditionalLandscape(state)
+    return getGroupedItemsForAdditionalLandscape(state, landscapeSettings)
   }
 }
 
-export const getGroupedItemsForMainLandscape = createSelector(
+const getGroupedItemsForMainLandscape = createSelector(
   [ getFilteredItemsForBigPicture,
     (state) => state.main.data,
     (state) => state.main.grouping,
     (state) => state.main.filters,
-    (state) => state.main.sortField
+    (state) => state.main.sortField,
+    (state, landscapeSettings) => landscapeSettings
   ],
-  function(items, allItems, grouping, filters, sortField) {
-    const landscapeSettings = settings.big_picture.main;
+  function(items, allItems, grouping, filters, sortField, landscapeSettings) {
     const categories = getLandscapeCategories({landscapeSettings, landscape });
     return categories.map(function(category) {
       const newFilters = {...filters, landscape: category.id };
@@ -212,16 +215,15 @@ export const getGroupedItemsForMainLandscape = createSelector(
   }
 );
 
-export const getGroupedItemsForAdditionalLandscape = createSelector([
+const getGroupedItemsForAdditionalLandscape = createSelector([
      getFilteredItemsForBigPicture,
     (state) => state.main.data,
     (state) => state.main.grouping,
     (state) => state.main.filters,
     (state) => state.main.sortField,
-    (state) => state.main.mainContentMode
+    (state, landscapeSettings) => landscapeSettings
   ],
-  function(items, allItems, grouping, filters, sortField, mainContentMode) {
-    const landscapeSettings = Object.values(settings.big_picture).find(({ url }) => url === mainContentMode);
+  function(items, allItems, grouping, filters, sortField, landscapeSettings) {
     const category = getLandscapeCategories({landscapeSettings, landscape})[0];
     const subcategories = landscape.filter(({ parentId }) => parentId === category.id);
 
