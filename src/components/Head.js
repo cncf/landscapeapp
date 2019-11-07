@@ -5,9 +5,8 @@ import queryString from 'query-string';
 
 import settings from "project/settings.yml";
 
-const extraSettings = settings.big_picture.extra || {};
-const thirdSettings = settings.big_picture.third || {};
-const allowedFormats = ["card-mode", extraSettings.url, thirdSettings.url].filter((x) => x);
+const additionalLandscapes = Object.values(settings.big_picture).slice(1).map(({ url }) => url);
+const allowedFormats = ["card-mode", ...additionalLandscapes];
 
 const isCanonical = (pathname) => {
   const params = queryString.parse(pathname.split("/").pop());
