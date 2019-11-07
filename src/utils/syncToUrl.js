@@ -12,9 +12,7 @@ const sortOptions = options.map(function(x) {
 });
 
 import settings from 'project/settings.yml';
-const mainSettings = settings.big_picture.main;
-const extraSettings = settings.big_picture.extra || {};
-const thirdSettings = settings.big_picture.third || {};
+import findLandscapeSettings from './findLandscapeSettings';
 
 export function filtersToUrl({filters, grouping, sortField, selectedItemId, zoom, mainContentMode = 'card', isLogoMode = false, isFullscreen}) {
   const prefix = window.prefix;
@@ -119,14 +117,10 @@ function addMainContentModeToParams({mainContentMode, isLogoMode, params}) {
   }
 
   if (mainContentMode !== initialMainContentMode) {
-    if (mainContentMode === mainSettings.url) {
-      params['format'] = mainSettings.url;
-    }
-    if (mainContentMode === extraSettings.url && extraSettings.url) {
-      params['format'] = extraSettings.url;
-    }
-    if (mainContentMode === thirdSettings.url && thirdSettings.url) {
-      params['format'] = thirdSettings.url;
+    for (let key in settings.big_picture) {
+      if (mainContentMode === settings.big_picture[key].url) {
+        params['format'] = settings.big_picture[key].url;
+      }
     }
     if (mainContentMode === 'card') {
       params['format'] = 'card-mode';
@@ -218,11 +212,9 @@ function setSortFieldFromParams({ newParameters, params}) {
 function setMainContentModeFromParams({ newParameters, params}) {
   const format = params.format;
   if (!format) {
-    newParameters.mainContentMode = mainSettings.url;
-  } else if (format === extraSettings.url && extraSettings.url) {
-    newParameters.mainContentMode = extraSettings.url;
-  } else if (format === thirdSettings.url && thirdSettings.url) {
-    newParameters.mainContentMode = thirdSettings.url;
+    newParameters.mainContentMode = settings.big_picture.main.url;
+  } else if (findLandscapeSettings(format)) {
+    newParameters.mainContentMode = format;
   } else if (format === 'card-mode') {
     newParameters.mainContentMode = 'card';
     newParameters.isLogoMode = false;
