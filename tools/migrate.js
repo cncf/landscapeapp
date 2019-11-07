@@ -54,5 +54,11 @@ traverse(landscape).forEach((node) => {
   }
 });
 
+traverse(settings).forEach((node) => {
+  if (node && node.type && ["OtherLandscapeLink", "ThirdLandscapeLink"].includes(node.type)) {
+    node.type = "LandscapeLink";
+  }
+});
+
 saveSettings(settings);
 saveLandscape(landscape);

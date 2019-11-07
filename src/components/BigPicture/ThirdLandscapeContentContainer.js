@@ -4,7 +4,6 @@ import { changeSelectedItemId, changeMainContentMode } from '../../reducers/main
 import { getGroupedItemsForBigPicture } from '../../utils/itemsCalculator';
 import settings from 'project/settings.yml'
 
-const mainSettings = settings.big_picture.main;
 const thirdSettings = settings.big_picture.third || {};
 
 const mapStateToProps = (state) => ({
@@ -15,7 +14,7 @@ const mapStateToProps = (state) => ({
 });
 const mapDispatchToProps = {
   onSelectItem: changeSelectedItemId,
-  switchToOther: () => changeMainContentMode(mainSettings.url)
+  switchToLandscape: changeMainContentMode
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(LandscapeContent);

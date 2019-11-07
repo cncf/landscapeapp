@@ -5,8 +5,6 @@ import { getGroupedItemsForBigPicture } from '../../utils/itemsCalculator';
 import settings from 'project/settings.yml'
 
 const mainSettings = settings.big_picture.main;
-const extraSettings = settings.big_picture.extra || {};
-const thirdSettings = settings.big_picture.third || {};
 
 const mapStateToProps = (state) => ({
   groupedItems: getGroupedItemsForBigPicture(state),
@@ -16,8 +14,7 @@ const mapStateToProps = (state) => ({
 });
 const mapDispatchToProps = {
   onSelectItem: changeSelectedItemId,
-  switchToOther: () => changeMainContentMode(extraSettings.url),
-  switchToThird: () => changeMainContentMode(thirdSettings.url)
+  switchToLandscape: changeMainContentMode,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(LandscapeContent);
