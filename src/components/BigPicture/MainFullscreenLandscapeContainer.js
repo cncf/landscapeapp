@@ -1,12 +1,12 @@
 import { connect } from 'react-redux';
 import qs from 'query-string';
 import FullscreenLandscape from './FullscreenLandscape';
-import { getGroupedItemsForMainLandscape } from '../../utils/itemsCalculator';
+import { getGroupedItemsForBigPicture } from '../../utils/itemsCalculator';
 import settings from 'project/settings.yml'
 
 const mapStateToProps = (state) => ({
   ready: state.main.ready,
-  groupedItems: state.main.ready && getGroupedItemsForMainLandscape(state),
+  groupedItems: state.main.ready && getGroupedItemsForBigPicture(state),
   landscapeSettings: settings.big_picture.main,
   showPreview:location.search.indexOf('preview') === -1,
   version:qs.parse(location.search).version

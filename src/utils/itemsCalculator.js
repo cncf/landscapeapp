@@ -171,8 +171,11 @@ const bigPictureSortOrder = [
 export const getGroupedItemsForBigPicture = function(state) {
   if (state.main.mainContentMode === 'card') {
     return [];
+  } else if (state.main.mainContentMode === 'landscape') {
+    return getGroupedItemsForMainLandscape(state);
+  } else {
+    return getGroupedItemsForAdditionalLandscape(state)
   }
-  return landscapeMethods[state.main.mainContentMode](state);
 }
 
 export const getGroupedItemsForMainLandscape = createSelector(
@@ -209,29 +212,25 @@ export const getGroupedItemsForMainLandscape = createSelector(
   }
 );
 
-export const getGroupedItemsForServerlessLandscape = createSelector([
+export const getGroupedItemsForAdditionalLandscape = createSelector([
      getFilteredItemsForBigPicture,
     (state) => state.main.data,
     (state) => state.main.grouping,
     (state) => state.main.filters,
-    (state) => state.main.sortField
+    (state) => state.main.sortField,
+    (state) => state.main.mainContentMode
   ],
-  function(items, allItems, grouping, filters, sortField) {
-    const landscapeSettings = settings.big_picture.extra;
-    const serverlessCategory = getLandscapeCategories({landscapeSettings, landscape})[0];
-
-    const subcategories = landscape.filter( (l) => l.parentId === serverlessCategory.id);
+  function(items, allItems, grouping, filters, sortField, mainContentMode) {
+    const landscapeSettings = Object.values(settings.big_picture).find(({ url }) => url === mainContentMode);
+    const category = getLandscapeCategories({landscapeSettings, landscape})[0];
+    const subcategories = landscape.filter(({ parentId }) => parentId === category.id);
 
     const itemsFrom = function(subcategoryId) {
-      return _.orderBy(items.filter(function(item) {
-              return item.landscape ===  subcategoryId
-            }), bigPictureSortOrder)
+      return _.orderBy(items.filter((item) => item.landscape ===  subcategoryId), bigPictureSortOrder)
     };
 
     const allItemsFrom = function(subcategoryId) {
-      return _.orderBy(allItems.filter(function(item) {
-              return item.landscape ===  subcategoryId
-            }), bigPictureSortOrder)
+      return _.orderBy(allItems.filter((item) => item.landscape ===  subcategoryId), bigPictureSortOrder)
     };
 
     const result = subcategories.map(function(subcategory) {
@@ -254,60 +253,6 @@ export const getGroupedItemsForServerlessLandscape = createSelector([
     return result;
   }
 );
-
-export const getGroupedItemsForMembersLandscape = createSelector([
-     getFilteredItemsForBigPicture,
-    (state) => state.main.data,
-    (state) => state.main.grouping,
-    (state) => state.main.filters,
-    (state) => state.main.sortField
-  ],
-  function(items, allItems, grouping, filters, sortField) {
-    const landscapeSettings = settings.big_picture.third;
-    const membersCategory = getLandscapeCategories({ landscapeSettings, landscape })[0];
-    const subcategories = landscape.filter((l) => l.parentId === membersCategory.id);
-
-    const itemsFrom = function(subcategoryId) {
-      return _.orderBy(items.filter(function(item) {
-              return item.landscape ===  subcategoryId
-            }), bigPictureSortOrder)
-    };
-
-    const allItemsFrom = function(subcategoryId) {
-      return _.orderBy(allItems.filter(function(item) {
-              return item.landscape ===  subcategoryId
-            }), bigPictureSortOrder)
-    };
-
-    const result = subcategories.map(function(subcategory) {
-      const newFilters = {...filters, landscape: subcategory.id };
-      return {
-        key: stringOrSpecial(subcategory.label),
-        header: subcategory.label,
-        href: filtersToUrl({filters: newFilters, grouping: 'landscape', sortField, mainContentMode: 'card'}),
-        subcategories: [
-          {
-            name: '',
-            href: '',
-            items: itemsFrom(subcategory.id),
-            allItems: allItemsFrom(subcategory.id)
-          }
-        ]
-      };
-    });
-
-    return result;
-  }
-);
-
-let landscapeMethods = {};
-landscapeMethods[settings.big_picture.main.url] = getGroupedItemsForMainLandscape;
-if (settings.big_picture.extra) {
-  landscapeMethods[settings.big_picture.extra.url] = getGroupedItemsForServerlessLandscape;
-}
-if (settings.big_picture.third) {
-  landscapeMethods[settings.big_picture.third.url] = getGroupedItemsForMembersLandscape;
-}
 
 export function getItemsForExport(state) {
   return _.flatten(getGroupedItems(state).map((x) => x.items));
