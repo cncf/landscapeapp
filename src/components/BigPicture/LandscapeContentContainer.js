@@ -4,17 +4,19 @@ import { changeSelectedItemId, changeMainContentMode } from '../../reducers/main
 import { getGroupedItemsForBigPicture } from '../../utils/itemsCalculator';
 import settings from 'project/settings.yml'
 
-const thirdSettings = settings.big_picture.third || {};
+const mapStateToProps = (state) => {
+  const landscapeSettings = Object.values(settings.big_picture).find(({ url }) => url === state.main.mainContentMode);
 
-const mapStateToProps = (state) => ({
-  groupedItems: getGroupedItemsForBigPicture(state, settings.big_picture.third),
-  zoom: state.main.zoom,
-  landscapeSettings: thirdSettings,
-  showPreview: true
-});
+  return {
+    groupedItems: getGroupedItemsForBigPicture(state, landscapeSettings),
+    zoom: state.main.zoom,
+    landscapeSettings: landscapeSettings,
+    showPreview: true
+  }
+};
 const mapDispatchToProps = {
   onSelectItem: changeSelectedItemId,
-  switchToLandscape: changeMainContentMode
+  switchToLandscape: changeMainContentMode,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(LandscapeContent);
