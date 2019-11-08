@@ -68,18 +68,6 @@ else if (key.toLowerCase() === 'complete') {
   console.info('Unknown level. Should be one of easy, medium, hard or complete');
 }
 
-const unnamedOrganizationInfo = {
-  name: 'Non-Public Unnamed Organization',
-  description: '',
-  homepage: settings.global.company_url,
-  city: 'Bouvet Island',
-  region: 'Antarctica',
-  country: 'Antarctica',
-  twitter: 'https://twitter.com/CloudNativeFdn',
-  linkedin: null,
-  parents: []
-};
-
 async function main() {
 
   var crunchbaseEntries;
@@ -156,7 +144,7 @@ async function main() {
       //crunchbase
       if (node.unnamed_organization) {
         node.crunchbase = settings.global.self;
-        node.crunchbase_data = _.clone(unnamedOrganizationInfo);
+        node.crunchbase_data = _.clone({ ...settings.anonymous_organization, parents: [] });
       } else {
         var crunchbaseInfo = _.clone(_.find(crunchbaseEntries, {url: node.crunchbase}));
         if (crunchbaseInfo) {

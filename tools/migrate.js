@@ -51,6 +51,14 @@ traverse(landscape).forEach((node) => {
   if (node && node.crunchbase && node.crunchbase === 'https://www.cncf.io') {
     delete node.crunchbase;
     node.unnamed_organization = true;
+    settings.anonymous_organization = {
+      name: 'Non-Public Unnamed Organization',
+      homepage: 'https://www.cncf.io',
+      city: 'Bouvet Island',
+      region: 'Antarctica',
+      country: 'Antarctica',
+      twitter: 'https://twitter.com/CloudNativeFdn',
+    }
   }
 });
 
