@@ -68,6 +68,18 @@ else if (key.toLowerCase() === 'complete') {
   console.info('Unknown level. Should be one of easy, medium, hard or complete');
 }
 
+const unnamedOrganizationInfo = {
+  name: 'Non-Public Unnamed Organization',
+  description: '',
+  homepage: settings.global.company_url,
+  city: 'Bouvet Island',
+  region: 'Antarctica',
+  country: 'Antarctica',
+  twitter: 'https://twitter.com/CloudNativeFdn',
+  linkedin: null,
+  parents: []
+};
+
 async function main() {
 
   var crunchbaseEntries;
@@ -142,11 +154,16 @@ async function main() {
   const newSource = tree.map(function(node) {
     if (node && node.item === null) {
       //crunchbase
-      var crunchbaseInfo = _.clone(_.find(crunchbaseEntries, {url: node.crunchbase}));
-      if (crunchbaseInfo) {
-        delete crunchbaseInfo.url;
+      if (node.unnamed_organization) {
+        node.crunchbase = settings.global.self;
+        node.crunchbase_data = _.clone(unnamedOrganizationInfo);
+      } else {
+        var crunchbaseInfo = _.clone(_.find(crunchbaseEntries, {url: node.crunchbase}));
+        if (crunchbaseInfo) {
+          delete crunchbaseInfo.url;
+        }
+        node.crunchbase_data = crunchbaseInfo;
       }
-      node.crunchbase_data = crunchbaseInfo;
       //github
       var githubEntry = _.clone(_.find(githubEntries, {url: node.repo_url}));
       if (githubEntry) {

@@ -28,7 +28,8 @@ async function main() {
     'url_for_bestpractices',
     'enduser',
     'open_source',
-    'allow_duplicate_repo'
+    'allow_duplicate_repo',
+    'unnamed_organization'
   ];
 
   const addKeyError = (title, key) => {

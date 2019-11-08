@@ -31,11 +31,7 @@ function sortFn(x) {
 }
 
 function getItemMembershipKey(item) {
-  if (item.crunchbase === 'https://www.cncf.io') {
-    return item.crunchbase + ':' + item.name;
-  } else {
-    return item.crunchbase;
-  }
+  return item.unnamed_organization ? item.name : item.crunchbase;
 }
 
 async function getMembers() {
@@ -193,6 +189,14 @@ async function main () {
         return 'https://github.com' + link;
       }
 
+      const isEndUserSupporter = () => {
+        if (node.enduser) {
+          return true;
+        }
+
+        return (settings.membership[parts[1]] || {}).enduser;
+      };
+
       // calculating a membership
 
 
@@ -225,7 +229,8 @@ async function main () {
         oss: getLicense() !== 'NotOpenSource',
         href: `logos/${(node.image_data || {}).fileName}`,
         bestPracticeBadgeId: (node.best_practice_data || {}).badge,
-        bestPracticePercentage: (node.best_practice_data || {}).percentage
+        bestPracticePercentage: (node.best_practice_data || {}).percentage,
+        enduser: isEndUserSupporter()
       });
     }
   });
@@ -343,7 +348,7 @@ async function main () {
 
   var hasBadCrunchbase = false;
   await Promise.mapSeries(itemsWithExtraFields, async function(item) {
-    if (item.crunchbase.indexOf('https://www.crunchbase.com/organization/') !== 0 && item.crunchbase !== 'https://www.cncf.io') {
+    if (!item.unnamed_organization && item.crunchbase.indexOf('https://www.crunchbase.com/organization/') !== 0) {
       hasBadCrunchbase = true;
       await failOnMultipleErrors(`${item.name}  has a crunchbase ${item.crunchbase} which does not start with 'https://www.crunchbase.com/organization'`);
     }
@@ -520,10 +525,8 @@ async function main () {
     })();
     item.member = membership;
     const {relation, isSubsidiaryProject} = (function() {
-      let result;
-      result = item.project === 'sandbox' && settings.global.flags.cncf_sandbox ? 'member' : item.project;
-      if (result) {
-        return {relation: result, isSubsidiaryProject: false};
+      if (item.project) {
+        return {relation: item.project, isSubsidiaryProject: false};
       }
       if (item.member) {
         return {relation: 'member', isSubsidiaryProject: false};
@@ -641,7 +644,7 @@ async function main () {
 
   const generateCrunchbaseSlugs = () => {
     const urls = _.flatten(itemsWithExtraFields.map(({crunchbase, crunchbaseData}) => [crunchbase, ...crunchbaseData.parents || []]));
-    const slugs = urls.map((crunchbaseUrl) => crunchbaseUrl.split("/").pop());
+    const slugs = urls.filter((url) => url).map((crunchbaseUrl) => crunchbaseUrl.split("/").pop());
     return [...new Set(slugs)].sort()
   }
 
