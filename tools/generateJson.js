@@ -189,7 +189,7 @@ async function main () {
         return 'https://github.com' + link;
       }
 
-      const isEndUserSupporter = () => {
+      const isEndUser = () => {
         if (node.enduser) {
           return true;
         }
@@ -230,7 +230,7 @@ async function main () {
         href: `logos/${(node.image_data || {}).fileName}`,
         bestPracticeBadgeId: (node.best_practice_data || {}).badge,
         bestPracticePercentage: (node.best_practice_data || {}).percentage,
-        enduser: isEndUserSupporter()
+        enduser: isEndUser()
       });
     }
   });
