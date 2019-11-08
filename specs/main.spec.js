@@ -107,15 +107,15 @@ function landscapeTest() {
       await page.waitForSelector(".modal-content");
     }, 6 * 60 * 1000); //give it up to 1 min to execute
   });
-  if (settings.big_picture.extra) {
-    test("I visit an extra landscape page and have all required elements", async () => {
-      console.info('about to open an extra landscape page');
-      const page = await makePage(appUrl + '/format=' + settings.big_picture.extra.url);
+  Object.values(settings.big_picture).slice(1).forEach(({ name, url }) => {
+    test(`I visit ${name} landscape page and have all required elements`, async () => {
+      console.info(`about to open ${name} landscape page`);
+      const page = await makePage(`${appUrl}/format=${url}`);
       await page.waitForSelector('.big-picture-section');
       await page.click('.big-picture-section img[src]');
       await page.waitForSelector(".modal-content");
     }, 6 * 60 * 1000); //give it up to 1 min to execute
-  }
+  })
 }
 
 describe("Normal browser", function() {
