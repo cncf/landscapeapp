@@ -10,8 +10,7 @@ const mapStateToProps = (state) => {
   return {
     groupedItems: getGroupedItemsForBigPicture(state, landscapeSettings),
     zoom: state.main.zoom,
-    landscapeSettings: landscapeSettings,
-    showPreview: true
+    landscapeSettings: landscapeSettings
   }
 };
 const mapDispatchToProps = {

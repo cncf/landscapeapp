@@ -1,7 +1,7 @@
 import React from 'react';
 import { pure } from 'recompose';
 
-const OtherLandscapeLink = function({zoom, top, left, height, width, color, showPreview, onClick, title, url, layout}) {
+const OtherLandscapeLink = function({zoom, top, left, height, width, color, onClick, title, url, layout}) {
   if (layout === 'category') {
     return (<div style={{
       position: 'absolute', top: (top - 5) * zoom, left: left * zoom, height: height * zoom, margin: 5 * zoom, width: (width + 2) * zoom, background: 'white', border: `${1 * zoom}px solid ${color}`,
@@ -9,10 +9,8 @@ const OtherLandscapeLink = function({zoom, top, left, height, width, color, show
       boxShadow: `0 ${4 * zoom}px ${8 * zoom}px 0 rgba(0, 0, 0, 0.2), 0 ${6 * zoom}px ${20 * zoom}px 0 rgba(0, 0, 0, 0.19)`
     }} onClick={onClick} >
     <div style={{ width: width * zoom, height: 20 * zoom, lineHeight: `${20 * zoom}px`, textAlign: 'center', color: 'white', background: color, fontSize: 12 * zoom}}> {title} </div>
-    { showPreview &&
-        <div style={{ width: (width - 10) * zoom, height: (height - 40) * zoom, margin: 5 * zoom,
-          backgroundImage: `url("images/${url}_preview.png")`, backgroundSize: 'contain', backgroundPosition: 'center', backgroundRepeat: 'no-repeat' }}></div>
-    }
+    <div style={{ width: (width - 10) * zoom, height: (height - 40) * zoom, margin: 5 * zoom,
+      backgroundImage: `url("images/${url}_preview.png")`, backgroundSize: 'contain', backgroundPosition: 'center', backgroundRepeat: 'no-repeat' }}></div>
   </div>);
   }
   if (layout === 'subcategory') {
@@ -21,10 +19,8 @@ const OtherLandscapeLink = function({zoom, top, left, height, width, color, show
       cursor: 'pointer',
     }} onClick={onClick} >
     <div style={{ width: width * zoom, height: 20 * zoom, lineHeight: `${20 * zoom}px`, textAlign: 'center', color: 'white', fontSize: 11 * zoom}}> {title}</div>
-    { showPreview &&
-        <div style={{ width: (width - 10) * zoom, height: (height - 40) * zoom, margin: 5 * zoom,
-          backgroundImage: `url("images/${url}_preview.png")`, backgroundSize: 'contain', backgroundPosition: 'center', backgroundRepeat: 'no-repeat' }}></div>
-    }
+    <div style={{ width: (width - 10) * zoom, height: (height - 40) * zoom, margin: 5 * zoom,
+      backgroundImage: `url("images/${url}_preview.png")`, backgroundSize: 'contain', backgroundPosition: 'center', backgroundRepeat: 'no-repeat' }}></div>
   </div>);
   }
 }

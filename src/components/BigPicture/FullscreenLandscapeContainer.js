@@ -6,7 +6,6 @@ import { getGroupedItemsForBigPicture } from '../../utils/itemsCalculator';
 const mapStateToProps = (state, { landscapeSettings }) => ({
   ready: state.main.ready,
   groupedItems: state.main.ready && getGroupedItemsForBigPicture(state, landscapeSettings),
-  showPreview: location.search.indexOf('preview') === -1,
   version: qs.parse(location.search).version
 });
 const mapDispatchToProps = {

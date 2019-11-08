@@ -13,26 +13,29 @@ async function main() {
   const puppeteer = require('puppeteer');
   const landscapes = Object.values(settings.big_picture);
 
+  const pageAttributes = ({ url, fullscreen_size, deviceScaleFactor = 1 }) => {
+    return {
+      url: `/${url}?version=${version}`,
+      size: { width: fullscreen_size.width * 4, height: fullscreen_size.height * 4, deviceScaleFactor },
+    }
+  }
+
   let previews = [];
   if (landscapes.length > 1) {
     previews = landscapes.map(({ url, fullscreen_size }) => {
-      return {
-        url: `/${url}?preview&version=${version}`,
-        size: {width: fullscreen_size.width * 4, height: fullscreen_size.height * 4, deviceScaleFactor: 0.5},
-        fileName: `${url}_preview.png`
-      }
+      const deviceScaleFactor = 0.5;
+      const fileName = `${url}_preview.png`;
+      return { fileName, ...pageAttributes({ url, fullscreen_size, deviceScaleFactor }) };
     })
   }
 
   const full_sizes = landscapes.map(({ url, fullscreen_size }) => {
-    return {
-      url: `/${url}?version=${version}`,
-      size: {width: fullscreen_size.width * 4, height: fullscreen_size.height * 4, deviceScaleFactor: 1},
-      fileName: `${url}.png`
-    }
+    const fileName = `${url}.png`;
+    const pdfFileName = `${url}.pdf`;
+    return { fileName, pdfFileName, ...pageAttributes({ url, fullscreen_size }) };
   });
 
-  await Promise.mapSeries([previews, previews, full_sizes], async function(series) {
+  await Promise.mapSeries([previews, full_sizes], async function(series) {
     await Promise.map(series, async function(pageInfo) {
       const browser = await puppeteer.launch({args: ['--no-sandbox', '--disable-setuid-sandbox']});
       const page = await browser.newPage();
