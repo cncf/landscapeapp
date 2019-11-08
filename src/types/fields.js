@@ -16,11 +16,27 @@ import settings from 'project/settings.yml';
 import isParent from '../utils/isParent';
 
 const relationField = (function() {
+  const additionalRelations = settings.relation.values.flatMap(({ children }) => children || [])
+    .reduce((obj, { id, additional_relation }) => {
+      obj[id] = additional_relation;
+      return obj;
+    }, {});
   const rootEntry = {
     id: 'relation',
     url: 'project',
     label: settings.relation.label,
-    isArray: true
+    isArray: true,
+    filterFn: (filter, value) => {
+      return filter.length === 0 || filter.includes(value) || filter.includes(additionalRelations[value]);
+    },
+    groupFn: ({ item, filters }) => {
+      const { relation } = item;
+      if ((filters.relation && filters.relation.includes(relation)) || !additionalRelations[relation]) {
+        return relation;
+      } else {
+        return additionalRelations[relation];
+      }
+    }
   }
   const firstEntry = settings.relation.values[0];
   if (!firstEntry.children) {
@@ -178,16 +194,11 @@ const fields = {
     id: 'enduser',
     label: 'End User',
     url: 'enduser',
-    filterFn: function(filter, value, record) {
+    filterFn: function(filter, value) {
       if (filter === null) {
         return true;
       }
-      if (filter === true) {
-        return !!value || record.landscape === 'CNCF Members / End User Supporter' ;
-      }
-      if (filter === false) {
-        return !value && record.landscape !== 'CNCF Members / End User Supporter';
-      }
+      return filter === true ? value : !value;
     },
     values: [{id: true, label: 'Yes', url: 'yes'}, {id: false, label: 'No', url: 'no'}]
   },
@@ -318,8 +329,7 @@ export function filterFn({field, filters}) {
     }
   };
 }
-export function getGroupingValue({item, grouping}) {
-  const fieldInfo = fields[grouping];
-  const value = item[fieldInfo.id];
-  return value;
+export function getGroupingValue({item, grouping, filters}) {
+  const { id, groupFn } = fields[grouping];
+  return groupFn ? groupFn({ item , filters }) : item[id];
 }

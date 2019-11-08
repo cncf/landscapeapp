@@ -142,11 +142,16 @@ async function main() {
   const newSource = tree.map(function(node) {
     if (node && node.item === null) {
       //crunchbase
-      var crunchbaseInfo = _.clone(_.find(crunchbaseEntries, {url: node.crunchbase}));
-      if (crunchbaseInfo) {
-        delete crunchbaseInfo.url;
+      if (node.unnamed_organization) {
+        node.crunchbase = settings.global.self;
+        node.crunchbase_data = _.clone({ ...settings.anonymous_organization, parents: [] });
+      } else {
+        var crunchbaseInfo = _.clone(_.find(crunchbaseEntries, {url: node.crunchbase}));
+        if (crunchbaseInfo) {
+          delete crunchbaseInfo.url;
+        }
+        node.crunchbase_data = crunchbaseInfo;
       }
-      node.crunchbase_data = crunchbaseInfo;
       //github
       var githubEntry = _.clone(_.find(githubEntries, {url: node.repo_url}));
       if (githubEntry) {

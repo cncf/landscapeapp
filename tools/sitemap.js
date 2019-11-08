@@ -1,26 +1,23 @@
-import { bigPictureMethods } from '../src/utils/sharedItemsCalculator';
+import { getLandscapeCategories } from '../src/utils/sharedItemsCalculator';
 import fields from '../src/types/fields';
 import {createSitemap} from 'sitemap';
 import { projectPath, settings } from './settings';
 import path from 'path';
 const items = JSON.parse(require('fs').readFileSync(path.resolve(projectPath, 'data.json')));
 import _ from 'lodash';
-import Promise from 'bluebird';
-
-
+import { landscapeSettingsList } from "../src/utils/landscapeSettings";
 
 async function main() {
-  const sections = _.map(settings.big_picture, (section) => section.url);
   const bigPictureElements = {};
   const landscape = fields.landscape.values;
-  for (var section of _.values(settings.big_picture)) {
-    const categories = bigPictureMethods[section.method]({bigPictureSettings: settings.big_picture, format: section.url, landscape: landscape});
-    bigPictureElements[section.url] = {
-      format: section.url,
-      urlPart:  section === settings.big_picture.main ? null : section.url,
-      categories: categories.map( (x) => x.label)
+  landscapeSettingsList.forEach((landscapeSettings) => {
+    const categories = getLandscapeCategories({landscapeSettings, landscape});
+    bigPictureElements[landscapeSettings.url] = {
+      format: landscapeSettings.url,
+      urlPart: landscapeSettings.url === "landscape" ? null : landscapeSettings.url,
+      categories: categories.map( ({ label }) => label)
     }
-  }
+  });
 
   const sectionsWithOrder = [{key: 'card-mode', tab_index: 0}].concat( _.keys(settings.big_picture).map(function(key) {
     return {
@@ -33,7 +30,7 @@ async function main() {
     hostname: settings.global.website,
     cacheTime: 600 * 1000,
     urls: _.flatten([
-      _.values(settings.big_picture).map(function(section) {
+      landscapeSettingsList.map(function(section) {
         return {
           url: `images/${section.url}.pdf`,
           img: [{
