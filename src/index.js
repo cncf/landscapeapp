@@ -4,7 +4,7 @@
 import 'current-device';
 import 'babel-polyfill';
 import React from 'react';
-import { render } from 'react-dom';
+import { hydrate, render } from 'react-dom';
 import { AppContainer } from 'react-hot-loader';
 import configureStore, { history } from './store/configureStore';
 import Root from './components/Root';
@@ -14,18 +14,40 @@ import ReactGA from 'react-ga';
 import isDesktop from './utils/isDesktop';
 import iframeResizerContentWindow from 'iframe-resizer/js/iframeResizer.contentWindow';
 require('favicon.png'); // Tell webpack to load favicon.png
-const store = configureStore();
+
+// redux + react-snap specific hacks
+const preloadedState = window.__PRELOADED_STATE__;
+delete window.__PRELOADED_STATE__;
+const store = configureStore(preloadedState);
+// Tell react-snap how to save Redux state
+window.snapSaveState = () => ({
+  __PRELOADED_STATE__: store.getState()
+});
+
 window.__MUI_USE_NEXT_TYPOGRAPHY_VARIANTS__ = true;
 
 import "./styles/roboto.css";
-render(
-  <AppContainer>
-    <Root store={store} history={history} />
-  </AppContainer>,
-  document.getElementById('app')
-);
+const rootElement = document.getElementById("app");
+const isPrerendered = rootElement.hasChildNodes();
+if (isPrerendered) {
+  hydrate(
+    <AppContainer>
+      <Root store={store} history={history} />
+    </AppContainer>,
+    document.getElementById('app')
+  );
+} else {
+  render(
+    <AppContainer>
+      <Root store={store} history={history} />
+    </AppContainer>,
+    document.getElementById('app')
+  );
+}
 //Todo: move this to a better place
-store.dispatch(loadMainData());
+if (!isPrerendered) {
+  store.dispatch(loadMainData());
+}
 
 if (window.GA) {
   ReactGA.initialize(window.GA);
