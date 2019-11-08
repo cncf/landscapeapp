@@ -13,6 +13,7 @@ import { getItemsForExport } from '../utils/itemsCalculator';
 import { getLandscapeCategories } from '../utils/sharedItemsCalculator';
 import exportItems from '../utils/csvExporter';
 import fields from '../types/fields';
+import { findLandscapeSettings } from "../utils/landscapeSettings";
 
 
 export const initialState = {
@@ -165,9 +166,7 @@ export function changeParameters(value) {
         const mainContentMode = value.mainContentMode || state.mainContentMode;
         const item = _.find(state.data, {id: value.selectedItemId});
         if (mainContentMode !== 'card') {
-          const landscapeSettings = _.find(_.values(settings.big_picture), function(bigPicture) {
-            return bigPicture.url === mainContentMode
-          });
+          const landscapeSettings = findLandscapeSettings(mainContentMode);
           const landscape = fields.landscape.values;
           const categories = getLandscapeCategories({ landscapeSettings, landscape });
           const itemInCategories = _.find(categories, function(category) {

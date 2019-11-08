@@ -194,9 +194,7 @@ async function main () {
           return true;
         }
 
-        const membership = settings.membership[parts[1]];
-
-        return membership && membership.enduser;
+        return (settings.membership[parts[1]] || {}).enduser;
       };
 
       // calculating a membership

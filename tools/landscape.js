@@ -10,4 +10,3 @@ export const landscape = require('js-yaml').safeLoad(readFileSync(landscapePath)
 export const saveLandscape = (newLandscape) => {
   writeFileSync(landscapePath, dump(newLandscape));
 }
-

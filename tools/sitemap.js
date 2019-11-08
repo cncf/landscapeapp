@@ -5,19 +5,19 @@ import { projectPath, settings } from './settings';
 import path from 'path';
 const items = JSON.parse(require('fs').readFileSync(path.resolve(projectPath, 'data.json')));
 import _ from 'lodash';
+import { landscapeSettingsList } from "../src/utils/landscapeSettings";
 
 async function main() {
   const bigPictureElements = {};
   const landscape = fields.landscape.values;
-  for (let key in settings.big_picture) {
-    const landscapeSettings = settings.big_picture[key];
+  landscapeSettingsList.forEach((landscapeSettings) => {
     const categories = getLandscapeCategories({landscapeSettings, landscape});
     bigPictureElements[landscapeSettings.url] = {
       format: landscapeSettings.url,
-      urlPart: key === "main" ? null : landscapeSettings.url,
+      urlPart: landscapeSettings.url === "landscape" ? null : landscapeSettings.url,
       categories: categories.map( ({ label }) => label)
     }
-  }
+  });
 
   const sectionsWithOrder = [{key: 'card-mode', tab_index: 0}].concat( _.keys(settings.big_picture).map(function(key) {
     return {
@@ -30,7 +30,7 @@ async function main() {
     hostname: settings.global.website,
     cacheTime: 600 * 1000,
     urls: _.flatten([
-      _.values(settings.big_picture).map(function(section) {
+      landscapeSettingsList.map(function(section) {
         return {
           url: `images/${section.url}.pdf`,
           img: [{

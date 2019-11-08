@@ -117,10 +117,8 @@ function addMainContentModeToParams({mainContentMode, isLogoMode, params}) {
   }
 
   if (mainContentMode !== initialMainContentMode) {
-    for (let key in settings.big_picture) {
-      if (mainContentMode === settings.big_picture[key].url) {
-        params['format'] = settings.big_picture[key].url;
-      }
+    if (findLandscapeSettings(mainContentMode)) {
+      params['format'] = mainContentMode
     }
     if (mainContentMode === 'card') {
       params['format'] = 'card-mode';
