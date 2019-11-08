@@ -4,6 +4,7 @@ import devices from 'puppeteer/DeviceDescriptors';
 import { paramCase } from 'change-case';
 import { settings } from '../tools/settings';
 import { projects } from '../tools/loadData';
+import { landscapeSettingsList } from "../src/utils/landscapeSettings";
 const port = process.env.PORT || '4000';
 const appUrl = `http://localhost:${port}`;
 const width = 1920;
@@ -107,7 +108,7 @@ function landscapeTest() {
       await page.waitForSelector(".modal-content");
     }, 6 * 60 * 1000); //give it up to 1 min to execute
   });
-  Object.values(settings.big_picture).slice(1).forEach(({ name, url }) => {
+  landscapeSettingsList.slice(1).forEach(({ name, url }) => {
     test(`I visit ${name} landscape page and have all required elements`, async () => {
       console.info(`about to open ${name} landscape page`);
       const page = await makePage(`${appUrl}/format=${url}`);

@@ -8,7 +8,7 @@ import formatNumber from 'format-number';
 import { filtersToUrl } from '../utils/syncToUrl';
 import stringOrSpecial from '../utils/stringOrSpecial';
 import { getLandscapeCategories } from './sharedItemsCalculator';
-import settings from 'project/settings.yml';
+import { findLandscapeSettings } from "./landscapeSettings";
 
 const landscape = fields.landscape.values;
 
@@ -170,7 +170,7 @@ const bigPictureSortOrder = [
 
 export const getGroupedItemsForBigPicture = function(state, landscapeSettings = null) {
   if (!landscapeSettings) {
-    landscapeSettings = Object.values(settings.big_picture).find(({ url }) => url === state.main.mainContentMode);
+    landscapeSettings = findLandscapeSettings(state.main.mainContentMode);
   }
   if (state.main.mainContentMode === 'card') {
     return [];

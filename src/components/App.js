@@ -8,7 +8,7 @@ import { FullscreenLandscapeContainer } from "./BigPicture";
 import HomePageContainer from './HomePageContainer';
 import NotFoundPage from './NotFoundPage';
 import { isZoomedIn } from "../utils/browserZoom";
-import settings from 'project/settings.yml';
+import { landscapeSettingsList } from "../utils/landscapeSettings";
 
 // detect an initial prefix, like /cncf/ or /lfai/ , but it can be just /
 const possiblePrefix = window.possiblePrefix || '';
@@ -37,7 +37,7 @@ class App extends React.Component {
   }
 
   fullscreenLandscapes = () => {
-    return Object.values(settings.big_picture).map((landscapeSettings) => {
+    return landscapeSettingsList.map((landscapeSettings) => {
       const url = landscapeSettings.url
       const renderer = (props) => <FullscreenLandscapeContainer {...props} landscapeSettings={landscapeSettings} />
       return <Route exact path={`/${prefix}${url}`} render={renderer} key={url} />

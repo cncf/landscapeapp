@@ -12,7 +12,7 @@ const sortOptions = options.map(function(x) {
 });
 
 import settings from 'project/settings.yml';
-import findLandscapeSettings from './findLandscapeSettings';
+import { findLandscapeSettings } from './landscapeSettings';
 
 export function filtersToUrl({filters, grouping, sortField, selectedItemId, zoom, mainContentMode = 'card', isLogoMode = false, isFullscreen}) {
   const prefix = window.prefix;

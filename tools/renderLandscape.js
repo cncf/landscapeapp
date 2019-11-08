@@ -1,6 +1,7 @@
 import Promise from 'bluebird';
-import { projectPath, settings } from './settings';
+import { projectPath } from './settings';
 import path from 'path';
+import { landscapeSettingsList } from "../src/utils/landscapeSettings";
 
 const getLastCommitSha = function() {
   return require('child_process').execSync(`cd '${projectPath}' && git log -n 1 --format=format:%h`).toString('utf-8').trim();
@@ -11,7 +12,6 @@ async function main() {
   const time = new Date().toISOString().slice(0, 19) + 'Z';
   const version = `${time} ${sha}`;
   const puppeteer = require('puppeteer');
-  const landscapes = Object.values(settings.big_picture);
 
   const pageAttributes = ({ url, fullscreen_size, deviceScaleFactor = 1 }) => {
     return {
@@ -21,15 +21,15 @@ async function main() {
   }
 
   let previews = [];
-  if (landscapes.length > 1) {
-    previews = landscapes.map(({ url, fullscreen_size }) => {
+  if (landscapeSettingsList.length > 1) {
+    previews = landscapeSettingsList.map(({ url, fullscreen_size }) => {
       const deviceScaleFactor = 0.5;
       const fileName = `${url}_preview.png`;
       return { fileName, ...pageAttributes({ url, fullscreen_size, deviceScaleFactor }) };
     })
   }
 
-  const full_sizes = landscapes.map(({ url, fullscreen_size }) => {
+  const full_sizes = landscapeSettingsList.map(({ url, fullscreen_size }) => {
     const fileName = `${url}.png`;
     const pdfFileName = `${url}.pdf`;
     return { fileName, pdfFileName, ...pageAttributes({ url, fullscreen_size }) };
