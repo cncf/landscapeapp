@@ -7,8 +7,8 @@ import formatAmount from '../utils/formatAmount';
 import formatNumber from 'format-number';
 import { filtersToUrl } from '../utils/syncToUrl';
 import stringOrSpecial from '../utils/stringOrSpecial';
-import  {sharedGetCategoriesForBigPicture, sharedGetCategoriesForServerlessBigPicture, sharedGetCategoriesForCncfMembers } from './sharedItemsCalculator';
-import settings from 'project/settings.yml';
+import { getLandscapeCategories } from './sharedItemsCalculator';
+import { findLandscapeSettings } from "./landscapeSettings";
 
 const landscape = fields.landscape.values;
 
@@ -19,16 +19,6 @@ export const getFilteredItems = createSelector(
   ],
   function(data, filters, mainContentMode) {
     var filterHostedProject = filterFn({field: 'relation', filters});
-    if (settings.global.flags.cncf_sandbox) {
-      filterHostedProject = function(x) {
-        const oldValue = filterFn({field: 'relation', filters})(x);
-        if (filters.relation.indexOf('sandbox') !== -1) {
-          return oldValue || x.project === 'sandbox';
-        } else {
-          return oldValue;
-        }
-      }
-    }
     var filterByLicense = filterFn({field: 'license', filters});
     var filterByOrganization = filterFn({field: 'organization', filters});
     var filterByHeadquarters = filterFn({field: 'headquarters', filters});
@@ -62,16 +52,6 @@ const getFilteredItemsForBigPicture = createSelector(
   ],
   function(data, filters) {
     var filterHostedProject = filterFn({field: 'relation', filters});
-    if (settings.global.flags.cncf_sandbox) {
-      filterHostedProject = function(x) {
-        const oldValue = filterFn({field: 'relation', filters})(x);
-        if (filters.relation.indexOf('sandbox') !== -1) {
-          return oldValue || x.project === 'sandbox';
-        } else {
-          return oldValue;
-        }
-      }
-    }
     var filterByLicense = filterFn({field: 'license', filters});
     var filterByOrganization = filterFn({field: 'organization', filters});
     var filterByHeadquarters = filterFn({field: 'headquarters', filters});
@@ -155,21 +135,8 @@ const getGroupedItems = createSelector(
     }
 
     let grouped = _.groupBy(items, function(item) {
-      return getGroupingValue({item: item, grouping: grouping});
+      return getGroupingValue({item, grouping, filters});
     });
-
-    if (settings.global.flags.cncf_sandbox) {
-      if (grouping === 'relation' && filters.relation.indexOf('sandbox') !== -1) {
-        grouped = _.groupBy(items, function(item) {
-          const oldValue = getGroupingValue({item: item, grouping: grouping});
-          if (item.project === 'sandbox') {
-            return 'sandbox'
-          } else {
-            return oldValue;
-          }
-        });
-      }
-    }
 
     const fieldInfo = fields[grouping];
     return _.orderBy(_.map(grouped, function(value, key) {
@@ -201,26 +168,29 @@ const bigPictureSortOrder = [
   }
 ];
 
-export const getGroupedItemsForBigPicture = function(state) {
+export const getGroupedItemsForBigPicture = function(state, landscapeSettings = null) {
+  if (!landscapeSettings) {
+    landscapeSettings = findLandscapeSettings(state.main.mainContentMode);
+  }
   if (state.main.mainContentMode === 'card') {
     return [];
+  } else if (landscapeSettings.url === 'landscape') {
+    return getGroupedItemsForMainLandscape(state, landscapeSettings);
+  } else {
+    return getGroupedItemsForAdditionalLandscape(state, landscapeSettings)
   }
-  const bigPictureSettings = _.values(settings.big_picture);
-  const currentSettings = _.find(bigPictureSettings, {url: state.main.mainContentMode});
-  return bigPictureMethods[currentSettings.method](state);
 }
 
-const getGroupedItemsForCncfBigPicture = createSelector(
+const getGroupedItemsForMainLandscape = createSelector(
   [ getFilteredItemsForBigPicture,
     (state) => state.main.data,
     (state) => state.main.grouping,
     (state) => state.main.filters,
     (state) => state.main.sortField,
-    (state) => state.main.mainContentMode
+    (state, landscapeSettings) => landscapeSettings
   ],
-  function(items, allItems, grouping, filters, sortField, mainContentMode) {
-    const bigPictureSettings = _.values(settings.big_picture);
-    const categories = sharedGetCategoriesForBigPicture({bigPictureSettings, format: mainContentMode, landscape });
+  function(items, allItems, grouping, filters, sortField, landscapeSettings) {
+    const categories = getLandscapeCategories({landscapeSettings, landscape });
     return categories.map(function(category) {
       const newFilters = {...filters, landscape: category.id };
       return {
@@ -245,107 +215,24 @@ const getGroupedItemsForCncfBigPicture = createSelector(
   }
 );
 
-
-const getGroupedItemsForServerlessBigPicture = createSelector([
+const getGroupedItemsForAdditionalLandscape = createSelector([
      getFilteredItemsForBigPicture,
     (state) => state.main.data,
     (state) => state.main.grouping,
     (state) => state.main.filters,
-    (state) => state.main.sortField
+    (state) => state.main.sortField,
+    (state, landscapeSettings) => landscapeSettings
   ],
-  function(items, allItems, grouping, filters, sortField) {
-    const serverlessCategory = sharedGetCategoriesForServerlessBigPicture({landscape})[0];
-    const hostedPlatformSubcategory = _.find(landscape, {label: 'Hosted Platform'});
-    const installablePlatformSubcategory = _.find(landscape, {label: 'Installable Platform'});
-
-    const subcategories = landscape.filter( (l) => l.parentId === serverlessCategory.id);
+  function(items, allItems, grouping, filters, sortField, landscapeSettings) {
+    const category = getLandscapeCategories({landscapeSettings, landscape})[0];
+    const subcategories = landscape.filter(({ parentId }) => parentId === category.id);
 
     const itemsFrom = function(subcategoryId) {
-      return _.orderBy(items.filter(function(item) {
-              return item.landscape ===  subcategoryId
-            }), bigPictureSortOrder)
+      return _.orderBy(items.filter((item) => item.landscape ===  subcategoryId), bigPictureSortOrder)
     };
 
     const allItemsFrom = function(subcategoryId) {
-      return _.orderBy(allItems.filter(function(item) {
-              return item.landscape ===  subcategoryId
-            }), bigPictureSortOrder)
-    };
-
-    const result = subcategories.map(function(subcategory) {
-      const newFilters = {...filters, landscape: subcategory.id };
-      return {
-        key: stringOrSpecial(subcategory.label),
-        header: subcategory.label,
-        href: filtersToUrl({filters: newFilters, grouping: 'landscape', sortField, mainContentMode: 'card'}),
-        subcategories: [
-          {
-            name: '',
-            href: '',
-            items: itemsFrom(subcategory.id),
-            allItems: allItemsFrom(subcategory.id)
-          }
-        ]
-      };
-    });
-
-    // merge platforms
-    const merged = {
-      key: stringOrSpecial('Platform'),
-      header: 'Platform',
-      href: filtersToUrl({
-        filters: {...filters,  landscape: [hostedPlatformSubcategory.id, installablePlatformSubcategory.id]},
-        grouping: 'landscape', sortField, mainContentMode: 'card'
-      }),
-      subcategories: [
-        {
-          name: 'Hosted',
-          href: filtersToUrl({
-            filters: {...filters, landscape: hostedPlatformSubcategory.id},
-            grouping: 'landscape', sortField, mainContentMode: 'card'
-          }),
-          items: itemsFrom(hostedPlatformSubcategory.id),
-          allItems: allItemsFrom(hostedPlatformSubcategory.id)
-        },
-        {
-          name: 'Installable',
-          href: filtersToUrl({
-            filters: {...filters, landscape: installablePlatformSubcategory.id},
-            grouping: 'landscape', sortField, mainContentMode: 'card'
-          }),
-          items: itemsFrom(installablePlatformSubcategory.id),
-          allItems: allItemsFrom(installablePlatformSubcategory.id)
-        }
-      ]
-    };
-
-    return result.filter(function(x) { return x.header !== 'Hosted Platform'}).filter(function(x) { return x.header !== 'Installable Platform'}).concat([merged]);
-
-
-  }
-);
-
-const getGroupedItemsForCncfMembers = createSelector([
-     getFilteredItemsForBigPicture,
-    (state) => state.main.data,
-    (state) => state.main.grouping,
-    (state) => state.main.filters,
-    (state) => state.main.sortField
-  ],
-  function(items, allItems, grouping, filters, sortField) {
-    const membersCategory = sharedGetCategoriesForCncfMembers({landscape})[0];
-    const subcategories = landscape.filter( (l) => l.parentId === membersCategory.id);
-
-    const itemsFrom = function(subcategoryId) {
-      return _.orderBy(items.filter(function(item) {
-              return item.landscape ===  subcategoryId
-            }), bigPictureSortOrder)
-    };
-
-    const allItemsFrom = function(subcategoryId) {
-      return _.orderBy(allItems.filter(function(item) {
-              return item.landscape ===  subcategoryId
-            }), bigPictureSortOrder)
+      return _.orderBy(allItems.filter((item) => item.landscape ===  subcategoryId), bigPictureSortOrder)
     };
 
     const result = subcategories.map(function(subcategory) {
@@ -368,14 +255,9 @@ const getGroupedItemsForCncfMembers = createSelector([
     return result;
   }
 );
+
 export function getItemsForExport(state) {
   return _.flatten(getGroupedItems(state).map((x) => x.items));
 }
-
-export const bigPictureMethods = {
-  getGroupedItemsForCncfBigPicture,
-  getGroupedItemsForServerlessBigPicture,
-  getGroupedItemsForCncfMembers
-};
 
 export default getGroupedItems;

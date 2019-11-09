@@ -1,10 +1,8 @@
 import React from 'react';
 import { pure } from 'recompose';
 import LandscapeContent from './LandscapeContent';
-import HomePageUrlContainer from '../HomePageUrlContainer';
-import qs from 'query-string';
 
-const Fullscreen = ({ready, groupedItems, landscapeSettings, showPreview, version}) => {
+const Fullscreen = ({ready, groupedItems, landscapeSettings, version}) => {
   if (ready !== true) {
     return (
       <div>
@@ -18,7 +16,7 @@ const Fullscreen = ({ready, groupedItems, landscapeSettings, showPreview, versio
           width: landscapeSettings.fullscreen_size.width,
           height: landscapeSettings.fullscreen_size.height,
           position: 'relative'}}>
-          <LandscapeContent style={{top: 50, left: 20}} groupedItems={groupedItems} zoom={1} showPreview={showPreview} landscapeSettings={landscapeSettings} />
+          <LandscapeContent style={{top: 50, left: 20}} groupedItems={groupedItems} zoom={1} landscapeSettings={landscapeSettings} />
           <div style={{
             position: 'absolute',
             top: 15,

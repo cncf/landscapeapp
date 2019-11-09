@@ -11,9 +11,7 @@ import PresetsContainer from './PresetsContainer';
 import Ad from './Ad';
 import AutoSizer from './CustomAutoSizer';
 import {
-  MainLandscapeContentContainer,
-  ExtraLandscapeContentContainer,
-  ThirdLandscapeContentContainer,
+  LandscapeContentContainer,
   SwitchButtonContainer,
   ZoomButtonsContainer,
   FullscreenButtonContainer
@@ -24,23 +22,16 @@ import HomePageUrlContainer from './HomePageUrlContainer';
 import HomePageScrollerContainer from './HomePageScrollerContainer';
 import ResetFiltersContainer from './ResetFiltersContainer';
 import ItemDialogContainer from './ItemDialogContainer';
-import ItemDialogButtonsContainer from './ItemDialogButtonsContainer';
 import HeaderContainer from './HeaderContainer';
 import SummaryContainer from './SummaryContainer';
 import ExportCsvContainer from './ExportCsvContainer';
 import Footer from './Footer';
 import EmbeddedFooter from './EmbeddedFooter';
 
-import isMobile from '../utils/isMobile';
 import isIphone from '../utils/isIphone';
-import isDesktop from '../utils/isDesktop';
 import isGoogle from '../utils/isGoogle';
 import bus from '../reducers/bus';
 import settings from 'project/settings.yml'
-
-const mainSettings = settings.big_picture.main;
-const extraSettings = settings.big_picture.extra || {};
-const thirdSettings = settings.big_picture.third || {};
 
 const state = {
   lastScrollPosition: 0
@@ -203,9 +194,7 @@ const HomePage = ({isEmbed, mainContentMode, ready, hasSelectedItem, filtersVisi
             <AutoSizer>
               {({ height }) => (
                 <div className="landscape-wrapper" style={{height: height}}>
-                  { mainContentMode === mainSettings.url && <MainLandscapeContentContainer /> }
-                  { mainContentMode === extraSettings.url && <ExtraLandscapeContentContainer /> }
-                  { mainContentMode === thirdSettings.url && <ThirdLandscapeContentContainer /> }
+                  <LandscapeContentContainer />
                 </div>
               )}
             </AutoSizer>
