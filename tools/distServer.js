@@ -20,5 +20,18 @@ browserSync({
   server: {
     baseDir: path.resolve(projectPath, 'dist')
   },
-  middleware: [historyApiFallback()]
+  middleware: [
+    function (req, res, next) {
+
+      const contentPath = path.resolve(projectPath, 'dist', 'prerender.html');
+      console.info(contentPath, req.url);
+      if (req.url === '/' && require('fs').existsSync(contentPath)) {
+          const content = require('fs').readFileSync(contentPath, 'utf-8');
+          res.end(content);
+      } else {
+        next();
+      }
+    },
+    historyApiFallback()
+  ]
 });
