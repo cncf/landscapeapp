@@ -41,6 +41,7 @@ async function main() {
   if (isPrerendered) {
     const data = await loadData();
     preloadedState.main.data = data;
+    preloadedState.router.location.pathname = window.location.pathname;
     store = configureStore(preloadedState);
     hydrate(
       <AppContainer>
