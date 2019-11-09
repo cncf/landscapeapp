@@ -24,9 +24,8 @@ If the project is hosted/sponsored by an organization but doesn't have a logo, b
 
 Tips for common issues with images:
 
-- If you get an error with the image that it has a PNG embeded, you will need to work with a graphic artist to rebuild the logo.
-- If the SVG has a 'text' element tag within it, you will get an error. You can use Inkscape to convert the text tag to a glyph ( select the text, then Ctrl+K (path combine), then Ctrl+J (dynamic offset) ) or [CloudConvert](https://cloudconvert.com) ( click the wrench icon and then checkbox 'Convert text to path' ).
-- If you get an error about the size being too large, use [svg-autocrop](https://github.com/cncf/svg-autocrop) on the image to automatically fix it.
+- If you get an error with the image that it has a PNG embeded, you will need to find a different SVG that doesn't include a PNG or work with a graphic artist to rebuild the logo.
+- If the SVG has a 'text' element tag within it, you will get an error. You can use Inkscape to convert the text tag to a glyph ( select the text, then Ctrl+K (path combine), then Ctrl+J (dynamic offset) ) or [CloudConvert](https://cloudconvert.com) ( click the wrench icon and then checkbox 'Convert text to path' ). Or there are [directions](https://github.com/cncf/landscape#proper-svgs) for fixing in Illustrator.
 
 ## New Entries
 
@@ -54,10 +53,10 @@ The update server enhances the source data with the fetched data and saves the r
 If you want to create an interactive landscape for your project or organization:
 1. Note ahead of time that the hardest part of building a landscape is getting hi-res images for every project. You *cannot* convert from a PNG or JPEG into an SVG. You need to get an SVG, AI, or EPS file. When those aren't available, you will  need a graphic designer to recreate several images. Don't just use an auto-tracer to try to convert PNG to SVG because there is some artistry involved in making it look good. Please review this [primer](https://www.cncf.io/blog/2019/07/17/what-image-formats-should-you-be-using-in-2019/) on image formats. 
 1. Create a repo `youracronym-landscape` so it's distinct from other landscapes stored in the same directory. From inside your new directory, copy over files from a simpler landscape like https://github.com/graphql/graphql-landscape with `cp -r ../graphql-landscape/* ../graphql-landscape/.github ../graphql-landscape/.gitignore ../graphql-landscape/.npmrc ../graphql-landscape/.nvmrc .`.
-2. If you're working with the [LF](https://www.linuxfoundation.org/), give admin privileges to the new repo to [dankohn](https://github.com/dankohn) and write privleges to [AndreyKozlov1984](https://github.com/AndreyKozlov1984), [jordinl83](https://github.com/jordinl83), and [CNCF-Bot](https://github.com/CNCF-Bot) and ping me after creating an account at [slack.cncf.io](https://slack.cncf.io). Alex Contini and I are available there to help you recreate SVGs based on a PNG or the company's logo, if necessary, and to fix other problems.
+2. If you're working with the [LF](https://www.linuxfoundation.org/), give admin privileges to the new repo to [dankohn](https://github.com/dankohn) and write privleges to [AndreyKozlov1984](https://github.com/AndreyKozlov1984), [jordinl83](https://github.com/jordinl83), and [CNCF-Bot](https://github.com/CNCF-Bot) and ping Dan after creating an account at [slack.cncf.io](https://slack.cncf.io). Alex Contini and Dan are available there to help you recreate SVGs based on a PNG of the company's logo, if necessary, and to fix other problems.
 2. Set the repo to only support merge commits and turn off DCO support, since it doesn't work well with the GitHub web interface:
 ![image](https://user-images.githubusercontent.com/3083270/66166276-dd62ad00-e604-11e9-87db-fd9ae7a80d1a.png)
-3. For LF projects, I'll set you up in Netlify to build on every commit. Build command is `npm install -g npm && npm ci && npm run build` and publish directory is `dist`. Environment variables that need to be set are `CRUNCHBASE_KEY`, `GITHUB_KEY`, and `TWITTER_KEYS`. I recommend these notifications:
+3. For LF projects, Dan will set you up in Netlify to build on every commit. Build command is `npm install -g npm && npm ci && npm run build` and publish directory is `dist`. Environment variables that need to be set are `CRUNCHBASE_KEY`, `GITHUB_KEY`, and `TWITTER_KEYS`. Dan recommends these notifications:
 ![image](https://user-images.githubusercontent.com/3083270/62425480-87c36000-b6a8-11e9-9882-e84c4e2cdfb4.png)
 5. Edit `settings.yml` and `landscape.yml` for your topic.
 6. [Generate](https://www.qrcode-monkey.com) a QR code, setting colors to black. Save as SVG and overwrite images/qr.svg.
@@ -121,14 +120,14 @@ Please open an [issue](https://github.com/cncf/landscapeapp/issues/new) or, for 
 
 ## Continuous Integration and NPM Publishing
 
-On every commit, Netlify builds landscapeapp, clones the CNCF and LFAI repos, and builds their landscapes and verifies that their tests pass with the updated landscapeapp. When that succeeds, it [generates](./full_build.sh) and pushes an updated NPM module.
+On every commit, Netlify builds landscapeapp, clones the 10 LF repos, and builds their landscapes and verifies that their tests pass with the updated landscapeapp. When that succeeds, it [generates](./full_build.sh) and pushes an updated NPM module.
 
 ## Keeping Project Up to Date
 We have an issue #75, where we update all out packages. This is how an update
 is usually done:
 1. Create a new folder like 75-update-2019-10-16
-2. Run `ncu -u` which is same as `node-check-updates -u`, do not forget to
-   isntall `npm install -g node-check-updates`
+2. Run `ncu -u` which is same as `npm-check-updates -u`, do not forget to
+   install `npm install -g npm-check-updates`
 3. Run `npm install` , commit and push and make a PR
 4. Check that everything runs locally, i.e. `npm run open:src should still work
    well`
@@ -141,7 +140,7 @@ is usually done:
 
 You can embed the landscape in a website in a few different ways...
 
-- If you want just a full visual of the landscape in landscape mode, you can do:
+- If you want just a full static image of the landscape in landscape mode, you can do:
 
 ```
 <!-- Embed ASWF landscape as a PNG -->
