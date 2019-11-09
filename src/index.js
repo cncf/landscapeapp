@@ -9,7 +9,7 @@ import { AppContainer } from 'react-hot-loader';
 import configureStore, { history } from './store/configureStore';
 import Root from './components/Root';
 import {loadMainData} from './reducers/mainReducer.js';
-import loadData from './reducers/api.js';
+import { loadData } from './reducers/api.js';
 import './styles/theme.scss';
 import ReactGA from 'react-ga';
 import isDesktop from './utils/isDesktop';
@@ -27,7 +27,9 @@ async function main() {
   let store;
   // Tell react-snap how to save Redux state
   window.snapSaveState = function() {
+    console.info('state');
     const state = store.getState();
+    console.info('state');
     delete state.main.data;
     return {
       __PRELOADED_STATE__: state
@@ -47,6 +49,7 @@ async function main() {
       document.getElementById('app')
     );
   } else {
+    console.info('1');
     store = configureStore();
     render(
       <AppContainer>
@@ -54,7 +57,9 @@ async function main() {
       </AppContainer>,
       document.getElementById('app')
     );
+    console.info('2');
     store.dispatch(loadMainData());
+    console.info('3');
   }
 
   if (window.GA) {

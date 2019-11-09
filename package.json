@@ -210,6 +210,7 @@
     ]
   },
   "react-snap": {
+    "headless": false,
     "source": "../cncf/dist",
     "destination": "../cncf/dist",
     "puppeteerArgs": ["--no-sandbox", "--disable-setuid-sandbox"],
