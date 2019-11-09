@@ -37,8 +37,7 @@
     "setup-robots": "babel-node tools/sitemap && babel-node tools/addRobots",
     "quick-build": "babel-node tools/build.js && npm run copy-dist && npm run setup-robots",
     "prebuild": "npm config set scripts-prepend-node-path true && npm run fetch && npm run clean-dist",
-    "build": "((babel-node tools/build.js && npm run copy-dist && npm run setup-robots && npm run stop-old-ci && npm run start-ci && babel-node tools/parallel integration-test check-landscape render-landscape) || (npm run stop-old-ci && false)) && npm run stop-ci && babel-node tools/fundingForMasterBranch",
-    "postbuild": "react-snap",
+    "build": "((babel-node tools/build.js && npm run copy-dist && npm run setup-robots && npm run stop-old-ci && npm run start-ci && babel-node tools/parallel integration-test check-landscape render-landscape) || (npm run stop-old-ci && false)) && npm run stop-ci && babel-node tools/prerender && babel-node tools/fundingForMasterBranch",
     "show-report": "open dist/report.html",
     "test": "jest",
     "test:CI": "babel-node tools/testCi.js",
@@ -210,10 +209,10 @@
       "raf/polyfill"
     ]
   },
-  "react-snap": {
+  "reactSnap": {
+    "crawl": false,
     "headless": false,
     "source": "../cncf/dist",
-    "destination": "../cncf/dist",
     "puppeteerArgs": ["--no-sandbox", "--disable-setuid-sandbox"],
     "skipThirdPartyRequests": true
   }
