@@ -7,6 +7,12 @@ import LandscapeInfo from './LandscapeInfo';
 import OtherLandscapeLink from './OtherLandscapeLink';
 
 const LandscapeContent = ({groupedItems, onSelectItem, style, switchToLandscape, zoom, landscapeSettings }) => {
+  if (navigator.userAgent === 'ReactSnap') {
+    return (<div style={{...style, position: 'relative', ...landscapeSettings.size }}>
+      <img width={landscapeSettings.size.width} height={landscapeSettings.size.height} src="./images/landscape_preview.png" />
+    </div>);
+  }
+
   const elements = landscapeSettings.elements.map(function(element) {
     if (element.type === 'HorizontalCategory') {
       const cat = _.find(groupedItems, {key: element.category});
