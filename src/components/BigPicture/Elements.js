@@ -33,7 +33,7 @@ const Item = (function({zoom, item, x, y, isLarge, onSelectItem}) {
     height: (itemHeight * k) * zoom }}
     key={item.id}
   >
-    <img src={item.href} style={{
+    <img loading="lazy" src={item.href} style={{
       width: (itemWidth * k - 2) * zoom,
       height: (itemHeight * k - 2) * zoom,
       margin: 2 * zoom,
@@ -69,7 +69,7 @@ const LargeItem = (function({zoom, item, x, y, onSelectItem}) {
     onClick={ () => onSelectItem(item.id)}
     key={item.id}
   >
-    <img src={item.href} style={{
+    <img loading="lazy" src={item.href} style={{
       width: (itemWidth * k - 2 - 5) * zoom,
       height: (itemHeight * k - 9 - 2 - 10) * zoom,
       margin: z(2),
