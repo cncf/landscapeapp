@@ -5,6 +5,12 @@ import fs from 'fs';
 const url = require("url");
 const { run } = require("react-snap/index.js");
 
+function removeHttpLink(fileName) {
+  const content = require('fs').readFileSync(fileName, 'utf-8');
+  const updated = content.replace('<link href="http://localhost:45678/" rel="canonical">', '');
+  require('fs').writeFileSync(fileName, updated);
+}
+
 async function main() {
   const file200 = path.resolve(projectPath, 'dist', '200.html');
   const fileIndex = path.resolve(projectPath, 'dist', 'index.html');
@@ -31,6 +37,7 @@ async function main() {
   }
   fs.copyFileSync(fileIndex, filePrerender);
   fs.copyFileSync(file200, fileIndex);
+  removeHttpLink(filePrerender);
 };
 main().catch(function(ex) {
   console.error(ex);

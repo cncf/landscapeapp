@@ -25,12 +25,13 @@ async function main() {
   const preloadedState = window.__PRELOADED_STATE__;
   delete window.__PRELOADED_STATE__;
   let store;
-  // Tell react-snap how to save Redux state
+  // Tell react-snap how to save Redux state, plus remove extra features
   window.snapSaveState = function() {
     console.info('state');
     const state = store.getState();
     console.info('state');
     delete state.main.data;
+
     return {
       __PRELOADED_STATE__: state
     };
