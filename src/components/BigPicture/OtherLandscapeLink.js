@@ -9,8 +9,8 @@ const OtherLandscapeLink = function({zoom, top, left, height, width, color, onCl
       boxShadow: `0 ${4 * zoom}px ${8 * zoom}px 0 rgba(0, 0, 0, 0.2), 0 ${6 * zoom}px ${20 * zoom}px 0 rgba(0, 0, 0, 0.19)`
     }} onClick={onClick} >
     <div style={{ width: width * zoom, height: 20 * zoom, lineHeight: `${20 * zoom}px`, textAlign: 'center', color: 'white', background: color, fontSize: 12 * zoom}}> {title} </div>
-    <div style={{ width: (width - 10) * zoom, height: (height - 40) * zoom, margin: 5 * zoom,
-      backgroundImage: `url("images/${url}_preview.png")`, backgroundSize: 'contain', backgroundPosition: 'center', backgroundRepeat: 'no-repeat' }}></div>
+    <img loading="lazy" src={`images/${url}_preview.png`} style={{ width: (width - 10) * zoom, height: (height - 40) * zoom, margin: 5 * zoom,
+      objectFit: 'contain', backgroundPosition: 'center', backgroundRepeat: 'no-repeat' }} />
   </div>);
   }
   if (layout === 'subcategory') {
@@ -19,8 +19,8 @@ const OtherLandscapeLink = function({zoom, top, left, height, width, color, onCl
       cursor: 'pointer',
     }} onClick={onClick} >
     <div style={{ width: width * zoom, height: 20 * zoom, lineHeight: `${20 * zoom}px`, textAlign: 'center', color: 'white', fontSize: 11 * zoom}}> {title}</div>
-    <div style={{ width: (width - 10) * zoom, height: (height - 40) * zoom, margin: 5 * zoom,
-      backgroundImage: `url("images/${url}_preview.png")`, backgroundSize: 'contain', backgroundPosition: 'center', backgroundRepeat: 'no-repeat' }}></div>
+    <img loading="lazy" src={`"images/${url}_preview.png"`} style={{ width: (width - 10) * zoom, height: (height - 40) * zoom, margin: 5 * zoom,
+      objectFit: 'contain', backgroundPosition: 'center', backgroundRepeat: 'no-repeat' }} />
   </div>);
   }
 }
