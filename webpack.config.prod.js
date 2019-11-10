@@ -148,7 +148,7 @@ export default {
           {
             loader: 'url-loader',
             options: {
-              limit: 50000,
+              limit: 10000,
               mimetype: 'application/font-woff',
               name: '[name].[ext]'
             }

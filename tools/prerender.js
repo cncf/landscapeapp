@@ -10,18 +10,6 @@ function removeHttpLink(fileName) {
   const updated = content.replace('<link href="http://localhost:45678/" rel="canonical">', '');
   require('fs').writeFileSync(fileName, updated);
 }
-function embedCss({source, filePrerender}) {
-  const content = require('fs').readFileSync(filePrerender, 'utf-8');
-  const css = content.match(/(main\.\w+\.css)/)[1];
-  const cssContent = require('fs').readFileSync(path.resolve(source, css), 'utf-8');
-  const updated = content.replace('<style ', `
-      <style>
-        ${cssContent}
-      </style>
-      <style
-  `);
-  require('fs').writeFileSync(filePrerender, updated);
-}
 
 async function main() {
   const file200 = path.resolve(projectPath, 'dist', '200.html');
@@ -50,7 +38,6 @@ async function main() {
   fs.copyFileSync(fileIndex, filePrerender);
   fs.copyFileSync(file200, fileIndex);
   removeHttpLink(filePrerender);
-  embedCss({source, filePrerender});
 };
 main().catch(function(ex) {
   console.error(ex);
