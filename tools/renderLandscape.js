@@ -23,7 +23,7 @@ async function main() {
   let previews = [];
   if (landscapeSettingsList.length > 1) {
     previews = landscapeSettingsList.map(({ url, fullscreen_size }) => {
-      const deviceScaleFactor = 0.5;
+      const deviceScaleFactor = 960 / (fullscreen_size.width * 4);
       const fileName = `${url}_preview.png`;
       return { fileName, ...pageAttributes({ url, fullscreen_size, deviceScaleFactor }) };
     })
