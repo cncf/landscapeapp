@@ -190,7 +190,7 @@ a {text-decoration: none; transition: all 0.5s; color: $blue;
 }
 
 .app {
-  position: relative; 
+  position: relative;
   .sidebar-show {
     display: none;
   }
@@ -424,6 +424,7 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='rgb(124,170,1
   width: 100%;
   height: 100%;
   overflow: scroll;
+  -webkit-overflow-scrolling: touch;
   padding: 10px;
 }
 
