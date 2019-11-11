@@ -24,27 +24,23 @@ const Item = (function({zoom, item, x, y, isLarge, onSelectItem}) {
   }
   const k = 1;
   const isMember = item.category === settings.global.membership;
-  return <div style={{
-    cursor: 'pointer',
-    position: 'absolute',
-    left: (itemWidth * x) * zoom,
-    top: (itemHeight * y) * zoom,
-    width: (itemWidth  * k) * zoom,
-    height: (itemHeight * k) * zoom }}
-    key={item.id}
-  >
-    <img loading="lazy" src={item.href} style={{
-      width: (itemWidth * k - 2) * zoom,
+  return <img style={{
+      cursor: 'pointer',
+      position: 'absolute',
+      left: (itemWidth * x + 2) * zoom,
+      top: (itemHeight * y + 2) * zoom,
+      width: (itemWidth  * k - 2) * zoom,
       height: (itemHeight * k - 2) * zoom,
-      margin: 2 * zoom,
-      padding: 2 * zoom,
       border: isMember ? '' : `${1 * zoom}px solid grey`,
       borderRadius: 3 * zoom,
-      background: isMember ? '' : item.oss ? '' : '#eee'
+      padding: 1,
+      background: isMember ? '' : item.oss ? '' : '#eee',
     }}
+    loading="lazy"
+    src={item.href}
+    key={item.id}
     onClick={ () => onSelectItem(item.id)}
   />
-  </div>;
 })
 
 const LargeItem = (function({zoom, item, x, y, onSelectItem}) {
