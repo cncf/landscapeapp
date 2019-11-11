@@ -11,6 +11,21 @@ function removeHttpLink(fileName) {
   require('fs').writeFileSync(fileName, updated);
 }
 
+function embedResize(fileName) {
+  const content = require('fs').readFileSync(fileName, 'utf-8');
+  const updated = content.replace('<script src="./main', `
+   <script>
+               const el = document.querySelector('.landscape-wrapper');
+               if (el) {
+                   var height = el.parentElement.clientHeight + window.innerHeight -
+                   document.body.offsetHeight;
+                   el.style.height = height + "px";
+               }
+  </script>
+  <script src="./main`);
+  require('fs').writeFileSync(fileName, updated);
+}
+
 async function main() {
   const file200 = path.resolve(projectPath, 'dist', '200.html');
   const fileIndex = path.resolve(projectPath, 'dist', 'index.html');
@@ -38,6 +53,7 @@ async function main() {
   fs.copyFileSync(fileIndex, filePrerender);
   fs.copyFileSync(file200, fileIndex);
   removeHttpLink(filePrerender);
+  embedResize(filePrerender);
 };
 main().catch(function(ex) {
   console.error(ex);
