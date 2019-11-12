@@ -21,6 +21,11 @@ async function main() {
   // redux + react-snap specific hacks
   const rootElement = document.getElementById("app");
   const isPrerendered = rootElement.hasChildNodes();
+  const isPrerendering = navigator.userAgent === "ReactSnap";
+  if (isPrerendering) {
+    document.querySelector('html').classList.add('react-snap');
+  }
+
 
   const preloadedState = window.__PRELOADED_STATE__;
   delete window.__PRELOADED_STATE__;
@@ -50,6 +55,7 @@ async function main() {
       </AppContainer>,
       document.getElementById('app')
     );
+    document.querySelector('html').classList.remove('react-snap');
   } else {
     console.info('1');
     store = configureStore();

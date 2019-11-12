@@ -15,6 +15,13 @@ html {-webkit-text-size-adjust: 100%;}
   overflow: scroll;
 }
 
+html.react-snap {
+  overflow-y: hidden;
+  .right-buttons {
+    visibility: hidden;
+  }
+}
+
 body {background-color:#F4F4f4 !important; font-family: Arial, Helvetica, sans-serif;}
 body.popup {background-color:transparent !important;}
 
