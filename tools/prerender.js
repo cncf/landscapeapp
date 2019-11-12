@@ -17,9 +17,16 @@ function embedResize(fileName) {
    <script>
                const el = document.querySelector('.landscape-wrapper');
                if (el) {
-                   var height = el.parentElement.clientHeight + window.innerHeight -
-                   document.body.offsetHeight;
+                   var height = el.parentElement.clientHeight + window.innerHeight - document.body.offsetHeight;
                    el.style.height = height + "px";
+                   el.addEventListener('click', function(evt) {
+                      if (document.querySelector('html').classList.contains('react-snap')) {;
+                        const href = evt.target.getAttribute('data-href');
+                          if (href) {
+                              window.location.href = "./selected=" + href;
+                          }
+                        }
+                   }, true);
                }
   </script>
   <script src="./main`);
