@@ -33,6 +33,20 @@ function embedResize(fileName) {
   require('fs').writeFileSync(fileName, updated);
 }
 
+function embedCss({source, filePrerender}) {
+  const content = require('fs').readFileSync(filePrerender, 'utf-8');
+  const css = content.match(/(main\.\w+\.css)/)[1];
+  const cssContent = require('fs').readFileSync(path.resolve(source, css), 'utf-8');
+  const updated = content.replace('<style ', `
+      <style>
+        ${cssContent}
+      </style>
+      <style
+  `);
+  require('fs').writeFileSync(filePrerender, updated);
+}
+
+
 async function main() {
   const file200 = path.resolve(projectPath, 'dist', '200.html');
   const fileIndex = path.resolve(projectPath, 'dist', 'index.html');
@@ -61,6 +75,7 @@ async function main() {
   fs.copyFileSync(file200, fileIndex);
   removeHttpLink(filePrerender);
   embedResize(filePrerender);
+  embedCss({source, filePrerender});
 };
 main().catch(function(ex) {
   console.error(ex);
