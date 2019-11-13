@@ -208,12 +208,5 @@
     "setupFiles": [
       "raf/polyfill"
     ]
-  },
-  "reactSnap": {
-    "crawl": false,
-    "headless": false,
-    "source": "../cncf/dist",
-    "puppeteerArgs": ["--no-sandbox", "--disable-setuid-sandbox"],
-    "skipThirdPartyRequests": true
   }
 }
