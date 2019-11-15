@@ -99,7 +99,7 @@ function landscapeTest() {
   describe("Big Picture Test", () => {
     test("I visit a main landscape page and have all required elements", async () => {
       console.info('about to open a main landscape page');
-      const page = await makePage(appUrl + '/format=' + settings.big_picture.main.url);
+      const page = await makePage(appUrl);
       await page.waitForSelector('.big-picture-section');
       await page.click('.big-picture-section img[src]');
       await page.waitForSelector(".modal-content");

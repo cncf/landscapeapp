@@ -2,24 +2,22 @@
 @font-face {
   font-family: 'Roboto';
   font-style: normal;
-  font-display: swap;
+  font-display: block;
   font-weight: 400;
   src:
     local('Roboto Regular '),
     local('Roboto-Regular'),
     url('~typeface-roboto/files/roboto-latin-400.woff2') format('woff2'), /* Super Modern Browsers */
-    url('~typeface-roboto/files/roboto-latin-400.woff') format('woff'); /* Modern Browsers */
 }
 
 /* roboto-500normal - latin */
 @font-face {
   font-family: 'Roboto';
   font-style: normal;
-  font-display: swap;
+  font-display: block;
   font-weight: 500;
   src:
     local('Roboto Medium '),
     local('Roboto-Medium'),
     url('~typeface-roboto/files/roboto-latin-500.woff2') format('woff2'), /* Super Modern Browsers */
-    url('~typeface-roboto/files/roboto-latin-500.woff') format('woff'); /* Modern Browsers */
 }
