@@ -33,9 +33,9 @@ When creating new entries, the only 4 required fields are `name`, `homepage_url`
 
 ## Crunchbase Requirement
 
-We require all entries to include a [Crunchbase](https://www.crunchbase.com/) entry. We use the Crunchbase API to fetch the backing organization and headquarters location and (if they exist), Twitter, LinkedIn, funding, parent organization, and stock ticker. For open source projects, we will just create a nonprofit organization representing the project (if one doesn't already exist), and set the location to the lead developer.
+We require all landscape entries to include a [Crunchbase](https://www.crunchbase.com/) url. We use the Crunchbase API to fetch the backing organization and headquarters location and (if they exist), Twitter, LinkedIn, funding, parent organization, and stock ticker. For open source, non-affiliated projects, we will just create a nonprofit organization representing the project (if one doesn't already exist), and set the location to the lead developer.
 
-Using an external source for this info saves effort in most cases, because it's data is being independently maintained and updated over time.
+Using an external source for this info saves effort in most cases, because most organizations are already listed. Going forward, the data is being independently maintained and updated over time.
 
 ## External Data
 
