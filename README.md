@@ -22,10 +22,27 @@ For new landscapes of any size, you will probably need a graphic artist to rebui
 
 If the project is hosted/sponsored by an organization but doesn't have a logo, best practice is to use that organization's logo with the title of the project underneath ( [example](https://landscape.cncf.io/selected=netflix-eureka) ). You can use a tool such as [Inkscape](https://inkscape.org/) to add the text.
 
-Tips for common issues with images:
+If you get an error with the image that it has a PNG embeded, you will need to find a different SVG that doesn't include a PNG or work with a graphic artist to rebuild the logo.
 
-- If you get an error with the image that it has a PNG embeded, you will need to find a different SVG that doesn't include a PNG or work with a graphic artist to rebuild the logo.
-- If the SVG has a 'text' element tag within it, you will get an error. You can use Inkscape to convert the text tag to a glyph ( select the text, then Ctrl+K (path combine), then Ctrl+J (dynamic offset) ) or [CloudConvert](https://cloudconvert.com) ( click the wrench icon and then checkbox 'Convert text to path' ). Or there are [directions](https://github.com/cncf/landscape#proper-svgs) for fixing in Illustrator.
+## SVGs Can't Include Text
+
+SVGs need to not rely on external fonts so that they will render correctly in any web browser, whether or not the correct fonts are installed. That means that all embedded text and tspan elements need to be converted to objects. Use of SVGs with embedded text will fail with an error. You can convert the SVGs as follows:
+
+Here are the steps in Adobe Illustrator to create convert text to objects:
+
+1. Select all text
+1. With the text selected, go to Object > Expand in the top menu
+1. Export file by going to File > Export > Export As in top menu
+1. Select SVG from the format drop down and make sure that "Use Artboards" is checked
+1. This will open a SVG options box, make sure to set Decimal to 5 (that is the highest possible, so to ensure that sufficient detail is preserved)
+1. Click Okay to export
+
+Here are the steps for Inkscape:
+
+1. Select the text
+1. Ctrl+K (path combine)
+1. Ctrl+J (dynamic offset)
+1. Save
 
 ## New Entries
 
