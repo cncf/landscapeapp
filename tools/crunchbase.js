@@ -14,7 +14,6 @@ const cacheMiss = colors.green;
 const debug = require('debug')('cb');
 import { CrunchbaseClient } from './apiClients';
 
-
 export async function getCrunchbaseOrganizationsList() {
   const traverse = require('traverse');
   const source = require('js-yaml').safeLoad(require('fs').readFileSync(path.resolve(projectPath, 'landscape.yml')));
@@ -63,7 +62,7 @@ export async function extractSavedCrunchbaseEntries() {
   return _.uniq(organizations);
 }
 
-async function getParentCompanies(companyInfo) {
+async function getParentCompanies(companyInfo, visited = []) {
   var parentInfo = companyInfo.relationships.owned_by.item;
   // console.info(`looking for parent for ${companyInfo.name}`);
   // console.info(`parentInfo is ${parentInfo}`);
@@ -72,12 +71,16 @@ async function getParentCompanies(companyInfo) {
     return [];
   } else {
     var parentId = parentInfo.uuid;
+    const { permalink } = parentInfo.properties;
     if (parentId === companyInfo.uuid) {
       return []; //we are the parent and this hangs up the algorythm
     }
+    if (visited.includes(permalink)) {
+      throw new Error(`Cyclic dependency detected when fetching parents: ${visited.join(', ')}, ${permalink}`);
+    }
     var fullParentInfo = await CrunchbaseClient.request({ path: `/organizations/${parentId}` });
     var cbInfo = fullParentInfo.data;
-    return [parentInfo].concat(await getParentCompanies(cbInfo));
+    return [parentInfo].concat(await getParentCompanies(cbInfo, [...visited, permalink]));
   }
 }
 const marketCapCache = {};
