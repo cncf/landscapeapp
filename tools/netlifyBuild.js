@@ -1,5 +1,6 @@
 import _ from 'lodash';
 import Promise from 'bluebird';
+import path from "path";
 const landscapesInfo = require('js-yaml').safeLoad(require('fs').readFileSync('landscapes.yml'));
 
 async function main() {
@@ -133,8 +134,7 @@ EOSSH
   require('fs').writeFileSync('dist/_redirects', redirects);
   require('fs').writeFileSync('dist/index.html', index);
   require('fs').writeFileSync('dist/robots.html', robots);
-
-
+  require('fs').copyFileSync(path.resolve(__dirname, '..', '_headers'), 'dist/_headers')
 }
 main();
 
