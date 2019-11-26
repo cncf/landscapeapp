@@ -220,7 +220,7 @@ const HorizontalCategory = (function({header, subcategories, rows, width, height
                   <InternalLink to={subcategory.href}>
                     <span style={{
                       color: 'white',
-                      fontSize: 10 * zoom
+                      fontSize: 11 * zoom
                     }}>{subcategory.name}</span>
                   </InternalLink>
                 </span>
@@ -258,7 +258,7 @@ const VerticalCategory = (function({header, subcategories, cols = 6, top, left, 
             <InternalLink to={subcategory.href}>
               <span style={{
                 color: color,
-                fontSize: 10 * zoom
+                fontSize: 11 * zoom
               }}>{subcategory.name}</span>
             </InternalLink>
           </div>
