@@ -3,3 +3,6 @@
 
 /*.svg
   Content-Type: image/svg+xml; charset=utf-8
+
+/*.json
+  Content-Type: application/json; charset=utf-8
