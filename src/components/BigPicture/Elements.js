@@ -5,6 +5,7 @@ import InternalLink from '../InternalLink';
 import Fade from '@material-ui/core/Fade';
 import fields from '../../types/fields';
 import settings from 'project/settings.yml'
+import { getContrastRatio } from "@material-ui/core/styles";
 
 const itemWidth = 36;
 const itemHeight = 32;
@@ -198,7 +199,7 @@ const HorizontalCategory = (function({header, subcategories, rows, width, height
     </div>
       <div style={{transform: 'rotate(-90deg)', width: (height - 20) * zoom, height: 30 * zoom, top: ((height + 20) / 2 - 30 / 2) * zoom, left: (-(height / 2 - 30/2) + 20/2) * zoom, textAlign: 'center', position: 'absolute', background:color, color: 'white', fontSize: 13 * zoom}}>
         <div style={{
-          color: 'white',
+          color: getContrastRatio('#ffffff', color) < 4.5 ? '#282828' : '#ffffff',
           fontSize: 12 * zoom,
           position: 'absolute',
           width: '100%',
