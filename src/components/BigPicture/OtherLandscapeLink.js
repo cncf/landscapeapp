@@ -10,7 +10,7 @@ const OtherLandscapeLink = function({zoom, top, left, height, width, color, onCl
     }} onClick={onClick} >
     <div style={{ width: width * zoom, height: 20 * zoom, lineHeight: `${20 * zoom}px`, textAlign: 'center', color: 'white', background: color, fontSize: 12 * zoom}}> {title} </div>
     <img loading="lazy" src={`images/${url}_preview.png`} style={{ width: (width - 10) * zoom, height: (height - 40) * zoom, margin: 5 * zoom,
-      objectFit: 'contain', backgroundPosition: 'center', backgroundRepeat: 'no-repeat' }} />
+      objectFit: 'contain', backgroundPosition: 'center', backgroundRepeat: 'no-repeat' }} alt={title} />
   </div>);
   }
   if (layout === 'subcategory') {
@@ -20,7 +20,7 @@ const OtherLandscapeLink = function({zoom, top, left, height, width, color, onCl
     }} onClick={onClick} >
     <div style={{ width: width * zoom, height: 20 * zoom, lineHeight: `${20 * zoom}px`, textAlign: 'center', color: 'white', fontSize: 11 * zoom}}> {title}</div>
     <img loading="lazy" src={`images/${url}_preview.png`} style={{ width: (width - 10) * zoom, height: (height - 40) * zoom, margin: 5 * zoom,
-      objectFit: 'contain', backgroundPosition: 'center', backgroundRepeat: 'no-repeat' }} />
+      objectFit: 'contain', backgroundPosition: 'center', backgroundRepeat: 'no-repeat' }} alt={title} />
   </div>);
   }
 }
