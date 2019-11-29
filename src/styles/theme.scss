@@ -1,7 +1,4 @@
-$navy: #38404a;
-$navy-light: #696D70;
-$blue: #5093e0;
-$blue-hover: #0e61c0;
+@import 'colors';
 $mobilewidth: 812px;
 
 // Breakpoints taken from: https://getbootstrap.com/docs/4.3/layout/overview/
@@ -51,7 +48,11 @@ a {text-decoration: none; transition: all 0.5s; color: $blue;
   background-color: #e8e8e8;
   border-radius: 10px;
   margin: 0.5rem 5px;
-  div{font-size:0.8em !important;}
+
+  div{
+    color: #565656;
+    font-size:0.8em !important;
+  }
 
   .link {
     text-decoration: none;
