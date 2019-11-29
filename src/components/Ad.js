@@ -22,7 +22,7 @@ const Ad = () => {
             to={entry.url}
             target="_blank"
             title={entry.title}>
-            <img src={normalizeUrl(entry.image)} />
+            <img src={normalizeUrl(entry.image)} alt={entry.title} />
         </OutboundLink>
     )) }
   </div>
