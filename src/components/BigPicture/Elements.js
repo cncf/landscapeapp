@@ -258,7 +258,7 @@ const VerticalCategory = (function({header, subcategories, cols = 6, top, left, 
           <div style={{ fontSize: 10 * zoom, lineHeight: `${15 * zoom}px`, textAlign: 'center', color: color}}>
             <InternalLink to={subcategory.href}>
               <span style={{
-                color: color,
+                color: '#282828',
                 fontSize: 11 * zoom
               }}>{subcategory.name}</span>
             </InternalLink>
