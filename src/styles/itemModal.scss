@@ -1,7 +1,5 @@
-$navy: #38404a;
-$navy-light: #87919a;
-$blue: #5093e0;
-$blue-hover: #0e61c0;
+@import 'colors';
+
 $mobilewidth: 1000px;
 
 .modal {
@@ -101,7 +99,7 @@ $mobilewidth: 1000px;
     }
   }
   &-repo {
-    &-stars {color: #7b7b7b; font-size: 0.8rem; white-space: nowrap; line-height: 16px; display: inline-block;
+    &-stars {color: $navy; font-size: 0.8rem; white-space: nowrap; line-height: 16px; display: inline-block;
       svg {width: 16px; height: 16px; display: inline-block; vertical-align: top; }
     }
   }

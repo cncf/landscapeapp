@@ -5,6 +5,7 @@ import InternalLink from '../InternalLink';
 import Fade from '@material-ui/core/Fade';
 import fields from '../../types/fields';
 import settings from 'project/settings.yml'
+import { getContrastRatio } from "@material-ui/core/styles";
 
 const itemWidth = 36;
 const itemHeight = 32;
@@ -41,6 +42,7 @@ const Item = (function({zoom, item, x, y, isLarge, onSelectItem}) {
     src={item.href}
     key={item.id}
     onClick={ () => onSelectItem(item.id)}
+    alt={item.name}
   />
 })
 
@@ -71,7 +73,7 @@ const LargeItem = (function({zoom, item, x, y, onSelectItem}) {
       height: (itemHeight * k - 9 - 2 - 10) * zoom,
       margin: z(2),
       padding: z(2)
-    }} data-href={item.id}  />
+    }} data-href={item.id} alt={item.name} />
   <div style={{position: 'absolute', left: 0, right: 0, bottom: 0, height: 10 * zoom, textAlign: 'center', background: color, color: 'white', fontSize: 6.7 * zoom, lineHeight: `${13 * zoom}px`}}>
     {label}
   </div>
@@ -188,23 +190,22 @@ const HorizontalCategory = (function({header, subcategories, rows, width, height
     <div style={{
       position: 'absolute', height: height * zoom, margin: 5 * zoom, width: width * zoom, top: (top - 5) * zoom, left: left * zoom
     }} className="big-picture-section" >
-    <div style={{position: 'absolute', top: 20 * zoom, height: (height - 20) * zoom, width: 30 * zoom, opacity: 0.5, zIndex: 10}}>
-        <InternalLink to={href}>
-          <div style={{
-            width: '100%',
-            height: '100%'
-          }}></div>
-        </InternalLink>
-    </div>
       <div style={{transform: 'rotate(-90deg)', width: (height - 20) * zoom, height: 30 * zoom, top: ((height + 20) / 2 - 30 / 2) * zoom, left: (-(height / 2 - 30/2) + 20/2) * zoom, textAlign: 'center', position: 'absolute', background:color, color: 'white', fontSize: 13 * zoom}}>
         <div style={{
-          color: 'white',
-          fontSize: 12 * zoom,
           position: 'absolute',
           width: '100%',
           transform: 'translate(-50%, -50%)',
           left: '50%',
-          top:'50%'}}>{header}</div>
+          top:'50%'}}>
+          <InternalLink to={href} style={{
+            color: getContrastRatio('#ffffff', color) < 4.5 ? '#282828' : '#ffffff',
+            fontSize: 12 * zoom,
+            lineHeight: `${13 * zoom}px`,
+            display: 'block'
+          }}>
+            {header}
+          </InternalLink>
+        </div>
       </div>
       <div style={{width: 40 * zoom, display: 'inline-block'}} />
       <div style={{position: 'absolute', border: `${1 * zoom}px solid ${color}`, background: 'white', top: 20 * zoom, bottom: 0, left: 30 * zoom, right: 0}}></div>
@@ -220,7 +221,7 @@ const HorizontalCategory = (function({header, subcategories, rows, width, height
                   <InternalLink to={subcategory.href}>
                     <span style={{
                       color: 'white',
-                      fontSize: 10 * zoom
+                      fontSize: 11 * zoom
                     }}>{subcategory.name}</span>
                   </InternalLink>
                 </span>
@@ -257,8 +258,8 @@ const VerticalCategory = (function({header, subcategories, cols = 6, top, left, 
           <div style={{ fontSize: 10 * zoom, lineHeight: `${15 * zoom}px`, textAlign: 'center', color: color}}>
             <InternalLink to={subcategory.href}>
               <span style={{
-                color: color,
-                fontSize: 10 * zoom
+                color: '#282828',
+                fontSize: 11 * zoom
               }}>{subcategory.name}</span>
             </InternalLink>
           </div>

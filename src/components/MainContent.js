@@ -32,7 +32,7 @@ const Card = pure(({item, handler, itemRef, ...props}) => {
             <div className={classNames('mosaic', {nonoss : item.oss === false})} style={getRelationStyle(item.relation)}
               onClick={() => handler(item.id)} >
               <div className="logo_wrapper">
-                <img src={item.href} className='logo' max-height='100%' max-width='100%' />
+                <img src={item.href} className='logo' max-height='100%' max-width='100%' alt={item.name} />
               </div>
               <div className="mosaic-info">
                 <div className="mosaic-title">

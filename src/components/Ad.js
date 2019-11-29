@@ -20,8 +20,9 @@ const Ad = () => {
             key={entry.image}
             eventLabel={entry.url}
             to={entry.url}
-            target="_blank">
-            <img src={normalizeUrl(entry.image)} />
+            target="_blank"
+            title={entry.title}>
+            <img src={normalizeUrl(entry.image)} alt={entry.title} />
         </OutboundLink>
     )) }
   </div>

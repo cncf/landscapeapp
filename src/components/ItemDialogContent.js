@@ -454,7 +454,7 @@ const ItemDialogContent = ({itemInfo, isLandscape, setIsLandscape}) => {
 
   const productLogoAndTags = <Fragment>
             <div className="product-logo" style={getRelationStyle(itemInfo.relation)}>
-              <img src={itemInfo.href} className='product-logo-img'/>
+              <img src={itemInfo.href} className='product-logo-img' alt={itemInfo.name}/>
             </div>
             <div className="product-tags">
               <div className="product-badges" style = {{width: Math.min(300, innerWidth - 110)}} >
