@@ -156,10 +156,10 @@ const HomePage = ({isEmbed, mainContentMode, ready, hasSelectedItem, filtersVisi
       <div />
       <div style={{marginTop: (isIphone && hasSelectedItem) ? -state.lastScrollPosition : 0}} className={classNames({"iphone-scroller": isIphone && hasSelectedItem}, 'main-parent')} >
         { !isEmbed && !isFullscreen && <HeaderContainer/> }
-        { !isEmbed && !isFullscreen && <IconButton className="sidebar-show" onClick={showFilters}><MenuIcon /></IconButton> }
+        { !isEmbed && !isFullscreen && <IconButton className="sidebar-show" title="Show sidebar" onClick={showFilters}><MenuIcon /></IconButton> }
         { !isEmbed && !isFullscreen && <div className="sidebar">
           <div className="sidebar-scroll">
-            <IconButton className="sidebar-collapse" onClick={hideFilters}><CloseIcon /></IconButton>
+            <IconButton className="sidebar-collapse" title="Hide sidebar" onClick={hideFilters}><CloseIcon /></IconButton>
             <ResetFiltersContainer />
             <Grouping/>
             <Sorting/>

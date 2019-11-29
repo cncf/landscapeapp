@@ -12,11 +12,11 @@ const FullscreenButton = function({isVisible, isFullscreen, enableFullscreen, di
   }
   return <div className="fullscreen-button">
         { isFullscreen ?
-        <IconButton onClick={disableFullscreen}>
+        <IconButton onClick={disableFullscreen} title="Exit fullscreen">
           <FullscreenExitIcon />
         </IconButton>
           :
-        <IconButton onClick={enableFullscreen} >
+        <IconButton onClick={enableFullscreen} title="Enter fullscreen">
           <FullscreenIcon />
         </IconButton>
         }

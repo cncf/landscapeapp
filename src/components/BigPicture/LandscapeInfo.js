@@ -51,7 +51,7 @@ const LandscapeInfo = ({zoom, width, height, top, left, childrenInfo}) => {
       }}>{info.title}</div>
     }
     if (info.type === 'image') {
-      return <img src={`images/${info.image}`} style={{...positionProps}} key={info.image} />
+      return <img src={`images/${info.image}`} style={{...positionProps}} key={info.image} alt={info.title || info.image} />
     }
   });
 

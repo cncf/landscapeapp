@@ -9,11 +9,11 @@ import React from 'react';
 
 const ZoomButtons = function({canZoomIn, canZoomOut, zoomText, onZoomIn, onZoomOut, onZoomReset}) {
   return <div className="zoom-buttons">
-        <IconButton disabled={!canZoomOut} onClick={onZoomOut} className='zoom-change'>
+        <IconButton disabled={!canZoomOut} onClick={onZoomOut} className='zoom-change' title="Zoom out">
           <RemoveCircleIcon />
         </IconButton>
-        <Button onClick={onZoomReset} className='zoom-reset'>{zoomText}</Button>
-        <IconButton disabled={!canZoomIn} onClick={onZoomIn} className='zoom-change'>
+        <Button onClick={onZoomReset} className='zoom-reset' title="Reset zoom">{zoomText}</Button>
+        <IconButton disabled={!canZoomIn} onClick={onZoomIn} className='zoom-change' title="Zoom in">
           <AddCircleIcon />
         </IconButton>
   </div>
