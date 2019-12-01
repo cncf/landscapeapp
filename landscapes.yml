@@ -44,3 +44,7 @@ landscapes:
     name: lfenergy
     repo: lf-energy/lfenergy-landscape
     hook: 5d98c95de9ff92d31e713003
+  - landscape:
+    name: openjsf
+    repo: dankohn/openjsf-landscape
+    hook: 5de319ba9e61a5ddc3207294
