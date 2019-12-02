@@ -190,49 +190,62 @@ const HorizontalCategory = (function({header, subcategories, rows, width, height
     <div style={{
       position: 'absolute', height: height * zoom, margin: 5 * zoom, width: width * zoom, top: (top - 5) * zoom, left: left * zoom
     }} className="big-picture-section" >
-      <div style={{transform: 'rotate(-90deg)', width: (height - 20) * zoom, height: 30 * zoom, top: ((height + 20) / 2 - 30 / 2) * zoom, left: (-(height / 2 - 30/2) + 20/2) * zoom, textAlign: 'center', position: 'absolute', background:color, color: 'white', fontSize: 13 * zoom}}>
-        <div style={{
+      <div
+        style={{
           position: 'absolute',
-          width: '100%',
-          transform: 'translate(-50%, -50%)',
-          left: '50%',
-          top:'50%'}}>
+          border: `${1 * zoom}px solid ${color}`,
+          borderLeft: 0,
+          background: 'white',
+          top: 20 * zoom,
+          bottom: 0,
+          left: 0,
+          right: 0,
+          boxShadow: `0 ${4 * zoom}px ${8 * zoom}px 0 rgba(0, 0, 0, 0.2), 0 ${6 * zoom}px ${20 * zoom}px 0 rgba(0, 0, 0, 0.19)`
+        }}
+      >
+        <div style={{
+          top: '-1px',
+          bottom: '-1px',
+          left: '-1px',
+          width: 31 * zoom,
+          position: 'absolute',
+          writingMode: 'vertical-rl',
+          transform: 'rotate(180deg)',
+          background: color,
+          textAlign: 'center',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center'
+        }}>
           <InternalLink to={href} style={{
             color: getContrastRatio('#ffffff', color) < 4.5 ? '#282828' : '#ffffff',
             fontSize: 12 * zoom,
-            lineHeight: `${13 * zoom}px`,
-            display: 'block'
+            lineHeight: `${13 * zoom}px`
           }}>
             {header}
           </InternalLink>
         </div>
       </div>
-      <div style={{width: 40 * zoom, display: 'inline-block'}} />
-      <div style={{position: 'absolute', border: `${1 * zoom}px solid ${color}`, background: 'white', top: 20 * zoom, bottom: 0, left: 30 * zoom, right: 0}}></div>
-      <div style={{position: 'absolute', top: 20 * zoom, bottom: 0, left: 0, right: 0,
-        boxShadow: `0 ${4 * zoom}px ${8 * zoom}px 0 rgba(0, 0, 0, 0.2), 0 ${6 * zoom}px ${20 * zoom}px 0 rgba(0, 0, 0, 0.19)`
-      }}></div>
       <div style={{position: 'absolute', left: 35 * zoom, top: 0, right: 10 * zoom, bottom: 0, display: 'flex', justifyContent: 'space-between'}}>
         {subcategories.map(function(subcategory, index, all) {
           return [
             <div key={subcategory.name} style={{position: 'relative', fontSize: `${10 * zoom}px`}}>
               <div style={{position: 'relative', width: '100%', height: 40 * zoom, top: -14 * zoom}}>
-                <span style={{textAlign: 'center', position: 'absolute', width: '100%', minWidth: 80 * zoom, transform: 'translate(-50%, -50%)', left: '50%', top:'50%'}}>
-                  <InternalLink to={subcategory.href}>
-                    <span style={{
-                      color: 'white',
-                      fontSize: 11 * zoom
-                    }}>{subcategory.name}</span>
-                  </InternalLink>
-                </span>
+                  <span style={{textAlign: 'center', position: 'absolute', width: '100%', minWidth: 80 * zoom, transform: 'translate(-50%, -50%)', left: '50%', top:'50%'}}>
+                    <InternalLink to={subcategory.href}>
+                      <span style={{
+                        color: 'white',
+                        fontSize: 11 * zoom
+                      }}>{subcategory.name}</span>
+                    </InternalLink>
+                  </span>
               </div>
               <HorizontalSubcategory subcategory={subcategory} rows={rows} zoom={zoom} onSelectItem={onSelectItem} parentHeight={height} xRatio={xRatio} key={subcategory.name}/>
             </div>,
             index !== all.length - 1 && <div key={index} style={{ top: 40 * zoom, height: `calc(100% - ${50 * zoom}px)`, border: `${Math.max(Math.round(zoom) / 2, 0.5)}px solid #777`, position: 'relative' }}></div>
-            ]
+          ]
         })}
       </div>
-
   </div>);
 });
 
