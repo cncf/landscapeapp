@@ -44,7 +44,8 @@
     "test:watch": "jest --watch",
     "analyze-bundle": "babel-node ./tools/analyzeBundle.js",
     "latest": "npm install",
-    "reset-tweet-count": "babel-node tools/resetTweetCount.js"
+    "reset-tweet-count": "babel-node tools/resetTweetCount.js",
+    "check-accessibility": "axe -q --tags wcag2a localhost:${PORT:-4000}, localhost:${PORT:-4000}/format=card-mode"
   },
   "author": "CNCF",
   "license": "Apache-2.0",
@@ -80,6 +81,7 @@
     "@material-ui/icons": "4.5.1",
     "@rooks/use-window-size": "3.4.0",
     "autoprefixer": "9.7.2",
+    "axe-puppeteer": "1.0.0",
     "babel-eslint": "10.0.3",
     "babel-jest": "24.9.0",
     "babel-loader": "8.0.6",
