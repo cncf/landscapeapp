@@ -1,6 +1,6 @@
 import React from 'react';
 import { pure } from 'recompose';
-import { OutboundLink } from 'react-ga';
+import OutboundLink from './OutboundLink';
 import settings from 'project/settings.yml';
 
 const Header = ({ reset }) => {
@@ -9,8 +9,7 @@ const Header = ({ reset }) => {
     <div className="header_container">
       <div className="header">
         <span className="landscape-logo"><img onClick={reset} src="./images/left-logo.svg" alt={name}/></span>
-        <OutboundLink eventLabel={short_name} to={company_url} target="_blank"
-                      rel="noopener noreferrer" className="landscapeapp-logo" title={`${short_name} Home`}>
+        <OutboundLink eventLabel={short_name} to={company_url} className="landscapeapp-logo" title={`${short_name} Home`}>
           <img src="./images/right-logo.svg" title={`${short_name} Logo`}/>
         </OutboundLink>
 

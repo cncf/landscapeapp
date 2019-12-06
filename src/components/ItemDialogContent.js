@@ -4,12 +4,11 @@ import SvgIcon from '@material-ui/core/SvgIcon';
 import StarIcon from '@material-ui/icons/Star';
 import KeyHandler from 'react-key-handler';
 import _ from 'lodash';
-import { OutboundLink } from 'react-ga';
+import OutboundLink from './OutboundLink';
 import millify from 'millify';
 import relativeDate from 'relative-date';
 import { filtersToUrl } from '../utils/syncToUrl';
 import formatNumber from '../utils/formatNumber';
-import isMobile from '../utils/isMobile';
 import isParent from '../utils/isParent';
 import InternalLink from './InternalLink';
 import '../styles/itemModal.scss';
@@ -136,7 +135,7 @@ const badgeTag = function(itemInfo) {
   if (!itemInfo.bestPracticeBadgeId) {
     if (itemInfo.oss) {
       const emptyUrl="https://bestpractices.coreinfrastructure.org/";
-      return (<OutboundLink eventLabel={emptyUrl} to={emptyUrl} target="_blank" className="tag tag-grass">
+      return (<OutboundLink to={emptyUrl} className="tag tag-grass">
         <span className="tag-value">No CII Best Practices </span>
       </OutboundLink>);
     } else {
@@ -145,7 +144,7 @@ const badgeTag = function(itemInfo) {
   }
   const url = `https://bestpractices.coreinfrastructure.org/en/projects/${itemInfo.bestPracticeBadgeId}`;
   const label = itemInfo.bestPracticePercentage === 100 ? 'passing' : (itemInfo.bestPracticePercentage + '%');
-  return (<OutboundLink eventLabel={url} to={url} target="_blank" className="tag tag-grass">
+  return (<OutboundLink to={url} className="tag tag-grass">
     <span className="tag-name">CII Best Practices</span>
     <span className="tag-value">{label}</span>
   </OutboundLink>);
@@ -347,7 +346,7 @@ const ItemDialogContent = ({itemInfo, isLandscape, setIsLandscape}) => {
     <div className="product-property row">
       <div className="product-property-name col col-40">Twitter</div>
       <div className="product-property-value col col-60">
-        <OutboundLink eventLabel={itemInfo.twitter} to={itemInfo.twitter} target="_blank">{formatTwitter(itemInfo.twitter)}</OutboundLink>
+        <OutboundLink to={itemInfo.twitter}>{formatTwitter(itemInfo.twitter)}</OutboundLink>
       </div>
     </div>;
 
@@ -356,7 +355,7 @@ const ItemDialogContent = ({itemInfo, isLandscape, setIsLandscape}) => {
       <div className="product-property-name col col-50">Latest Tweet</div>
       <div className="product-property-value col col-50">
         { itemInfo.latestTweetDate && (
-          <OutboundLink eventLabel={itemInfo.twitter} to={itemInfo.twitter} target="_blank">{formatDate(itemInfo.latestTweetDate)}</OutboundLink>
+          <OutboundLink to={itemInfo.twitter}>{formatDate(itemInfo.latestTweetDate)}</OutboundLink>
         )}
       </div>
     </div>
@@ -366,7 +365,7 @@ const ItemDialogContent = ({itemInfo, isLandscape, setIsLandscape}) => {
     <div className="product-property row">
       <div className="product-property-name col col-40">First Commit</div>
       <div className="product-property-value tight-col col-60">
-        <OutboundLink eventLabel={itemInfo.firstCommitLink} to={itemInfo.firstCommitLink} target="_blank">{formatDate(itemInfo.firstCommitDate)}</OutboundLink>
+        <OutboundLink to={itemInfo.firstCommitLink} >{formatDate(itemInfo.firstCommitDate)}</OutboundLink>
       </div>
     </div>
   );
@@ -375,7 +374,7 @@ const ItemDialogContent = ({itemInfo, isLandscape, setIsLandscape}) => {
                       <div className="product-property row">
                         <div className="product-property-name col col-40">Contributors</div>
                         <div className="product-property-value tight-col col-60">
-                          <OutboundLink eventLabel={itemInfo.contributorsLink} to={itemInfo.contributorsLink} target="_blank">{itemInfo.contributorsCount}</OutboundLink>
+                          <OutboundLink to={itemInfo.contributorsLink}>{itemInfo.contributorsCount}</OutboundLink>
                         </div>
                       </div>
                     ) : null;
@@ -391,21 +390,15 @@ const ItemDialogContent = ({itemInfo, isLandscape, setIsLandscape}) => {
       <div className="product-property-name col col-40">{itemInfo.amountKind === 'funding' ? 'Funding' : 'Market Cap'}</div>
       {  itemInfo.amountKind === 'funding' &&
           <div className="product-property-value tight-col col-60">
-            <OutboundLink
-              target="_blank"
-              eventLabel={itemInfo.crunchbase + '#section-funding-rounds'}
-              to={itemInfo.crunchbase + '#section-funding-rounds'}
-            >{'$' + millify(itemInfo.amount)}
+            <OutboundLink to={itemInfo.crunchbase + '#section-funding-rounds'}>
+              {'$' + millify(itemInfo.amount)}
             </OutboundLink>
           </div>
       }
       { itemInfo.amountKind !== 'funding' &&
           <div className="product-property-value tight-col col-60">
-            <OutboundLink
-              target="_blank"
-              eventLabel={'https://finance.yahoo.com/quote/' + itemInfo.yahoo_finance_data.effective_ticker}
-              to={'https://finance.yahoo.com/quote/' + itemInfo.yahoo_finance_data.effective_ticker}
-            >{'$' + millify(itemInfo.amount)}
+            <OutboundLink to={'https://finance.yahoo.com/quote/' + itemInfo.yahoo_finance_data.effective_ticker}>
+              {'$' + millify(itemInfo.amount)}
             </OutboundLink>
           </div>
       }
@@ -415,7 +408,9 @@ const ItemDialogContent = ({itemInfo, isLandscape, setIsLandscape}) => {
     <div className="product-property row">
       <div className="product-property-name col col-40">Ticker</div>
       <div className="product-property-value tight-col col-60">
-        <OutboundLink target="_blank" eventLabel={"https://finance.yahoo.com/quote/" + itemInfo.yahoo_finance_data.effective_ticker} to={"https://finance.yahoo.com/quote/" + itemInfo.yahoo_finance_data.effective_ticker}>{itemInfo.yahoo_finance_data.effective_ticker}</OutboundLink>
+        <OutboundLink to={"https://finance.yahoo.com/quote/" + itemInfo.yahoo_finance_data.effective_ticker}>
+          {itemInfo.yahoo_finance_data.effective_ticker}
+        </OutboundLink>
       </div>
     </div>
   );
@@ -423,7 +418,7 @@ const ItemDialogContent = ({itemInfo, isLandscape, setIsLandscape}) => {
     <div className="product-property row">
       <div className="product-property-name col col-50">Latest Commit</div>
       <div className="product-property-value col col-50">
-        <OutboundLink eventLabel={itemInfo.latestCommitLink} to={itemInfo.latestCommitLink} target="_blank">{formatDate(itemInfo.latestCommitDate)}</OutboundLink>
+        <OutboundLink to={itemInfo.latestCommitLink}>{formatDate(itemInfo.latestCommitDate)}</OutboundLink>
       </div>
     </div>
   );
@@ -431,7 +426,7 @@ const ItemDialogContent = ({itemInfo, isLandscape, setIsLandscape}) => {
     <div className="product-property row">
       <div className="product-property-name col col-50">Latest Release</div>
       <div className="product-property-value col col-50">
-        <OutboundLink eventLabel={itemInfo.releaseLink} to={itemInfo.releaseLink} target="_blank">{formatDate(itemInfo.releaseDate)}</OutboundLink>
+        <OutboundLink to={itemInfo.releaseLink}>{formatDate(itemInfo.releaseDate)}</OutboundLink>
       </div>
     </div>
   );
@@ -514,18 +509,14 @@ const ItemDialogContent = ({itemInfo, isLandscape, setIsLandscape}) => {
                 <div className="product-property row">
                   <div className="product-property-name col col-20">Website</div>
                   <div className="product-property-value col col-80">
-                    <OutboundLink eventLabel={itemInfo.homepage_url} to={itemInfo.homepage_url} target="_blank">
-                      {shortenUrl(itemInfo.homepage_url)}
-                    </OutboundLink>
+                    <OutboundLink to={itemInfo.homepage_url}>{shortenUrl(itemInfo.homepage_url)}</OutboundLink>
                   </div>
                 </div>
                 {itemInfo.repo_url &&
                 <div className="product-property row">
                   <div className="product-property-name col col-20">Repository</div>
                   <div className="product-property-value product-repo col col-80">
-                    <OutboundLink eventLabel={itemInfo.repo_url} to={itemInfo.repo_url} target="_blank">
-                      {shortenUrl(itemInfo.repo_url)}
-                    </OutboundLink>
+                    <OutboundLink to={itemInfo.repo_url}>{shortenUrl(itemInfo.repo_url)}</OutboundLink>
                   </div>
                 </div>
                 }
@@ -545,9 +536,7 @@ const ItemDialogContent = ({itemInfo, isLandscape, setIsLandscape}) => {
                 <div className="product-property row">
                   <div className="product-property-name col col-20">Crunchbase</div>
                   <div className="product-property-value col col-80">
-                    <OutboundLink eventLabel={itemInfo.crunchbase} to={itemInfo.crunchbase} target="_blank">
-                      {shortenUrl(itemInfo.crunchbase)}
-                    </OutboundLink>
+                    <OutboundLink to={itemInfo.crunchbase}>{shortenUrl(itemInfo.crunchbase)}</OutboundLink>
                   </div>
                 </div>
                 }
@@ -555,7 +544,7 @@ const ItemDialogContent = ({itemInfo, isLandscape, setIsLandscape}) => {
                 <div className="product-property row">
                   <div className="product-property-name col col-20">LinkedIn</div>
                   <div className="product-property-value col col-80">
-                    <OutboundLink eventLabel={itemInfo.crunchbaseData.linkedin} to={itemInfo.crunchbaseData.linkedin} target="_blank">
+                    <OutboundLink to={itemInfo.crunchbaseData.linkedin}>
                       {shortenUrl(itemInfo.crunchbaseData.linkedin)}
                     </OutboundLink>
                   </div>
