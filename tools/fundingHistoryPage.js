@@ -32,12 +32,12 @@ const page = `
            const delta = item.currentAmount - (item.previousAmount || 0);
            return `
                <tr style="${index % 2 === 0 ? '' : 'background: #eee'}">
-                 <td><a href="${item.link}" target="_blank">${item.name}</a></td>
+                 <td><a href="${item.link}" target="_blank" rel="noopener noreferrer">${item.name}</a></td>
                  <td>$${millify(item.currentAmount)}</td>
                  <td style="color: ${delta > 0 ? 'green' : 'red'}">$${millify(delta)}</td>
                  <td>${settings.membership[item.membership].funding}</td>
                  <td>${item.date}</td>
-                 <td><a href="${item.url}" target="_blank">${item.name}</a></td>
+                 <td><a href="${item.url}" target="_blank" rel="noopener noreferrer">${item.name}</a></td>
                </tr>
            `;
          }).join('')}

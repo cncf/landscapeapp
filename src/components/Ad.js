@@ -1,6 +1,6 @@
 import React from 'react';
 import { pure } from 'recompose';
-import { OutboundLink } from 'react-ga';
+import OutboundLink from './OutboundLink';
 import settings from 'project/settings.yml';
 
 const Ad = () => {
@@ -16,12 +16,7 @@ const Ad = () => {
 
   return <div id="kubecon">
     { entries.map( (entry) => (
-        <OutboundLink className="sidebar-event"
-            key={entry.image}
-            eventLabel={entry.url}
-            to={entry.url}
-            target="_blank"
-            title={entry.title}>
+        <OutboundLink className="sidebar-event" key={entry.image} to={entry.url} title={entry.title}>
             <img src={normalizeUrl(entry.image)} alt={entry.title} />
         </OutboundLink>
     )) }
