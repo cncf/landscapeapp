@@ -10,6 +10,7 @@ import Sorting from './Sorting';
 import PresetsContainer from './PresetsContainer';
 import Ad from './Ad';
 import AutoSizer from './CustomAutoSizer';
+import OutboundLink from './OutboundLink';
 import {
   LandscapeContentContainer,
   SwitchButtonContainer,
@@ -178,7 +179,7 @@ const HomePage = ({isEmbed, mainContentMode, ready, hasSelectedItem, filtersVisi
         <div className={classNames('main', {'embed': isEmbed})}>
           { !isEmbed && <div className="disclaimer">
             <span  dangerouslySetInnerHTML={{__html: settings.home.header}} />
-            Please <a target="_blank" href={`https://github.com/${settings.global.repo}`}>open</a> a pull request to
+            Please <OutboundLink to={`https://github.com/${settings.global.repo}`}>open</OutboundLink> a pull request to
             correct any issues. Greyed logos are not open source. Last Updated: {window.lastUpdated}
           </div> }
           { !isEmbed && <SummaryContainer /> }
