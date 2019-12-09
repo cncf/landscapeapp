@@ -21,11 +21,10 @@ const result = browserSync({
   server: {
     baseDir: path.resolve(projectPath, 'dist')
   },
-
   files: [
     'src/*.html'
   ],
-
+  ghostMode: false,
   middleware: [
     function (req, res, next) {
 
