@@ -44,8 +44,7 @@
     "test:watch": "jest --watch",
     "analyze-bundle": "babel-node ./tools/analyzeBundle.js",
     "latest": "npm install",
-    "reset-tweet-count": "babel-node tools/resetTweetCount.js",
-    "check-accessibility": "axe -q --tags wcag2a localhost:${PORT:-4000}, localhost:${PORT:-4000}/format=card-mode"
+    "reset-tweet-count": "babel-node tools/resetTweetCount.js"
   },
   "author": "CNCF",
   "license": "Apache-2.0",
