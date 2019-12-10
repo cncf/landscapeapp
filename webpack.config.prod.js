@@ -88,6 +88,7 @@ export default {
         favicons: {
           appName: settings.global.name,
           icons: {
+            appleIcon: false,
             appleStartup: false,
             firefox: false,
             coast: false,
