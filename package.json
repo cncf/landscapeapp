@@ -44,7 +44,10 @@
     "test:watch": "jest --watch",
     "analyze-bundle": "babel-node ./tools/analyzeBundle.js",
     "latest": "npm install",
-    "reset-tweet-count": "babel-node tools/resetTweetCount.js"
+    "reset-tweet-count": "babel-node tools/resetTweetCount.js",
+    "preinstall": "npx npm-force-resolutions 2>/dev/null || true",
+    "prepublishOnly": "npm shrinkwrap",
+    "postpublish": "mv npm-shrinkwrap.json package-lock.json"
   },
   "author": "CNCF",
   "license": "Apache-2.0",
@@ -132,6 +135,7 @@
     "mini-css-extract-plugin": "0.8.0",
     "minimatch": "3.0.4",
     "node-sass": "4.13.0",
+    "npm-force-resolutions": "0.0.3",
     "postcss-loader": "3.0.0",
     "prop-types": "15.7.2",
     "puppeteer": "2.0.0",
@@ -174,6 +178,9 @@
     "webpack-hot-middleware": "2.25.0",
     "webpack-md5-hash": "0.0.6",
     "yaml-loader": "0.5.0"
+  },
+  "resolutions": {
+    "sharp": "0.23.4"
   },
   "keywords": [
     "landscape",
