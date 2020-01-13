@@ -42,6 +42,7 @@ async function main() {
       page.setViewport(pageInfo.size)
       console.info(`visiting http://localhost:${port}${pageInfo.url}`);
       await page.goto(`http://localhost:${port}${pageInfo.url}&pdf`, { waitUntil: 'networkidle0'});
+      await Promise.delay(5000); // https://github.com/cncf/landscapeapp/issues/498
       await page.screenshot({ path: path.resolve(projectPath, 'dist/images/' + pageInfo.fileName), fullPage: false });
       if (pageInfo.pdfFileName) {
         await page.emulateMediaType('screen');
