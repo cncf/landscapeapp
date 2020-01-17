@@ -1,3 +1,4 @@
+// import './suppressAnnoyingWarnings';
 import _ from 'lodash';
 import Promise from 'bluebird';
 import { settings } from './settings';
@@ -6,6 +7,7 @@ const urls = _.map(settings.big_picture, (section) => section.url);
 const port = process.env.PORT || '4000';
 async function main() {
   const puppeteer = require('puppeteer');
+  console.info('go!');
   const browser = await puppeteer.launch({args: ['--no-sandbox', '--disable-setuid-sandbox']});
   const page = await browser.newPage();
   var hasErrors = false;

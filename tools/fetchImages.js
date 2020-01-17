@@ -1,3 +1,4 @@
+import './suppressAnnoyingWarnings';
 import { setFatalError } from './fatalErrors';
 import colors from 'colors';
 import rp from './rpRetry';
