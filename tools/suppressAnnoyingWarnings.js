@@ -8,7 +8,7 @@ const oldInfo = console.info;
 const oldLog = console.log;
 console.info = function(a) {
   if (a && a.includes) {
-    if (ignoreText.all( (x) => !a.includes(x))) {
+    if (ignoreText.every( (x) => !a.includes(x))) {
       oldInfo.apply(console, arguments);
     }
   } else {
@@ -18,7 +18,7 @@ console.info = function(a) {
 }
 console.log = function(a) {
   if (a && a.includes) {
-    if (ignoreText.all( (x) => !a.includes(x))) {
+    if (ignoreText.every( (x) => !a.includes(x))) {
       oldLog.apply(console, arguments);
     }
   } else {

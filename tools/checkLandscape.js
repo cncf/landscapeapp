@@ -1,4 +1,4 @@
-// import './suppressAnnoyingWarnings';
+import './suppressAnnoyingWarnings';
 import _ from 'lodash';
 import Promise from 'bluebird';
 import { settings } from './settings';
