@@ -52,7 +52,7 @@ function buildDiff({currentItems, prevItems, date, result}) {
       return;
     }
     const previousEntry = _.find(prevItems, (prevItem) => prevItem.crunchbase_data && prevItem.crunchbase_data.name === item.crunchbase_data.name);
-    if (previousEntry && item.crunchbase_data.funding !== previousEntry.crunchbase_data.funding) {
+    if (previousEntry && Math.abs(item.crunchbase_data.funding - previousEntry.crunchbase_data.funding) > 100) {
       const membership = _.find(dataJson, {crunchbase: item.crunchbase}).member;
       result.push({
         name: item.crunchbase_data.name,
