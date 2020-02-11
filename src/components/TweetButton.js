@@ -14,7 +14,12 @@ const bird = ( <svg
   </g>
 </svg>);
 
+const isPrerendering = navigator.userAgent === "ReactSnap";
+
 const TweetButton = function({url, cls}) {
+  if (isPrerendering) {
+    return null;
+  }
   const params = qs.stringify({
     text: settings.twitter.text,
     url: url
