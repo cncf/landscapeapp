@@ -23,7 +23,7 @@ const ApiClient = ({ baseUrl, defaultOptions = {}, defaultParams = {}, retryStat
 
       const key = `${method} ${url}?${stringify(qs)}`;
 
-      if (true) { //!requests[key]) {
+      if (!requests[key]) {
         requests[key] = rp({
           method: method,
           uri: url,
@@ -60,7 +60,6 @@ const OldGithubClient = ApiClient({
 
 export const GithubClient = {
   request: async function({ path = null, url = null, method = 'GET', params = {} }) {
-    console.info('go');
     const rates = await rp({
       uri: 'https://api.github.com/rate_limit',
       json: true,
@@ -68,10 +67,9 @@ export const GithubClient = {
         'User-agent': 'CNCF',
         'Authorization': `token ${env.GITHUB_KEY}`
       }});
-    console.info('done');
     const remaining = rates.resources.core.remaining;
-    console.info('remaining: ', remaining);
-    if (remaining < 10) {
+    if (remaining < 100) { // because requests may go in parallel
+      console.info('Pausing for one hour, github quote exceeded');
       await Promise.delay(3600 * 1000);
     }
     return await OldGithubClient.request({path, url, method, params});

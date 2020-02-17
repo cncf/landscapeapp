@@ -1,5 +1,4 @@
 import { GithubClient } from './apiClients';
-console.info(GithubClient.request);
 
 
 export async function getReleaseDate({repo}) {
