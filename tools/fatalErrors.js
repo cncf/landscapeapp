@@ -12,6 +12,10 @@ export async function reportFatalErrors() {
     console.info(`Can not report fatal errors, GITHUB_TOKEN not provided`);
     return;
   }
+  if (!process.env.REPOSITORY_URL) {
+    console.info(`Can not report fatal errors, REPOSITORY_URL not provided`);
+    return;
+  }
 
   const message = `Build failed because of:\n` + fatalErrors.join('\n');
   const repo = process.env.REPOSITORY_URL.split('/').slice(-2).join('/').split(':').slice(-1)[0];

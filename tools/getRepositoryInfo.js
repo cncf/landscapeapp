@@ -1,5 +1,7 @@
 import shortRepoName from '../src/utils/shortRepoName';
 import rp from './rpRetry';
+import { GithubClient } from './apiClients';
+
 
 const cache = {};
 export default async function getRepositoryInfo(url) {
@@ -7,13 +9,9 @@ export default async function getRepositoryInfo(url) {
     return cache[url];
   }
   const repoName = shortRepoName(url);
-  const apiUrl = `https://api.github.com/repos/${repoName}?access_token=${process.env.GITHUB_KEY}`;
-  const apiInfo = await rp({
-    url: apiUrl,
-    json: true,
-    headers: {
-      'User-Agent': 'landscapeapp updater'
-    }
+  const apiUrl = `https://api.github.com/repos/${repoName}`;
+  const apiInfo = await GithubClient.request({
+    path: `repos/${repoName}`
   });
   cache[url] = apiInfo;
   return apiInfo;
@@ -25,13 +23,8 @@ export async function getLanguages(url) {
     return getLanguagesCache[url];
   }
   const repoName = shortRepoName(url);
-  const apiUrl = `https://api.github.com/repos/${repoName}/languages?access_token=${process.env.GITHUB_KEY}`;
-  const apiInfo = await rp({
-    url: apiUrl,
-    json: true,
-    headers: {
-      'User-Agent': 'landscapeapp updater'
-    }
+  const apiInfo = await GithubClient.request({
+    path: `repos/${repoName}/languages`
   });
   getLanguagesCache[url] = apiInfo;
   return apiInfo;
@@ -43,15 +36,9 @@ export async function getWeeklyContributions(url) {
     return weeklyContributionsCache[url];
   }
   const repoName = shortRepoName(url);
-  const apiUrl = `https://api.github.com/repos/${repoName}/stats/participation?access_token=${process.env.GITHUB_KEY}`;
-  const apiInfo = await rp({
-    url: apiUrl,
-    json: true,
-    headers: {
-      'User-Agent': 'landscapeapp updater'
-    }
+  const apiInfo = await GithubClient.request({
+    path: `repos/${repoName}/stats/participation`
   });
-
   weeklyContributionsCache[url] = apiInfo;
   return apiInfo;
 

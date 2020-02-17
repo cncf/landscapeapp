@@ -1,3 +1,4 @@
+import Promise from 'bluebird';
 import { env } from 'process';
 import { stringify } from 'query-string';
 import rp from './rpRetry';
@@ -44,7 +45,7 @@ export const CrunchbaseClient = ApiClient({
   defaultOptions: { followRedirect: true, maxRedirects: 5, timeout: 10 * 1000 }
 });
 
-export const GithubClient = ApiClient({
+const OldGithubClient = ApiClient({
   baseUrl: 'https://api.github.com',
   retryStatuses: [403], // Github returns 403 when rate limiting.
   defaultOptions: {
@@ -56,6 +57,24 @@ export const GithubClient = ApiClient({
     },
   }
 });
+
+export const GithubClient = {
+  request: async function({ path = null, url = null, method = 'GET', params = {} }) {
+    const rates = await rp({
+      uri: 'https://api.github.com/rate_limit',
+      json: true,
+      headers: {
+        'User-agent': 'CNCF',
+        'Authorization': `token ${env.GITHUB_KEY}`
+      }});
+    const remaining = rates.resources.core.remaining;
+    if (remaining < 100) { // because requests may go in parallel
+      console.info('Pausing for one hour, github quote exceeded');
+      await Promise.delay(3600 * 1000);
+    }
+    return await OldGithubClient.request({path, url, method, params});
+  }
+};
 
 const [consumerKey, consumerSecret, accessTokenKey, accessTokenSecret] = (env.TWITTER_KEYS || '').split(',');
 
