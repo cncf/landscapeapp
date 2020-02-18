@@ -20,6 +20,7 @@ import TweetButton from './TweetButton';
 import currentDevice from 'current-device';
 import TwitterTimeline from "./TwitterTimeline";
 import {Bar, Pie, defaults} from 'react-chartjs-2';
+import 'chartjs-adapter-date-fns';
 import useWindowSize from "@rooks/use-window-size"
 import classNames from 'classnames'
 import CreateWidthMeasurer from 'measure-text-width';
