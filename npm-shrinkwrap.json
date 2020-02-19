@@ -7592,6 +7592,11 @@
         "moment": "^2.10.2"
       }
     },
+    "chartjs-adapter-date-fns": {
+      "version": "1.0.0",
+      "resolved": "https://registry.npmjs.org/chartjs-adapter-date-fns/-/chartjs-adapter-date-fns-1.0.0.tgz",
+      "integrity": "sha512-G7gk8IzCJmg7kH7Hhp4upJ7mOhN9ipGR2w0pnG+/aYnNno2rada6wzvxeWV6hpYSr/UT/E3AnQAM4z994JarVw=="
+    },
     "chartjs-color": {
       "version": "2.4.1",
       "resolved": "https://registry.npmjs.org/chartjs-color/-/chartjs-color-2.4.1.tgz",
@@ -8615,6 +8620,11 @@
         "whatwg-mimetype": "^2.2.0",
         "whatwg-url": "^7.0.0"
       }
+    },
+    "date-fns": {
+      "version": "2.9.0",
+      "resolved": "https://registry.npmjs.org/date-fns/-/date-fns-2.9.0.tgz",
+      "integrity": "sha512-khbFLu/MlzLjEzy9Gh8oY1hNt/Dvxw3J6Rbc28cVoYWQaC1S3YI4xwkF9ZWcjDLscbZlY9hISMr66RFzZagLsA=="
     },
     "debug": {
       "version": "4.1.1",
