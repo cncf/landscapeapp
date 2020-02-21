@@ -5,6 +5,7 @@ console.info('processed', projectPath);
 const source = require('js-yaml').safeLoad(require('fs').readFileSync(`${projectPath}/processed_landscape.yml`));
 const traverse = require('traverse');
 const _ = require('lodash');
+const { emojify } = require('node-emoji')
 
 import actualTwitter from './actualTwitter';
 import saneName from '../src/utils/saneName';
@@ -148,7 +149,7 @@ async function main () {
           return node.description;
         }
         if (node.github_data && node.github_data.description) {
-          return node.github_data.description;
+          return emojify(node.github_data.description);
         }
         if (node.crunchbase_data && node.crunchbase_data.description) {
           return node.crunchbase_data.description;
