@@ -14,7 +14,7 @@ export async function getRepoLatestDate({repo, branch}) {
   const commits = await GithubClient.request({ path: `/repos/${repo}/commits?sha=${branchSha}` });
   const firstCommit = commits[0];
   const commitLink = (new URL(firstCommit.html_url)).pathname;
-  return { date: firstCommit.commit.author.date, commitLink: commitLink };
+  return { date: firstCommit.commit.committer.date, commitLink: commitLink };
 }
 
 const getBranchSha = async (repo, branch) => {
