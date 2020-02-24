@@ -35,9 +35,9 @@ async function main() {
     return { fileName, pdfFileName, ...pageAttributes({ url, fullscreen_size }) };
   });
 
+  const browser = await puppeteer.launch({args: ['--no-sandbox', '--disable-setuid-sandbox']});
   await Promise.mapSeries([previews, full_sizes], async function(series) {
-    await Promise.map(series, async function(pageInfo) {
-      const browser = await puppeteer.launch({args: ['--no-sandbox', '--disable-setuid-sandbox']});
+    for (const pageInfo of series) {
       const page = await browser.newPage();
       page.setViewport(pageInfo.size)
       console.info(`visiting http://localhost:${port}${pageInfo.url}`);
@@ -47,8 +47,8 @@ async function main() {
         await page.emulateMediaType('screen');
         await page.pdf({path: path.resolve(projectPath, 'dist/images/' + pageInfo.pdfFileName), ...pageInfo.size, printBackground: true, pageRanges: '1' });
       }
-      await browser.close();
-    });
+    }
   });
+  await browser.close();
 }
 main().catch(console.info);
