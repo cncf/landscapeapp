@@ -31,14 +31,10 @@
   <script>
     if (navigator.userAgent !== "ReactSnap") {
       const parts = window.location.pathname.split('/'); // for example: /cncf/members or  /lfai/landscape or /a/s/d/f
-      if (parts[1] === 'cncf') {
+      const prefix = '<%= htmlWebpackPlugin.options.prefix %>';
+      if (parts[1] === prefix) {
         if (parts[3]) {
-          window.location = '/cncf'
-        }
-      }
-      else if (parts[1] === 'lfai') {
-        if (parts[3]) {
-          window.location = '/lfai'
+          window.location = '/' + prefix + '/';
         }
       }
       else if (parts[2]) {
@@ -47,7 +43,6 @@
     }
   </script>
   <script>
-    window.prefix = ''; // this line will be replaced for a landscapeapp build
     // adjust size
     document.addEventListener("DOMContentLoaded", function() {
       const el = document.querySelector('.landscape-wrapper');
