@@ -130,9 +130,18 @@ export async function fetchCrunchbaseEntries({cache, preferCache}) {
     try {
       const result = await CrunchbaseClient.request({ path: `/organizations/${c.name}` });
       var cbInfo = result.data.properties;
-      var twitterEntry = _.find(result.data.relationships.websites.items, (x) => x.properties.website_name === 'twitter');
-      var linkedInEntry = _.find(result.data.relationships.websites.items, (x) => x.properties.website_name === 'linkedin');
-      const headquarters = result.data.relationships.headquarters;
+      const { relationships } = result.data
+      var twitterEntry = _.find(relationships.websites.items, (x) => x.properties.website_name === 'twitter');
+      var linkedInEntry = _.find(relationships.websites.items, (x) => x.properties.website_name === 'linkedin');
+      const headquarters = relationships.headquarters;
+      const acquisitions = relationships.acquisitions.items.map((acquisition) => {
+        const { name, permalink } = acquisition.relationships.acquiree.properties
+        return {
+          price: acquisition.properties.price_usd,
+          date: acquisition.properties.announced_on,
+          acquiree: { name, permalink }
+        }
+      })
       const entry = {
         url: c.crunchbase,
         name: cbInfo.name,
@@ -144,7 +153,8 @@ export async function fetchCrunchbaseEntries({cache, preferCache}) {
         region: headquarters && headquarters.item && headquarters.item.properties.region || null,
         country: headquarters && headquarters.item && headquarters.item.properties.country || null,
         twitter: twitterEntry ? twitterEntry.properties.url : null,
-        linkedin: linkedInEntry ? ensureHttps(linkedInEntry.properties.url) : null
+        linkedin: linkedInEntry ? ensureHttps(linkedInEntry.properties.url) : null,
+        acquisitions
       };
       if (_.isEmpty(entry.city)) {
         addError('crunchbase');
