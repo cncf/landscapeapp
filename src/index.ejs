@@ -29,12 +29,12 @@
   <meta name="msvalidate.01" content="<%= htmlWebpackPlugin.options.settings.global.meta.ms_validate %>" />
   <title><%= htmlWebpackPlugin.options.settings.global.meta.title %></title>
   <script>
-    window.prefix = ''; // this line will be replaced for a landscapeapp build
     if (navigator.userAgent !== "ReactSnap") {
       const parts = window.location.pathname.split('/'); // for example: /cncf/members or  /lfai/landscape or /a/s/d/f
-      if (parts[1] === window.prefix.replace('/', '')) {
+      const prefix = '<%= htmlWebpackPlugin.options.prefix %>';
+      if (parts[1] === prefix) {
         if (parts[3]) {
-          window.location = window.prefix;
+          window.location = '/' + prefix;
         }
       }
       else if (parts[2]) {

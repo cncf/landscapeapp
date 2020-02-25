@@ -81,6 +81,7 @@ export default {
       inject: true,
       // custom properties
       GA :require('process').env['GA'],
+      prefix: process.env.PROJECT_NAME || '',
       lastUpdated: new Date().toISOString().substring(0, 19).replace('T', ' ') + 'Z',
       settings: settings
     }),
