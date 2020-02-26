@@ -1,17 +1,15 @@
-import React, { useState } from 'react'
+import React from 'react'
 import { connect } from 'react-redux'
-import { uniqBy } from 'lodash'
+import { uniqBy, sortBy } from 'lodash'
 import Acquisitions from './Acquisitions'
 
 const mapStateToProps = (state) => {
   return { data: state.main.data || [] }
 };
 
+const makeOptions = (arr) => sortBy(uniqBy(arr, 'permalink'), 'name')
+
 const AcquisitionsContainer = ({ data }) => {
-  const [page, setPage] = useState(0)
-
-  const rowsPerPage = 20
-
   const organizations = uniqBy(data, 'crunchbase')
 
   const acquisitions = organizations
@@ -31,13 +29,13 @@ const AcquisitionsContainer = ({ data }) => {
     .sort((a, b) => b.date - a.date)
 
   const members = new Set(organizations.map(({ crunchbase }) => crunchbase.split('/').pop()))
+  const acquirers = makeOptions(acquisitions.map(a => a.acquirer))
+  const acquirees = makeOptions(acquisitions.map(a => a.acquiree).filter(a => a.permalink))
 
-  return <Acquisitions acquisitions={acquisitions.slice(page * rowsPerPage, (page + 1) * rowsPerPage)}
-                       total={acquisitions.length}
-                       page={page}
-                       setPage={setPage}
-                       rowsPerPage={rowsPerPage}
+  return <Acquisitions acquisitions={acquisitions}
                        members={members}
+                       acquirers={acquirers}
+                       acquirees={acquirees}
   />
 }
 
