@@ -27,15 +27,15 @@ import Autocomplete from "@material-ui/lab/Autocomplete"
 import { DatePicker, MuiPickersUtilsProvider } from '@material-ui/pickers'
 import DateFnsUtils from '@date-io/date-fns'
 import millify from 'millify'
-import saneName from '../utils/saneName'
 import OutboundLink from './OutboundLink'
+import { filtersToUrl } from '../utils/syncToUrl'
 
 export default ({ acquisitions, members, acquirers, acquirees }) => {
   const linkToOrg = ({ name, permalink }) => {
     if (!members.has(permalink)) {
       return name
     }
-    return <OutboundLink to={`/organization=${saneName(name)}`}>{name}</OutboundLink>
+    return <OutboundLink to={filtersToUrl({filters: { organization: name}})}>{name}</OutboundLink>
   }
 
   const rowKey = ({ acquirer, acquiree, date }) => {
