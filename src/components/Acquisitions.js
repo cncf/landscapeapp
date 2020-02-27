@@ -35,7 +35,7 @@ export default ({ acquisitions, members, acquirers, acquirees }) => {
     if (!members.has(permalink)) {
       return name
     }
-    return <OutboundLink to={filtersToUrl({filters: { organization: name}})}>{name}</OutboundLink>
+    return <OutboundLink to={filtersToUrl({mainContentMode: 'landscape', filters: { organization: name}})}>{name}</OutboundLink>
   }
 
   const rowKey = ({ acquirer, acquiree, date }) => {
