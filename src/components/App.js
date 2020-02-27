@@ -6,6 +6,7 @@ import { Switch, Route } from 'react-router-dom';
 
 import { FullscreenLandscapeContainer } from "./BigPicture";
 import HomePageContainer from './HomePageContainer';
+import AcquisitionsContainer from './AcquisitionsContainer';
 import NotFoundPage from './NotFoundPage';
 import { isZoomedIn } from "../utils/browserZoom";
 import { landscapeSettingsList } from "../utils/landscapeSettings";
@@ -51,6 +52,7 @@ class App extends React.Component {
         <Switch>
           <Route exact path={`/${prefix}`} component={HomePageContainer} />
           { this.fullscreenLandscapes() }
+          <Route path={`/${prefix}acquisitions`} component={AcquisitionsContainer} />
           <Route path={`/${prefix}`} component={HomePageContainer} />
           <Route component={NotFoundPage} />
         </Switch>

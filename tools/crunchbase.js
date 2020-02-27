@@ -110,6 +110,33 @@ async function getMarketCap(ticker) {
   return result;
 }
 
+const fetchAcquisitions = async(url, params = {}) => {
+  const response = await CrunchbaseClient.request({ url, params })
+  const { items, paging } = response.data
+  const { next_page_url } = paging
+  if (!next_page_url) {
+    return items
+  }
+  return items + await fetchAcquisitions(next_page_url)
+}
+
+const getAcquisitions = async (acquisitions) => {
+  const { items, paging } = acquisitions
+  const { total_items, first_page_url } = paging
+  const entries = items.length === total_items ? items : await fetchAcquisitions(first_page_url, { items_per_page: 1000 })
+  return entries.map(acquisition => {
+    const { name } = acquisition.relationships.acquiree.properties
+    let result = {
+      date: acquisition.properties.announced_on,
+      acquiree: name
+    }
+    if (acquisition.properties.price_usd) {
+      result.price = acquisition.properties.price_usd
+    }
+    return result
+  })
+}
+
 export async function fetchCrunchbaseEntries({cache, preferCache}) {
   // console.info(organizations);
   // console.info(_.find(organizations, {name: 'foreman'}));
@@ -134,14 +161,7 @@ export async function fetchCrunchbaseEntries({cache, preferCache}) {
       var twitterEntry = _.find(relationships.websites.items, (x) => x.properties.website_name === 'twitter');
       var linkedInEntry = _.find(relationships.websites.items, (x) => x.properties.website_name === 'linkedin');
       const headquarters = relationships.headquarters;
-      const acquisitions = relationships.acquisitions.items.map((acquisition) => {
-        const { name, permalink } = acquisition.relationships.acquiree.properties
-        return {
-          price: acquisition.properties.price_usd,
-          date: acquisition.properties.announced_on,
-          acquiree: { name, permalink }
-        }
-      })
+      const acquisitions = await getAcquisitions(relationships.acquisitions)
       const entry = {
         url: c.crunchbase,
         name: cbInfo.name,
