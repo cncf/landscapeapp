@@ -193,26 +193,28 @@ export default ({ acquisitions, members, acquirers, acquirees }) => {
 
   return <Container maxWidth="lg" disableGutters={true}>
     <Paper>
-      <Box mx={-1}>
-        <Toolbar>
-          <Box flexGrow="1">
-            <Typography variant="h6">
-              Acquisitions
-            </Typography>
-          </Box>
+      <Toolbar variant="dense">
+        <Box flexGrow="1">
+          <Typography variant="h6">
+            Acquisitions
+          </Typography>
+        </Box>
 
-          { hasFilters() ?
-            <Button color="primary" onClick={resetFilters}>Reset Filters</Button>
-            : null
-          }
+        { hasFilters() ?
+          <Button color="primary" onClick={resetFilters}>Reset</Button>
+          : null
+        }
 
-          <IconButton aria-label="filter list" onClick={() => setDialogOpen(true)}>
-            <FilterListIcon/>
-          </IconButton>
+        <Button
+          aria-label="filter list"
+          onClick={() => setDialogOpen(true)}
+          endIcon={<FilterListIcon>filter</FilterListIcon>}
+        >
+          Filter
+        </Button>
 
-          {filterDialog()}
-        </Toolbar>
-      </Box>
+        {filterDialog()}
+      </Toolbar>
       <TableContainer>
         <Table size="small">
           <TableHead>
