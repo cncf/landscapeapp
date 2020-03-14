@@ -123,7 +123,7 @@ EOSSH
   const redirects = results.map((result) => `
     /${result.landscape.name}/ /${result.landscape.name}/prerender.html 200!
     /${result.landscape.name} /${result.landscape.name}/prerender.html 200!
-    /${result.landscape.name}/* /${result.landscape.name}/index.html 200!
+    /${result.landscape.name}/* /${result.landscape.name}/index.html 200
   `).join('\n');
   const index = results.map((result) => `<div><a href="${result.landscape.name}/"><h1>${result.landscape.name}</h1></a></div>`).join('\n');
   const robots = `
