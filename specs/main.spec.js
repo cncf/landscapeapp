@@ -77,24 +77,20 @@ function mainTest() {
       await expect(page).toHaveElement(`//h1[text() = '${settings.test.header}']`);
       console.info('header is present');
       //group headers
-      if ( settings.test.section ) {
-        await expect(page).toHaveElement(`//a[contains(text(), '${settings.test.section}')]`);
-        console.info('group headers are ok');
-      }
+      await expect(page).toHaveElement(`//a[contains(text(), '${settings.test.section}')]`);
+      console.info('group headers are ok');
       // ensure that everything was loaded
       await expect(page).toHaveElement(`//*[contains(text(), 'You are viewing ')]`);
       console.info('group headers are ok');
-      if ( settings.test.logo ) {
-        //card
-        await expect(page).toHaveElement(`.mosaic img[src='logos/${settings.test.logo}']`);
-        console.info('there is a kubernetes card');
-        //click on a card
-        await page.click(`.mosaic img[src='logos/${settings.test.logo}']`);
-        console.info('it is clickable');
-        //await for a modal
-        await page.waitForSelector(".modal-content");
-        console.info('modal appears');
-      }
+      //card
+      await expect(page).toHaveElement(`.mosaic img[src='logos/${settings.test.logo}']`);
+      console.info('there is a kubernetes card');
+      //click on a card
+      await page.click(`.mosaic img[src='logos/${settings.test.logo}']`);
+      console.info('it is clickable');
+      //await for a modal
+      await page.waitForSelector(".modal-content");
+      console.info('modal appears');
     }, 6 * 60 * 1000); //give it up to 1 min to execute
   });
 }
