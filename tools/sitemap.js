@@ -1,6 +1,6 @@
 import { getLandscapeCategories } from '../src/utils/sharedItemsCalculator';
 import fields from '../src/types/fields';
-import { SitemapIndexStream } from 'sitemap';
+import { SitemapStream } from 'sitemap';
 import { projectPath, settings } from './settings';
 import path from 'path';
 const items = JSON.parse(require('fs').readFileSync(path.resolve(projectPath, 'data.json')));
@@ -27,7 +27,10 @@ async function main() {
   }));
 
 
-  const stream = new SitemapIndexStream({ level: 'warn' });
+  const stream = new SitemapStream({
+    hostname: settings.global.website,
+    cacheTime: 600 * 1000,
+  });
   const fileName = path.resolve(projectPath, 'dist/sitemap.xml');
   const writeStream = require('fs').createWriteStream(fileName);
   stream.pipe(writeStream);
