@@ -6,7 +6,8 @@ import path from 'path';
 const base = settings.global.website;
 // sync should go from a proper place!!!
 require('child_process').execSync(`cd '${projectPath}'; git remote rm github 2>/dev/null || true`);
-require('child_process').execSync(`cd '${projectPath}'; git remote add github https://github.com/${settings.global.repo}`);
+const credentials = process.env.GITHUB_USER ? `${process.env.GITHUB_USER}:${process.env.GITHUB_TOKEN}@` : '';
+require('child_process').execSync(`cd '${projectPath}'; git remote add github https://${credentials}github.com/${settings.global.repo}`);
 console.info(require('child_process').execSync(`cd '${projectPath}'; git fetch github`).toString('utf-8'));
 
 function getFileFromHistory(days) {
