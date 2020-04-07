@@ -1,3 +1,4 @@
+import settings from 'project/settings.yml';
 import createSelector from '../utils/createSelector';
 import _ from 'lodash';
 import { getItemsForExport } from './itemsCalculator';
@@ -24,8 +25,8 @@ const getSummary = createSelector(
   function(filteredItems, organizations) {
     const total = filteredItems.length;
     const stars = _.sum(_.map(filteredItems, (x) => _.isNumber(x.stars) ? x.stars : 0));
-    const funding = _.sumBy(organizations, 'funding');
-    const marketCap = _.sumBy(organizations, 'marketCap');
+    const funding = settings.global.hide_funding_and_market_cap ? 0 : _.sumBy(organizations, 'funding');
+    const marketCap = settings.global.hide_funding_and_market_cap ? 0 :_.sumBy(organizations, 'marketCap');
     return { total, stars, funding, marketCap };
   }
 );
