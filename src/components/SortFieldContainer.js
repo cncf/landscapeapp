@@ -1,3 +1,4 @@
+import settings from 'project/settings.yml';
 import { connect } from 'react-redux';
 import SortFieldSelector from './SortFieldSelector';
 import { changeSortFieldAndDirection } from '../reducers/mainReducer.js';
@@ -11,6 +12,7 @@ export const options = [{
 }, {
   id: {field: 'amount', direction: 'desc'},
   label: 'Funding / Market Cap (high to low)',
+  disabled: settings.global.hide_funding_and_market_cap
 }, {
   id: {field: 'firstCommitDate', direction: 'asc'},
   label: 'Project Started (earlier to later)',
@@ -26,7 +28,7 @@ export const options = [{
 }, {
   id: {field: 'commitsThisYear', direction: 'desc'},
   label: 'Commits this year (high to low)',
-}].map(function(x) {
+}].filter( (x) => !x.disabled).map(function(x) {
   return {
     id: JSON.stringify(x.id),
     label: x.label

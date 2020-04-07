@@ -386,7 +386,7 @@ const ItemDialogContent = ({itemInfo, isLandscape, setIsLandscape}) => {
       <div className="product-property-value tight-col col-60"><InternalLink to={filtersToUrl({grouping: 'headquarters', filters:{headquarters:itemInfo.headquarters}})}>{itemInfo.headquarters}</InternalLink></div>
     </div>
   );
-  const amountElement = Number.isInteger(itemInfo.amount) && (
+  const amountElement = !settings.global.hide_funding_and_market_cap && Number.isInteger(itemInfo.amount) && (
     <div className="product-property row">
       <div className="product-property-name col col-40">{itemInfo.amountKind === 'funding' ? 'Funding' : 'Market Cap'}</div>
       {  itemInfo.amountKind === 'funding' &&
