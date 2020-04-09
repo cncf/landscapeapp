@@ -9,9 +9,9 @@ apt-get -y install build-essential gconf-service libasound2 libatk1.0-0 libc6 li
 
 # Then we run our wrapper to process all landscapes
 . ~/.nvm/nvm.sh
-npm install
+yarn install
 nvm install `cat .nvmrc`
 nvm use
 npm install -g npm
-npm install
+yarn install
 ./node_modules/.bin/babel-node tools/landscapes.js

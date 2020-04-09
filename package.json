@@ -43,7 +43,7 @@
     "test:CI": "babel-node tools/testCi.js",
     "test:watch": "jest --watch",
     "analyze-bundle": "babel-node ./tools/analyzeBundle.js",
-    "latest": "npm install",
+    "latest": "yarn install",
     "reset-tweet-count": "babel-node tools/resetTweetCount.js"
   },
   "author": "CNCF",
@@ -218,5 +218,8 @@
   },
   "devDependencies": {
     "html-webpack-plugin": "4.0.4"
+  },
+  "resolutions": {
+    "puppeteer": "2.1.1"
   }
 }

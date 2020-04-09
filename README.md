@@ -73,7 +73,7 @@ If you want to create an interactive landscape for your project or organization:
 2. If you're working with the [LF](https://www.linuxfoundation.org/), give admin privileges to the new repo to [dankohn](https://github.com/dankohn) and write privleges to [AndreyKozlov1984](https://github.com/AndreyKozlov1984), [jordinl83](https://github.com/jordinl83), and [CNCF-Bot](https://github.com/CNCF-Bot) and ping Dan after creating an account at [slack.cncf.io](https://slack.cncf.io). Alex Contini and Dan are available there to help you recreate SVGs based on a PNG of the company's logo, if necessary, and to fix other problems.
 2. Set the repo to only support merge commits and turn off DCO support, since it doesn't work well with the GitHub web interface:
 ![image](https://user-images.githubusercontent.com/3083270/66166276-dd62ad00-e604-11e9-87db-fd9ae7a80d1a.png)
-3. For LF projects, Dan will set you up in Netlify to build on every commit. Build command is `npm install -g npm && npm ci && npm run build` and publish directory is `dist`. Environment variables that need to be set are `CRUNCHBASE_KEY`, `GITHUB_KEY`, and `TWITTER_KEYS`. Dan recommends these notifications:
+3. For LF projects, Dan will set you up in Netlify to build on every commit. Build command is `npm install -g npm && yarn install --frozen-lockfile && npm run build` and publish directory is `dist`. Environment variables that need to be set are `CRUNCHBASE_KEY`, `GITHUB_KEY`, and `TWITTER_KEYS`. Dan recommends these notifications:
 ![image](https://user-images.githubusercontent.com/3083270/62425480-87c36000-b6a8-11e9-9882-e84c4e2cdfb4.png)
 5. Edit `settings.yml` and `landscape.yml` for your topic.
 6. [Generate](https://www.qrcode-monkey.com) a QR code, setting colors to black. Save as SVG and overwrite images/qr.svg.
@@ -99,7 +99,7 @@ You can administer a landscape without ever needing to install the software loca
 dev$ git clone git@github.com:cncf/landscapeapp.git
 dev$ git clone git@github.com:cdfoundation/cdf-landscape.git
 dev$ cd landscapeapp
-dev$ npm install
+dev$ yarn install
 ```
 Now, to use the local landscapeapp you can add the following to your `~/.bash_profile`:
 ```sh

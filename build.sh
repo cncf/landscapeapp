@@ -1,6 +1,6 @@
 set -e
 npm install -g npm --no-progress
-npm ci --no-progress --silent
+yarn install --frozen-lockfile --silent --no-progress
 rm -rf $2 || true
 git clone --quiet https://github.com/$1 $2
 cd $2

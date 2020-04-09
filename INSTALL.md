@@ -3,7 +3,8 @@
 ## Install on Mac
 1. Install [Homebrew](https://brew.sh/)
 2. `brew intall node`
-3. `git clone git@github.com:cncf/landscape.git`
+3. `brew install yarn`
+4. `git clone git@github.com:cncf/landscape.git`
 
 ## Install on Linux
 1. `git clone git@github.com:cncf/landscape.git`
@@ -11,7 +12,7 @@
 
 ## Local development
 1. `git pull`
-2. `npm install` (installs dependencies)
+2. `yarn install` (installs dependencies)
 * `npm run open:src` (starts a development server) or
 * `npm build`, then `npm run open:dist` (compiles and opens a production build)
 
