@@ -141,11 +141,11 @@ describe("Normal browser", function() {
 
     console.log(`Checking we see ${project.name} when filtering by organization ${project.organization}`);
     const page = await makePage(`${appUrl}/organization=${organizationSlug}&format=card-mode`);
-    await expect(page).toMatch(project.name);
+    await expect(page).toHaveElement(`//div[contains(@class, 'mosaic')]//*[text()='${project.name}']`);
 
     console.log(`Checking we don't see ${project.name} when filtering by organization ${otherProject.organization}`);
     await page.goto(`${appUrl}/organization=${otherOrganizationSlug}&format=card-mode`);
-    await expect(page).not.toMatch(project.name);
+    await expect(page).not.toHaveElement(`//div[contains(@class, 'mosaic')]//*[text()='${project.name}']`);
   }, 6 * 60 * 1000);
 });
 
