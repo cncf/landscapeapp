@@ -14,7 +14,7 @@ landscapes:
     hook: 5c1bd968fdd72a78a54bdcd1
   - landscape:
     name: lfedge
-    repo: lf-edge/lfedge-landscape
+    repo: State-of-the-Edge/lfedge-landscape
     hook: 5c80e31894c5c7758edb31e4
   - landscape:
     name: aswf
