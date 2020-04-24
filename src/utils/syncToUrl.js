@@ -224,9 +224,7 @@ function setMainContentModeFromParams({ newParameters, params}) {
 
 function setZoomFromParams({ newParameters, params}) {
   const zoom = params.zoom;
-  if (!zoom) {
-    // newParameters.zoom = 1.0;
-  } else {
+  if (zoom) {
     const zoomAsValue = Math.trunc(+params.zoom) / 100;
     newParameters.zoom = zoomAsValue;
   }
