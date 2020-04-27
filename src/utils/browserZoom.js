@@ -1,6 +1,10 @@
+import isDesktop from './isDesktop';
+
+// This method actually checks if there's zoom on mobile device
+// so it returns false for desktop browsers.
 const isZoomedIn = () => {
-  const scale = window.visualViewport ? visualViewport.scale : screen.width / window.innerWidth;
-  return scale > 1;
+  const { visualViewport } = window
+  return !isDesktop && visualViewport && visualViewport.scale > 1;
 }
 
 export { isZoomedIn };
