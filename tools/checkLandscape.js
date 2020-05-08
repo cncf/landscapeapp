@@ -25,7 +25,7 @@ async function main() {
         for (var j = 0; j < items.length; j++) {
           var item = items[j];
           var itemBounds = item.getBoundingClientRect();
-          if (itemBounds.right > sectionBounds.right - 3 || itemBounds.bottom > sectionBounds.bottom - 3) {
+          if (itemBounds.right > sectionBounds.right - 2 || itemBounds.bottom > sectionBounds.bottom - 2) {
             if (result.indexOf(title) === -1) {
               result.push(title);
             }

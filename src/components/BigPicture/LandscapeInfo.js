@@ -20,7 +20,8 @@ const LandscapeInfo = ({width, height, top, left, childrenInfo}) => {
           ...positionProps,
           fontSize: info.font_size,
           fontStyle: 'italic',
-          textAlign: 'justify'
+          textAlign: 'justify',
+          zIndex: 1
         }}>{info.text}</div>
       // while in a browser we use a special version which renders fonts
       // properly on a small zoom
@@ -29,7 +30,8 @@ const LandscapeInfo = ({width, height, top, left, childrenInfo}) => {
           ...positionProps,
           fontSize: info.font_size * 4,
           fontStyle: 'italic',
-          textAlign: 'justify'
+          textAlign: 'justify',
+          zIndex: 1
         }}><div style={{
           position: 'absolute',
           left: 0,
@@ -61,9 +63,9 @@ const LandscapeInfo = ({width, height, top, left, childrenInfo}) => {
     height: height - 20,
     top: top,
     left: left,
-    border: '1 px solid black',
+    border: '1px solid black',
     background: 'white',
-    borderRadius: 15,
+    borderRadius: 10,
     marginTop: 20,
     boxShadow: `0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19)`
   }}>{children}</div>
