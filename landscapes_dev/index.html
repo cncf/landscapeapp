@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/js-yaml/3.13.1/js-yaml.min.js"></script>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.8.2/css/bulma.min.css">
+  <style>
+    table {
+      white-space: nowrap
+    }
+    td.organization a {
+      float: left;
+      height: 30px;
+    }
+
+    td.organization img {
+      height: 30px;
+    }
+
+    .table td {
+      vertical-align: middle;
+    }
+  </style>
+</head>
+<body>
+<div class="container">
+  <section class="section">
+    <h1 class="title">Landscapes</h1>
+
+    <table class="table is-fullwidth">
+      <thead>
+      <th>Organization</th>
+      <th>Landscape</th>
+      <th>Repo</th>
+      <th>Status</th>
+      <th>Published</th>
+      </thead>
+
+      <tbody></tbody>
+    </table>
+  </section>
+</div>
+
+<script>
+  const fetchFile = async path => await (await fetch(`https://raw.githubusercontent.com/${path}`)).text()
+  const fetchYaml = async path => jsyaml.load(await fetchFile(path))
+
+  const tableEl = document.querySelector("tbody")
+
+  const fetchLandscapeInfo = ({ repo }) => {
+    const rowEl = document.createElement("tr")
+    tableEl.append(rowEl)
+    console.log(rowEl)
+    rowEl.insertAdjacentHTML("beforeend", "<td class='organization'></td>")
+    rowEl.insertAdjacentHTML("beforeend", "<td class='landscape'></td>")
+    rowEl.insertAdjacentHTML("beforeend", "<td class='repo'></td>")
+    rowEl.insertAdjacentHTML("beforeend", "<td class='status'></td>")
+    rowEl.insertAdjacentHTML("beforeend", "<td class='published'></td>")
+    const setColumn = (className, html) => { rowEl.getElementsByClassName(className)[0].innerHTML = html }
+
+    fetchYaml(`${repo}/master/settings.yml`)
+      .then(settings => {
+        const { company_url, short_name, short_domain, website } = settings.global
+        setColumn("organization", `<a href="${company_url}"><img src="${website}/images/right-logo.svg" alt="${short_name}"/></a>`)
+        setColumn("landscape", `<a href="${website}">${short_domain}</a>`)
+        setColumn("repo", `<a href="https://github.com/${repo}">${repo}</a>`)
+      })
+
+
+    fetchFile(`${repo}/master/README.md`)
+      .then(async readme => {
+        const statusUrl = readme.match(/https:\/\/api.netlify.com\/api\/v1\/badges[^)]*/)[0]
+        const deploysUrl = readme.match(/https:\/\/app.netlify.com\/sites[^)]*/)[0]
+        setColumn("status", `<a href=${deploysUrl}><img src="${statusUrl}" alt="Netlify Status" /></a>`)
+
+        const netlifyUrl = statusUrl.replace("badges", "sites").replace("/deploy-status", "")
+        const netlifyInfo = await (await fetch(netlifyUrl)).json()
+        const { published_at } = netlifyInfo.published_deploy
+        const dateTimeFormat = new Intl.DateTimeFormat('en', { month: 'short', day: '2-digit', hour: '2-digit', minute:'2-digit' })
+
+        setColumn("published", dateTimeFormat.format(new Date(published_at)))
+      })
+  }
+
+  fetchYaml("cncf/landscapeapp/master/landscapes.yml")
+    .then(data => data.landscapes.forEach(landscape => fetchLandscapeInfo(landscape)))
+</script>
+</body>
+</html>
