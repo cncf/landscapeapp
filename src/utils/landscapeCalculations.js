@@ -11,6 +11,8 @@ export const subcategoryTitleHeight = 20
 export const dividerWidth = 2
 export const categoryBorder = 1
 export const categoryTitleHeight = 30
+export const outerPadding = 20
+export const headerHeight = 40
 
 // Check if item is large
 const isLargeFn = ({ relation, category, member }) => {

@@ -13,7 +13,7 @@ const extractKeys = (obj, keys) => {
   return _.mapKeys(attributes, (value, key) => _.camelCase(key))
 }
 
-const LandscapeContent = ({groupedItems, onSelectItem, style, zoom, switchToLandscape, landscapeSettings }) => {
+const LandscapeContent = ({groupedItems, onSelectItem, zoom, switchToLandscape, landscapeSettings, horizontalPadding = 10, verticalPadding = 10 }) => {
   const elements = landscapeSettings.elements.map(function(element) {
     if (element.type === 'HorizontalCategory') {
       const cat = _.find(groupedItems, {key: element.category});
@@ -39,12 +39,18 @@ const LandscapeContent = ({groupedItems, onSelectItem, style, zoom, switchToLand
     return null;
   });
 
-  const horizontalMargin = 5
-  const margin = `0 ${horizontalMargin}px`
   const { width, height } = calculateSize(landscapeSettings)
 
-  return <div style={{margin, width: width + horizontalMargin * 2, height: height + 10 }}>
-    <div style={{...style, width, height, transform: `scale(${zoom})`, transformOrigin: '0 0', position: 'relative' }}>
+  const style = {
+    padding: `${verticalPadding}px ${horizontalPadding}px`,
+    width: width + 2 * horizontalPadding,
+    height: height + 2 * verticalPadding,
+    transform: `scale(${zoom})`,
+    transformOrigin: '0 0'
+  }
+
+  return <div style={style}>
+    <div style={{ position: 'relative' }}>
       {elements}
     </div>
   </div>
