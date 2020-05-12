@@ -22,7 +22,7 @@ const OtherLandscapeLink = function({top, left, height, width, color, onClick, t
     return <div style={{position: 'absolute', top, left, height, width, cursor: 'pointer' }} onClick={onClick}>
       <div style={{ width, top: 0, height: 20, lineHeight: '20px', textAlign: 'center', color: 'white', fontSize: 11}}>{title}</div>
       <img loading="lazy" src={`images/${url}_preview.png`} alt={title}
-           style={{ width: width, height: height - 40, objectFit: 'contain', backgroundPosition: 'center', backgroundRepeat: 'no-repeat' }} />
+           style={{ width: width, height: height - 20, objectFit: 'contain', backgroundPosition: 'center', backgroundRepeat: 'no-repeat' }} />
     </div>;
   }
 }

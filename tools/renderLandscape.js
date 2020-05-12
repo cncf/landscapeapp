@@ -1,7 +1,8 @@
 import Promise from 'bluebird';
 import { projectPath } from './settings';
-import path from 'path';
+import { resolve } from 'path';
 import { landscapeSettingsList } from "../src/utils/landscapeSettings";
+import { calculateSize, outerPadding, headerHeight } from "../src/utils/landscapeCalculations";
 
 const getLastCommitSha = function() {
   return require('child_process').execSync(`cd '${projectPath}' && git log -n 1 --format=format:%h`).toString('utf-8').trim();
@@ -13,39 +14,42 @@ async function main() {
   const version = `${time} ${sha}`;
   const puppeteer = require('puppeteer');
 
-  const pageAttributes = ({ url, fullscreen_size, deviceScaleFactor = 1 }) => {
-    return {
-      url: `/${url}?version=${version}`,
-      size: { width: fullscreen_size.width * 4, height: fullscreen_size.height * 4, deviceScaleFactor },
-    }
-  }
+  const sizes = landscapeSettingsList.reduce((acc, landscapeSettings) => {
+    const { width, height } = calculateSize(landscapeSettings)
+    const size = { width: width + 2 * outerPadding, height: height + headerHeight + 2 * outerPadding }
+
+    return { ...acc, [landscapeSettings.url]: size }
+  }, {})
 
   let previews = [];
-  if (landscapeSettingsList.length > 1) {
-    previews = landscapeSettingsList.map(({ url, fullscreen_size }) => {
-      const deviceScaleFactor = 960 / (fullscreen_size.width * 4);
-      const fileName = `${url}_preview.png`;
-      return { fileName, ...pageAttributes({ url, fullscreen_size, deviceScaleFactor }) };
-    })
-  }
+  previews = landscapeSettingsList.map(({ url }) => {
+    const { width } = sizes[url]
+    const deviceScaleFactor = 960 / width;
+    const fileName = `${url}_preview.png`;
+    return { fileName, url, deviceScaleFactor };
+  })
 
-  const full_sizes = landscapeSettingsList.map(({ url, fullscreen_size }) => {
+  const full_sizes = landscapeSettingsList.map(({ url }) => {
     const fileName = `${url}.png`;
     const pdfFileName = `${url}.pdf`;
-    return { fileName, pdfFileName, ...pageAttributes({ url, fullscreen_size }) };
+    return { fileName, pdfFileName, url, deviceScaleFactor: 4 };
   });
 
-  const browser = await puppeteer.launch({args: ['--no-sandbox', '--disable-setuid-sandbox']});
+  const browser = await puppeteer.launch({args: ['--no-sandbox', '--disable-setuid-sandbox'] });
   await Promise.mapSeries([previews, full_sizes], async function(series) {
     for (const pageInfo of series) {
+      const { url, deviceScaleFactor, fileName, pdfFileName } = pageInfo
+      const { width, height } = sizes[url]
       const page = await browser.newPage();
-      page.setViewport(pageInfo.size)
-      console.info(`visiting http://localhost:${port}${pageInfo.url}`);
-      await page.goto(`http://localhost:${port}${pageInfo.url}&pdf`, { waitUntil: 'networkidle0'});
-      await page.screenshot({ path: path.resolve(projectPath, 'dist/images/' + pageInfo.fileName), fullPage: false });
-      if (pageInfo.pdfFileName) {
+      await page.setViewport({ width, height, deviceScaleFactor })
+
+      const fullUrl = `http://localhost:${port}/${url}?version=${version}&scale=false&pdf`
+      console.info(`visiting ${fullUrl}`);
+      await page.goto(fullUrl, { waitUntil: 'networkidle0'});
+      await page.screenshot({ path: resolve(projectPath, 'dist', 'images', fileName), fullPage: false });
+      if (pdfFileName) {
         await page.emulateMediaType('screen');
-        await page.pdf({path: path.resolve(projectPath, 'dist/images/' + pageInfo.pdfFileName), ...pageInfo.size, printBackground: true, pageRanges: '1' });
+        await page.pdf({path: resolve(projectPath, 'dist', 'images', pdfFileName), width, height, printBackground: true, pageRanges: '1' });
       }
     }
   });

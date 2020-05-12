@@ -21,7 +21,7 @@ let newSettings = traverse(settings).map(function () {
     }
 
     if (this.node.type === 'LandscapeLink' && this.node.layout === 'subcategory') {
-      incrementValues(this, {left: -5})
+      incrementValues(this, {left: -5}, false)
     }
 
     if (settings.global.short_name === 'CNCF') {
@@ -130,6 +130,17 @@ let newSettings = traverse(settings).map(function () {
           incrementValues(this, {top: -15})
         }
       }
+    }
+  }
+
+  if (settings.big_picture.main.fullscreen_size && this.node) {
+    if (this.node.fullscreen_size) {
+      const { fullscreen_size, ...attrs } = this.node
+      this.update({ ...attrs })
+    }
+
+    if (this.node.type === 'LandscapeLink' && this.node.layout === 'subcategory') {
+      incrementValues(this, { left: 60, width: -120, height: -20 }, false)
     }
   }
 })
