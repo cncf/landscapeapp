@@ -6,16 +6,35 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/js-yaml/3.13.1/js-yaml.min.js"></script>
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.8.2/css/bulma.min.css">
   <style>
-    table {
-      white-space: nowrap
+    body .container {
+      padding-top: 2rem;
+      padding-bottom: 2rem;
     }
-    td.organization a {
+
+    .container h1.title {
+      margin-left: 0.75rem;
+      margin-bottom: 1rem;
+    }
+
+    table.table {
+      white-space: nowrap;
+    }
+
+    td.organization a,
+    td.status a {
       float: left;
+      display: block;
+    }
+
+    td.organization a,
+    td.organization img {
       height: 30px;
     }
 
-    td.organization img {
-      height: 30px;
+    td.status a,
+    td.status img {
+      height: 18px;
+      max-width: initial;
     }
 
     .table td {
@@ -24,8 +43,7 @@
   </style>
 </head>
 <body>
-<div class="container">
-  <section class="section">
+  <div class="container is-widescreen">
     <h1 class="title">Landscapes</h1>
 
     <table class="table is-fullwidth">
@@ -39,52 +57,56 @@
 
       <tbody></tbody>
     </table>
-  </section>
+  </div>
 </div>
 
 <script>
   const fetchFile = async path => await (await fetch(`https://raw.githubusercontent.com/${path}`)).text()
-  const fetchYaml = async path => jsyaml.load(await fetchFile(path))
 
   const tableEl = document.querySelector("tbody")
 
-  const fetchLandscapeInfo = ({ repo }) => {
+  const fetchLandscapeInfo = ({ repo, contributors }) => {
     const rowEl = document.createElement("tr")
     tableEl.append(rowEl)
-    console.log(rowEl)
-    rowEl.insertAdjacentHTML("beforeend", "<td class='organization'></td>")
-    rowEl.insertAdjacentHTML("beforeend", "<td class='landscape'></td>")
-    rowEl.insertAdjacentHTML("beforeend", "<td class='repo'></td>")
-    rowEl.insertAdjacentHTML("beforeend", "<td class='status'></td>")
-    rowEl.insertAdjacentHTML("beforeend", "<td class='published'></td>")
-    const setColumn = (className, html) => { rowEl.getElementsByClassName(className)[0].innerHTML = html }
+    const appendColumn = (args = {}) => {
+      let column = document.createElement('td')
+      column.setAttribute("class", args.className)
+      column.innerText = "Fetching..."
+      rowEl.append(column)
+      return column
+    }
+    let organizationEl = appendColumn({ className: "organization" })
+    let landscapeEl = appendColumn()
+    let repoEl = appendColumn()
+    let statusEl = appendColumn({ className: "status" })
+    let publishedEl = appendColumn()
 
-    fetchYaml(`${repo}/master/settings.yml`)
+    repoEl.innerHTML = `<a href="https://github.com/${repo}">${repo}</a>`
+
+    fetchFile(`${repo}/master/settings.yml`)
       .then(settings => {
-        const { company_url, short_name, short_domain, website } = settings.global
-        setColumn("organization", `<a href="${company_url}"><img src="${website}/images/right-logo.svg" alt="${short_name}"/></a>`)
-        setColumn("landscape", `<a href="${website}">${short_domain}</a>`)
-        setColumn("repo", `<a href="https://github.com/${repo}">${repo}</a>`)
+        const { company_url, short_name, short_domain, website } = jsyaml.load(settings).global
+        organizationEl.innerHTML = `<a href="${company_url}"><img src="${website}/images/right-logo.svg" alt="${short_name}"/></a>`
+        landscapeEl.innerHTML = `<a href="${website}">${short_domain}</a>`
       })
-
 
     fetchFile(`${repo}/master/README.md`)
       .then(async readme => {
         const statusUrl = readme.match(/https:\/\/api.netlify.com\/api\/v1\/badges[^)]*/)[0]
         const deploysUrl = readme.match(/https:\/\/app.netlify.com\/sites[^)]*/)[0]
-        setColumn("status", `<a href=${deploysUrl}><img src="${statusUrl}" alt="Netlify Status" /></a>`)
+        statusEl.innerHTML = `<a href=${deploysUrl}><img src="${statusUrl}" alt="Netlify Status" /></a>`
 
         const netlifyUrl = statusUrl.replace("badges", "sites").replace("/deploy-status", "")
         const netlifyInfo = await (await fetch(netlifyUrl)).json()
         const { published_at } = netlifyInfo.published_deploy
         const dateTimeFormat = new Intl.DateTimeFormat('en', { month: 'short', day: '2-digit', hour: '2-digit', minute:'2-digit' })
 
-        setColumn("published", dateTimeFormat.format(new Date(published_at)))
+        publishedEl.innerText = dateTimeFormat.format(new Date(published_at))
       })
   }
 
-  fetchYaml("cncf/landscapeapp/master/landscapes.yml")
-    .then(data => data.landscapes.forEach(landscape => fetchLandscapeInfo(landscape)))
+  fetchFile("cncf/landscapeapp/master/landscapes.yml")
+    .then(data => jsyaml.load(data).landscapes.forEach(landscape => fetchLandscapeInfo(landscape)))
 </script>
 </body>
 </html>
