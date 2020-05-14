@@ -1,5 +1,6 @@
 import _ from 'lodash';
 import Promise from 'bluebird';
+import { spawn } from 'child_process';
 import path from "path";
 const landscapesInfo = require('js-yaml').safeLoad(require('fs').readFileSync('landscapes.yml'));
 
@@ -85,39 +86,28 @@ EOSSH
 
     // run a build command remotely for a given repo
 
-    function runIt() {
-      return new Promise(function(resolve) {
-        var spawn = require('child_process').spawn;
-        var child = spawn('bash', ['-lc', bashCommand]);
-        let output = [];
-        child.stdout.on('data', function(data) {
-          const text = maskSecrets(data.toString('utf-8'));
-          // console.info(text);
-          output.push(text);
-          //Here is where the output goes
-        });
-        child.stderr.on('data', function(data) {
-          const text = maskSecrets(data.toString('utf-8'));
-          // console.info(text);
-          output.push(text);
-          //Here is where the error output goes
-        });
-        child.on('close', function(returnCode) {
-          resolve({landscape, text: output.join(''), returnCode});
-          //Here you can get the exit code of the script
+    const runIt = () => {
+      return new Promise(resolve => {
+        let child = spawn('bash', ['-lc', bashCommand]);
+        let output = '';
+        child.stdout.on('data', data => output += data)
+        child.stderr.on('data', data => output += data)
+        child.on('close', returnCode => {
+          resolve({landscape, text: maskSecrets(output.toString('utf-8')), returnCode});
         });
       });
     }
 
     const output  = await runIt();
-    console.info(`Output from: ${landscape.name}, exit code: ${landscape.returnCode}`);
+    console.info(`Output from: ${output.landscape.name}, exit code: ${output.returnCode}`);
     const lines = output.text.split('\n');
     const index = _.findIndex(lines, (line) => line.match(/added \d+ packages in/));
     const filteredLines = lines.slice(index !== -1 ? index : 0).join('\n');
     console.info(filteredLines);
     return output;
   });
-  if (_.find(results, (x) => x.returnCode !== 0)) {
+  if (results.find(({ returnCode, landscape }) => landscape.required && returnCode !== 0)) {
+    console.log("At least one required landscape failed, exiting build")
     process.exit(1);
   }
   const redirects = results.map((result) => `
@@ -125,7 +115,13 @@ EOSSH
     /${result.landscape.name} /${result.landscape.name}/prerender.html 200!
     /${result.landscape.name}/* /${result.landscape.name}/index.html 200
   `).join('\n');
-  const index = results.map((result) => `<div><a href="${result.landscape.name}/"><h1>${result.landscape.name}</h1></a></div>`).join('\n');
+  const index = results.map(result => {
+    return `<div>
+        ${ result.returnCode === 0 ?
+          `<a href="${result.landscape.name}/"><h1>${result.landscape.name} (OK)</h1></a>` :
+          `<h1>${result.landscape.name} (FAILED)</h1>`}
+        </div>`
+  }).join('\n');
   const robots = `
     User-agent: *
     Disallow: /
