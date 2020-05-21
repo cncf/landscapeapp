@@ -222,6 +222,14 @@ export async function fetchCrunchbaseEntries({cache, preferCache}) {
     }
     try {
       const result = await CrunchbaseClient.request({ path: `/organizations/${c.name}` });
+      const newData = await fetchNewData(c.name);
+      const oldData = await fetchOldData(c.name);
+
+      if (JSON.stringify(newData) !== JSON.stringify(oldData)) {
+        addError('New and Old API return different result for ' + c.name);
+        addWarning('New and Old API return different result for ' + c.name);
+      }
+
       var cbInfo = result.data.properties;
       const { relationships } = result.data
       var twitterEntry = _.find(relationships.websites.items, (x) => x.properties.website_name === 'twitter');
