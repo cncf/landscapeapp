@@ -45,6 +45,12 @@ export const CrunchbaseClient = ApiClient({
   defaultOptions: { followRedirect: true, maxRedirects: 5, timeout: 10 * 1000 }
 });
 
+export const CrunchbaseClientV4 = ApiClient({
+  baseUrl: 'https://api.crunchbase.com/api/v4',
+  defaultParams: { user_key: env.CRUNCHBASE_KEY_4 },
+  defaultOptions: { followRedirect: true, maxRedirects: 5, timeout: 10 * 1000 }
+});
+
 const OldGithubClient = ApiClient({
   baseUrl: 'https://api.github.com',
   retryStatuses: [403], // Github returns 403 when rate limiting.
