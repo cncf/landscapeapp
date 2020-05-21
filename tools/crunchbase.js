@@ -12,7 +12,7 @@ const error = colors.red;
 const fatal = (x) => colors.red(colors.inverse(x));
 const cacheMiss = colors.green;
 const debug = require('debug')('cb');
-import { CrunchbaseClient } from './apiClients';
+import { CrunchbaseClient, CrunchbaseClientV4 } from './apiClients';
 
 export async function getCrunchbaseOrganizationsList() {
   const traverse = require('traverse');
@@ -135,6 +135,60 @@ const getAcquisitions = async (acquisitions) => {
     }
     return result
   })
+}
+
+export async function fetchNewData(name) {
+  const result = await CrunchbaseClientV4.request({ path: `entities/organizations/${name}`, params:{'card_ids': 'headquarters_address,acquiree_acquisitions', 'field_ids': 'num_employees_enum,linkedin,twitter,name,website,short_description' }});
+  const acquisitions = result.cards.acquiree_acquisitions.map( function(a) {
+    const result = {
+      date: a.announced_on.value,
+      acquiree: a.acquiree_identifier.value,
+    }
+    if (a.price) {
+      result.price = a.price.value_usd
+    }
+    return result;
+  });
+  const getAddressPart = function(part) {
+    return (result.cards.headquarters_address[0].location_identifiers.filter( (x) => x.location_type === part)[0] || {}).value
+  }
+  return {
+    name: result.properties.name,
+    description: result.properties.short_description,
+    num_employees_min: result.properties.num_employees_enum,
+    num_employees_max: result.properties.num_employees_enum,
+    homepage: (result.properties.website || {}).value,
+    city: getAddressPart('city'),
+    region: getAddressPart('region'),
+    country: getAddressPart('country'),
+    twitter: (result.properties.twitter || {}).value,
+    linkedin: (result.properties.linkedin || {}).value,
+    acquisitions
+  }
+}
+
+export async function fetchOldData(name) {
+      const result = await CrunchbaseClient.request({ path: `/organizations/${name}` });
+      var cbInfo = result.data.properties;
+      const { relationships } = result.data
+      var twitterEntry = _.find(relationships.websites.items, (x) => x.properties.website_name === 'twitter');
+      var linkedInEntry = _.find(relationships.websites.items, (x) => x.properties.website_name === 'linkedin');
+      const headquarters = relationships.headquarters;
+      const acquisitions = await getAcquisitions(relationships.acquisitions)
+      const entry = {
+        name: cbInfo.name,
+        description: cbInfo.short_description,
+        num_employees_min: cbInfo.num_employees_min,
+        num_employees_max: cbInfo.num_employees_max,
+        homepage: cbInfo.homepage_url,
+        city: headquarters && headquarters.item && headquarters.item.properties.city || null,
+        region: headquarters && headquarters.item && headquarters.item.properties.region || null,
+        country: headquarters && headquarters.item && headquarters.item.properties.country || null,
+        twitter: twitterEntry ? twitterEntry.properties.url : null,
+        linkedin: linkedInEntry ? ensureHttps(linkedInEntry.properties.url) : null,
+        acquisitions
+      };
+      return entry;
 }
 
 export async function fetchCrunchbaseEntries({cache, preferCache}) {
