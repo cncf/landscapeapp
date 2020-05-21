@@ -5,8 +5,13 @@ const retry  = async function (fn, attempts = maxAttempts, delay = 50000, retryS
     const result = await fn();
     return result;
   } catch (ex) {
-    const { statusCode } = ex;
-    console.info(`Attempt #${maxAttempts - attempts + 1}${statusCode ? ` (Status Code: ${statusCode})` : ''}`);
+    const { statusCode, options } = ex;
+    const message = [
+      `Attempt #${maxAttempts - attempts + 1}`,
+      statusCode ? `(Status Code: ${statusCode})` : null,
+      options && options.uri ? `(URI: ${options.uri.split('?')[0]})` : `(MESSAGE: ${ex.message})`
+    ].filter(_ => _).join(' ')
+    console.info(message);
     if (attempts <= 0 || (retryStatuses && !retryStatuses.includes(statusCode))) {
       throw ex;
     }

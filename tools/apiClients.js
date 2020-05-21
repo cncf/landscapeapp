@@ -89,3 +89,7 @@ export const TwitterClient = ApiClient({
     }
   }
 });
+
+export const YahooFinanceClient = ApiClient({
+  baseUrl: 'https://query2.finance.yahoo.com',
+});
