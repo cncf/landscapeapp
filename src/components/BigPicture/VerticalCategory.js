@@ -38,7 +38,7 @@ const VerticalCategory = ({header, subcategories, top, left, width, height, colo
             </div>
 
             <div style={{width, overflow: 'hidden', margin: '0 auto', ...style, ...extraStyle}}>
-              {subcategory.allItems.map(item => <Item item={item} onClick={onSelectItem} key={item.name} fitWidth={fitWidth} />)}
+              {subcategory.allItems.map(item => <Item item={item} onSelectItem={onSelectItem} key={item.name} fitWidth={fitWidth} />)}
             </div>
           </div>
         })}
