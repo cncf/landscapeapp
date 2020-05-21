@@ -27,8 +27,19 @@
     }
 
     td.organization a,
-    td.organization img {
+    td.organization img,
+    .logo {
       height: 30px;
+    }
+
+    .previews {
+      padding-top: 20px;
+    }
+
+    .preview-logo-wrapper {
+      display: flex;
+      justify-content: center;
+      margin-bottom: 4px;
     }
 
     td.status a,
@@ -44,69 +55,122 @@
 </head>
 <body>
   <div class="container is-widescreen">
-    <h1 class="title">Landscapes</h1>
+    <div class="is-clipped">
+      <h1 class="title is-pulled-left">Landscapes</h1>
 
-    <table class="table is-fullwidth">
+      <div class="has-text-link title is-4 is-pulled-right">
+        <a href="#" data-behavior="toggle">View Previews</a>
+        <a href="#" class="is-hidden" data-behavior="toggle">View List</a>
+      </div>
+    </div>
+
+    <table class="table is-fullwidth" data-behavior="toggle-target">
       <thead>
       <th>Organization</th>
       <th>Landscape</th>
       <th>Repo</th>
       <th>Status</th>
       <th>Published</th>
+      <th>Data Refreshed</th>
       </thead>
 
       <tbody></tbody>
     </table>
+
+    <div class="is-hidden previews columns is-multiline" data-behavior="toggle-target"></div>
   </div>
-</div>
 
-<script>
-  const fetchFile = async path => await (await fetch(`https://raw.githubusercontent.com/${path}`)).text()
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      const toggleTargets = document.querySelectorAll('[data-behavior="toggle"], [data-behavior="toggle-target"]')
 
-  const tableEl = document.querySelector("tbody")
+      document.querySelectorAll('[data-behavior="toggle"]').forEach(el => {
+        el.addEventListener('click', e => {
+          e.preventDefault()
+          toggleTargets.forEach(({ classList }) => classList.toggle('is-hidden'))
+        })
+      })
+    })
+  </script>
 
-  const fetchLandscapeInfo = ({ repo, contributors }) => {
-    const rowEl = document.createElement("tr")
-    tableEl.append(rowEl)
-    const appendColumn = (args = {}) => {
-      let column = document.createElement('td')
-      column.setAttribute("class", args.className)
-      column.innerText = "Fetching..."
-      rowEl.append(column)
-      return column
+  <script>
+    const fetchFile = async path => await (await fetch(`https://raw.githubusercontent.com/${path}`)).text()
+
+    const tableEl = document.querySelector("tbody")
+    const previewsEl = document.querySelector(".previews")
+
+    const linkTo = (url, title) => `<a target="_blank" href="${url}">${title}</a>`
+    const imageLinkTo = (url, src, alt) => linkTo(url, `<img src="${src}" alt="${alt}" />`)
+
+    const fetchLandscapeInfo = ({ repo }) => {
+      const rowEl = document.createElement("tr")
+      const dateTimeFormat = new Intl.DateTimeFormat('en', { month: 'short', day: '2-digit', hour: '2-digit', minute:'2-digit' })
+      tableEl.append(rowEl)
+      const appendColumn = (args = {}) => {
+        let column = document.createElement('td')
+        column.setAttribute("class", args.className)
+        column.innerText = "Fetching..."
+        rowEl.append(column)
+        return column
+      }
+
+      const appendPreview = () => {
+        let preview = document.createElement('div')
+        preview.setAttribute("class", "preview column is-one-third-widescreen is-half-desktop is-full-tablet")
+        previewsEl.append(preview)
+        return preview
+      }
+
+      let organizationEl = appendColumn({ className: "organization" })
+      let landscapeEl = appendColumn()
+      let repoEl = appendColumn()
+      let statusEl = appendColumn({ className: "status" })
+      let publishedEl = appendColumn()
+      let updatedEl = appendColumn()
+      let previewEl = appendPreview()
+
+      repoEl.innerHTML = linkTo(`https://github.com/${repo}`, repo)
+
+      fetchFile(`${repo}/master/settings.yml`)
+        .then(settings => {
+          const { company_url, short_name, short_domain, website } = jsyaml.load(settings).global
+          organizationEl.innerHTML = imageLinkTo(company_url, `${website}/images/right-logo.svg`, short_name)
+          landscapeEl.innerHTML = linkTo(website, short_domain)
+          previewEl.innerHTML = `
+              <div class="preview-logo-wrapper">
+                  <img src="${website}/images/right-logo.svg" class="logo" alt="${short_name}"/>
+              </div>
+              ${imageLinkTo(website, `${website}/images/landscape_preview.png`, short_domain)}`
+        })
+
+      fetchFile(`${repo}/master/README.md`)
+        .then(async readme => {
+          const statusUrl = readme.match(/https:\/\/api.netlify.com\/api\/v1\/badges[^)]*/)[0]
+          const deploysUrl = readme.match(/https:\/\/app.netlify.com\/sites[^)]*/)[0]
+          statusEl.innerHTML = `<a href=${deploysUrl}><img src="${statusUrl}" alt="Netlify Status" /></a>`
+
+          const netlifyUrl = statusUrl.replace("badges", "sites").replace("/deploy-status", "")
+          const netlifyInfo = await (await fetch(netlifyUrl)).json()
+          const { published_at } = netlifyInfo.published_deploy
+
+          publishedEl.innerText = dateTimeFormat.format(new Date(published_at))
+        })
+
+      fetchFile(`${repo}/master/processed_landscape.yml`)
+        .then(processedLandscape => {
+          const { updated_at } = jsyaml.load(processedLandscape)
+          const updatedAt = updated_at ? new Date(updated_at) : null
+          const oneDayAgo = new Date() - 24 * 60 * 60 * 1000
+          const className = updatedAt && updatedAt > oneDayAgo ? '' : 'has-text-danger'
+
+          updatedEl.innerHTML = `<div class="${className}">
+              ${updated_at ? dateTimeFormat.format(updatedAt) : 'UNKNOWN'}
+          </div>`
+        })
     }
-    let organizationEl = appendColumn({ className: "organization" })
-    let landscapeEl = appendColumn()
-    let repoEl = appendColumn()
-    let statusEl = appendColumn({ className: "status" })
-    let publishedEl = appendColumn()
 
-    repoEl.innerHTML = `<a href="https://github.com/${repo}">${repo}</a>`
-
-    fetchFile(`${repo}/master/settings.yml`)
-      .then(settings => {
-        const { company_url, short_name, short_domain, website } = jsyaml.load(settings).global
-        organizationEl.innerHTML = `<a href="${company_url}"><img src="${website}/images/right-logo.svg" alt="${short_name}"/></a>`
-        landscapeEl.innerHTML = `<a href="${website}">${short_domain}</a>`
-      })
-
-    fetchFile(`${repo}/master/README.md`)
-      .then(async readme => {
-        const statusUrl = readme.match(/https:\/\/api.netlify.com\/api\/v1\/badges[^)]*/)[0]
-        const deploysUrl = readme.match(/https:\/\/app.netlify.com\/sites[^)]*/)[0]
-        statusEl.innerHTML = `<a href=${deploysUrl}><img src="${statusUrl}" alt="Netlify Status" /></a>`
-
-        const netlifyUrl = statusUrl.replace("badges", "sites").replace("/deploy-status", "")
-        const netlifyInfo = await (await fetch(netlifyUrl)).json()
-        const { published_at } = netlifyInfo.published_deploy
-        const dateTimeFormat = new Intl.DateTimeFormat('en', { month: 'short', day: '2-digit', hour: '2-digit', minute:'2-digit' })
-
-        publishedEl.innerText = dateTimeFormat.format(new Date(published_at))
-      })
-  }
-
-  fetchFile("cncf/landscapeapp/master/landscapes.yml")
-    .then(data => jsyaml.load(data).landscapes.forEach(landscape => fetchLandscapeInfo(landscape)))
-</script>
+    fetchFile("cncf/landscapeapp/master/landscapes.yml")
+      .then(data => jsyaml.load(data).landscapes.forEach(landscape => fetchLandscapeInfo(landscape)))
+  </script>
 </body>
 </html>

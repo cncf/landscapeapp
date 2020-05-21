@@ -1,9 +1,7 @@
 import _ from 'lodash';
-import fs from 'fs';
-import path from 'path';
 import { TwitterClient } from './apiClients';
-import { projectPath, settings } from './settings';
-import {dump} from './yaml';
+import { settings } from './settings';
+import updateProcessedLandscape from "./updateProcessedLandscape";
 
 // we need to know a latest since_id, otherwise we can only expect
 async function getLatestTweets(sinceId) {
@@ -27,18 +25,14 @@ async function getLatestTweets(sinceId) {
   }
 }
 
-async function main() {
-  const source =  require('js-yaml').safeLoad(fs.readFileSync(path.resolve(projectPath, 'processed_landscape.yml')));
-  const twitterOptions = source.twitter_options || { count: 0};
-  // get a count from processed_landscape or use a base count
-  const result = await getLatestTweets(twitterOptions.since_id);
-  console.info(twitterOptions, result);
-  // write this back to the processed_landscape.yml
-  source.twitter_options = {
-    count: result.count + twitterOptions.count,
+updateProcessedLandscape(async processedLandscape => {
+  const oldOptions = processedLandscape.twitter_options || { count: 0 }
+  const result = await getLatestTweets(oldOptions.since_id);
+
+  const twitter_options = {
+    count: result.count + oldOptions.count,
     since_id: result.since_id
   };
-  const newContent = "# THIS FILE IS GENERATED AUTOMATICALLY!\n" + dump(source);
-  require('fs').writeFileSync(path.resolve(projectPath, 'processed_landscape.yml'), newContent);
-}
-main();
+
+  return { ...processedLandscape, twitter_options }
+})

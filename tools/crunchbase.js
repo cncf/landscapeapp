@@ -1,6 +1,5 @@
 import { setFatalError } from './fatalErrors';
 import colors from 'colors';
-import rp from './rpRetry'
 import Promise from 'bluebird'
 import _ from 'lodash';
 import ensureHttps from './ensureHttps';
@@ -12,7 +11,7 @@ const error = colors.red;
 const fatal = (x) => colors.red(colors.inverse(x));
 const cacheMiss = colors.green;
 const debug = require('debug')('cb');
-import { CrunchbaseClient } from './apiClients';
+import { CrunchbaseClient, YahooFinanceClient } from './apiClients';
 
 export async function getCrunchbaseOrganizationsList() {
   const traverse = require('traverse');
@@ -83,21 +82,18 @@ async function getParentCompanies(companyInfo, visited = []) {
     return [parentInfo].concat(await getParentCompanies(cbInfo, [...visited, permalink]));
   }
 }
+
+const getYahooFinanceData = async ticker => {
+  const response = await YahooFinanceClient.request({ path: `/v10/finance/quoteSummary/${ticker}?modules=summaryDetail` })
+  return _.get(response, ['quoteSummary', 'result', 0, 'summaryDetail', 'marketCap'])
+}
+
 const marketCapCache = {};
 async function getMarketCap(ticker) {
-  // console.info(ticker, stock_exchange);
-  // console.info('ticker is', ticker);
   debug(`Extracting the ticker from ${ticker}`);
-  var quote;
+  let quote;
   try {
-    quote = marketCapCache[ticker];
-    if (!quote) {
-      const response = (await rp({
-        url: `https://query2.finance.yahoo.com/v10/finance/quoteSummary/${ticker}?modules=summaryDetail`,
-        json: true
-      }));
-      quote = response.quoteSummary.result[0].summaryDetail.marketCap;
-    }
+    quote = marketCapCache[ticker] || await getYahooFinanceData(ticker)
   } catch(ex) {
     throw new Error(`Can't resolve stock ticker ${ticker}; please manually add a "stock_ticker" key to landscape.yml or set to null`);
   }
