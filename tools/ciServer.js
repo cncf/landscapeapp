@@ -25,6 +25,7 @@ const result = browserSync({
     'src/*.html'
   ],
   ghostMode: false,
+  notify: false,
   middleware: [
     function (req, res, next) {
 
