@@ -139,7 +139,7 @@ const getAcquisitions = async (acquisitions) => {
 
 export async function fetchNewData(name) {
   const result = await CrunchbaseClientV4.request({ path: `entities/organizations/${name}`, params:{'card_ids': 'headquarters_address,acquiree_acquisitions', 'field_ids': 'num_employees_enum,linkedin,twitter,name,website,short_description' }});
-  const acquisitions = result.cards.acquiree_acquisitions.map( function(a) {
+  const mapAcquisitions = function(a) {
     const result = {
       date: a.announced_on.value,
       acquiree: a.acquiree_identifier.value,
@@ -148,7 +148,18 @@ export async function fetchNewData(name) {
       result.price = a.price.value_usd
     }
     return result;
-  });
+  }
+  let acquisitions = result.cards.acquiree_acquisitions.map(mapAcquisitions);
+  const limit = 100;
+  let lastPage = result;
+  while (lastPage.cards.acquiree_acquisitions.length === limit) {
+     lastPage = await CrunchbaseClientV4.request({
+        path: `entities/organizations/${name}/cards/acquiree_acquisitions`,
+        params: {after_id: lastPage.cards.acquiree_acquisitions[limit - 1].identifier.uuid}
+      });
+      acquisitions = acquisitions.concat(lastPage.cards.acquiree_acquisitions.map(mapAcquisitions));
+  }
+  acquisitions = _.orderBy(acquisitions, ['date', 'acquiree']);
   const getAddressPart = function(part) {
     return (result.cards.headquarters_address[0].location_identifiers.filter( (x) => x.location_type === part)[0] || {}).value
   }
@@ -174,7 +185,7 @@ export async function fetchOldData(name) {
       var twitterEntry = _.find(relationships.websites.items, (x) => x.properties.website_name === 'twitter');
       var linkedInEntry = _.find(relationships.websites.items, (x) => x.properties.website_name === 'linkedin');
       const headquarters = relationships.headquarters;
-      const acquisitions = await getAcquisitions(relationships.acquisitions)
+      const acquisitions = _.orderBy(await getAcquisitions(relationships.acquisitions), ['date', 'acquiree']);
       const entry = {
         name: cbInfo.name,
         description: cbInfo.short_description,
