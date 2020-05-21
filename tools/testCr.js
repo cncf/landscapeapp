@@ -13,18 +13,21 @@ async function main() {
 }
 
 async function main2() {
-  const newData = await fetchNewData('ibm');
-  const oldData = await fetchOldData('ibm');
+  const newData = await fetchNewData('oracle');
+  const oldData = await fetchOldData('oracle');
   console.info(newData.acquisitions.length, oldData.acquisitions.length);
   console.info(newData.acquisitions[180], oldData.acquisitions[180]);
+  console.info(JSON.stringify(newData.acquisitions) === JSON.stringify(oldData.acquisitions));
   for (var i = 0; i < newData.acquisitions.length; i++) {
     const bad = (JSON.stringify(newData.acquisitions[i]) !== JSON.stringify(oldData.acquisitions[i]));
     if (bad) {
-      d
       console.info(i);
       console.info(newData.acquisitions[i].date === oldData.acquisitions[i].date, newData.acquisitions[i].acquiree === oldData.acquisitions[i].acquiree);
     }
   }
+  delete newData.acquisitions;
+  delete oldData.acquisitions;
+  console.info(newData, oldData);
 
 
 }

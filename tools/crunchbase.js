@@ -163,11 +163,12 @@ export async function fetchNewData(name) {
   const getAddressPart = function(part) {
     return (result.cards.headquarters_address[0].location_identifiers.filter( (x) => x.location_type === part)[0] || {}).value
   }
+  const employee_parts = (result.properties.num_employees_enum || '').split('_');
   return {
     name: result.properties.name,
     description: result.properties.short_description,
-    num_employees_min: result.properties.num_employees_enum,
-    num_employees_max: result.properties.num_employees_enum,
+    num_employees_min: +employee_parts[1],
+    num_employees_max: employee_parts[2] === 'max' ? 1000000 : +employee_parts[2],
     homepage: (result.properties.website || {}).value,
     city: getAddressPart('city'),
     region: getAddressPart('region'),
