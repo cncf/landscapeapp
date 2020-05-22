@@ -1,6 +1,6 @@
-import { CrunchbaseClient } from './apiClients';
+import { CrunchbaseClientV3 } from './apiClients';
 import { CrunchbaseClientV4 } from './apiClients';
-import { fetchNewData, fetchOldData } from './crunchbase';
+import { fetchDataV3, fetchDataV4 } from './crunchbase';
 
 async function main() {
   const result = await CrunchbaseClient.request({ path: `/organizations/ibm` });
@@ -13,8 +13,8 @@ async function main() {
 }
 
 async function main2() {
-  const newData = await fetchNewData('oracle');
-  const oldData = await fetchOldData('oracle');
+  const newData = await fetchDataV3('oracle');
+  const oldData = await fetchDataV4('oracle');
   console.info(newData.acquisitions.length, oldData.acquisitions.length);
   console.info(newData.acquisitions[180], oldData.acquisitions[180]);
   console.info(JSON.stringify(newData.acquisitions) === JSON.stringify(oldData.acquisitions));

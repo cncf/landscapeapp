@@ -39,7 +39,7 @@ const ApiClient = ({ baseUrl, defaultOptions = {}, defaultParams = {}, retryStat
   }
 };
 
-export const CrunchbaseClient = ApiClient({
+export const CrunchbaseClientV3 = ApiClient({
   baseUrl: 'https://api.crunchbase.com/v3.1',
   defaultParams: { user_key: env.CRUNCHBASE_KEY },
   defaultOptions: { followRedirect: true, maxRedirects: 5, timeout: 10 * 1000 }

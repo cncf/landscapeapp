@@ -12,7 +12,7 @@ const error = colors.red;
 const fatal = (x) => colors.red(colors.inverse(x));
 const cacheMiss = colors.green;
 const debug = require('debug')('cb');
-import { CrunchbaseClient, CrunchbaseClientV4 } from './apiClients';
+import { CrunchbaseClientV3, CrunchbaseClientV4 } from './apiClients';
 
 export async function getCrunchbaseOrganizationsList() {
   const traverse = require('traverse');
@@ -62,7 +62,7 @@ export async function extractSavedCrunchbaseEntries() {
   return _.uniq(organizations);
 }
 
-async function getParentCompanies(companyInfo, visited = []) {
+async function getParentCompaniesV3(companyInfo, visited = []) {
   var parentInfo = companyInfo.relationships.owned_by.item;
   // console.info(`looking for parent for ${companyInfo.name}`);
   // console.info(`parentInfo is ${parentInfo}`);
@@ -78,11 +78,16 @@ async function getParentCompanies(companyInfo, visited = []) {
     if (visited.includes(permalink)) {
       throw new Error(`Cyclic dependency detected when fetching parents: ${visited.join(', ')}, ${permalink}`);
     }
-    var fullParentInfo = await CrunchbaseClient.request({ path: `/organizations/${parentId}` });
+    var fullParentInfo = await CrunchbaseClientV3.request({ path: `/organizations/${parentId}` });
     var cbInfo = fullParentInfo.data;
     return [parentInfo].concat(await getParentCompanies(cbInfo, [...visited, permalink]));
   }
 }
+
+async function getParentCompaniesV4(name) {
+
+}
+
 const marketCapCache = {};
 async function getMarketCap(ticker) {
   // console.info(ticker, stock_exchange);
@@ -110,20 +115,20 @@ async function getMarketCap(ticker) {
   return result;
 }
 
-const fetchAcquisitions = async(url, params = {}) => {
-  const response = await CrunchbaseClient.request({ url, params })
+const fetchAcquisitionsV3 = async(url, params = {}) => {
+  const response = await CrunchbaseClientV3.request({ url, params })
   const { items, paging } = response.data
   const { next_page_url } = paging
   if (!next_page_url) {
     return items
   }
-  return items + await fetchAcquisitions(next_page_url)
+  return items + await fetchAcquisitionsV3(next_page_url)
 }
 
-const getAcquisitions = async (acquisitions) => {
+const getAcquisitionsV3 = async (acquisitions) => {
   const { items, paging } = acquisitions
   const { total_items, first_page_url } = paging
-  const entries = items.length === total_items ? items : await fetchAcquisitions(first_page_url, { items_per_page: 1000 })
+  const entries = items.length === total_items ? items : await fetchAcquisitionsV3(first_page_url, { items_per_page: 1000 })
   return entries.map(acquisition => {
     const { name } = acquisition.relationships.acquiree.properties
     let result = {
@@ -137,8 +142,12 @@ const getAcquisitions = async (acquisitions) => {
   })
 }
 
-export async function fetchNewData(name) {
-  const result = await CrunchbaseClientV4.request({ path: `entities/organizations/${name}`, params:{'card_ids': 'headquarters_address,acquiree_acquisitions', 'field_ids': 'num_employees_enum,linkedin,twitter,name,website,short_description' }});
+export async function fetchDataV4(name) {
+  const result = await CrunchbaseClientV4.request({
+    path: `entities/organizations/${name}`,
+    params:{'card_ids': 'headquarters_address,acquiree_acquisitions,parent_organization', 'field_ids': 'num_employees_enum,linkedin,twitter,name,website,short_description' }
+  });
+
   const mapAcquisitions = function(a) {
     const result = {
       date: a.announced_on.value,
@@ -160,9 +169,24 @@ export async function fetchNewData(name) {
       acquisitions = acquisitions.concat(lastPage.cards.acquiree_acquisitions.map(mapAcquisitions));
   }
   acquisitions = _.orderBy(acquisitions, ['date', 'acquiree']);
+
+  let parents = [];
+  let lastOrganization = result;
+  while (lastOrganization.cards.parent_organization[0]) {
+    parents.push(lastOrganization.cards.parent_organization[0]);
+    lastOrganization = await CrunchbaseClientV4.request({
+      path: `entities/organizations/${lastOrganization.cards.parent_organization[0].identifier.permalink}`,
+      params:{'card_ids': 'parent_organization', 'field_ids': '' }
+    });
+  }
+
+  const parentLinks = parents.map( (item) => 'https://www.crunchbase.com/' + item.properties.identifier.permalink );
+
   const getAddressPart = function(part) {
     return (result.cards.headquarters_address[0].location_identifiers.filter( (x) => x.location_type === part)[0] || {}).value
   }
+
+
   const employee_parts = (result.properties.num_employees_enum || '').split('_');
   return {
     name: result.properties.name,
@@ -175,18 +199,22 @@ export async function fetchNewData(name) {
     country: getAddressPart('country'),
     twitter: (result.properties.twitter || {}).value,
     linkedin: (result.properties.linkedin || {}).value,
-    acquisitions
+    acquisitions,
+    parentLinks: parentLinks,
+    stockSymbol:
+    totalFunding:
   }
 }
 
-export async function fetchOldData(name) {
-      const result = await CrunchbaseClient.request({ path: `/organizations/${name}` });
+export async function fetchDataV3(name) {
+      const result = await CrunchbaseClientV3.request({ path: `/organizations/${name}` });
       var cbInfo = result.data.properties;
       const { relationships } = result.data
       var twitterEntry = _.find(relationships.websites.items, (x) => x.properties.website_name === 'twitter');
       var linkedInEntry = _.find(relationships.websites.items, (x) => x.properties.website_name === 'linkedin');
       const headquarters = relationships.headquarters;
-      const acquisitions = _.orderBy(await getAcquisitions(relationships.acquisitions), ['date', 'acquiree']);
+      const acquisitions = _.orderBy(await getAcquisitionsV3(relationships.acquisitions), ['date', 'acquiree']);
+      const parents = await getParentsV3();
       const entry = {
         name: cbInfo.name,
         description: cbInfo.short_description,
@@ -198,7 +226,8 @@ export async function fetchOldData(name) {
         country: headquarters && headquarters.item && headquarters.item.properties.country || null,
         twitter: twitterEntry ? twitterEntry.properties.url : null,
         linkedin: linkedInEntry ? ensureHttps(linkedInEntry.properties.url) : null,
-        acquisitions
+        acquisitions,
+        parents
       };
       return entry;
 }
@@ -221,9 +250,9 @@ export async function fetchCrunchbaseEntries({cache, preferCache}) {
       return {};
     }
     try {
-      const result = await CrunchbaseClient.request({ path: `/organizations/${c.name}` });
-      const newData = await fetchNewData(c.name);
-      const oldData = await fetchOldData(c.name);
+      const result = await CrunchbaseClientV3.request({ path: `/organizations/${c.name}` });
+      const newData = await fetchDataV3(c.name);
+      const oldData = await fetchDataV4(c.name);
 
       if (JSON.stringify(newData) !== JSON.stringify(oldData)) {
         addError('New and Old API return different result for ' + c.name);
@@ -235,7 +264,7 @@ export async function fetchCrunchbaseEntries({cache, preferCache}) {
       var twitterEntry = _.find(relationships.websites.items, (x) => x.properties.website_name === 'twitter');
       var linkedInEntry = _.find(relationships.websites.items, (x) => x.properties.website_name === 'linkedin');
       const headquarters = relationships.headquarters;
-      const acquisitions = await getAcquisitions(relationships.acquisitions)
+      const acquisitions = await getAcquisitionsV3(relationships.acquisitions)
       const entry = {
         url: c.crunchbase,
         name: cbInfo.name,
@@ -258,12 +287,14 @@ export async function fetchCrunchbaseEntries({cache, preferCache}) {
         reporter.write(fatal("F"));
         return null;
       }
+
       var parents = await getParentCompanies(result.data);
       entry.parents = parents.map( (item) =>  'https://www.crunchbase.com/' + item.properties.web_path);
        // console.info(parents.map( (x) => x.properties.name));
       var meAndParents = [result.data].concat(parents);
       var firstWithTicker = _.find( meAndParents, (org) => !!org.properties.stock_symbol );
       var firstWithFunding = _.find( meAndParents, (org) => !!org.properties.total_funding_usd );
+
       if (!(c.ticker === null) && (firstWithTicker || c.ticker)) {
         // console.info('need to get a ticker?');
         entry.ticker = firstWithTicker ? firstWithTicker.properties.stock_symbol : undefined;
