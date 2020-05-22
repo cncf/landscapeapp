@@ -141,7 +141,7 @@ const getAcquisitionsV3 = async (acquisitions) => {
 export async function fetchDataV4(name) {
   const result = await CrunchbaseClientV4.request({
     path: `entities/organizations/${name}`,
-    params:{'card_ids': 'headquarters_address,acquiree_acquisitions,parent_organization', 'field_ids': 'num_employees_enum,linkedin,twitter,name,website,short_description,funding_total,stock_symbol' }
+    params:{'card_ids': 'headquarters_address,acquiree_acquisitions,parent_organization', 'field_ids': 'num_employees_enum,linkedin,twitter,name,website,short_description,funding_total,stock_symbol,stock_exchange_symbol' }
   });
 
   const mapAcquisitions = function(a) {
@@ -171,7 +171,6 @@ export async function fetchDataV4(name) {
   while (lastOrganization.cards.parent_organization[0]) {
     parents.push(lastOrganization.cards.parent_organization[0]);
     const url =  `entities/organizations/${lastOrganization.cards.parent_organization[0].identifier.permalink}`;
-    console.info(url);
     lastOrganization = await CrunchbaseClientV4.request({
       path: url,
       params:{'card_ids': 'parent_organization', 'field_ids': '' }
@@ -180,9 +179,9 @@ export async function fetchDataV4(name) {
   const parentLinks = parents.map( (item) => 'https://www.crunchbase.com/' + item.identifier.permalink );
 
   const firstWithStockSymbol = _.find([result.properties].concat(parents), (x) => !!x.stock_symbol);
-  const stockSymbol = firstWithStockSymbol ? firstWithStockSymbol.stock_symbol.value : null;
+  const stockSymbol = firstWithStockSymbol ? firstWithStockSymbol.stock_symbol.value : undefined;
   const firstWithTotalFunding = _.find([result.properties].concat(parents), (x) => !!x.funding_total);
-  const totalFunding = firstWithTotalFunding ? firstWithTotalFunding.funding_total.value_usd : null;
+  const totalFunding = firstWithTotalFunding ? firstWithTotalFunding.funding_total.value_usd : undefined;
 
   const getAddressPart = function(part) {
     return (result.cards.headquarters_address[0].location_identifiers.filter( (x) => x.location_type === part)[0] || {}).value
@@ -200,12 +199,13 @@ export async function fetchDataV4(name) {
     city: getAddressPart('city'),
     region: getAddressPart('region'),
     country: getAddressPart('country'),
-    twitter: (result.properties.twitter || {}).value,
-    linkedin: (result.properties.linkedin || {}).value,
+    twitter: result.properties.twitter ? result.properties.twitter.value : null,
+    linkedin: result.properties.linkedin ? ensureHttps(result.properties.linkedin.value) : null,
     acquisitions,
-    parentLinks: parentLinks,
-    stockSymbol,
-    totalFunding
+    parents: parentLinks,
+    ticker: stockSymbol,
+    funding: totalFunding,
+    stockExchange: result.properties.stock_exchange_symbol
   }
 }
 
@@ -234,9 +234,10 @@ export async function fetchDataV3(name) {
         twitter: twitterEntry ? twitterEntry.properties.url : null,
         linkedin: linkedInEntry ? ensureHttps(linkedInEntry.properties.url) : null,
         acquisitions,
-        parentLinks,
-        stockSymbol : firstWithTicker ? firstWithTicker.properties.stock_symbol : null,
-        totalFunding: firstWithFunding ? firstWithFunding.properties.total_funding_usd : null
+        parents: parentLinks,
+        ticker: firstWithTicker ? firstWithTicker.properties.stock_symbol : undefined,
+        funding: firstWithFunding ? firstWithFunding.properties.total_funding_usd : undefined,
+        stockExchange: cbInfo.stock_exchange
       };
       return entry;
 }
@@ -259,34 +260,18 @@ export async function fetchCrunchbaseEntries({cache, preferCache}) {
       return {};
     }
     try {
-      const result = await CrunchbaseClientV3.request({ path: `/organizations/${c.name}` });
-      const newData = await fetchDataV3(c.name);
-      const oldData = await fetchDataV4(c.name);
+      const newData = await fetchDataV4(c.name);
+      const oldData = await fetchDataV3(c.name);
+      const result = newData;
 
       if (JSON.stringify(newData) !== JSON.stringify(oldData)) {
         addError('New and Old API return different result for ' + c.name);
         addWarning('New and Old API return different result for ' + c.name);
       }
 
-      var cbInfo = result.data.properties;
-      const { relationships } = result.data
-      var twitterEntry = _.find(relationships.websites.items, (x) => x.properties.website_name === 'twitter');
-      var linkedInEntry = _.find(relationships.websites.items, (x) => x.properties.website_name === 'linkedin');
-      const headquarters = relationships.headquarters;
-      const acquisitions = await getAcquisitionsV3(relationships.acquisitions)
       const entry = {
         url: c.crunchbase,
-        name: cbInfo.name,
-        description: cbInfo.short_description,
-        num_employees_min: cbInfo.num_employees_min,
-        num_employees_max: cbInfo.num_employees_max,
-        homepage: cbInfo.homepage_url,
-        city: headquarters && headquarters.item && headquarters.item.properties.city || null,
-        region: headquarters && headquarters.item && headquarters.item.properties.region || null,
-        country: headquarters && headquarters.item && headquarters.item.properties.country || null,
-        twitter: twitterEntry ? twitterEntry.properties.url : null,
-        linkedin: linkedInEntry ? ensureHttps(linkedInEntry.properties.url) : null,
-        acquisitions
+        ...result
       };
       if (_.isEmpty(entry.city)) {
         addError('crunchbase');
@@ -297,27 +282,16 @@ export async function fetchCrunchbaseEntries({cache, preferCache}) {
         return null;
       }
 
-      var parents = await getParentCompaniesV3(result.data);
-      entry.parents = parents.map( (item) =>  'https://www.crunchbase.com/' + item.properties.web_path);
-       // console.info(parents.map( (x) => x.properties.name));
-      var meAndParents = [result.data].concat(parents);
-      var firstWithTicker = _.find( meAndParents, (org) => !!org.properties.stock_symbol );
-      var firstWithFunding = _.find( meAndParents, (org) => !!org.properties.total_funding_usd );
-
-      if (!(c.ticker === null) && (firstWithTicker || c.ticker)) {
+      if (!(c.ticker === null) && (entry.ticker || c.ticker)) {
         // console.info('need to get a ticker?');
-        entry.ticker = firstWithTicker ? firstWithTicker.properties.stock_symbol : undefined;
         entry.effective_ticker = c.ticker || entry.ticker;
-        entry.market_cap = await getMarketCap(entry.effective_ticker, cbInfo.stock_exchange);
+        entry.market_cap = await getMarketCap(entry.effective_ticker, entry.stockExchange);
         entry.kind = 'market_cap';
-        // console.info(cbInfo.name, 'ticker: ', entry.ticker, ' market cap: ', entry.funding);
-      } else if (firstWithFunding) {
+      } else if (entry.funding) {
         entry.kind = 'funding';
-        entry.funding = firstWithFunding.properties.total_funding_usd;
-        // console.info(cbInfo.name, 'funding: ', entry.funding);
       } else {
-        // console.info(cbInfo.name, 'no finance info');
       }
+      delete entry.stockSymbol;
       reporter.write(cacheMiss("*"));
       return entry;
       // console.info(entry);
