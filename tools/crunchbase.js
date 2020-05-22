@@ -80,12 +80,8 @@ async function getParentCompaniesV3(companyInfo, visited = []) {
     }
     var fullParentInfo = await CrunchbaseClientV3.request({ path: `/organizations/${parentId}` });
     var cbInfo = fullParentInfo.data;
-    return [parentInfo].concat(await getParentCompanies(cbInfo, [...visited, permalink]));
+    return [parentInfo].concat(await getParentCompaniesV3(cbInfo, [...visited, permalink]));
   }
-}
-
-async function getParentCompaniesV4(name) {
-
 }
 
 const marketCapCache = {};
@@ -145,7 +141,7 @@ const getAcquisitionsV3 = async (acquisitions) => {
 export async function fetchDataV4(name) {
   const result = await CrunchbaseClientV4.request({
     path: `entities/organizations/${name}`,
-    params:{'card_ids': 'headquarters_address,acquiree_acquisitions,parent_organization', 'field_ids': 'num_employees_enum,linkedin,twitter,name,website,short_description' }
+    params:{'card_ids': 'headquarters_address,acquiree_acquisitions,parent_organization', 'field_ids': 'num_employees_enum,linkedin,twitter,name,website,short_description,funding_total,stock_symbol' }
   });
 
   const mapAcquisitions = function(a) {
@@ -174,17 +170,24 @@ export async function fetchDataV4(name) {
   let lastOrganization = result;
   while (lastOrganization.cards.parent_organization[0]) {
     parents.push(lastOrganization.cards.parent_organization[0]);
+    const url =  `entities/organizations/${lastOrganization.cards.parent_organization[0].identifier.permalink}`;
+    console.info(url);
     lastOrganization = await CrunchbaseClientV4.request({
-      path: `entities/organizations/${lastOrganization.cards.parent_organization[0].identifier.permalink}`,
+      path: url,
       params:{'card_ids': 'parent_organization', 'field_ids': '' }
     });
   }
+  const parentLinks = parents.map( (item) => 'https://www.crunchbase.com/' + item.identifier.permalink );
 
-  const parentLinks = parents.map( (item) => 'https://www.crunchbase.com/' + item.properties.identifier.permalink );
+  const firstWithStockSymbol = _.find([result.properties].concat(parents), (x) => !!x.stock_symbol);
+  const stockSymbol = firstWithStockSymbol ? firstWithStockSymbol.stock_symbol.value : null;
+  const firstWithTotalFunding = _.find([result.properties].concat(parents), (x) => !!x.funding_total);
+  const totalFunding = firstWithTotalFunding ? firstWithTotalFunding.funding_total.value_usd : null;
 
   const getAddressPart = function(part) {
     return (result.cards.headquarters_address[0].location_identifiers.filter( (x) => x.location_type === part)[0] || {}).value
   }
+
 
 
   const employee_parts = (result.properties.num_employees_enum || '').split('_');
@@ -201,8 +204,8 @@ export async function fetchDataV4(name) {
     linkedin: (result.properties.linkedin || {}).value,
     acquisitions,
     parentLinks: parentLinks,
-    stockSymbol:
-    totalFunding:
+    stockSymbol,
+    totalFunding
   }
 }
 
@@ -214,7 +217,11 @@ export async function fetchDataV3(name) {
       var linkedInEntry = _.find(relationships.websites.items, (x) => x.properties.website_name === 'linkedin');
       const headquarters = relationships.headquarters;
       const acquisitions = _.orderBy(await getAcquisitionsV3(relationships.acquisitions), ['date', 'acquiree']);
-      const parents = await getParentsV3();
+      const parents = await getParentCompaniesV3(result.data);
+      const parentLinks = parents.map( (item) =>  'https://www.crunchbase.com/' + item.properties.web_path);
+      var meAndParents = [result.data].concat(parents);
+      var firstWithTicker = _.find( meAndParents, (org) => !!org.properties.stock_symbol );
+      var firstWithFunding = _.find( meAndParents, (org) => !!org.properties.total_funding_usd );
       const entry = {
         name: cbInfo.name,
         description: cbInfo.short_description,
@@ -227,7 +234,9 @@ export async function fetchDataV3(name) {
         twitter: twitterEntry ? twitterEntry.properties.url : null,
         linkedin: linkedInEntry ? ensureHttps(linkedInEntry.properties.url) : null,
         acquisitions,
-        parents
+        parentLinks,
+        stockSymbol : firstWithTicker ? firstWithTicker.properties.stock_symbol : null,
+        totalFunding: firstWithFunding ? firstWithFunding.properties.total_funding_usd : null
       };
       return entry;
 }
@@ -288,7 +297,7 @@ export async function fetchCrunchbaseEntries({cache, preferCache}) {
         return null;
       }
 
-      var parents = await getParentCompanies(result.data);
+      var parents = await getParentCompaniesV3(result.data);
       entry.parents = parents.map( (item) =>  'https://www.crunchbase.com/' + item.properties.web_path);
        // console.info(parents.map( (x) => x.properties.name));
       var meAndParents = [result.data].concat(parents);
