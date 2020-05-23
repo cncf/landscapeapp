@@ -36,7 +36,7 @@
     "copy-iframe-resizer": "((cp \"$PROJECT_PATH\"/node_modules/iframe-resizer/js/iframeResizer.min.js \"$PROJECT_PATH\"/dist/iframeResizer.js 2>/dev/null) || (cp node_modules/iframe-resizer/js/iframeResizer.min.js \"$PROJECT_PATH\"/dist/iframeResizer.js)) && echo \"`cat \"$PROJECT_PATH\"/dist/iframeResizer.js`\n`cat src/iframeResizer.js`\" > \"$PROJECT_PATH\"/dist/iframeResizer.js",
     "setup-robots": "babel-node tools/sitemap && babel-node tools/addRobots",
     "quick-build": "babel-node tools/build.js && npm run copy-dist && npm run setup-robots",
-    "prebuild": "npm config set scripts-prepend-node-path true && npm run fetch && npm run clean-dist",
+    "prebuild": "npm config set scripts-prepend-node-path true && LEVEL=medium npm run fetch && npm run clean-dist",
     "build": "((babel-node tools/build.js && npm run copy-dist && npm run setup-robots && npm run stop-old-ci && npm run start-ci && babel-node tools/parallel integration-test check-landscape render-landscape) || (npm run stop-old-ci && false)) && babel-node tools/prerender && npm run integration-test && npm run stop-ci && babel-node tools/fundingForMasterBranch",
     "show-report": "open dist/report.html",
     "test": "jest",
