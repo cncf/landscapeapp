@@ -3,8 +3,10 @@ import { CrunchbaseClientV4 } from './apiClients';
 import { fetchDataV3, fetchDataV4 } from './crunchbase';
 
 async function main() {
-  const newData = await fetchDataV4('kubeless');
-  const oldData = await fetchDataV3('kubeless');
+  const oldData = await fetchDataV3('zeit');
+  console.info('got old');
+  const newData = await fetchDataV4('zeit');
+  console.info('got new');
   console.info(newData);
   console.info(oldData);
 }
