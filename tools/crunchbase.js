@@ -176,26 +176,35 @@ export async function fetchDataV4(name) {
       params:{'card_ids': 'parent_organization', 'field_ids': '' }
     });
   }
-  const parentLinks = parents.map( (item) => 'https://www.crunchbase.com/' + item.identifier.permalink );
+  const parentLinks = parents.map( (item) => 'https://www.crunchbase.com/organization/' + item.identifier.permalink );
 
   const firstWithStockSymbol = _.find([result.properties].concat(parents), (x) => !!x.stock_symbol);
   const stockSymbol = firstWithStockSymbol ? firstWithStockSymbol.stock_symbol.value : undefined;
   const firstWithTotalFunding = _.find([result.properties].concat(parents), (x) => !!x.funding_total);
-  const totalFunding = firstWithTotalFunding ? firstWithTotalFunding.funding_total.value_usd : undefined;
+  const totalFunding = firstWithTotalFunding ? + firstWithTotalFunding.funding_total.value_usd.toFixed() : undefined;
 
   const getAddressPart = function(part) {
     return (result.cards.headquarters_address[0].location_identifiers.filter( (x) => x.location_type === part)[0] || {}).value
   }
 
 
+  const { employeesMin, employeesMax } = (function() {
+    const value = result.properties.num_employees_enum || '';
+    const parts = value.split('_');
+    if (parts.length !== 3) {
+      return { employeesMin: null, employeesMax: null}
+    } else {
+      return { employeesMin: + parts[1], employeesMax: parts[2] === 'max' ? 1000000 : + parts[2] }
+    }
+  })();
 
   const employee_parts = (result.properties.num_employees_enum || '').split('_');
   return {
     name: result.properties.name,
     description: result.properties.short_description,
-    num_employees_min: +employee_parts[1],
-    num_employees_max: employee_parts[2] === 'max' ? 1000000 : +employee_parts[2],
-    homepage: (result.properties.website || {}).value,
+    num_employees_min: employeesMin,
+    num_employees_max: employeesMax,
+    homepage: (result.properties.website || {value: null}).value ,
     city: getAddressPart('city'),
     region: getAddressPart('region'),
     country: getAddressPart('country'),
@@ -205,7 +214,7 @@ export async function fetchDataV4(name) {
     parents: parentLinks,
     ticker: stockSymbol,
     funding: totalFunding,
-    stockExchange: result.properties.stock_exchange_symbol
+    stockExchange: result.properties.stock_exchange_symbol || null
   }
 }
 
@@ -265,8 +274,13 @@ export async function fetchCrunchbaseEntries({cache, preferCache}) {
       const result = newData;
 
       if (JSON.stringify(newData) !== JSON.stringify(oldData)) {
+        error('New and Old API return different result for ' + c.name);
         addError('New and Old API return different result for ' + c.name);
         addWarning('New and Old API return different result for ' + c.name);
+        delete newData.acquisitions;
+        delete oldData.acquisitions;
+        console.info(newData, oldData);
+        throw new Error('API V3/V4 data mismatch');
       }
 
       const entry = {
