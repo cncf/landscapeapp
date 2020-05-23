@@ -2,6 +2,7 @@ import retry from './retry';
 import rp from 'request-promise';
 
 const rpWithRetry = async function(args) {
-  return await retry(() => rp(args), 5, 30000, args.retryStatuses);
+  const { retryStatuses, delayFn, ...rest } = args
+  return await retry(() => rp(rest), 5, 30000, retryStatuses, delayFn);
 }
 export default rpWithRetry;
