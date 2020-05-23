@@ -3,7 +3,7 @@ import { env } from 'process';
 import { stringify } from 'query-string';
 import rp from './rpRetry';
 
-['CRUNCHBASE_KEY', 'CRUNCHBNASE_KEY_4', 'GITHUB_KEY', 'TWITTER_KEYS'].forEach((key) => {
+['CRUNCHBASE_KEY', 'CRUNCHBASE_KEY_4', 'GITHUB_KEY', 'TWITTER_KEYS'].forEach((key) => {
   if (!env[key]) {
     console.info(`${key} not provided`);
   }
