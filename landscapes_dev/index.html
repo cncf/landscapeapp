@@ -6,14 +6,22 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/js-yaml/3.13.1/js-yaml.min.js"></script>
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.8.2/css/bulma.min.css">
   <style>
+    body {
+      overflow: scroll;
+    }
+
     body .container {
       padding-top: 2rem;
       padding-bottom: 2rem;
     }
 
-    .container h1.title {
-      margin-left: 0.75rem;
-      margin-bottom: 1rem;
+    .header {
+      margin: 0 0 1rem;
+    }
+
+    .header,
+    .main {
+      padding: 0 0.75rem;
     }
 
     table.table {
@@ -55,29 +63,30 @@
 </head>
 <body>
   <div class="container is-widescreen">
-    <div class="is-clipped">
-      <h1 class="title is-pulled-left">Landscapes</h1>
-
-      <div class="has-text-link title is-4 is-pulled-right">
-        <a href="#" data-behavior="toggle">View Previews</a>
-        <a href="#" class="is-hidden" data-behavior="toggle">View List</a>
+    <div class="header is-clipped">
+      <h1 class="title is-marginless is-pulled-left">Landscapes</h1>
+      <div class="is-pulled-right">
+        <a href="#" data-behavior="toggle" class="button is-light is-link">View Previews</a>
+        <a href="#" class="is-hidden button is-light is-link" data-behavior="toggle">View List</a>
       </div>
     </div>
 
-    <table class="table is-fullwidth" data-behavior="toggle-target">
-      <thead>
-      <th>Organization</th>
-      <th>Landscape</th>
-      <th>Repo</th>
-      <th>Status</th>
-      <th>Published</th>
-      <th>Data Refreshed</th>
-      </thead>
+    <div class="main">
+      <table class="table is-fullwidth" data-behavior="toggle-target">
+        <thead>
+        <th>Organization</th>
+        <th>Landscape</th>
+        <th>Repo</th>
+        <th>Status</th>
+        <th>Published</th>
+        <th>Data Refreshed</th>
+        </thead>
 
-      <tbody></tbody>
-    </table>
+        <tbody></tbody>
+      </table>
 
-    <div class="is-hidden previews columns is-multiline" data-behavior="toggle-target"></div>
+      <div class="is-hidden previews columns is-multiline" data-behavior="toggle-target"></div>
+    </div>
   </div>
 
   <script>
@@ -104,7 +113,7 @@
 
     const fetchLandscapeInfo = ({ repo }) => {
       const rowEl = document.createElement("tr")
-      const dateTimeFormat = new Intl.DateTimeFormat('en', { month: 'short', day: '2-digit', hour: '2-digit', minute:'2-digit' })
+      const dateTimeFormat = new Intl.DateTimeFormat('en', { month: 'short', day: '2-digit', hour: '2-digit', minute:'2-digit', hour12: false })
       tableEl.append(rowEl)
       const appendColumn = (args = {}) => {
         let column = document.createElement('td')
