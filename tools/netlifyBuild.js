@@ -5,7 +5,7 @@ const landscapesInfo = require('js-yaml').safeLoad(require('fs').readFileSync('l
 
 async function main() {
   const secrets = [
-    process.env.CRUNCHBASE_KEY, process.env.TWITTER_KEYS, process.env.GITHUB_TOKEN, process.env.GITHUB_USER, process.env.GITHUB_KEY
+    process.env.CRUNCHBASE_KEY_4, process.env.TWITTER_KEYS, process.env.GITHUB_TOKEN, process.env.GITHUB_USER, process.env.GITHUB_KEY
   ].filter( (x) => !!x);
 
   const  maskSecrets = function(x) {
