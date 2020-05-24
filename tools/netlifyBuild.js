@@ -47,7 +47,7 @@ ${process.env.BUILDBOT_KEY.replace(/\s/g,'\n')}
 
   const results = await Promise.map(landscapesInfo.landscapes, async function(landscape) {
 
-    const vars = ['NODE_VERSION', 'RUBY_VERSION', 'CRUNCHBASE_KEY', 'CRUNCHBASE_KEY_4', 'GITHUB_KEY', 'TWITTER_KEYS'];
+    const vars = ['NODE_VERSION', 'RUBY_VERSION', 'CRUNCHBASE_KEY_4', 'GITHUB_KEY', 'TWITTER_KEYS'];
 
     const outputFolder = landscape.name + new Date().getTime();
     const nvmrc = require('fs').readFileSync('.nvmrc', 'utf-8').trim();
