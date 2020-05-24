@@ -3,7 +3,7 @@ import { stringify } from 'query-string';
 import rp from './rpRetry';
 import _ from 'lodash'
 
-['CRUNCHBASE_KEY', 'GITHUB_KEY', 'TWITTER_KEYS'].forEach((key) => {
+['CRUNCHBASE_KEY_4', 'GITHUB_KEY', 'TWITTER_KEYS'].forEach((key) => {
   if (!env[key]) {
     console.info(`${key} not provided`);
   }
@@ -41,8 +41,8 @@ const ApiClient = ({ baseUrl, defaultOptions = {}, defaultParams = {}, retryStat
 };
 
 export const CrunchbaseClient = ApiClient({
-  baseUrl: 'https://api.crunchbase.com/v3.1',
-  defaultParams: { user_key: env.CRUNCHBASE_KEY },
+  baseUrl: 'https://api.crunchbase.com/api/v4',
+  defaultParams: { user_key: env.CRUNCHBASE_KEY_4 },
   defaultOptions: { followRedirect: true, maxRedirects: 5, timeout: 10 * 1000 }
 });
 

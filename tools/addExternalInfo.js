@@ -71,13 +71,13 @@ async function main() {
 
   var crunchbaseEntries;
   var savedCrunchbaseEntries = await extractSavedCrunchbaseEntries();
-  if (process.env.CRUNCHBASE_KEY) {
+  if (process.env.CRUNCHBASE_KEY_4) {
     console.info('Fetching crunchbase entries');
     crunchbaseEntries = await fetchCrunchbaseEntries({
       cache: savedCrunchbaseEntries,
       preferCache: useCrunchbaseCache});
   } else {
-    console.info('CRUNCHBASE_KEY is not set. Using processed_landscape.yml as a source for crunchbase info');
+    console.info('CRUNCHBASE_KEY_4 is not set. Using processed_landscape.yml as a source for crunchbase info');
     crunchbaseEntries = savedCrunchbaseEntries;
   }
 
