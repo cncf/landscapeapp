@@ -33,7 +33,6 @@ function reportOptions() {
     `);
 }
 if (key.toLowerCase() === 'easy') {
-  useCrunchbaseCache=false;
   reportOptions();
 }
 else if (key.toLowerCase() === 'medium') {
