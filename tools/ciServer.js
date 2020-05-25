@@ -41,5 +41,5 @@ const result = browserSync({
     historyApiFallback()
   ]
 });
-require('fs').writeFileSync('/tmp/ci.pid', process.pid);
+require('fs').writeFileSync('/tmp/ci.pid', process.pid.toString());
 export default result;
