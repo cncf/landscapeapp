@@ -2,7 +2,7 @@
 
 ## Install on Mac
 1. Install [Homebrew](https://brew.sh/)
-2. `brew intall node`
+2. `brew install node`
 3. `git clone git@github.com:cncf/landscape.git`
 
 ## Install on Linux
