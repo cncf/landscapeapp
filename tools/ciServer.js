@@ -25,6 +25,7 @@ const result = browserSync({
     'src/*.html'
   ],
   ghostMode: false,
+  notify: false,
   middleware: [
     function (req, res, next) {
 
@@ -40,5 +41,5 @@ const result = browserSync({
     historyApiFallback()
   ]
 });
-require('fs').writeFileSync('/tmp/ci.pid', process.pid);
+require('fs').writeFileSync('/tmp/ci.pid', process.pid.toString());
 export default result;

@@ -4,10 +4,10 @@ import { resolve } from "path";
 import { safeLoad } from "js-yaml";
 import { dump } from "./yaml";
 
-const updateProcessedLandscape = (callback) => {
+const updateProcessedLandscape = async callback => {
   const path = resolve(projectPath, 'processed_landscape.yml');
   const processedLandscape = existsSync(path) ? safeLoad(readFileSync(path)) : {};
-  const updatedProcessedLandscape = callback(processedLandscape);
+  const updatedProcessedLandscape = await callback(processedLandscape);
   const newContent = "# THIS FILE IS GENERATED AUTOMATICALLY!\n" + dump(updatedProcessedLandscape);
   writeFileSync(path, newContent);
 }

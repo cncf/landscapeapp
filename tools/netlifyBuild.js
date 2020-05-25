@@ -5,7 +5,7 @@ const landscapesInfo = require('js-yaml').safeLoad(require('fs').readFileSync('l
 
 async function main() {
   const secrets = [
-    process.env.CRUNCHBASE_KEY, process.env.TWITTER_KEYS, process.env.GITHUB_TOKEN, process.env.GITHUB_USER, process.env.GITHUB_KEY
+    process.env.CRUNCHBASE_KEY_4, process.env.TWITTER_KEYS, process.env.GITHUB_TOKEN, process.env.GITHUB_USER, process.env.GITHUB_KEY
   ].filter( (x) => !!x);
 
   const  maskSecrets = function(x) {
@@ -47,7 +47,7 @@ ${process.env.BUILDBOT_KEY.replace(/\s/g,'\n')}
 
   const results = await Promise.map(landscapesInfo.landscapes, async function(landscape) {
 
-    const vars = ['NODE_VERSION', 'RUBY_VERSION', 'CRUNCHBASE_KEY', 'GITHUB_KEY', 'TWITTER_KEYS'];
+    const vars = ['NODE_VERSION', 'RUBY_VERSION', 'CRUNCHBASE_KEY_4', 'GITHUB_KEY', 'TWITTER_KEYS'];
 
     const outputFolder = landscape.name + new Date().getTime();
     const nvmrc = require('fs').readFileSync('.nvmrc', 'utf-8').trim();

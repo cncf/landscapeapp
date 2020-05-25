@@ -6,8 +6,6 @@ const source = require('js-yaml').safeLoad(require('fs').readFileSync(path.resol
 const traverse = require('traverse');
 const _ = require('lodash');
 import actualTwitter from './actualTwitter';
-import {dump} from './yaml';
-// import formatCity from '../src/utils/formatCity';
 import { fetchImageEntries, extractSavedImageEntries, removeNonReferencedImages } from './fetchImages';
 import { fetchCrunchbaseEntries, extractSavedCrunchbaseEntries } from './crunchbase';
 import { fetchGithubEntries, extractSavedGithubEntries } from './fetchGithubStats';
@@ -15,6 +13,7 @@ import { fetchStartDateEntries, extractSavedStartDateEntries } from './fetchGith
 import { fetchTwitterEntries, extractSavedTwitterEntries } from './twitter';
 import { fetchBestPracticeEntriesWithFullScan, fetchBestPracticeEntriesWithIndividualUrls, extractSavedBestPracticeEntries } from './fetchBestPractices';
 import shortRepoName from '../src/utils/shortRepoName';
+import updateProcessedLandscape from "./updateProcessedLandscape";
 
 var useCrunchbaseCache = true;
 var useImagesCache=true;
@@ -72,13 +71,13 @@ async function main() {
 
   var crunchbaseEntries;
   var savedCrunchbaseEntries = await extractSavedCrunchbaseEntries();
-  if (process.env.CRUNCHBASE_KEY) {
+  if (process.env.CRUNCHBASE_KEY_4) {
     console.info('Fetching crunchbase entries');
     crunchbaseEntries = await fetchCrunchbaseEntries({
       cache: savedCrunchbaseEntries,
       preferCache: useCrunchbaseCache});
   } else {
-    console.info('CRUNCHBASE_KEY is not set. Using processed_landscape.yml as a source for crunchbase info');
+    console.info('CRUNCHBASE_KEY_4 is not set. Using processed_landscape.yml as a source for crunchbase info');
     crunchbaseEntries = savedCrunchbaseEntries;
   }
 
@@ -222,11 +221,12 @@ async function main() {
     }
   });
 
-  newSource.twitter_options = require('js-yaml').safeLoad(require('fs').readFileSync(require('path').resolve(projectPath, 'processed_landscape.yml'))).twitter_options;
+  updateProcessedLandscape(processedLandscape => {
+    const { twitter_options, updated_at } = processedLandscape
 
-  const newContent = "# THIS FILE IS GENERATED AUTOMATICALLY!\n" + dump(newSource);
-  console.info('saving!');
-  require('fs').writeFileSync(path.resolve(projectPath, 'processed_landscape.yml'), newContent);
+    console.info('saving!');
+    return { ...newSource, twitter_options, updated_at }
+  })
 }
 main().catch(function(x) {
   console.info('Reporting exception');

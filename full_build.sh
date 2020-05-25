@@ -4,7 +4,6 @@ mkdir -p dist
 
 ./node_modules/.bin/babel-node tools/netlifyBuild.js
 
-# bash build.sh lf-edge/lfedge-landscape lf-edge
 echo "User-agent: *" > dist/robots.txt
 # comment below when about to test a googlebot rendering
 echo "Disallow: /" >> dist/robots.txt

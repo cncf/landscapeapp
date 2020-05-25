@@ -14,7 +14,7 @@ landscapes:
     hook: 5c1bd968fdd72a78a54bdcd1
   - landscape:
     name: lfedge
-    repo: lf-edge/lfedge-landscape
+    repo: State-of-the-Edge/lfedge-landscape
     hook: 5c80e31894c5c7758edb31e4
   - landscape:
     name: aswf
@@ -48,3 +48,7 @@ landscapes:
     name: openjsf
     repo: openjs-foundation/openjsf-landscape
     hook: 5de319ba9e61a5ddc3207294
+  - landscape:
+    name: lfph
+    repo: lfph/lfph-landscape
+    hook: 5ec5145565b543b0b01aa9d7

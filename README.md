@@ -73,7 +73,7 @@ If you want to create an interactive landscape for your project or organization:
 2. If you're working with the [LF](https://www.linuxfoundation.org/), give admin privileges to the new repo to [dankohn](https://github.com/dankohn) and write privleges to [AndreyKozlov1984](https://github.com/AndreyKozlov1984), [jordinl83](https://github.com/jordinl83), and [CNCF-Bot](https://github.com/CNCF-Bot) and ping Dan after creating an account at [slack.cncf.io](https://slack.cncf.io). Alex Contini and Dan are available there to help you recreate SVGs based on a PNG of the company's logo, if necessary, and to fix other problems.
 2. Set the repo to only support merge commits and turn off DCO support, since it doesn't work well with the GitHub web interface:
 ![image](https://user-images.githubusercontent.com/3083270/66166276-dd62ad00-e604-11e9-87db-fd9ae7a80d1a.png)
-3. For LF projects, Dan will set you up in Netlify to build on every commit. Build command is `npm install -g npm && npm ci && npm run build` and publish directory is `dist`. Environment variables that need to be set are `CRUNCHBASE_KEY`, `GITHUB_KEY`, and `TWITTER_KEYS`. Dan recommends these notifications:
+3. For LF projects, Dan will set you up in Netlify to build on every commit. Build command is `npm install -g npm && npm ci && npm run build` and publish directory is `dist`. Environment variables that need to be set are `CRUNCHBASE_KEY`, `GITHUB_KEY`, `GITHUB_TOKEN`, and `TWITTER_KEYS`. Dan recommends these notifications:
 ![image](https://user-images.githubusercontent.com/3083270/62425480-87c36000-b6a8-11e9-9882-e84c4e2cdfb4.png)
 5. Edit `settings.yml` and `landscape.yml` for your topic.
 6. [Generate](https://www.qrcode-monkey.com) a QR code, setting colors to black. Save as SVG and overwrite images/qr.svg.
@@ -87,14 +87,16 @@ You want to add the following to your `~/.bash_profile`. If you're with the LF, 
 For the GitHub key, please go to https://github.com/settings/tokens and create a key (you can call it `personal landscape`) with *no* permissions. That is, don't click any checkboxes, because you only need to access public repos.
 
 ```sh
-export CRUNCHBASE_KEY="key-here"
+export CRUNCHBASE_KEY_4="key-here"
 export TWITTER_KEYS=keys-here
 export GITHUB_KEY=key-here
 ```
 
 ## Installing Locally
 
-You can administer a landscape without ever needing to install the software locally. However, a local install is helpful for rapid development, as it reduces the 5 minute build time on Netlify to 10 seconds or less locally. In particular, you want a local install when you're reconfiguring the layout. We recommend installing one or more landscapes as sibling directories to the landscapeapp. Then, you want to install the npm modules for landscapeapp but not for any of the landscapes. So, if you're in a directory called `dev`, you would do:
+You can administer a landscape without ever needing to install the software locally. However, a local install is helpful for rapid development, as it reduces the 5 minute build time on Netlify to 10 seconds or less locally. In particular, you want a local install when you're reconfiguring the layout. We recommend installing one or more landscapes as sibling directories to the landscapeapp. Then, you want to install the npm modules for landscapeapp but not for any of the landscapes. Here are the [install](INSTALL.md) directions.
+
+So, if you're in a directory called `dev`, you would do:
 ```sh
 dev$ git clone git@github.com:cncf/landscapeapp.git
 dev$ git clone git@github.com:cdfoundation/cdf-landscape.git

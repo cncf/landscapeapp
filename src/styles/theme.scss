@@ -7,6 +7,13 @@ $md-screen: 768px;
 $lg-screen: 992px;
 $xl-screen: 1200px;
 
+@media (max-width: $lg-screen) {
+  body, html {
+    overflow: auto;
+    max-height: 100%;
+  }
+}
+
 html {-webkit-text-size-adjust: 100%;}
 .big-picture .zoomed-in {
   overflow: scroll;
@@ -437,7 +444,6 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='rgb(27,68,108
   height: 100%;
   overflow: scroll;
   -webkit-overflow-scrolling: touch;
-  padding: 10px;
 }
 
 .zoomed-in .landscape-wrapper {
