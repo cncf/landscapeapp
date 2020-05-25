@@ -94,7 +94,9 @@ export GITHUB_KEY=key-here
 
 ## Installing Locally
 
-You can administer a landscape without ever needing to install the software locally. However, a local install is helpful for rapid development, as it reduces the 5 minute build time on Netlify to 10 seconds or less locally. In particular, you want a local install when you're reconfiguring the layout. We recommend installing one or more landscapes as sibling directories to the landscapeapp. Then, you want to install the npm modules for landscapeapp but not for any of the landscapes. So, if you're in a directory called `dev`, you would do:
+You can administer a landscape without ever needing to install the software locally. However, a local install is helpful for rapid development, as it reduces the 5 minute build time on Netlify to 10 seconds or less locally. In particular, you want a local install when you're reconfiguring the layout. We recommend installing one or more landscapes as sibling directories to the landscapeapp. Then, you want to install the npm modules for landscapeapp but not for any of the landscapes. Here are the [install](INSTALL.md) directions.
+
+So, if you're in a directory called `dev`, you would do:
 ```sh
 dev$ git clone git@github.com:cncf/landscapeapp.git
 dev$ git clone git@github.com:cdfoundation/cdf-landscape.git
