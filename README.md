@@ -87,7 +87,7 @@ You want to add the following to your `~/.bash_profile`. If you're with the LF, 
 For the GitHub key, please go to https://github.com/settings/tokens and create a key (you can call it `personal landscape`) with *no* permissions. That is, don't click any checkboxes, because you only need to access public repos.
 
 ```sh
-export CRUNCHBASE_KEY="key-here"
+export CRUNCHBASE_KEY_4="key-here"
 export TWITTER_KEYS=keys-here
 export GITHUB_KEY=key-here
 ```
