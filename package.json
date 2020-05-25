@@ -1,6 +1,6 @@
 {
   "name": "interactive-landscape",
-  "version": "1.0.375",
+  "version": "1.0.380",
   "description": "Visualization tool for building interactive landscapes",
   "engines": {
     "npm": ">=3",
@@ -16,7 +16,7 @@
     "update-github-colors": "curl https://raw.githubusercontent.com/Diastro/github-colors/master/github-colors.json > tools/githubColors.json",
     "migrate": "babel-node tools/migrate",
     "fetch": "babel-node tools/validateLandscape && npm run migrate && babel-node tools/checkWrongCharactersInFilenames && babel-node tools/addExternalInfo.js && npm run yaml2json",
-    "update": "(rm /tmp/landscape.json || true) && babel-node tools/validateLandscape && npm run migrate && npm run remove-quotes && LEVEL=medium babel-node tools/addExternalInfo.js && npm run yaml2json && npm run prune && babel-node tools/calculateNumberOfTweets",
+    "update": "(rm /tmp/landscape.json || true) && babel-node tools/validateLandscape && npm run migrate && npm run remove-quotes && LEVEL=medium babel-node tools/addExternalInfo.js && npm run yaml2json && npm run prune && babel-node tools/calculateNumberOfTweets && babel-node tools/updateTimestamps",
     "yaml2json": "babel-node tools/generateJson.js",
     "remove-quotes": "babel-node tools/removeQuotes",
     "prune": "babel-node tools/pruneExtraEntries",

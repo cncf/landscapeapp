@@ -40,8 +40,8 @@ const HorizontalCategory = (({ header, subcategories, width, height, top, left, 
         }}
       >
         <div style={{
-          top: 0,
-          bottom: 0,
+          top: 5,
+          bottom: 5,
           left: 0,
           width: categoryTitleHeight,
           position: 'absolute',
