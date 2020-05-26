@@ -79,7 +79,7 @@
         <th>Landscape</th>
         <th>Repo</th>
         <th>Status</th>
-        <th>Published</th>
+        <th># of Tweets</th>
         <th>Data Refreshed</th>
         </thead>
 
@@ -135,7 +135,7 @@
       let landscapeEl = appendColumn()
       let repoEl = appendColumn()
       let statusEl = appendColumn({ className: "status" })
-      let publishedEl = appendColumn()
+      let numTweetsEl = appendColumn()
       let updatedEl = appendColumn()
       let previewEl = appendPreview()
 
@@ -168,10 +168,12 @@
 
       fetchFile(`${repo}/master/processed_landscape.yml`)
         .then(processedLandscape => {
-          const { updated_at } = jsyaml.load(processedLandscape)
+          const { updated_at, twitter_options } = jsyaml.load(processedLandscape)
           const updatedAt = updated_at ? new Date(updated_at) : null
           const oneDayAgo = new Date() - 24 * 60 * 60 * 1000
           const className = updatedAt && updatedAt > oneDayAgo ? '' : 'has-text-danger'
+
+          numTweetsEl.innerHTML = (twitter_options ? twitter_options.count : 0).toString()
 
           updatedEl.innerHTML = `<div class="${className}">
               ${updated_at ? dateTimeFormat.format(updatedAt) : 'UNKNOWN'}
