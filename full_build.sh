@@ -1,5 +1,3 @@
-node -e 'require("puppeteer").launch({args: ["--no-sandbox", "--disable-setuid-sandbox"]}).then(() => process.exit(0));'
-exit 1
 set -e
 rm -rf dist || true
 mkdir -p dist
