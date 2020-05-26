@@ -157,7 +157,7 @@
         .then(async readme => {
           const statusUrl = readme.match(/https:\/\/api.netlify.com\/api\/v1\/badges[^)]*/)[0]
           const deploysUrl = readme.match(/https:\/\/app.netlify.com\/sites[^)]*/)[0]
-          statusEl.innerHTML = `<a href=${deploysUrl}><img src="${statusUrl}" alt="Netlify Status" /></a>`
+          statusEl.innerHTML = imageLinkTo(deploysUrl, statusUrl, "Netlify Status")
 
           const netlifyUrl = statusUrl.replace("badges", "sites").replace("/deploy-status", "")
           const netlifyInfo = await (await fetch(netlifyUrl)).json()
