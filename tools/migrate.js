@@ -1,5 +1,6 @@
 import traverse from 'traverse';
 import {settings, saveSettings} from './settings';
+import { landscape, saveLandscape } from "./landscape";
 
 const incrementValues = (ref, values, stop = true) => {
   let {...attrs} = ref.node
@@ -146,4 +147,14 @@ let newSettings = traverse(settings).map(function () {
 })
 
 saveSettings(newSettings)
+
+let newLandscape = traverse(landscape).forEach(function(node) {
+  if (settings.global.short_name === 'LFPH') {
+    if (node && node.repo_url === 'https://github.com/covid19risk/covidwatch-android' && !node.additional_repos) {
+      this.update({ ...this.node, additional_repos: [{ repo_url: 'https://github.com/covid19risk/covidwatch-ios' }] })
+    }
+  }
+})
+
+saveLandscape(newLandscape)
 

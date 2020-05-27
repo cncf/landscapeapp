@@ -2,18 +2,24 @@ import { hasFatalErrors, reportFatalErrors } from './fatalErrors';
 import process from 'process';
 import path from 'path';
 import { projectPath, settings } from './settings';
-const source = require('js-yaml').safeLoad(require('fs').readFileSync(path.resolve(projectPath, 'landscape.yml')));
+import actualTwitter from './actualTwitter';
+import { extractSavedImageEntries, fetchImageEntries, removeNonReferencedImages } from './fetchImages';
+import { extractSavedCrunchbaseEntries, fetchCrunchbaseEntries } from './crunchbase';
+import { fetchGithubEntries } from './fetchGithubStats';
+import { getProcessedRepos, getProcessedReposStartDates } from './repos';
+import { fetchStartDateEntries } from './fetchGithubStartDate';
+import { extractSavedTwitterEntries, fetchTwitterEntries } from './twitter';
+import {
+  extractSavedBestPracticeEntries,
+  fetchBestPracticeEntriesWithFullScan,
+  fetchBestPracticeEntriesWithIndividualUrls
+} from './fetchBestPractices';
+import shortRepoName from '../src/utils/shortRepoName';
+import { updateProcessedLandscape } from "./processedLandscape";
+
+const { landscape } = require('./landscape')
 const traverse = require('traverse');
 const _ = require('lodash');
-import actualTwitter from './actualTwitter';
-import { fetchImageEntries, extractSavedImageEntries, removeNonReferencedImages } from './fetchImages';
-import { fetchCrunchbaseEntries, extractSavedCrunchbaseEntries } from './crunchbase';
-import { fetchGithubEntries, extractSavedGithubEntries } from './fetchGithubStats';
-import { fetchStartDateEntries, extractSavedStartDateEntries } from './fetchGithubStartDate';
-import { fetchTwitterEntries, extractSavedTwitterEntries } from './twitter';
-import { fetchBestPracticeEntriesWithFullScan, fetchBestPracticeEntriesWithIndividualUrls, extractSavedBestPracticeEntries } from './fetchBestPractices';
-import shortRepoName from '../src/utils/shortRepoName';
-import updateProcessedLandscape from "./updateProcessedLandscape";
 
 var useCrunchbaseCache = true;
 var useImagesCache=true;
@@ -67,6 +73,41 @@ else if (key.toLowerCase() === 'complete') {
   console.info('Unknown level. Should be one of easy, medium, hard or complete');
 }
 
+const aggregateContributors = repos => {
+  return (new Set(repos.flatMap(repo => repo.contributors_list))).size
+}
+
+const aggregateContributions = repos => {
+  const contributions = repos.map(repo => repo.contributions.split(';').map(count => parseInt(count)))
+
+  const totalContributions = contributions.reduce((acc, contributions) => {
+    contributions.forEach((count, index) => acc[index] += count)
+    return acc
+  })
+
+  return totalContributions.join(';')
+}
+
+const getRepoWithLatestCommit = repos => {
+  return repos.sort((a, b) => new Date(b.latest_commit_link) - new Date(a.latest_commit_link))[0]
+}
+
+const getRepoWithFirstCommit = repos => {
+  return repos.sort((a, b) => new Date(a.start_date) - new Date(b.start_date))[0]
+}
+
+const aggregateLanguages = repos => {
+  const languages = repos.flatMap(repo => repo.languages)
+
+  const aggregate = languages.reduce((acc, language) =>{
+    acc[language.name] = acc[language.name] || { ...language, value: 0 }
+    acc[language.name].value += language.value
+    return acc
+  }, {})
+
+  return Object.values(aggregate).sort((a, b) => b.value - a.value)
+}
+
 async function main() {
 
   var crunchbaseEntries;
@@ -90,14 +131,14 @@ async function main() {
   }
 
   console.info('Fetching github entries');
-  const savedGithubEntries = await extractSavedGithubEntries();
+  const savedGithubEntries = getProcessedRepos();
   const githubEntries = await fetchGithubEntries({
     cache: savedGithubEntries,
     preferCache: useGithubCache
   });
 
   console.info('Fetching start date entries');
-  const savedStartDateEntries = await extractSavedStartDateEntries();
+  const savedStartDateEntries = await getProcessedReposStartDates();
   const startDateEntries = await fetchStartDateEntries({
     cache: savedStartDateEntries,
     preferCache: useGithubStartDatesCache
@@ -136,9 +177,9 @@ async function main() {
     preferCache: useBestPracticesCache
   });
 
-  const tree = traverse(source);
+  const tree = traverse(landscape);
   console.info('Processing the tree');
-  const newSource = tree.map(function(node) {
+  const newProcessedLandscape = tree.map(function(node) {
     if (node && node.item === null) {
       //crunchbase
       if (node.unnamed_organization) {
@@ -155,15 +196,38 @@ async function main() {
       var githubEntry = _.clone(_.find(githubEntries, {url: node.repo_url}));
       if (githubEntry) {
         node.github_data = githubEntry;
+        if (node.additional_repos && !githubEntry.cached) {
+          const additionalReposEntries = node.additional_repos.map(node => _.find(githubEntries, {url: node.repo_url}))
+          const allRepos = [githubEntry, ...additionalReposEntries]
+          node.github_data.contributors_count = aggregateContributors(allRepos)
+          node.github_data.contributions = aggregateContributions(allRepos)
+          node.github_data.stars = [githubEntry.stars, ...additionalReposEntries.map(({ stars }) => stars)].reduce((a, s) => a + s)
+          node.github_data.languages = aggregateLanguages(allRepos)
+
+          const { latest_commit_link, latest_commit_date } = getRepoWithLatestCommit(allRepos)
+          node.github_data.latest_commit_link = latest_commit_link
+          node.github_data.latest_commit_date = latest_commit_date
+        }
         delete node.github_data.url;
         delete node.github_data.branch;
+        delete node.github_data.contributors_list
+        delete node.github_data.cached
       }
       //github start dates
       var dateEntry = _.clone(_.find(startDateEntries, {url: node.repo_url}));
       if (dateEntry) {
         node.github_start_commit_data = dateEntry;
+
+        if (node.additional_repos && !dateEntry.cached) {
+          const additionalReposEntries = node.additional_repos.map(node => _.find(startDateEntries, {url: node.repo_url}))
+          const allRepos = [dateEntry, ...additionalReposEntries]
+          const firstCommit = getRepoWithFirstCommit(allRepos)
+          node.github_start_commit_data = firstCommit
+        }
+
         delete node.github_start_commit_data.url;
         delete node.github_start_commit_data.branch;
+        delete node.github_start_commit_data.cached;
       }
       //yahoo finance. we will just extract it
       if (node.crunchbase_data && node.crunchbase_data.effective_ticker) {
@@ -225,7 +289,7 @@ async function main() {
     const { twitter_options, updated_at } = processedLandscape
 
     console.info('saving!');
-    return { ...newSource, twitter_options, updated_at }
+    return { ...newProcessedLandscape, twitter_options, updated_at }
   })
 }
 main().catch(function(x) {

@@ -1,5 +1,4 @@
 import shortRepoName from '../src/utils/shortRepoName';
-import rp from './rpRetry';
 import { GithubClient } from './apiClients';
 
 
@@ -9,7 +8,6 @@ export default async function getRepositoryInfo(url) {
     return cache[url];
   }
   const repoName = shortRepoName(url);
-  const apiUrl = `https://api.github.com/repos/${repoName}`;
   const apiInfo = await GithubClient.request({
     path: `repos/${repoName}`
   });
