@@ -21,6 +21,7 @@ async function main() {
     'twitter',
     'crunchbase',
     'repo_url',
+    'additional_repos',
     'stock_ticker',
     'description',
     'branch',
@@ -47,6 +48,21 @@ async function main() {
     }
   }
 
+  const validateRepos = ({ name, repo_url, branch, additional_repos }) => {
+    const repos = [repo_url ? { repo_url, branch } : null, ...(additional_repos || [])].filter(_ => _)
+    for (const { repo_url, branch, ...rest } of repos) {
+      if (!repo_url) {
+        errors.push(`item ${name} must have repo_url set`)
+      } else if (!repo_url.match(new RegExp('^https://github\.com/[^/]+/[^/]+$'))) {
+        errors.push(`item ${name} has an invalid repo ${repo_url}`)
+      }
+
+      for (let wrongKey in rest) {
+        addKeyError(`item ${name}`, `additional_repos.${wrongKey}`)
+      }
+    }
+  }
+
   function checkItem(item) {
     if (item.item !== null) {
       errors.push(`item ${item.name} does not have a "- item:" part `);
@@ -64,6 +80,7 @@ async function main() {
     });
 
     validateTwitterUrl(item);
+    validateRepos(item)
   }
 
   function checkCategoryEntry(item) {
