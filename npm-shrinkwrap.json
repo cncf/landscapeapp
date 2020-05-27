@@ -22287,9 +22287,9 @@
       }
     },
     "svg-autocrop": {
-      "version": "2.0.12",
-      "resolved": "https://registry.npmjs.org/svg-autocrop/-/svg-autocrop-2.0.12.tgz",
-      "integrity": "sha512-HF+iSf4lV5mpjHJlFMqHshTH4ob/PLzoNlC1qojv8/VbwJVd4+TI7Xe8jPD8lO4Caf1Dr7ZGY947llPZ5AEv6A==",
+      "version": "2.0.13",
+      "resolved": "https://registry.npmjs.org/svg-autocrop/-/svg-autocrop-2.0.13.tgz",
+      "integrity": "sha512-NiCvvTHH2LAXGaZDglpAo1O5Celh0sGMr9MFqI+lT/5skgsh+lqlLbPG303/Yc6zgDTdSmsMAMciTYlCewzMiQ==",
       "requires": {
         "file-url": "^3.0.0",
         "glob": "^7.1.6",
@@ -22297,7 +22297,7 @@
         "jimp": "^0.12.1",
         "lodash": "^4.17.15",
         "prettydiff": "^101.2.6",
-        "puppeteer": "^3.1.0",
+        "puppeteer": "^3.0.4",
         "svgo": "^1.3.2",
         "ws": "^7.3.0",
         "xml-beautifier": "^0.4.3"
@@ -23721,9 +23721,9 @@
           "integrity": "sha512-iV3XNKw06j5Q7mi6h+9vbx23Tv7JkjEVgKHW4pimwyDGWm0OIQntJJ+u1C6mg6mK1EaTv42XQ7w76yuzH7M2cA=="
         },
         "mime": {
-          "version": "2.4.5",
-          "resolved": "https://registry.npmjs.org/mime/-/mime-2.4.5.tgz",
-          "integrity": "sha512-3hQhEUF027BuxZjQA3s7rIv/7VCQPa27hN9u9g87sEkWaKwQPuXOkVKtOeiyUrnWqTDiOs8Ed2rwg733mB0R5w=="
+          "version": "2.4.6",
+          "resolved": "https://registry.npmjs.org/mime/-/mime-2.4.6.tgz",
+          "integrity": "sha512-RZKhC3EmpBchfTGBVb8fb+RL2cWyw/32lshnsETttkBAyAUXSGHxbEJWWRXc751DrIxG1q04b8QwMbAwkRPpUA=="
         },
         "min-document": {
           "version": "2.19.0",
@@ -24029,9 +24029,9 @@
           }
         },
         "puppeteer": {
-          "version": "3.1.0",
-          "resolved": "https://registry.npmjs.org/puppeteer/-/puppeteer-3.1.0.tgz",
-          "integrity": "sha512-jLa9sqdVx0tPnr2FcwAq+8DSjGhSM4YpkwOf3JE22Ycyqm71SW7B5uGfTyMGFoLCmbCozbLZclCjasPb0flTRw==",
+          "version": "3.0.4",
+          "resolved": "https://registry.npmjs.org/puppeteer/-/puppeteer-3.0.4.tgz",
+          "integrity": "sha512-1QEb4tJXXbNId7WSHlcDkS3B4GklTIebKn8Y9D6B7tAdUjQncb+8QlTjbQsAgGX5dhRG32Qycuk5XKzJgLs0sg==",
           "requires": {
             "debug": "^4.1.0",
             "extract-zip": "^2.0.0",
@@ -24355,9 +24355,9 @@
           }
         },
         "unbzip2-stream": {
-          "version": "1.4.2",
-          "resolved": "https://registry.npmjs.org/unbzip2-stream/-/unbzip2-stream-1.4.2.tgz",
-          "integrity": "sha512-pZMVAofMrrHX6Ik39hCk470kulCbmZ2SWfQLPmTWqfJV/oUm0gn1CblvHdUu4+54Je6Jq34x8kY6XjTy6dMkOg==",
+          "version": "1.4.3",
+          "resolved": "https://registry.npmjs.org/unbzip2-stream/-/unbzip2-stream-1.4.3.tgz",
+          "integrity": "sha512-mlExGW4w71ebDJviH16lQLtZS32VKqsSfk80GCfUlwT/4/hNRFsoscrF/c++9xinkMzECL1uL9DDwXqFWkruPg==",
           "requires": {
             "buffer": "^5.2.1",
             "through": "^2.3.8"
