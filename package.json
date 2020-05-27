@@ -117,6 +117,7 @@
     "eslint-plugin-react": "7.20.0",
     "eslint-watch": "6.0.1",
     "event-emitter": "0.3.5",
+    "extract-zip": "1.6.6",
     "favicons-webpack-plugin": "3.0.1",
     "feed": "4.2.0",
     "file-loader": "6.0.0",
@@ -197,8 +198,7 @@
     "url": "https://github.com/cncf/landscapeapp"
   },
   "jest": {
-    "haste": {
-    },
+    "haste": {},
     "testPathIgnorePatterns": [
       "<rootDir>/node_modules"
     ],
