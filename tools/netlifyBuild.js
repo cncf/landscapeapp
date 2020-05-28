@@ -163,7 +163,7 @@ EOSSH
         buildbot /bin/bash -lc "${buildCommand}"
     `;
 
-    console.info(dockerCommand);
+    // console.info(dockerCommand);
     console.info(`processing ${landscape.name} at ${landscape.repo}`);
 
 
@@ -171,10 +171,7 @@ EOSSH
     const output  = await runRemote(dockerCommand);
     output.landscape = landscape;
     console.info(`Output from: ${output.landscape.name}, exit code: ${output.returnCode}`);
-    const lines = output.text.split('\n');
-    const index = _.findIndex(lines, (line) => line.match(/added \d+ packages in/));
-    const filteredLines = lines.slice(index !== -1 ? index : 0).join('\n');
-    console.info(filteredLines);
+    console.info(output.text);
     return output;
 
     const rsyncResult = await runLocal(
