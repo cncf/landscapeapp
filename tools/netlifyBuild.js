@@ -64,6 +64,7 @@ ${process.env.BUILDBOT_KEY.replace(/\s/g,'\n')}
         ${vars.map( (v) => ` -e ${v}="${process.env[v]}" `).join(' ')} \
         -e NVM_NO_PROGRESS=1 \
         -e PARALLEL=TRUE \
+        -v /root/shared_nvm:/opt/buildhome/.nvm \
         -v \${REPO_PATH}:/opt/repo \
         -v \${OUTPUT_PATH}:/dist \
         -v \${BASE_PATH}/run-build.sh:/usr/local/bin/build \
