@@ -73,6 +73,7 @@ EOSSH
       });
     });
   }
+
   {
     await runRemote(`mkdir -p /root/builds`);
     const result = require('child_process').spawnSync('bash', ['-lc', `
@@ -121,8 +122,6 @@ EOSSH
     const filteredLines = lines.slice(index !== -1 ? index : 0).join('\n');
     console.info(filteredLines);
 
-    process.exit(1);
-
   }
 
 
@@ -147,7 +146,6 @@ EOSSH
     const dockerCommand = `
       mkdir -p /root/builds/${outputFolder}
       chmod -R 777 /root/builds/${outputFolder}
-      BASE_PATH=/root/build-image
       REPO_PATH=/root/builds/${folder}
       OUTPUT_PATH=/root/builds/${outputFolder}
 
@@ -159,8 +157,6 @@ EOSSH
         -v /root/builds/branches_cache/nvm/${branch}:/opt/buildhome/.nvm \
         -v \${REPO_PATH}:/opt/repo \
         -v \${OUTPUT_PATH}:/dist \
-        -v \${BASE_PATH}/run-build.sh:/usr/local/bin/build \
-        -v \${BASE_PATH}/run-build-functions.sh:/usr/local/bin/run-build-functions.sh \
         buildbot /bin/bash -lc "${buildCommand}"
     `;
 
