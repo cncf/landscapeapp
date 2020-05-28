@@ -176,16 +176,18 @@ EOSSH
     output.landscape = landscape;
     console.info(`Output from: ${output.landscape.name}, exit code: ${output.returnCode}`);
     console.info(output.text);
-    return output;
 
     const rsyncResult = await runLocal(
       `
       rsync -az -e "ssh -i /tmp/buildbot  -o StrictHostKeyChecking=no " ${remote}:/root/builds/${outputFolder}/dist/ dist/${landscape.name}
       rm -rf /root/builds/${outputFolder}
       rm -rf /root/builds/${folder}
+      ls dist/*
+      ls dist/cncf/*
       `
     );
     console.info(`Returning files back, exit code: ${rsyncResult.returnCode}, text: \n${rsyncResult.text}`);
+    return output;
 
   });
   if (_.find(results, (x) => x.returnCode !== 0)) {
@@ -201,7 +203,6 @@ EOSSH
     User-agent: *
     Disallow: /
   `;
-  console.info({redirects});
   require('fs').writeFileSync('dist/_redirects', redirects);
   require('fs').writeFileSync('dist/index.html', index);
   require('fs').writeFileSync('dist/robots.html', robots);
