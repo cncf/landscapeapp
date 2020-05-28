@@ -102,7 +102,7 @@ EOSSH
       `nvm use ${nvmrc}`,
       `npm install -g npm --no-progress`,
       `cd /opt/repo`,
-      `npm ci --no-progress --silent`
+      `npm install --no-progress --silent`
     ].join(' && ');
     const npmInstallCommand = `
       mkdir -p /root/builds/branches_cache/${branch}/npm
@@ -182,8 +182,6 @@ EOSSH
       rsync -az -e "ssh -i /tmp/buildbot  -o StrictHostKeyChecking=no " ${remote}:/root/builds/${outputFolder}/dist/ dist/${landscape.name}
       rm -rf /root/builds/${outputFolder}
       rm -rf /root/builds/${folder}
-      ls dist/*
-      ls dist/cncf/*
       `
     );
     console.info(`Returning files back, exit code: ${rsyncResult.returnCode}, text: \n${rsyncResult.text}`);
