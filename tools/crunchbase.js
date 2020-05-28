@@ -61,9 +61,19 @@ export async function extractSavedCrunchbaseEntries() {
   return _.uniq(organizations);
 }
 
+const getCurrencyConversion = async currency => {
+  const path = `/v10/finance/quoteSummary/${currency}=X?modules=summaryDetail`
+  const response = await YahooFinanceClient.request({ path })
+  const { bid, ask } = response.quoteSummary.result[0].summaryDetail
+  return (bid.raw + ask.raw) / 2
+}
+
 const getYahooFinanceData = async ticker => {
-  const response = await YahooFinanceClient.request({ path: `/v10/finance/quoteSummary/${ticker}?modules=summaryDetail` })
-  return _.get(response, ['quoteSummary', 'result', 0, 'summaryDetail', 'marketCap'])
+  const path = `/v10/finance/quoteSummary/${ticker}?modules=summaryDetail`
+  const response = await YahooFinanceClient.request({ path })
+  const { currency, marketCap } = response.quoteSummary.result[0].summaryDetail
+  const conversion = currency === 'USD' ? 1 : await getCurrencyConversion(currency)
+  return { ...marketCap, raw: Math.round(marketCap.raw / conversion) }
 }
 
 const marketCapCache = {};
