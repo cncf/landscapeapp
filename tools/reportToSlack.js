@@ -1,7 +1,7 @@
 import rp from 'request-promise';
 import _ from 'lodash';
 
-export async function report({ returnCode, logs, slackChannel}) {
+export async function report({ returnCode, logs, slackChannel, icon_url, name }) {
   const url = `https://hooks.slack.com/services/${slackChannel}`;
   const errorsAndWarnings = JSON.parse(require('fs').readFileSync('/tmp/landscape.json', 'utf-8'));
   console.info(errorsAndWarnings);
@@ -29,21 +29,25 @@ export async function report({ returnCode, logs, slackChannel}) {
     } catch(ex) {
       return {
         messages: '',
-        numberOfRedirects: '',
-        numberOfErrors: ''
+        numberOfRedirects: 0,
+        numberOfErrors: 0
       }
     }
   })();
 
   const payload = {
     text: `Update from ${new Date().toISOString()} finished with ${errorStatus}`,
+    username: `${name} Landscape Update`,
+    icon_url,
     attachments: [{
       title: 'Log File: (update.log)',
       text: logContent,
-      fields: fields
+      fields: fields,
+      color: returnCode === 0 ? 'good' : 'danger'
     }, {
       title: 'Check links result',
       text: checkLinksData.messages,
+      color: checkLinksData.numberOfErrors > 0 ? 'danger' : (checkLinksData.numberOfRedirects > 0 ? 'warning' : 'good'),
       fields: [{
         title: '# of Redirects',
         value: checkLinksData.numberOfRedirects
@@ -53,8 +57,6 @@ export async function report({ returnCode, logs, slackChannel}) {
       }]
     }]
   };
-
-
 
   const result = await rp({
     method: 'POST',
