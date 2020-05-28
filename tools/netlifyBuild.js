@@ -4,29 +4,6 @@ import path from "path";
 const landscapesInfo = require('js-yaml').safeLoad(require('fs').readFileSync('landscapes.yml'));
 
 //execute a bash command on a given server, returns a promise.
-function runIt(command) {
-  return new Promise(function(resolve) {
-    var spawn = require('child_process').spawn;
-    var child = spawn('bash', ['-lc', command]);
-    let output = [];
-    child.stdout.on('data', function(data) {
-      const text = maskSecrets(data.toString('utf-8'));
-      // console.info(text);
-      output.push(text);
-      //Here is where the output goes
-    });
-    child.stderr.on('data', function(data) {
-      const text = maskSecrets(data.toString('utf-8'));
-      // console.info(text);
-      output.push(text);
-      //Here is where the error output goes
-    });
-    child.on('close', function(returnCode) {
-      resolve({text: output.join(''), returnCode});
-      //Here you can get the exit code of the script
-    });
-  });
-}
 
 async function main() {
   const nvmrc = require('fs').readFileSync('.nvmrc', 'utf-8').trim();
@@ -62,7 +39,42 @@ ${process.env.BUILDBOT_KEY.replace(/\s/g,'\n')}
   // now our goal is to run this on a remote server. Step 1 - xcopy the repo
   const folder = new Date().getTime();
   const remote = 'root@147.75.76.177';
+
+  const runRemote = function(command) {
+    const bashCommand = `
+      nocheck=" -o StrictHostKeyChecking=no "
+      ssh -i /tmp/buildbot $nocheck ${remote} << 'EOSSH'
+      ${command}
+EOSSH
+  `
+    return runLocal(bashCommand);
+  };
+
+  const runLocal = function(command) {
+    return new Promise(function(resolve) {
+      var spawn = require('child_process').spawn;
+      var child = spawn('bash', ['-lc', command]);
+      let output = [];
+      child.stdout.on('data', function(data) {
+        const text = maskSecrets(data.toString('utf-8'));
+        // console.info(text);
+        output.push(text);
+        //Here is where the output goes
+      });
+      child.stderr.on('data', function(data) {
+        const text = maskSecrets(data.toString('utf-8'));
+        // console.info(text);
+        output.push(text);
+        //Here is where the error output goes
+      });
+      child.on('close', function(returnCode) {
+        resolve({text: output.join(''), returnCode});
+        //Here you can get the exit code of the script
+      });
+    });
+  }
   {
+    await runRemote(`mkdir -p /root/builds`);
     const result = require('child_process').spawnSync('bash', ['-lc', `
       rsync --exclude="node_modules" --exclude="dist" -az -e "ssh -i /tmp/buildbot  -o StrictHostKeyChecking=no  " . ${remote}:/root/builds/${folder}
   `], {stdio: 'inherit'});
@@ -100,7 +112,7 @@ ${process.env.BUILDBOT_KEY.replace(/\s/g,'\n')}
     `;
     console.info(npmInstallCommand);
     console.info(`Installing npm packages`);
-    const output = await runIt(npmInstallCommand);
+    const output = await runRemote(npmInstallCommand);
 
     console.info(`Output from npm install: exit code: ${output.returnCode}`);
     const lines = output.text.split('\n');
@@ -151,22 +163,12 @@ ${process.env.BUILDBOT_KEY.replace(/\s/g,'\n')}
         buildbot /bin/bash -lc "${buildCommand}"
     `;
 
-    const bashCommand = `
-      nocheck=" -o StrictHostKeyChecking=no "
-      ssh -i /tmp/buildbot $nocheck ${remote} << 'EOSSH'
-      ${dockerCommand}
-EOSSH
-      rsync -az -e "ssh -i /tmp/buildbot  -o StrictHostKeyChecking=no " ${remote}:/root/builds/${outputFolder}/dist/ dist/${landscape.name}
-    `
-
     // console.info(bashCommand);
     console.info(`processing ${landscape.name} at ${landscape.repo}`);
 
 
     // run a build command remotely for a given repo
-
-
-    const output  = await runIt(command);
+    const output  = await runRemote(dockerCommand);
     output.landscape = lanscape;
     console.info(`Output from: ${output.landscape.name}, exit code: ${output.returnCode}`);
     const lines = output.text.split('\n');
@@ -174,6 +176,13 @@ EOSSH
     const filteredLines = lines.slice(index !== -1 ? index : 0).join('\n');
     console.info(filteredLines);
     return output;
+
+    const rsyncResult = await runLocal(
+      `
+      rsync -az -e "ssh -i /tmp/buildbot  -o StrictHostKeyChecking=no " ${remote}:/root/builds/${outputFolder}/dist/ dist/${landscape.name}
+      `
+    );
+    console.info(`Returning files back, exit code: ${rsyncResult.returnCode}, text: \n${rsyncResult.text}`);
 
   });
   if (_.find(results, (x) => x.returnCode !== 0)) {
