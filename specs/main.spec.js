@@ -1,6 +1,6 @@
 import puppeteer from "puppeteer";
 require('expect-puppeteer');
-import devices from 'puppeteer/DeviceDescriptors';
+import { devicesMap } from 'puppeteer/DeviceDescriptors';
 import { paramCase } from 'change-case';
 import { settings } from '../tools/settings';
 import { projects } from '../tools/loadData';
@@ -151,7 +151,7 @@ describe("Normal browser", function() {
 
 describe("iPhone simulator", function() {
   beforeEach(async function() {
-    setup = async (page) => await page.emulate(devices['iPhone X'])
+    setup = async (page) => await page.emulate(devicesMap['iPhone X'])
   })
 
   afterEach(async function() {
