@@ -101,14 +101,17 @@ EOSSH
       `npm ci --no-progress --silent`
     ].join(' && ');
     const npmInstallCommand = `
-      mkdir -p /root/builds/branches_cache/node_modules/${branch}
-      mkdir -p /root/builds/branches_cache/nvm/${branch}
-      chmod -R 777 /root/builds/branches_cache/node_modules/${branch}
-      chmod -R 777 /root/builds/branches_cache/nvm/${branch}
+      mkdir -p /root/builds/branches_cache/${branch}/npm
+      mkdir -p /root/builds/branches_cache/${branch}/nvm
+      mkdir -p /root/builds/branches_cache/${branch}/node_modules
+      chmod -R 777 /root/builds/branches_cache/${branch}/npm
+      chmod -R 777 /root/builds/branches_cache/${branch}/nvm
+      chmod -R 777 /root/builds/branches_cache/${branch}/node_modules
       chmod -R 777 /root/builds/${folder}
       docker run --rm -t \
-        -v /root/builds/branches_cache/node_modules/${branch}:/opt/repo/node_modules \
-        -v /root/builds/branches_cache/nvm/${branch}:/opt/buildhome/.nvm \
+        -v /root/builds/branches_cache/${branch}/node_modules:/opt/repo/node_modules \
+        -v /root/builds/branches_cache/${branch}/nvm:/opt/buildhome/.nvm \
+        -v /root/builds/branches_cache/${branch}/npm:/opt/buildhome/.npm \
         -v /root/builds/${folder}:/opt/repo \
         buildbot /bin/bash -lc "${buildCommand}"
     `;
@@ -138,7 +141,6 @@ EOSSH
       `cd /opt/repo`,
       `export NETLIFY=1`,
       `. ~/.nvm/nvm.sh`,
-      `(nvm install ${nvmrc} || (sleep ${r()} && nvm install ${nvmrc}) || (sleep ${r()} && nvm install ${nvmrc}))`,
       `nvm use`,
       `bash build.sh ${landscape.repo} ${landscape.name} master`,
       `cp -r /opt/repo/${landscape.name}/dist /dist`
@@ -153,14 +155,15 @@ EOSSH
         ${vars.map( (v) => ` -e ${v}="${process.env[v]}" `).join(' ')} \
         -e NVM_NO_PROGRESS=1 \
         -e PARALLEL=TRUE \
-        -v /root/builds/branches_cache/node_modules/${branch}:/opt/repo/node_modules \
-        -v /root/builds/branches_cache/nvm/${branch}:/opt/buildhome/.nvm \
-        -v \${REPO_PATH}:/opt/repo \
-        -v \${OUTPUT_PATH}:/dist \
+        -v /root/builds/branches_cache/${branch}/node_modules:/opt/repo/node_modules \
+        -v /root/builds/branches_cache/${branch}/nvm:/opt/buildhome/.nvm \
+        -v /root/builds/branches_cache/${branch}/npm:/opt/buildhome/.npm \
+        -v /root/builds/${folder}:/opt/repo \
+        -v /root/builds/${outputFolder}:/dist \
         buildbot /bin/bash -lc "${buildCommand}"
     `;
 
-    // console.info(bashCommand);
+    console.info(dockerCommand);
     console.info(`processing ${landscape.name} at ${landscape.repo}`);
 
 
