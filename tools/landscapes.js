@@ -82,11 +82,13 @@ async function main() {
 
     require('fs').writeFileSync(`${process.env.HOME}/${landscape.name}.log`, logs.join(''));
 
-    const slackChannel = (function() {
+    const { slackChannel, icon_url, name } = (function() {
       try {
         const settings = require('js-yaml').safeLoad(require('fs').readFileSync('/repo/settings.yml'));
         const slackChannel = settings.global.slack_channel;
-        return slackChannel;
+        const icon_url = `${settings.global.website}/favicon.png`
+        const name = settings.global.short_name
+        return { slackChannel, icon_url, name };
       } catch(ex) {
         console.info('Failed to extract slack channel');
         return '';
@@ -95,14 +97,12 @@ async function main() {
     console.info({slackChannel: maskSecrets(slackChannel || '')});
 
     if (slackChannel) {
-      await report({
-        returnCode,
-        slackChannel,
-        logs
-      });
+      await report({ returnCode, slackChannel, logs, icon_url, name });
     }
 
-
+    if (process.env.SLACK_ERROR_CHANNEL) {
+      await report({ returnCode, slackChannel: process.env.SLACK_ERROR_CHANNEL, logs, icon_url, name });
+    }
   }
 }
 main();
