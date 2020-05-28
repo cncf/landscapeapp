@@ -144,7 +144,7 @@ EOSSH
       `nvm use`,
       `bash build.sh ${landscape.repo} ${landscape.name} master`,
       `cp -r /opt/repo/${landscape.name}/dist /dist`
-    ].join('&&');
+    ].join(' && ');
     const dockerCommand = `
       mkdir -p /root/builds/${outputFolder}
       chmod -R 777 /root/builds/${outputFolder}
