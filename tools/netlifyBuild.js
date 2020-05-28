@@ -3,7 +3,33 @@ import Promise from 'bluebird';
 import path from "path";
 const landscapesInfo = require('js-yaml').safeLoad(require('fs').readFileSync('landscapes.yml'));
 
+//execute a bash command on a given server, returns a promise.
+function runIt(command) {
+  return new Promise(function(resolve) {
+    var spawn = require('child_process').spawn;
+    var child = spawn('bash', ['-lc', command]);
+    let output = [];
+    child.stdout.on('data', function(data) {
+      const text = maskSecrets(data.toString('utf-8'));
+      // console.info(text);
+      output.push(text);
+      //Here is where the output goes
+    });
+    child.stderr.on('data', function(data) {
+      const text = maskSecrets(data.toString('utf-8'));
+      // console.info(text);
+      output.push(text);
+      //Here is where the error output goes
+    });
+    child.on('close', function(returnCode) {
+      resolve({text: output.join(''), returnCode});
+      //Here you can get the exit code of the script
+    });
+  });
+}
+
 async function main() {
+  const nvmrc = require('fs').readFileSync('.nvmrc', 'utf-8').trim();
   const secrets = [
     process.env.CRUNCHBASE_KEY_4, process.env.TWITTER_KEYS, process.env.GITHUB_TOKEN, process.env.GITHUB_USER, process.env.GITHUB_KEY
   ].filter( (x) => !!x);
@@ -36,35 +62,88 @@ ${process.env.BUILDBOT_KEY.replace(/\s/g,'\n')}
   // now our goal is to run this on a remote server. Step 1 - xcopy the repo
   const folder = new Date().getTime();
   const remote = 'root@147.75.76.177';
-  const result = require('child_process').spawnSync('bash', ['-lc', `
-      rsync --exclude="node_modules" --exclude="dist" -az -e "ssh -i /tmp/buildbot  -o StrictHostKeyChecking=no  " . ${remote}:/root/${folder}
+  {
+    const result = require('child_process').spawnSync('bash', ['-lc', `
+      rsync --exclude="node_modules" --exclude="dist" -az -e "ssh -i /tmp/buildbot  -o StrictHostKeyChecking=no  " . ${remote}:/root/builds/${folder}
   `], {stdio: 'inherit'});
-  if (result.status !== 0) {
-    console.info(`Failed to rsync, exiting`);
-    process.exit(1);
+    if (result.status !== 0) {
+      console.info(`Failed to rsync, exiting`);
+      process.exit(1);
+    }
+    console.info('Rsync done');
   }
-  console.info('Rsync done');
+
+
+  // lets guarantee npm install for this folder first
+  //
+  const branch = process.env.BRANCH;
+  {
+    const buildCommand = [
+      ". ~/.nvm/nvm.sh",
+      `nvm install ${nvmrc}`,
+      `nvm use ${nvmrc}`,
+      `npm install -g npm --no-progress`,
+      `cd /opt/repo`,
+      `npm ci --no-progress --silent`
+    ].join(' && ');
+    const npmInstallCommand = `
+      mkdir -p /root/builds/branches_cache/node_modules/${branch}
+      mkdir -p /root/builds/branches_cache/nvm/${branch}
+      chmod -R 777 /root/builds/branches_cache/node_modules/${branch}
+      chmod -R 777 /root/builds/branches_cache/nvm/${branch}
+      REPO_PATH=/root/${folder}
+      docker run --rm -t \
+        -v /root/builds/branches_cache/node_modules/${branch}:/opt/repo/node_modules \
+        -v /root/builds/branches_cache/nvm/${branch}:/opt/buildhome/.nvm \
+        -v \${REPO_PATH}:/opt/repo \
+        buildbot /bin/bash -lc "${buildCommand}"
+    `;
+    console.info(npmInstallCommand);
+    console.info(`Installing npm packages`);
+    const output = await runIt(npmInstallCommand);
+
+    console.info(`Output from npm install: exit code: ${output.returnCode}`);
+    const lines = output.text.split('\n');
+    const index = _.findIndex(lines, (line) => line.match(/added \d+ packages in/));
+    const filteredLines = lines.slice(index !== -1 ? index : 0).join('\n');
+    console.info(filteredLines);
+
+    process.exit(1);
+
+  }
+
+
+  //
+
 
   const results = await Promise.map(landscapesInfo.landscapes, async function(landscape) {
 
     const vars = ['NODE_VERSION', 'RUBY_VERSION', 'CRUNCHBASE_KEY_4', 'GITHUB_KEY', 'TWITTER_KEYS'];
 
     const outputFolder = landscape.name + new Date().getTime();
-    const nvmrc = require('fs').readFileSync('.nvmrc', 'utf-8').trim();
     const r = () => _.random(30) + 10;
-    const buildCommand = `mkdir -p /opt/buildhome/repo && cp -r /opt/repo /opt/buildhome && cd /opt/buildhome/repo && export NETLIFY=1 && . ~/.nvm/nvm.sh && (nvm install ${nvmrc} || (sleep ${r()} && nvm install ${nvmrc}) || (sleep ${r()} && nvm install ${nvmrc})) && nvm use && bash build.sh ${landscape.repo} ${landscape.name} master && cp -r /opt/buildhome/repo/${landscape.name}/dist /dist`
+    const buildCommand = [
+      `cd /opt/repo`,
+      `export NETLIFY=1`,
+      `. ~/.nvm/nvm.sh`,
+      `(nvm install ${nvmrc} || (sleep ${r()} && nvm install ${nvmrc}) || (sleep ${r()} && nvm install ${nvmrc}))`,
+      `nvm use`,
+      `bash build.sh ${landscape.repo} ${landscape.name} master`,
+      `cp -r /opt/repo/${landscape.name}/dist /dist`
+    ].join('&&');
     const dockerCommand = `
-      mkdir -p /root/${outputFolder}
-      chmod -R 777 /root/${outputFolder}
+      mkdir -p /root/builds/${outputFolder}
+      chmod -R 777 /root/builds/${outputFolder}
       BASE_PATH=/root/build-image
-      REPO_PATH=/root/${folder}
-      OUTPUT_PATH=/root/${outputFolder}
+      REPO_PATH=/root/builds/${folder}
+      OUTPUT_PATH=/root/builds/${outputFolder}
 
       docker run --rm -t \
         ${vars.map( (v) => ` -e ${v}="${process.env[v]}" `).join(' ')} \
         -e NVM_NO_PROGRESS=1 \
         -e PARALLEL=TRUE \
-        -v /root/shared_nvm:/opt/buildhome/.nvm \
+        -v /root/builds/branches_cache/node_modules/${branch}:/opt/repo/node_modules \
+        -v /root/builds/branches_cache/nvm/${branch}:/opt/buildhome/.nvm \
         -v \${REPO_PATH}:/opt/repo \
         -v \${OUTPUT_PATH}:/dist \
         -v \${BASE_PATH}/run-build.sh:/usr/local/bin/build \
@@ -77,7 +156,7 @@ ${process.env.BUILDBOT_KEY.replace(/\s/g,'\n')}
       ssh -i /tmp/buildbot $nocheck ${remote} << 'EOSSH'
       ${dockerCommand}
 EOSSH
-      rsync -az -e "ssh -i /tmp/buildbot  -o StrictHostKeyChecking=no " ${remote}:/root/${outputFolder}/dist/ dist/${landscape.name}
+      rsync -az -e "ssh -i /tmp/buildbot  -o StrictHostKeyChecking=no " ${remote}:/root/builds/${outputFolder}/dist/ dist/${landscape.name}
     `
 
     // console.info(bashCommand);
@@ -86,37 +165,16 @@ EOSSH
 
     // run a build command remotely for a given repo
 
-    function runIt() {
-      return new Promise(function(resolve) {
-        var spawn = require('child_process').spawn;
-        var child = spawn('bash', ['-lc', bashCommand]);
-        let output = [];
-        child.stdout.on('data', function(data) {
-          const text = maskSecrets(data.toString('utf-8'));
-          // console.info(text);
-          output.push(text);
-          //Here is where the output goes
-        });
-        child.stderr.on('data', function(data) {
-          const text = maskSecrets(data.toString('utf-8'));
-          // console.info(text);
-          output.push(text);
-          //Here is where the error output goes
-        });
-        child.on('close', function(returnCode) {
-          resolve({landscape, text: output.join(''), returnCode});
-          //Here you can get the exit code of the script
-        });
-      });
-    }
 
-    const output  = await runIt();
-    console.info(`Output from: ${landscape.name}, exit code: ${landscape.returnCode}`);
+    const output  = await runIt(command);
+    output.landscape = lanscape;
+    console.info(`Output from: ${output.landscape.name}, exit code: ${output.returnCode}`);
     const lines = output.text.split('\n');
     const index = _.findIndex(lines, (line) => line.match(/added \d+ packages in/));
     const filteredLines = lines.slice(index !== -1 ? index : 0).join('\n');
     console.info(filteredLines);
     return output;
+
   });
   if (_.find(results, (x) => x.returnCode !== 0)) {
     process.exit(1);
