@@ -166,7 +166,7 @@ EOSSH
 
     // run a build command remotely for a given repo
     const output  = await runRemote(dockerCommand);
-    output.landscape = lanscape;
+    output.landscape = landscape;
     console.info(`Output from: ${output.landscape.name}, exit code: ${output.returnCode}`);
     const lines = output.text.split('\n');
     const index = _.findIndex(lines, (line) => line.match(/added \d+ packages in/));
