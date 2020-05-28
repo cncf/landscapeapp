@@ -40,14 +40,14 @@ ${process.env.BUILDBOT_KEY.replace(/\s/g,'\n')}
   const folder = new Date().getTime();
   const remote = 'root@147.75.76.177';
 
-  const runRemote = function(command) {
+  const runRemote = async function(command) {
     const bashCommand = `
       nocheck=" -o StrictHostKeyChecking=no "
       ssh -i /tmp/buildbot $nocheck ${remote} << 'EOSSH'
       ${command}
 EOSSH
   `
-    return runLocal(bashCommand);
+    return await runLocal(bashCommand);
   };
 
   const runLocal = function(command) {
