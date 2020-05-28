@@ -3,6 +3,9 @@ import Promise from 'bluebird';
 import path from "path";
 const landscapesInfo = require('js-yaml').safeLoad(require('fs').readFileSync('landscapes.yml'));
 
+const dockerImage = 'netlify/build:xenial';
+const dockerHome = '/opt/buildhome';
+
 //execute a bash command on a given server, returns a promise.
 
 async function main() {
@@ -76,6 +79,7 @@ EOSSH
 
   {
     await runRemote(`mkdir -p /root/builds`);
+    await runRemote(`docker pull ${dockerImage}`);
     const result = require('child_process').spawnSync('bash', ['-lc', `
       rsync --exclude="node_modules" --exclude="dist" -az -e "ssh -i /tmp/buildbot  -o StrictHostKeyChecking=no  " . ${remote}:/root/builds/${folder}
   `], {stdio: 'inherit'});
@@ -110,10 +114,10 @@ EOSSH
       chmod -R 777 /root/builds/${folder}
       docker run --rm -t \
         -v /root/builds/branches_cache/${branch}/node_modules:/opt/repo/node_modules \
-        -v /root/builds/branches_cache/${branch}/nvm:/opt/buildhome/.nvm \
-        -v /root/builds/branches_cache/${branch}/npm:/opt/buildhome/.npm \
+        -v /root/builds/branches_cache/${branch}/nvm:${dockerHome}/.nvm \
+        -v /root/builds/branches_cache/${branch}/npm:${dockerHome}/.npm \
         -v /root/builds/${folder}:/opt/repo \
-        buildbot /bin/bash -lc "${buildCommand}"
+        ${dockerImage} /bin/bash -lc "${buildCommand}"
     `;
     console.info(npmInstallCommand);
     console.info(`Installing npm packages`);
@@ -156,11 +160,11 @@ EOSSH
         -e NVM_NO_PROGRESS=1 \
         -e PARALLEL=TRUE \
         -v /root/builds/branches_cache/${branch}/node_modules:/opt/repo/node_modules \
-        -v /root/builds/branches_cache/${branch}/nvm:/opt/buildhome/.nvm \
-        -v /root/builds/branches_cache/${branch}/npm:/opt/buildhome/.npm \
+        -v /root/builds/branches_cache/${branch}/nvm:${dockerHome}/.nvm \
+        -v /root/builds/branches_cache/${branch}/npm:${dockerHome}/.npm \
         -v /root/builds/${folder}:/opt/repo \
         -v /root/builds/${outputFolder}:/dist \
-        buildbot /bin/bash -lc "${buildCommand}"
+        ${dockerImage} /bin/bash -lc "${buildCommand}"
     `;
 
     // console.info(dockerCommand);
