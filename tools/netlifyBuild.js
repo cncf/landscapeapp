@@ -104,11 +104,11 @@ EOSSH
       mkdir -p /root/builds/branches_cache/nvm/${branch}
       chmod -R 777 /root/builds/branches_cache/node_modules/${branch}
       chmod -R 777 /root/builds/branches_cache/nvm/${branch}
-      REPO_PATH=/root/${folder}
+      chmod -R 777 /root/builds/${folder}
       docker run --rm -t \
         -v /root/builds/branches_cache/node_modules/${branch}:/opt/repo/node_modules \
         -v /root/builds/branches_cache/nvm/${branch}:/opt/buildhome/.nvm \
-        -v \${REPO_PATH}:/opt/repo \
+        -v /root/builds/${folder}:/opt/repo \
         buildbot /bin/bash -lc "${buildCommand}"
     `;
     console.info(npmInstallCommand);
@@ -181,6 +181,8 @@ EOSSH
     const rsyncResult = await runLocal(
       `
       rsync -az -e "ssh -i /tmp/buildbot  -o StrictHostKeyChecking=no " ${remote}:/root/builds/${outputFolder}/dist/ dist/${landscape.name}
+      rm -rf /root/builds/${outputFolder}
+      rm -rf /root/builds/${folder}
       `
     );
     console.info(`Returning files back, exit code: ${rsyncResult.returnCode}, text: \n${rsyncResult.text}`);
