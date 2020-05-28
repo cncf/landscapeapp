@@ -203,5 +203,8 @@ EOSSH
   require('fs').writeFileSync('dist/robots.html', robots);
   require('fs').copyFileSync(path.resolve(__dirname, '..', '_headers'), 'dist/_headers')
 }
-main();
+main().catch(ex) {
+  console.info(ex);
+  process.exit(1);
+};
 
