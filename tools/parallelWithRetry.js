@@ -48,7 +48,7 @@ async function main() {
   }
   const result = await Promise.map(tasks, async function(task) {
     const output = await runIt({task, showOutput: concurrency === 1});
-    if (output.returnCode !== 0) {
+    if (output.returnCode !== 0 && output.returnCode !== 2) { //2 is reserved when we know that task failed
       console.info(`Retrying ${task} one more time`);
       return await runIt({task, showOutput: concurrency === 1});
     } else {
