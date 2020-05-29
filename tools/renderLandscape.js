@@ -4,6 +4,10 @@ import { resolve } from 'path';
 import { landscapeSettingsList } from "../src/utils/landscapeSettings";
 import { calculateSize, outerPadding, headerHeight } from "../src/utils/landscapeCalculations";
 
+if (Math.random() > 0.9) {
+  process.exit(1);
+}
+
 const getLastCommitSha = function() {
   return require('child_process').execSync(`cd '${projectPath}' && git log -n 1 --format=format:%h`).toString('utf-8').trim();
 }
