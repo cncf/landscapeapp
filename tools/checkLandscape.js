@@ -46,7 +46,7 @@ async function main() {
   await browser.close();
   if (hasErrors) {
     await reportFatalErrors();
-    process.exit(2);
+    process.exit(1);
   }
 }
 main().catch(function(x) {

@@ -55,7 +55,4 @@ async function main() {
   });
   await browser.close();
 }
-main().catch(function(e) {
-  console.info(e);
-  process.exit(1);
-});
+main().catch(console.info);

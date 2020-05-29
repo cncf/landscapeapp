@@ -1,5 +1,5 @@
 {
-      "presets": [ ["babel-preset-latest-node", {target: "current"}] ],
+      "presets": [ ["babel-preset-latest-node", {target: 10}] ],
       "plugins": [
           ["module-resolver", {
               "root": ["./src"],

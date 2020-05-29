@@ -47,18 +47,7 @@ async function main() {
     console.info(`Running ${tasks} in parallel`);
   }
   const result = await Promise.map(tasks, async function(task) {
-    const maxAttempts = 3;
-    for (let i = 0; i < maxAttempts; i++) {
-      const output = await runIt({task, showOutput: concurrency === 1});
-      if (output.returnCode === 0 || output.returnCode === 2) {//2 is reserved when we know that task failed
-        return output;
-      }
-      if (i === maxAttempts - 1) {
-        return output;
-      } else {
-        console.info(`Retrying ${task} one more time`);
-      }
-    }
+    return await runIt({task, showOutput: concurrency === 1});
   }, {
     concurrency: concurrency
   });
