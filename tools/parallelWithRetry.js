@@ -47,7 +47,13 @@ async function main() {
     console.info(`Running ${tasks} in parallel`);
   }
   const result = await Promise.map(tasks, async function(task) {
-    return await runIt({task, showOutput: concurrency === 1});
+    const output = await runIt({task, showOutput: concurrency === 1});
+    if (output.returnCode !== 0) {
+      console.info(`Retrying ${task} one more time`);
+      return await runIt({task, showOutput: concurrency === 1});
+    } else {
+      return output;
+    }
   }, {
     concurrency: concurrency
   });
