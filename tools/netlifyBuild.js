@@ -137,6 +137,7 @@ EOSSH
 
   const results = await Promise.map(landscapesInfo.landscapes, async function(landscape) {
 
+
     const vars = ['NODE_VERSION', 'RUBY_VERSION', 'CRUNCHBASE_KEY_4', 'GITHUB_KEY', 'TWITTER_KEYS'];
 
     const outputFolder = landscape.name + new Date().getTime();
@@ -172,22 +173,35 @@ EOSSH
 
 
     // run a build command remotely for a given repo
-    const output  = await runRemote(dockerCommand);
+    let output;
+
+    output  = await runRemote(dockerCommand);
     output.landscape = landscape;
     console.info(`Output from: ${output.landscape.name}, exit code: ${output.returnCode}`);
     console.info(output.text);
+    if (output.returnCode === 255) { // a single ssh failure
+      output  = await runRemote(dockerCommand);
+      output.landscape = landscape;
+      console.info('Retrying ...');
+      console.info(`Output from: ${output.landscape.name}, exit code: ${output.returnCode}`);
+      console.info(output.text);
+    }
 
     const rsyncResult = await runLocal(
       `
       rsync -az -e "ssh -i /tmp/buildbot  -o StrictHostKeyChecking=no " ${remote}:/root/builds/${outputFolder}/dist/ dist/${landscape.name}
-      rm -rf /root/builds/${outputFolder}
-      rm -rf /root/builds/${folder}
       `
     );
+    await runRemote(
+      `
+      rm -rf /root/builds/${outputFolder}
+      `
+    )
     console.info(`Returning files back, exit code: ${rsyncResult.returnCode}, text: \n${rsyncResult.text}`);
     return output;
 
   });
+  await runRemote(`rm -rf /root/builds/${folder}`);
   if (_.find(results, (x) => x.returnCode !== 0)) {
     process.exit(1);
   }
