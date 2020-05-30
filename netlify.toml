@@ -2,4 +2,5 @@
   base = "netlify"
   ignore = "false"
   command = "node landscapeapp.js"
+  environments = "RUBY_VERSION=2.6.2"
 

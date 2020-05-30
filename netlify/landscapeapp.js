@@ -1,5 +1,5 @@
 const path = require('path');
-require('fs').execSync('npm install js-yaml');
+require('child_process').execSync('npm install js-yaml');
 const yaml = require('js-yaml');
 process.chdir('..');
 const landscapesInfo = yaml.safeLoad(require('fs').readFileSync('landscapes.yml'));
