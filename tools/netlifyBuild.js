@@ -133,13 +133,14 @@ EOSSH
     ].join(' && ');
     const npmInstallCommand = `
       mkdir -p /root/builds/node_cache
-      ls -l /root/builds/node_cache/${hash} || (
+      ls -l /root/builds/node_cache/${hash} 2>/dev/null || (
           echo ${hash} folder not found, running npm install
-          cp -r root/builds/node_cache/{master,${tmpHash}} || (
+          cp -r root/builds/node_cache/{master,${tmpHash}} 2>/dev/null || (
+            echo "node_cache from master branch not found, initializing an empty repo"
             mkdir -p root/builds/node_cache/${tmpHash}/{npm,nvm,node_modules}
-            chmod -R 777 root/builds/node_cache/${tmpHash}/{npm,nvm,node_modules}
           )
 
+          chmod -R 777 root/builds/node_cache/${tmpHash}
           docker run --rm -t \
             -v /root/builds/node_cache/${tmpHash}/node_modules:/opt/repo/node_modules \
             -v /root/builds/node_cache/${tmpHash}/nvm:${dockerHome}/.nvm \
@@ -271,8 +272,8 @@ EOSSH
     await runRemoteWithoutErrors(`
       cp -r /root/builds/node_cache/${hash} /root/builds/node_cache/${newHash}
       cp -r /root/builds/node_cache/${hash} /root/builds/node_cache/master
-      chmod -r 777 /root/builds/node_cache/${newHash}
-      chmod -r 777 /root/builds/node_cache/master
+      chmod -R 777 /root/builds/node_cache/${newHash}
+      chmod -R 777 /root/builds/node_cache/master
     `);
     for (var landscape of landscapesInfo.landscapes) {
       console.info(`triggering a hook  for ${landscape.name}`);
