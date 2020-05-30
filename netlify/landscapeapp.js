@@ -1,5 +1,5 @@
 const path = require('path');
-require('child_process').execSync('rm -rf /opt/build/cache');
+require('child_process').execSync('rm -rf /opt/build/cache/*');
 require('child_process').execSync('npm install js-yaml');
 const yaml = require('js-yaml');
 process.chdir('..');
