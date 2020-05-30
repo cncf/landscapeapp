@@ -160,7 +160,8 @@ EOSSH
 
   }
   // all landscapes
-  const results = await Promise.all(landscapesInfo.landscapes, async function(landscape) {
+
+  const results = await Promise.all(landscapesInfo.landscapes.map(async function(landscape) {
     const vars = ['CRUNCHBASE_KEY_4', 'GITHUB_KEY', 'TWITTER_KEYS'];
     const outputFolder = landscape.name + new Date().getTime();
     const buildCommand = [
@@ -221,7 +222,7 @@ EOSSH
       `
     )
     return output;
-  });
+  }));
   await runRemote(`rm -rf /root/builds/${folder}`);
   if (results.filter((x) => x.exitCode !== 0)[0]) {
     process.exit(1);
@@ -273,7 +274,7 @@ EOSSH
       chmod -R 777 /root/builds/node_cache/${newHash}
       chmod -R 777 /root/builds/node_cache/master
     `);
-    for (var landscape of landscapesInfo.landscapes) {
+    for (let landscape of landscapesInfo.landscapes) {
       console.info(`triggering a hook  for ${landscape.name}`);
       await runLocalWithoutErrors(`curl -X POST -d {} https://api.netlify.com/build_hooks/${landscape.hook}`);
     }
