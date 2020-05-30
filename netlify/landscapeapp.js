@@ -245,7 +245,7 @@ EOSSH
     )
     return output;
   }));
-  await runRemote(`rm -rf /root/builds/${folder}`);
+  // await runRemote(`rm -rf /root/builds/${folder}`);
   if (results.filter((x) => x.exitCode !== 0)[0]) {
     process.exit(1);
   }
