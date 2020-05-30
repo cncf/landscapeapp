@@ -8,9 +8,9 @@ const dockerHome = '/opt/buildhome';
 
 //how to get a hash based on our files
 const sha256Command = `node -e "
-  const p0 = require('fs').readFileSync('.nvmrc', 'utf-8');
-  const p1 = (crypto.createHash('sha256').update(require('fs').readFileSync('npm-shrinkwrap.json')).digest('hex'));"
-  const p2 = (crypto.createHash('sha256').update(require('fs').readFileSync('npm-shrinkwrap.json')).digest('hex'));"
+  const p0 = require('fs').readFileSync('.nvmrc', 'utf-8').trim();
+  const p1 = (crypto.createHash('sha256').update(require('fs').readFileSync('npm-shrinkwrap.json')).digest('hex'));
+  const p2 = (crypto.createHash('sha256').update(require('fs').readFileSync('npm-shrinkwrap.json')).digest('hex'));
   console.info(p0 + p1 + p2);
   "
 `;
