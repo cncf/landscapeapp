@@ -12,6 +12,7 @@ run('rm -rf /opt/buildhome/cache/*');
 run(`
     rm -rf ../node_modules/* || true
     rm -rf /opt/buildhome/.yarn_cache/* || true
+    ls /opt/buildhome/cache/* || true
 `);
 run('npm init -y');
 console.info('installing js-yaml', process.cwd());
