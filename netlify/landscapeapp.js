@@ -132,9 +132,9 @@ EOSSH
   await runRemoteWithoutErrors(`docker pull ${dockerImage}`);
   await runLocalWithoutErrors(`
       rsync --exclude="node_modules" --exclude="dist" -az -e "ssh -i /tmp/buildbot  -o StrictHostKeyChecking=no  " . ${remote}:/root/builds/${folder}
-      chmod -R 777 /root/builds/${folder}
     `);
   console.info('Rsync done');
+  await runRemoteWithoutErrors(`chmod -R 777 /root/builds/${folder}`);
 
   const hash = await runLocalWithoutErrors(sha256Command);
   const tmpHash = require('crypto').createHash('sha256').update(`${Math.random()}${new Date().getTime()}`).digest('hex');
