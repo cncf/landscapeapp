@@ -117,7 +117,7 @@ EOSSH
   console.info('Rsync done');
 
   const hash = await runLocalWithoutErrors(sha256Command);
-  const tmpHash = require('crypto').createHash('sha256').update(Math.random() + new Date().getTime()).digest('hex');
+  const tmpHash = require('crypto').createHash('sha256').update(`${Math.random()}${new Date().getTime()}`).digest('hex');
   // lets guarantee npm install for this folder first
   //
   const branch = process.env.BRANCH;
