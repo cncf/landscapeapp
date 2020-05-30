@@ -1,6 +1,4 @@
-import _ from 'lodash';
-import Promise from 'bluebird';
-import path from "path";
+const path = require("path");
 const landscapesInfo = require('js-yaml').safeLoad(require('fs').readFileSync('landscapes.yml'));
 
 const dockerImage = 'netlify/build:xenial';
@@ -135,12 +133,12 @@ EOSSH
       mkdir -p /root/builds/node_cache
       ls -l /root/builds/node_cache/${hash} 2>/dev/null || (
           echo ${hash} folder not found, running npm install
-          cp -r root/builds/node_cache/{master,${tmpHash}} 2>/dev/null || (
+          cp -r /root/builds/node_cache/{master,${tmpHash}} 2>/dev/null || (
             echo "node_cache from master branch not found, initializing an empty repo"
-            mkdir -p root/builds/node_cache/${tmpHash}/{npm,nvm,node_modules}
+            mkdir -p /root/builds/node_cache/${tmpHash}/{npm,nvm,node_modules}
           )
 
-          chmod -R 777 root/builds/node_cache/${tmpHash}
+          chmod -R 777 /root/builds/node_cache/${tmpHash}
           docker run --rm -t \
             -v /root/builds/node_cache/${tmpHash}/node_modules:/opt/repo/node_modules \
             -v /root/builds/node_cache/${tmpHash}/nvm:${dockerHome}/.nvm \
@@ -156,13 +154,13 @@ EOSSH
     const output = await runRemote(npmInstallCommand);
     console.info(`Output from npm install: exit code: ${output.exitCode}`);
     const lines = output.text.split('\n');
-    const index = _.findIndex(lines, (line) => line.match(/added \d+ packages in/));
+    const index = lines.indexOf(lines.filter( (line) => line.match(/added \d+ packages in/))[0]);
     const filteredLines = lines.slice(index !== -1 ? index : 0).join('\n');
     console.info(filteredLines);
 
   }
   // all landscapes
-  const results = await Promise.map(landscapesInfo.landscapes, async function(landscape) {
+  const results = await Promise.all(landscapesInfo.landscapes, async function(landscape) {
     const vars = ['CRUNCHBASE_KEY_4', 'GITHUB_KEY', 'TWITTER_KEYS'];
     const outputFolder = landscape.name + new Date().getTime();
     const buildCommand = [
@@ -225,7 +223,7 @@ EOSSH
     return output;
   });
   await runRemote(`rm -rf /root/builds/${folder}`);
-  if (_.find(results, (x) => x.exitCode !== 0)) {
+  if (results.filter((x) => x.exitCode !== 0)[0]) {
     process.exit(1);
   }
   const redirects = results.map((result) => `
