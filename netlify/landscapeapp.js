@@ -2,6 +2,11 @@ const path = require('path');
 const run = function(x) {
   console.info(require('child_process').execSync(x).toString())
 }
+const pause = function(i) {
+  return new Promise(function(resolve) {
+    setTimeout(resolve, i * 1000);
+  })
+};
 console.info('starting', process.cwd());
 run('rm -rf /opt/build/cache/*');
 run('npm init -y');
@@ -172,7 +177,8 @@ EOSSH
   }
   // all landscapes
 
-  const results = await Promise.all(landscapesInfo.landscapes.map(async function(landscape) {
+  const results = await Promise.all(landscapesInfo.landscapes.map(async function(landscape, i) {
+    await pause(i);
     const vars = ['CRUNCHBASE_KEY_4', 'GITHUB_KEY', 'TWITTER_KEYS'];
     const outputFolder = landscape.name + new Date().getTime();
     const buildCommand = [
