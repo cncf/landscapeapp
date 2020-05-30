@@ -5,10 +5,6 @@ const landscapesInfo = require('js-yaml').safeLoad(require('fs').readFileSync('l
 async function main() {
   for (var landscape of landscapesInfo.landscapes) {
     console.info(`processing ${landscape.name} at ${landscape.repo}`);
-    const settingsFileName = `${process.env.HOME}/${landscape.name}.env`
-    if (!require('fs').existsSync(settingsFileName)) {
-      console.info(`Warning: settings file ${settingsFileName} for ${landscape.name} does not exist, we will not be able to report to slack`);
-    };
     const globalSettingsFileName = `${process.env.HOME}/landscapes.env`
     const content = require('fs').readFileSync(globalSettingsFileName, 'utf-8');
     const secrets = content.split('\n').map(function(line) {
@@ -37,8 +33,16 @@ async function main() {
   . ~/.nvm/nvm.sh
   rm -rf /repo || true
   git clone https://$GITHUB_USER:$GITHUB_TOKEN@github.com/${landscape.repo} /repo
+  cd /landscapeapp
+  export PROJECT_PATH=/repo
+  npm run update
+  npm run check-links
   cd /repo
-  npm install interactive-landscape@latest && (export PROJECT_PATH="$PWD"; npm explore interactive-landscape -- npm run update) && npm explore interactive-landscape -- npm run check-links && git add . && git config --global user.email "info@cncf.io" && git config --global user.name "CNCF-bot" && git commit -m "Automated update by CNCF-bot" && git push origin HEAD
+  git add .
+  git config --global user.email "info@cncf.io"
+  git config --global user.name "CNCF-bot"
+  git commit -m "Automated update by CNCF-bot"
+  git push origin HEAD
   `;
 
     function runIt() {
