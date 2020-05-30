@@ -1,9 +1,12 @@
 const path = require('path');
+console.info('starting', process.cwd());
 require('child_process').execSync('rm -rf /opt/build/cache/*');
+require('child_process').execSync('rm -rf ../node_modules');
+console.info('installing js-yaml', process.cwd());
 require('child_process').execSync('npm install js-yaml');
 const yaml = require('js-yaml');
 process.chdir('..');
-console.info('starting');
+console.info('starting real script', process.cwd());
 const landscapesInfo = yaml.safeLoad(require('fs').readFileSync('landscapes.yml'));
 
 const dockerImage = 'netlify/build:xenial';
