@@ -1,9 +1,12 @@
 const path = require('path');
+const run = function(x) {
+  console.info(require('child_process').execSync(x).toString())
+}
 console.info('starting', process.cwd());
-require('child_process').execSync('rm -rf /opt/build/cache/*');
-require('child_process').execSync('rm -rf ../node_modules');
+run('rm -rf /opt/build/cache/*');
+run('rm -rf ../node_modules');
 console.info('installing js-yaml', process.cwd());
-require('child_process').execSync('npm install js-yaml');
+run('npm install js-yaml');
 const yaml = require('js-yaml');
 process.chdir('..');
 console.info('starting real script', process.cwd());
