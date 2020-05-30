@@ -265,9 +265,9 @@ EOSSH
   require('fs').writeFileSync('dist/robots.html', robots);
   require('fs').copyFileSync(path.resolve(__dirname, '..', '_headers'), 'dist/_headers')
 
-  require('fs').writeFileSync("User-agent: *", "dist/robots.txt");
+  require('fs').writeFileSync("dist/robots.txt", "User-agent: *");
   // comment below when about to test a googlebot rendering
-  require('fs').appendFileSync("Disallow: /", "dist/robots.txt");
+  require('fs').appendFileSync("dist/robots.txt", "Disallow: /");
 
   if (process.env.BRANCH === 'master') {
     runLocalWithoutErrors(`
