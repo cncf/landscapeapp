@@ -2,6 +2,11 @@ const path = require('path');
 const run = function(x) {
   console.info(require('child_process').execSync(x).toString())
 }
+const debug = function() {
+  if (process.env.DEBUG_BUILD) {
+    console.info.apply(console, arguments);
+  }
+}
 const pause = function(i) {
   return new Promise(function(resolve) {
     setTimeout(resolve, i * 1000);
@@ -171,7 +176,7 @@ EOSSH
           echo "node_modules for ${hash} had been installed"
       )
     `;
-    console.info(npmInstallCommand);
+    debug(npmInstallCommand);
     console.info(`Installing npm packages`);
     const output = await runRemote(npmInstallCommand);
     console.info(`Output from npm install: exit code: ${output.exitCode}`);
@@ -216,7 +221,7 @@ EOSSH
     `;
 
     console.info(`processing ${landscape.name} at ${landscape.repo}`);
-    console.info(dockerCommand);
+    debug(dockerCommand);
 
 
     // run a build command remotely for a given repo
@@ -289,6 +294,8 @@ EOSSH
       npm -q publish || (sleep 5 && npm -q publish) || (sleep 30 && npm -q publish)
       echo 'Npm package published'
     `);
+  }
+    // just for debug purpose
     //now we have a different cache, because we updated a version, but for build purposes thes are same npm modules
     const newHash = await runLocalWithoutErrors(sha256Command);
     await runRemoteWithoutErrors(`
@@ -301,7 +308,6 @@ EOSSH
       console.info(`triggering a hook  for ${landscape.name}`);
       await runLocalWithoutErrors(`curl -X POST -d {} https://api.netlify.com/build_hooks/${landscape.hook}`);
     }
-  }
 }
 main().catch(function(ex) {
   console.info(ex);
