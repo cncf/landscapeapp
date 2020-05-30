@@ -8,12 +8,12 @@ const pause = function(i) {
   })
 };
 console.info('starting', process.cwd());
-run('rm -rf /opt/buildhome/cache/*');
 run(`
     rm -rf ../node_modules/* || true
     rm -rf /opt/buildhome/.yarn_cache/* || true
     ls /opt/buildhome/cache/* || true
 `);
+run('rm -rf /opt/buildhome/cache/*');
 run('npm init -y');
 console.info('installing js-yaml', process.cwd());
 run('npm install js-yaml');
@@ -132,6 +132,7 @@ EOSSH
   await runRemoteWithoutErrors(`docker pull ${dockerImage}`);
   await runLocalWithoutErrors(`
       rsync --exclude="node_modules" --exclude="dist" -az -e "ssh -i /tmp/buildbot  -o StrictHostKeyChecking=no  " . ${remote}:/root/builds/${folder}
+      chmod -R 777 /root/builds/${folder}
     `);
   console.info('Rsync done');
 
