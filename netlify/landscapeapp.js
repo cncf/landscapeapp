@@ -298,10 +298,15 @@ EOSSH
     // just for debug purpose
     //now we have a different cache, because we updated a version, but for build purposes thes are same npm modules
     const newHash = await runLocalWithoutErrors(sha256Command);
+    if (newHash !== hash) {
+      await runRemoteWithoutErrors(`
+        cp -r /root/builds/node_cache/${hash} /root/builds/node_cache/${newHash}
+        chmod -R 777 /root/builds/node_cache/${newHash}
+      `);
+    }
+    // help for further deploys, do not make them install from sratch
     await runRemoteWithoutErrors(`
-      cp -r /root/builds/node_cache/${hash} /root/builds/node_cache/${newHash}
       cp -r /root/builds/node_cache/${hash} /root/builds/node_cache/master
-      chmod -R 777 /root/builds/node_cache/${newHash}
       chmod -R 777 /root/builds/node_cache/master
     `);
     for (let landscape of landscapesInfo.landscapes) {
