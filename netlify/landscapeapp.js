@@ -4,7 +4,7 @@ const run = function(x) {
 }
 console.info('starting', process.cwd());
 run('rm -rf /opt/build/cache/*');
-run('rm -rf ../node_modules');
+run('npm init . -y');
 console.info('installing js-yaml', process.cwd());
 run('npm install js-yaml');
 const yaml = require('js-yaml');
