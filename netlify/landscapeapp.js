@@ -294,9 +294,8 @@ EOSSH
       npm -q publish || (sleep 5 && npm -q publish) || (sleep 30 && npm -q publish)
       echo 'Npm package published'
     `);
-  }
     // just for debug purpose
-    //now we have a different cache, because we updated a version, but for build purposes thes are same npm modules
+    //now we have a different hash, because we updated a version, but for build purposes we have exactly same npm modules
     const newHash = await runLocalWithoutErrors(sha256Command);
     if (newHash !== hash) {
       await runRemoteWithoutErrors(`
@@ -313,6 +312,7 @@ EOSSH
       console.info(`triggering a hook  for ${landscape.name}`);
       await runLocalWithoutErrors(`curl -X POST -d {} https://api.netlify.com/build_hooks/${landscape.hook}`);
     }
+  }
 }
 main().catch(function(ex) {
   console.info(ex);
