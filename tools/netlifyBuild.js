@@ -12,6 +12,7 @@ const sha256Command = `node -e "
   const p1 = (crypto.createHash('sha256').update(require('fs').readFileSync('npm-shrinkwrap.json')).digest('hex'));"
   const p2 = (crypto.createHash('sha256').update(require('fs').readFileSync('npm-shrinkwrap.json')).digest('hex'));"
   console.info(p0 + p1 + p2);
+  "
 `;
 
 
