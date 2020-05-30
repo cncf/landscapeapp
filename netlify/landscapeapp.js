@@ -8,7 +8,7 @@ const pause = function(i) {
   })
 };
 console.info('starting', process.cwd());
-run('rm -rf /opt/build/cache/*');
+run('rm -rf /opt/buildhome/cache/*');
 run('npm init -y');
 console.info('installing js-yaml', process.cwd());
 run('npm install js-yaml');
@@ -209,8 +209,8 @@ EOSSH
 
     `;
 
-    // console.info(dockerCommand);
     console.info(`processing ${landscape.name} at ${landscape.repo}`);
+    console.info(dockerCommand);
 
 
     // run a build command remotely for a given repo
