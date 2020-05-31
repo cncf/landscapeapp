@@ -160,7 +160,7 @@ EOSSH
       mkdir -p /root/builds/node_cache
       ls -l /root/builds/node_cache/${hash} 2>/dev/null || (
           echo ${hash} folder not found, running npm install
-          cp -r /root/builds/node_cache/{master,${tmpHash}} 2>/dev/null || (
+          cp -r /root/builds/node_cache/master/${nvmrc} /root/builds/node_cache/${tmpHash} 2>/dev/null || (
             echo "node_cache from master branch not found, initializing an empty repo"
             mkdir -p /root/builds/node_cache/${tmpHash}/{npm,nvm,node_modules}
           )
@@ -305,8 +305,8 @@ EOSSH
     }
     // help for further deploys, do not make them install from sratch
     await runRemoteWithoutErrors(`
-      cp -r /root/builds/node_cache/${hash} /root/builds/node_cache/master
-      chmod -R 777 /root/builds/node_cache/master
+      cp -r /root/builds/node_cache/${hash} /root/builds/node_cache/master/${nvmrc}
+      chmod -R 777 /root/builds/node_cache/master/${nvmrc}
     `);
     for (let landscape of landscapesInfo.landscapes) {
       console.info(`triggering a hook  for ${landscape.name}`);
