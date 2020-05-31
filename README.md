@@ -147,6 +147,7 @@ An individual landscape is built on a PR to that landscape.
 Details about building a repo on netlify:
 
 ### Individual Landscape
+
 In order to build an individual landscape, we use Netlify. Netlify has certain
 issues with the performance and their caching algorythm is ineffective, thus in 
 order to produce the fastest build, these steps are done
@@ -160,6 +161,7 @@ virtual machines, while our own build server has a lot of CPUs and enough of RAM
 allows further parallization during build steps.
 
 #### Running "remotely" on our own build server (fast and by default)
+
 Thus, if an environment variable BUILD_SERVER is set, the following steps will
 occur:
   - the interactive-landscape package of a latest version is downloaded from npm
@@ -183,7 +185,14 @@ restore the netlify build process as soon as possible, BUILD_SERVER variable
 should be set to empty in either a given landscape or in a shared variables
 section. Usually the build will fail for all the landscapes, thus renaming the
 variable to BUILD_SERVER_1 in shared variables is the most effecient way.
+
+One of the possible issues why remote builds would stop to work,
+    although let's hope that will never change, would be that a cache folder is broken, thus 
+`ssh root@${BUILD_SERVER}` and then calling `rm -rf /root/build` on our build
+server will clear all the cache used for node_modules, then trigger a netlify build again.
+
 #### Running "locally" on netlify instances (if remote server is broken)
+
 Without BUILD_SERVER variable, the following steps are done, from a file netlify/netlify.sh
   - the interactive-landscape package of a latest version is downloaded from npm
   - we go to that folder
@@ -191,6 +200,7 @@ Without BUILD_SERVER variable, the following steps are done, from a file netlify
   - we run `PROJECT_PATH=.. npm run` build from the interactive-landscape package
 
 ### Building this repo, landscapeapp on a Netlify
+
   We want to ensure that we are making builds of all the landscapes, defined in
   `landscapes.yml`
   Netlify parameters are stored in the `notilfy.toml` file, and it runs the 
@@ -211,6 +221,10 @@ Without BUILD_SERVER variable, the following steps are done, from a file netlify
   Then _redirects and _headers files are generated to allow us to view
   individual landscapes from a netlify build.
 
+  This repo is built only on our build  server, because netlify has a 30 minutes
+  timeout and we can not build individual landscapes there in parallel. Still,
+  if every build fails and there is no obvious reasons, it may help to clear a
+  node_modules cache: `ssh root@${BUILD_SERVER}` and then calling `rm -rf /root/build`
 ### Setting up our own build server to speed up netlify builds
   If for some reaons our current server is lost, or wiped, or we have to rent a
   different build server, these are required steps
