@@ -1,3 +1,5 @@
+// We will execute this script from a landscape build
+const LANDSCAPEAPP = process.env.LANDSCAPEAPP || "latest"
 const path = require('path');
 const run = function(x) {
   console.info(require('child_process').execSync(x).toString())
@@ -7,35 +9,24 @@ const debug = function() {
     console.info.apply(console, arguments);
   }
 }
-const pause = function(i) {
-  return new Promise(function(resolve) {
-    setTimeout(resolve, i * 1000);
-  })
-};
 console.info('starting', process.cwd());
-run(`
-    rm -rf ../node_modules/* || true
-    rm -rf /opt/buildhome/.yarn_cache/* || true
-    ls /opt/buildhome/cache/* || true
-`);
-run('rm -rf /opt/buildhome/cache/*');
-run('npm init -y');
-console.info('installing js-yaml', process.cwd());
-run('npm install js-yaml');
-const yaml = require('js-yaml');
+run(` rm -rf ../node_modules/* || true `);
+run('rm -rf /opt/buildhome/cache/node_modules/* || true');
 process.chdir('..');
+
 console.info('starting real script', process.cwd());
-const landscapesInfo = yaml.safeLoad(require('fs').readFileSync('landscapes.yml'));
 
 const dockerImage = 'netlify/build:xenial';
 const dockerHome = '/opt/buildhome';
 
+run(`npm pack interactive-landscape@${LANDSCAPEAPP} && tar xzf interactive*.tgz`);
+
 //how to get a hash based on our files
 const sha256Command = `node -e "
   const crypto = require('crypto');
-  const p0 = require('fs').readFileSync('.nvmrc', 'utf-8').trim();
-  const p1 = (crypto.createHash('sha256').update(require('fs').readFileSync('package.json')).digest('hex'));
-  const p2 = (crypto.createHash('sha256').update(require('fs').readFileSync('npm-shrinkwrap.json')).digest('hex'));
+  const p0 = require('fs').readFileSync('package/.nvmrc', 'utf-8').trim();
+  const p1 = (crypto.createHash('sha256').update(require('fs').readFileSync('package/package.json')).digest('hex'));
+  const p2 = (crypto.createHash('sha256').update(require('fs').readFileSync('package/npm-shrinkwrap.json')).digest('hex'));
   console.info(p0 + p1 + p2);
   "
 `;
@@ -144,8 +135,6 @@ EOSSH
   const hash = await runLocalWithoutErrors(sha256Command);
   const tmpHash = require('crypto').createHash('sha256').update(`${Math.random()}${new Date().getTime()}`).digest('hex');
   // lets guarantee npm install for this folder first
-  //
-  const branch = process.env.BRANCH;
   {
     const buildCommand = [
       "(ls . ~/.nvm/nvm.sh || curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.35.3/install.sh | bash)",
@@ -153,7 +142,7 @@ EOSSH
       `nvm install ${nvmrc}`,
       `nvm use ${nvmrc}`,
       `npm install -g npm --no-progress`,
-      `cd /opt/repo`,
+      `cd /opt/repo/package`,
       `npm install --no-progress --silent`
     ].join(' && ');
     const npmInstallCommand = `
@@ -177,7 +166,7 @@ EOSSH
       )
     `;
     debug(npmInstallCommand);
-    console.info(`Installing npm packages`);
+    console.info(`Installing npm packages if required`);
     const output = await runRemote(npmInstallCommand);
     console.info(`Output from npm install: exit code: ${output.exitCode}`);
     const lines = output.text.split('\n');
@@ -186,20 +175,18 @@ EOSSH
     console.info(filteredLines);
 
   }
-  // all landscapes
 
-  const results = await Promise.all(landscapesInfo.landscapes.map(async function(landscape, i) {
-    await pause(i);
-    const vars = ['CRUNCHBASE_KEY_4', 'GITHUB_KEY', 'TWITTER_KEYS'];
-    const outputFolder = landscape.name + new Date().getTime();
-    const buildCommand = [
-      `cd /opt/repo`,
-      `. ~/.nvm/nvm.sh`,
-      `nvm use`,
-      `bash build.sh ${landscape.repo} ${landscape.name} master`,
-      `cp -r /opt/repo/${landscape.name}/dist /dist`
-    ].join(' && ');
-    const dockerCommand = `
+  const vars = ['CRUNCHBASE_KEY_4', 'GITHUB_KEY', 'TWITTER_KEYS'];
+  const outputFolder = 'landscape' + new Date().getTime();
+  const buildCommand = [
+    `cd /opt/repo/package`,
+    `. ~/.nvm/nvm.sh`,
+    `nvm use`,
+    `PROJECT_PATH=.. npm run build`,
+    `cp -r /opt/repo/dist /dist`
+  ].join(' && ');
+
+  const dockerCommand = `
       mkdir -p /root/builds/${outputFolder}
       chmod -R 777 /root/builds/${outputFolder}
       REPO_PATH=/root/builds/${folder}
@@ -217,103 +204,41 @@ EOSSH
         -v /root/builds/${outputFolder}:/dist \
         ${dockerImage} /bin/bash -lc "${buildCommand}"
 
-
     `;
 
-    console.info(`processing ${landscape.name} at ${landscape.repo}`);
-    debug(dockerCommand);
+  console.info(`processed a remote build`);
+  debug(dockerCommand);
 
+  // run a build command remotely for a given repo
+  let output;
 
-    // run a build command remotely for a given repo
-    let output;
-
+  output  = await runRemote(dockerCommand);
+  console.info(`Output from remote build, exit code: ${output.exitCode}`);
+  console.info(output.text);
+  if (output.exitCode === 255) { // a single ssh failure
     output  = await runRemote(dockerCommand);
-    output.landscape = landscape;
-    console.info(`Output from: ${output.landscape.name}, exit code: ${output.exitCode}`);
+    console.info('Retrying ...');
+    console.info(`Output from remote build, exit code: ${output.exitCode}`);
     console.info(output.text);
-    if (output.exitCode === 255) { // a single ssh failure
-      output  = await runRemote(dockerCommand);
-      output.landscape = landscape;
-      console.info('Retrying ...');
-      console.info(`Output from: ${output.landscape.name}, exit code: ${output.exitCode}`);
-      console.info(output.text);
-    }
+  }
 
-    await runLocal(
+  await runLocal(
+    `
+      rsync -az -e "ssh -i /tmp/buildbot  -o StrictHostKeyChecking=no " ${remote}:/root/builds/${outputFolder}/dist dist
       `
-      rsync -az -e "ssh -i /tmp/buildbot  -o StrictHostKeyChecking=no " ${remote}:/root/builds/${outputFolder}/dist/ dist/${landscape.name}
-      `
-    );
-    await runRemote(
-      `
+  );
+  await runRemote(
+    `
+      rm -rf /root/builds/${folder}
       rm -rf /root/builds/${outputFolder}
       `
-    )
-    return output;
-  }));
-  // await runRemote(`rm -rf /root/builds/${folder}`);
-  if (results.filter((x) => x.exitCode !== 0)[0]) {
-    process.exit(1);
-  }
-  const redirects = results.map((result) => `
-    /${result.landscape.name}/ /${result.landscape.name}/prerender.html 200!
-    /${result.landscape.name} /${result.landscape.name}/prerender.html 200!
-    /${result.landscape.name}/* /${result.landscape.name}/index.html 200
-  `).join('\n');
-  const index = results.map((result) => `<div><a href="${result.landscape.name}/"><h1>${result.landscape.name}</h1></a></div>`).join('\n');
-  const robots = `
-    User-agent: *
-    Disallow: /
-  `;
-  require('fs').writeFileSync('dist/_redirects', redirects);
-  require('fs').writeFileSync('dist/index.html', index);
-  require('fs').writeFileSync('dist/robots.html', robots);
-  require('fs').copyFileSync(path.resolve(__dirname, '..', '_headers'), 'dist/_headers')
-
-  require('fs').writeFileSync("dist/robots.txt", "User-agent: *");
-  // comment below when about to test a googlebot rendering
-  require('fs').appendFileSync("dist/robots.txt", "Disallow: /");
-
-  if (process.env.BRANCH === 'master') {
-    runLocalWithoutErrors(`
-      git config --global user.email "info@cncf.io"
-      git config --global user.name "CNCF-bot"
-      git remote rm github 2>/dev/null || true
-      git remote add github "https://$GITHUB_USER:$GITHUB_TOKEN@github.com/cncf/landscapeapp"
-      git fetch github
-      # git diff # Need to comment this when a diff is too large
-      git checkout -- .
-      npm version patch
-      git commit -m 'Update to a new version [skip ci]' --allow-empty --amend
-      git branch -D tmp || true
-      git checkout -b tmp
-      git push github HEAD:master
-      git push github HEAD:master --tags --force
-      echo "//registry.npmjs.org/:_authToken=$NPM_TOKEN" > ~/.npmrc
-      git diff
-      npm -q publish || (sleep 5 && npm -q publish) || (sleep 30 && npm -q publish)
-      echo 'Npm package published'
-    `);
-    // just for debug purpose
-    //now we have a different hash, because we updated a version, but for build purposes we have exactly same npm modules
-    const newHash = await runLocalWithoutErrors(sha256Command);
-    if (newHash !== hash) {
-      await runRemoteWithoutErrors(`
-        cp -r /root/builds/node_cache/${hash} /root/builds/node_cache/${newHash}
-        chmod -R 777 /root/builds/node_cache/${newHash}
-      `);
+  )
+  if (output.exitCode !=== 0) {
+    console.info(`Bad exit code from the remote build. Exiting the build`
+      process.exit(1);
     }
-    // help for further deploys, do not make them install from sratch
-    await runRemoteWithoutErrors(`
-      cp -r /root/builds/node_cache/${hash} /root/builds/node_cache/master
-      chmod -R 777 /root/builds/node_cache/master
-    `);
-    for (let landscape of landscapesInfo.landscapes) {
-      console.info(`triggering a hook  for ${landscape.name}`);
-      await runLocalWithoutErrors(`curl -X POST -d {} https://api.netlify.com/build_hooks/${landscape.hook}`);
-    }
-  }
 }
+
 main().catch(function(ex) {
   console.info(ex);
   process.exit(1);
