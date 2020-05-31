@@ -1,13 +1,13 @@
 // We will execute this script from a landscape build
-if (!process.env.BUILD_SERVER) {
-  console.info(`BUILD_SERVER variable not set, thus running a local build`);
-  run(`bash netlify.sh`);
-  process.exit(0);
-}
 const LANDSCAPEAPP = process.env.LANDSCAPEAPP || "latest"
 const path = require('path');
 const run = function(x) {
   console.info(require('child_process').execSync(x).toString())
+}
+if (!process.env.BUILD_SERVER) {
+  console.info(`BUILD_SERVER variable not set, thus running a local build`);
+  run(`bash netlify.sh`);
+  process.exit(0);
 }
 const debug = function() {
   if (process.env.DEBUG_BUILD) {
