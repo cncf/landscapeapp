@@ -104,6 +104,7 @@ EOSSH
   }
 
   const runLocalWithoutErrors = async function(command) {
+    debug(command);
     const result = await runLocal(command);
     if (result.exitCode !== 0) {
       throw new Error(`Failed to execute ${command}, exit code: ${result.exitCode}`);
@@ -125,6 +126,7 @@ EOSSH
     `);
   await runRemoteWithoutErrors(`mkdir -p /root/builds`);
   await runRemoteWithoutErrors(`docker pull ${dockerImage}`);
+  console.info('Rsync start');
   await runLocalWithoutErrors(`
       rsync --exclude="node_modules" --exclude="dist" -az -e "ssh -i /tmp/buildbot  -o StrictHostKeyChecking=no  " . ${remote}:/root/builds/${folder}
     `);
