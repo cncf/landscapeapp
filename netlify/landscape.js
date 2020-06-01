@@ -265,6 +265,7 @@ EOSSH
     `
       rm -rf dist 2>/dev/null || true;
       rsync -az -e "ssh -i /tmp/buildbot  -o StrictHostKeyChecking=no " ${remote}:/root/builds/${outputFolder}/dist .
+      cp -r dist netlify
     `
   );
 
