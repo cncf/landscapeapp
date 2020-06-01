@@ -27,7 +27,6 @@ const LargeItem = (({ item, onSelectItem }) => {
               onClick={ () => onSelectItem(item.id)}
   >
     <img loading="lazy" src={item.href} style={{
-      background: isMember || item.oss ? 'white' : '#eee',
       width: `calc(100% - ${2 * padding}px)`,
       height: `calc(100% - ${2 * padding + textHeight}px)`,
       padding: 5,
@@ -48,7 +47,6 @@ const SmallItem = (({ item, onSelectItem }) => {
     border: `1px solid ${isMember ? 'white' : 'grey'}`,
     borderRadius: 2,
     padding: 1,
-    background: isMember || item.oss ? '' : '#eee',
     visibility: item.isVisible ? 'visible' : 'hidden'
   }}
               data-href={item.id}
@@ -61,7 +59,7 @@ const SmallItem = (({ item, onSelectItem }) => {
 })
 
 export default props => {
-  const { isLarge, isVisible } = props.item
+  const { isLarge, isVisible, isMember, oss } = props.item
 
   const style = {
     display: 'flex',
@@ -72,6 +70,8 @@ export default props => {
   }
 
   return <Fade timeout={1000} in={isVisible}>
-    <div style={style}>{isLarge ? <LargeItem {...props} /> : <SmallItem {...props} />}</div>
+    <div className={isMember || oss ? 'oss' : 'nonoss'} style={style}>
+      {isLarge ? <LargeItem {...props} /> : <SmallItem {...props} />}
+    </div>
   </Fade>
 }
