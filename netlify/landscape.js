@@ -1,4 +1,28 @@
 // We will execute this script from a landscape build
+const secrets = [
+  process.env.CRUNCHBASE_KEY_4, process.env.TWITTER_KEYS, process.env.GITHUB_TOKEN, process.env.GITHUB_USER, process.env.GITHUB_KEY
+].filter( (x) => !!x);
+
+const  maskSecrets = function(x) {
+  let result = x;
+  const replaceAll = function(s, search, replacement) {
+    var target = s;
+    return target.split(search).join(replacement);
+  };
+  for (var secret of secrets) {
+    const safeString = secret.substring(0, 2) + '***' + secret.substring(secret.length -2);
+    result = replaceAll(result, secret, safeString);
+  }
+  return result;
+}
+for (var secret of secrets) {
+  console.info(maskSecrets(`We have a secret: ${secret}`));
+}
+const debug = function() {
+  if (process.env.DEBUG_BUILD) {
+    console.info.apply(console, arguments);
+  }
+}
 const runLocal = function(command) {
   return new Promise(function(resolve) {
     var spawn = require('child_process').spawn;
@@ -61,11 +85,6 @@ async function main() {
   }
   if (!process.env.BUILD_SERVER) {
   }
-  const debug = function() {
-    if (process.env.DEBUG_BUILD) {
-      console.info.apply(console, arguments);
-    }
-  }
   console.info('starting', process.cwd());
   run(` rm -rf ../node_modules/* || true `);
   run('rm -rf /opt/buildhome/cache/node_modules/* || true');
@@ -89,25 +108,6 @@ async function main() {
   const getTmpFile = () => new Date().getTime().toString() + Math.random();
   const nvmrc = require('fs').readFileSync('package/.nvmrc', 'utf-8').trim();
   console.info(nvmrc);
-  const secrets = [
-    process.env.CRUNCHBASE_KEY_4, process.env.TWITTER_KEYS, process.env.GITHUB_TOKEN, process.env.GITHUB_USER, process.env.GITHUB_KEY
-  ].filter( (x) => !!x);
-
-  const  maskSecrets = function(x) {
-    let result = x;
-    const replaceAll = function(s, search, replacement) {
-      var target = s;
-      return target.split(search).join(replacement);
-    };
-    for (var secret of secrets) {
-      const safeString = secret.substring(0, 2) + '***' + secret.substring(secret.length -2);
-      result = replaceAll(result, secret, safeString);
-    }
-    return result;
-  }
-  for (var secret of secrets) {
-    console.info(maskSecrets(`We have a secret: ${secret}`));
-  }
 
   const key = `
 -----BEGIN OPENSSH PRIVATE KEY-----
