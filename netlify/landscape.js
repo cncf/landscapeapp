@@ -261,13 +261,17 @@ EOSSH
 
   // check if the reason was a lack of npm install actually
 
-  await runLocalWithoutErrors(
+  console.info(await runLocalWithoutErrors(
     `
       rm -rf dist 2>/dev/null || true;
       rsync -az -e "ssh -i /tmp/buildbot  -o StrictHostKeyChecking=no " ${remote}:/root/builds/${outputFolder}/dist .
-      cp -r dist netlify
+      mkdir -p netlify/dist
+      cp -r dist/* netlify/dist
+      ls -la dist
+      ls -la netlify
+      ls -la netlify/dist
     `
-  );
+  ));
 
   await runRemoteWithoutErrors(
     `
