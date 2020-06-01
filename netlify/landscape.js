@@ -64,6 +64,7 @@ async function main() {
       npm pack interactive-landscape@latest
       tar xzf interactive*
       cd package
+      mkdir -p ../node_modules
       cp -r ../node_modules .
       nvm install \`cat .nvmrc\`
       nvm use \`cat .nvmrc\`
