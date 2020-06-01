@@ -25,6 +25,10 @@ landscapes:
     repo: graphql/graphql-landscape
     hook: 5d5c7ccf64ecb5bd3d2592f7
   - landscape:
+    name: lf
+    repo: jmertic/lf-landscape
+    hook: 5ed4f433987c7ad56b356a74
+  - landscape:
     name: lfai
     repo: lfai/landscape
     hook: 5c1bd968fdd72a78a54bdcd1
