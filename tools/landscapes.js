@@ -96,12 +96,14 @@ async function main() {
     })();
     console.info({slackChannel: maskSecrets(slackChannel || '')});
 
+    const hookArgs = { returnCode, logs, icon_url, name }
+
     if (slackChannel) {
-      await report({ returnCode, slackChannel, logs, icon_url, name });
+      await report({ ...hookArgs, slackChannel });
     }
 
     if (process.env.SLACK_ERROR_CHANNEL) {
-      await report({ returnCode, slackChannel: process.env.SLACK_ERROR_CHANNEL, logs, icon_url, name });
+      await report({ ...hookArgs, slackChannel: process.env.SLACK_ERROR_CHANNEL, onlyErrors: true });
     }
   }
 }
