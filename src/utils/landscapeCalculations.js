@@ -139,17 +139,26 @@ export const calculateHorizontalCategory = ({ height, width, subcategories, fitW
   }
 }
 
-export const calculateVerticalCategory = ({ subcategories, fitWidth, width }) => {
+export const calculateVerticalCategory = ({ subcategories, fitWidth, width, height }) => {
   const subcategoriesWithCalculations = computeItems(subcategories)
   const maxColumns = Math.floor((width - 2 * (categoryBorder + itemMargin)) / (smallItemWidth + itemMargin))
+  let totalRows = 0
 
-  return subcategoriesWithCalculations.map(subcategory => {
+  const subcategoriesWidthDimensions = subcategoriesWithCalculations.map(subcategory => {
     let columns = Math.min(maxColumns, subcategory.allItems.length)
     if (columns % 2 === 1 && subcategory.largeItemsCount === subcategory.items.length) {
       columns -= 1
     }
     const subWidth = fitWidth ? width - 2 * categoryBorder : maxColumns * (smallItemWidth + itemMargin) - itemMargin
+    const rows = Math.ceil(subcategory.itemsCount / columns)
+    totalRows = totalRows + rows
 
-    return { ...subcategory, columns, width: subWidth }
+    return { ...subcategory, columns, rows, width: subWidth }
+  })
+
+  const rowHeight = (height - categoryTitleHeight - categoryBorder - (subcategoryMargin + 15) * subcategories.length) / totalRows
+
+  return subcategoriesWidthDimensions.map(subcategory => {
+    return { ...subcategory, height: rowHeight * subcategory.rows + 15 }
   })
 }

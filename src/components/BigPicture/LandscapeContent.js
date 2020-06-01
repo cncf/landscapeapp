@@ -17,13 +17,13 @@ const LandscapeContent = ({groupedItems, onSelectItem, zoom, switchToLandscape, 
   const elements = landscapeSettings.elements.map(function(element) {
     if (element.type === 'HorizontalCategory') {
       const cat = _.find(groupedItems, {key: element.category});
-      const attributes = extractKeys(element, ['width', 'height', 'top', 'left', 'color', 'fit_width'])
-      return <HorizontalCategory {...cat} {...attributes} onSelectItem={onSelectItem}/>
+      const attributes = extractKeys(element, ['width', 'height', 'top', 'left', 'color'])
+      return <HorizontalCategory {...cat} {...attributes} onSelectItem={onSelectItem} fitWidth={true} />
     }
     if (element.type === 'VerticalCategory') {
       const cat = _.find(groupedItems, {key: element.category});
-      const attributes = extractKeys(element, ['width', 'height', 'top', 'left', 'color', 'fit_width'])
-      return <VerticalCategory {...cat} {...attributes} onSelectItem={onSelectItem}/>
+      const attributes = extractKeys(element, ['width', 'height', 'top', 'left', 'color'])
+      return <VerticalCategory {...cat} {...attributes} onSelectItem={onSelectItem} fitWidth={true} />
     }
     if (element.type === 'LandscapeLink') {
       return <OtherLandscapeLink {..._.pick(element, ['width','height','top','left','color', 'layout', 'title', 'url']) }
