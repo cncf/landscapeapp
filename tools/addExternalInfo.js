@@ -22,7 +22,7 @@ const traverse = require('traverse');
 const _ = require('lodash');
 
 var useCrunchbaseCache = true;
-var useImagesCache=false;
+var useImagesCache=true;
 var useGithubCache=true;
 var useGithubStartDatesCache=true;
 var useTwitterCache = true;
