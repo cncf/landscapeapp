@@ -1,43 +1,92 @@
 // We will execute this script from a landscape build
-const LANDSCAPEAPP = process.env.LANDSCAPEAPP || "latest"
-const path = require('path');
-const run = function(x) {
-  console.info(require('child_process').execSync(x).toString())
+const runLocal = function(command) {
+  return new Promise(function(resolve) {
+    var spawn = require('child_process').spawn;
+    var child = spawn('bash', ['-lc',`set -e \n${command}`]);
+    let output = [];
+    child.stdout.on('data', function(data) {
+      const text = maskSecrets(data.toString('utf-8'));
+      console.info(text);
+      output.push(text);
+      //Here is where the output goes
+    });
+    child.stderr.on('data', function(data) {
+      const text = maskSecrets(data.toString('utf-8'));
+      console.info(text);
+      output.push(text);
+      //Here is where the error output goes
+    });
+    child.on('close', function(exitCode) {
+      resolve({text: output.join(''), exitCode});
+      //Here you can get the exit code of the script
+    });
+  });
 }
-if (!process.env.BUILD_SERVER) {
-  console.info(`BUILD_SERVER variable not set, thus running a local build`);
-  run(`bash netlify.sh`);
-  process.exit(0);
-}
-const debug = function() {
-  if (process.env.DEBUG_BUILD) {
-    console.info.apply(console, arguments);
+
+const runLocalWithoutErrors = async function(command) {
+  debug(command);
+  const result = await runLocal(command);
+  if (result.exitCode !== 0) {
+    throw new Error(`Failed to execute ${command}, exit code: ${result.exitCode}`);
   }
+  return result.text.trim();
 }
-console.info('starting', process.cwd());
-run(` rm -rf ../node_modules/* || true `);
-run('rm -rf /opt/buildhome/cache/node_modules/* || true');
-process.chdir('..');
-
-console.info('starting real script', process.cwd());
-
-const dockerImage = 'netlify/build:xenial';
-const dockerHome = '/opt/buildhome';
-
-run(`npm pack interactive-landscape@${LANDSCAPEAPP} && tar xzf interactive*.tgz`);
-
-//how to get a hash based on our files
-const sha256Command = function() {
-  const crypto = require('crypto');
-  const p0 = require('fs').readFileSync('package/.nvmrc', 'utf-8').trim();
-  const p1 = crypto.createHash('sha256').update(require('fs').readFileSync('package/package.json')).digest('hex');
-  const p2 = crypto.createHash('sha256').update(require('fs').readFileSync('package/npm-shrinkwrap.json')).digest('hex');
-  return p0 + p1 + p2;
-}
-const getTmpFile = () => new Date().getTime().toString() + Math.random();
-
 
 async function main() {
+  if (!process.env.BUILD_SERVER) {
+    console.info(`BUILD_SERVER variable not set, thus running a local build`);
+    await runLocalWithoutErrors(`
+      . ~/.nvm/nvm.sh
+      npm pack interactive-landscape@latest
+      tar xzf interactive*
+      cd package
+      cp -r ../node_modules .
+      nvm install \`cat .nvmrc\`
+      nvm use \`cat .nvmrc\`
+      npm install -g npm
+      npm install
+      cp -r node_modules/* ../node_modules
+      PROJECT_PATH=../.. npm run build
+      cd ../..
+      cp -r dist netlify
+      ls dist
+      ls netlify/dist
+    `);
+    process.exit(0);
+  }
+  const LANDSCAPEAPP = process.env.LANDSCAPEAPP || "latest"
+  const path = require('path');
+  const run = function(x) {
+    console.info(require('child_process').execSync(x).toString())
+  }
+  if (!process.env.BUILD_SERVER) {
+  }
+  const debug = function() {
+    if (process.env.DEBUG_BUILD) {
+      console.info.apply(console, arguments);
+    }
+  }
+  console.info('starting', process.cwd());
+  run(` rm -rf ../node_modules/* || true `);
+  run('rm -rf /opt/buildhome/cache/node_modules/* || true');
+  process.chdir('..');
+
+  console.info('starting real script', process.cwd());
+
+  const dockerImage = 'netlify/build:xenial';
+  const dockerHome = '/opt/buildhome';
+
+  run(`npm pack interactive-landscape@${LANDSCAPEAPP} && tar xzf interactive*.tgz`);
+
+  //how to get a hash based on our files
+  const sha256Command = function() {
+    const crypto = require('crypto');
+    const p0 = require('fs').readFileSync('package/.nvmrc', 'utf-8').trim();
+    const p1 = crypto.createHash('sha256').update(require('fs').readFileSync('package/package.json')).digest('hex');
+    const p2 = crypto.createHash('sha256').update(require('fs').readFileSync('package/npm-shrinkwrap.json')).digest('hex');
+    return p0 + p1 + p2;
+  }
+  const getTmpFile = () => new Date().getTime().toString() + Math.random();
   const nvmrc = require('fs').readFileSync('package/.nvmrc', 'utf-8').trim();
   console.info(nvmrc);
   const secrets = [
@@ -84,38 +133,6 @@ EOSSH
     return await runLocal(bashCommand);
   };
 
-  const runLocal = function(command) {
-    return new Promise(function(resolve) {
-      var spawn = require('child_process').spawn;
-      var child = spawn('bash', ['-lc',`set -e \n${command}`]);
-      let output = [];
-      child.stdout.on('data', function(data) {
-        const text = maskSecrets(data.toString('utf-8'));
-        console.info(text);
-        output.push(text);
-        //Here is where the output goes
-      });
-      child.stderr.on('data', function(data) {
-        const text = maskSecrets(data.toString('utf-8'));
-        console.info(text);
-        output.push(text);
-        //Here is where the error output goes
-      });
-      child.on('close', function(exitCode) {
-        resolve({text: output.join(''), exitCode});
-        //Here you can get the exit code of the script
-      });
-    });
-  }
-
-  const runLocalWithoutErrors = async function(command) {
-    debug(command);
-    const result = await runLocal(command);
-    if (result.exitCode !== 0) {
-      throw new Error(`Failed to execute ${command}, exit code: ${result.exitCode}`);
-    }
-    return result.text.trim();
-  }
 
   const runRemoteWithoutErrors = async function(command) {
     const result = await runRemote(command);
