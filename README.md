@@ -146,12 +146,18 @@ An individual landscape is built on a PR to that landscape.
 
 Details about building a repo on netlify:
 
+### Building an individual landscape
+
 To build an individual landscape, we use Netlify. Netlify has certain
 issues with the performance and their caching algorithm is ineffective, thus in 
 order to produce the fastest build, these steps are done
 
+Note, that script `netlify/landscape.js` from THIS repo is used to run an
+individual build on every landscape.
+
 A file netlify.toml specifies which commands are used and how to make a build.
-We start from the `netlify` folder and then run a `node netlify/landscape.js` from the `landscapeapp` repo
+We start from the `netlify` folder and then download the landscape.js script from the master branch
+of a landscapeapp repo and then run a `node netlify/landscape.js`
 script because otherwise, Netlify will run an unnecessary `npm install`
 In order to make a build as fast as possible, we designed a way to run it on our
 own build server. The problem is that Netlify uses very slow and cheap amazon
