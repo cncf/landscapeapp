@@ -32,7 +32,7 @@ export default {
     extensions: ['*', '.js', '.jsx', '.json'],
     alias: {
       // for a smaller bundle size
-      '@material-ui/core': '@material-ui/core/es',
+      // '@material-ui/core': '@material-ui/core/es',
       'lodash.clonedeep': 'lodash/cloneDeep.js',
       'lodash.set': 'lodash/set.js',
       'lodash.get': 'lodash/get.js',
