@@ -9,11 +9,10 @@ import {
   smallItemWidth
 } from "../../utils/landscapeCalculations";
 
-const LargeItem = (({ item, onSelectItem }) => {
+const LargeItem = (({ item, onSelectItem, isMember }) => {
   const relationInfo = fields.relation.values.find(({ id }) => id === item.relation);
   const color = relationInfo.big_picture_color;
   const label = relationInfo.big_picture_label;
-  const isMember = item.category === settings.global.membership;
   const textHeight = isMember ? 0 : 10
   const padding = 2
 
@@ -59,7 +58,8 @@ const SmallItem = (({ item, onSelectItem }) => {
 })
 
 export default props => {
-  const { isLarge, isVisible, isMember, oss } = props.item
+  const { isLarge, isVisible, category, oss } = props.item
+  const isMember = category === settings.global.membership;
 
   const style = {
     display: 'flex',
@@ -71,7 +71,7 @@ export default props => {
 
   return <Fade timeout={1000} in={isVisible}>
     <div className={isMember || oss ? 'oss' : 'nonoss'} style={style}>
-      {isLarge ? <LargeItem {...props} /> : <SmallItem {...props} />}
+      {isLarge ? <LargeItem {...props} isMember={isMember} /> : <SmallItem {...props} />}
     </div>
   </Fade>
 }
