@@ -1,16 +1,11 @@
 import _ from 'lodash';
 import colors from 'colors';
-import rp from 'request-promise';
 import Promise from 'bluebird';
 const traverse = require('traverse');
 import path from 'path';
-import retry from './retry';
 import { projectPath } from './settings';
 
 const fatal = (x) => colors.red(colors.inverse(x));
-const rpWithRetry = async function(args) {
-  return await retry(() => rp(args), 2, 1000);
-}
 
 process.setMaxListeners(0);
 
