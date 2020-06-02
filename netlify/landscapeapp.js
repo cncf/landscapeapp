@@ -179,6 +179,7 @@ EOSSH
           ln -s /root/builds/node_cache/${tmpHash} /root/builds/node_cache/${hash} || (
             rm -rf /root/builds/node_cache/${tmpHash}
           )
+          chmod -R 777 /root/builds/node_cache/${hash}
           echo "node_modules for ${hash} had been installed"
       )
     `;
