@@ -1,6 +1,6 @@
 {
   "name": "interactive-landscape",
-  "version": "1.0.399",
+  "version": "1.0.400",
   "description": "Visualization tool for building interactive landscapes",
   "engines": {
     "npm": ">=3",
@@ -41,13 +41,12 @@
     "prebuild": "npm config set scripts-prepend-node-path true && npm run fetch && npm run clean-dist",
     "build": "((babel-node tools/build.js && npm run copy-dist && npm run setup-robots && npm run stop-old-ci && npm run start-ci && babel-node tools/parallelWithRetry integration-test check-landscape render-landscape funding) || (npm run stop-old-ci && false)) && babel-node tools/parallelWithRetry prerender && babel-node tools/parallelWithRetry integration-test && npm run stop-ci",
     "show-report": "open dist/report.html",
-    "test": "jest",
+    "test": "echo test",
     "test:CI": "babel-node tools/testCi.js",
     "test:watch": "jest --watch",
     "analyze-bundle": "babel-node ./tools/analyzeBundle.js",
     "latest": "npm install",
-    "reset-tweet-count": "babel-node tools/resetTweetCount.js",
-    "test": "echo test"
+    "reset-tweet-count": "babel-node tools/resetTweetCount.js"
   },
   "author": "CNCF",
   "license": "Apache-2.0",
