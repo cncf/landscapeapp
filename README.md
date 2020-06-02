@@ -94,7 +94,9 @@ export GITHUB_KEY=key-here
 
 ## Installing Locally
 
-You can administer a landscape without ever needing to install the software locally. However, a local install is helpful for rapid development, as it reduces the 5 minute build time on Netlify to 10 seconds or less locally. In particular, you want a local install when you're reconfiguring the layout. We recommend installing one or more landscapes as sibling directories to the landscapeapp. Then, you want to install the npm modules for landscapeapp but not for any of the landscapes. So, if you're in a directory called `dev`, you would do:
+You can administer a landscape without ever needing to install the software locally. However, a local install is helpful for rapid development, as it reduces the 5 minute build time on Netlify to 10 seconds or less locally. In particular, you want a local install when you're reconfiguring the layout. We recommend installing one or more landscapes as sibling directories to the landscapeapp. Then, you want to install the npm modules for landscapeapp but not for any of the landscapes. Here are the [install](INSTALL.md) directions.
+
+So, if you're in a directory called `dev`, you would do:
 ```sh
 dev$ git clone git@github.com:cncf/landscapeapp.git
 dev$ git clone git@github.com:cdfoundation/cdf-landscape.git
@@ -137,7 +139,111 @@ Please open an [issue](https://github.com/cncf/landscapeapp/issues/new) or, for 
 
 ## Continuous Integration and NPM Publishing
 
-On every commit, Netlify builds landscapeapp, clones the 10 LF repos, and builds their landscapes and verifies that their tests pass with the updated landscapeapp. When that succeeds, it [generates](./full_build.sh) and pushes an updated NPM module.
+We have a sophisticated build system.
+We build this landscapeapp repo together with every landscape after each commit
+to the landscapeapp. A list of landscapes is stored in the landscapes.yml
+An individual landscape is built on a PR to that landscape.
+
+Details about building a repo on netlify:
+
+### Building an individual landscape
+
+To build an individual landscape, we use Netlify. Netlify has certain
+issues with the performance and their caching algorithm is ineffective, thus in 
+order to produce the fastest build, these steps are done
+
+Note, that script `netlify/landscape.js` from THIS repo is used to run an
+individual build on every landscape.
+
+A file netlify.toml specifies which commands are used and how to make a build.
+We start from the `netlify` folder and then download the landscape.js script from the master branch
+of a landscapeapp repo and then run a `node netlify/landscape.js`
+script because otherwise, Netlify will run an unnecessary `npm install`
+In order to make a build as fast as possible, we designed a way to run it on our
+own build server. The problem is that Netlify uses very slow and cheap amazon
+virtual machines, while our build server has a lot of CPUs and enough of RAM, that
+allows further parallelization during build steps.
+
+#### Running "remotely" on our build server (fast and by default)
+
+When an environment variable BUILD_SERVER is set, the following steps will occur:
+  - the interactive-landscape package of the latest version is downloaded from npm
+  - a current checkout of an individual landscape with a `landscapeapp` in a
+  `package` folder is rsynced and sent to our build server
+  - we use a hash of .nvmrc + package.json + npm-shrinkwrap.json from the
+  `landscapeapp` repo as a key to cache `node_modules`, `~/.nvm` and `~/.npm` folders,
+  this way if the hash has not changed - we reuse existing node_modules without any
+  setup
+  - if a hash is different, we install node_modules and cache `~/.nvm`,
+  `~/.npm` and `node_modules` for further usage
+  - finally, we run a build on our remote server via ssh, and when the build is
+  done, the output is returned via rsync
+
+Those extra steps allow us to run a build faster because we avoid an `npm install` step
+almost every time and extra RAM and CPU allow running npm tasks `renderLandscape`,
+       `checkLandscape` and `jest` in parallel.
+
+Still, if for certain reasons, remote solution stopped to work and we need to
+restore the Netlify build process as soon as possible, BUILD_SERVER variable
+should be set to empty in either a given landscape or in a shared variables
+section. Usually, the build will fail for all the landscapes, thus renaming the
+variable to BUILD_SERVER_1 in shared variables is the most efficient way.
+
+One of the possible issues why remote builds would stop to work,
+    although let's hope that will never change, would be that a cache folder is broken, therefore 
+`ssh root@${BUILD_SERVER}` and then calling `rm -rf /root/build` on our build server will clear all the caches used for node_modules.
+ Then you need to trigger a Netlify build again.
+
+#### Running "locally" on Netlify instances (if the remote server is broken)
+
+Without BUILD_SERVER variable, the following steps are done, from a file netlify/netlify.sh
+  - the interactive-landscape package of the latest version is downloaded from npm
+  - we go to that folder
+  - we install node_modules via `npm install`
+  - we run `PROJECT_PATH=.. npm run` build from the interactive-landscape package
+
+### Building this repo, `landscapeapp` on a Netlify
+
+  We want to ensure that we are making builds of all the landscapes, defined in
+  `landscapes.yml`
+  Netlify parameters are stored in the `notilfy.toml` file, and it runs the 
+  `node netlify/landscapeapp.js` from the `netlify` folder.
+
+  First, we check if the hash of `.nvmrc`, `package.json` and `npm-shrinkwrap`
+  file already exists as a key of our cache on our remote server.
+  If it does exist, it means we can use this folder for `node_modules`, `.npm`
+  and `.nvm` folders for every individual landscape.
+  Then we use rsync to send the current checkout of a repo to our remote server
+  Then for every individual landscape, we run a `build.sh` file on a remote
+  server, in each own docker container for every landscape. That is done in parallel. The file `build.sh` checks out the
+  master branch of a given landscape and then runs `npm run build` with a
+  PROJECT_PATH pointed to the given landscape
+
+  When all builds had been finished, the output is returned to the `dist/${landscape.name}`
+  subfolder and logs are shown.
+  Then _redirects and _headers files are generated to allow us to view
+  individual landscapes from a Netlify build.
+
+  This repo is built only on our build server because Netlify has a 30 minutes timeout and we can not build individual landscapes there in parallel. Still,
+  if every build fails and there are no obvious reasons, it may help to clear a
+  node_modules cache: `ssh root@${BUILD_SERVER}` and then calling `rm -rf /root/build` and then running a new build on Netlify again
+### Setting up our build server to speed up Netlify builds
+  If for some reasons our current server is lost or wiped, or we have to rent a different build server, these are required steps
+  1. Install docker on a new server. Just the latest docker, nothing else is
+     required
+  2. Generate a new pair of ssh keys, and add a public key to the
+     `/root/.ssh/authorized_keys` file
+  3. Take a private key without first and last lines, replace \n with space, and
+     add as a BUILDBOT_KEY variable to the shared variable on a Netlify website
+  4. Update the BUILD_SERVER shared variable on a Netlify website and provide
+     the IP address of the new build server
+
+  To just check that all is fine, go to the `netlify` folder on your computer, 
+  checkout any branch you want or even make local changes, and run `node
+  landscapeapp.js`, do not forget to set all required variables, including the
+  BUILDBOT_KEY and BUILD_SERVER. The build should finish with the success and
+  copy generated files and folders to the `dist` folder in the root of the repo checkout
+  
 
 ## Keeping Project Up to Date
 We have an issue #75, where we update all out packages. This is how an update

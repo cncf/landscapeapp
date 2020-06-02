@@ -515,12 +515,20 @@ const ItemDialogContent = ({itemInfo, isLandscape, setIsLandscape}) => {
                 </div>
                 {itemInfo.repo_url &&
                 <div className="product-property row">
-                  <div className="product-property-name col col-20">Repository</div>
+                  <div className="product-property-name col col-20">{ itemInfo.additional_repos ? 'Repositories' : 'Repository' }</div>
                   <div className="product-property-value product-repo col col-80">
                     <OutboundLink to={itemInfo.repo_url}>{shortenUrl(itemInfo.repo_url)}</OutboundLink>
                   </div>
                 </div>
                 }
+                { itemInfo.additional_repos && itemInfo.additional_repos.map(({ repo_url }) => {
+                  return <div className="product-property row">
+                    <div className="product-property-name col col-20"></div>
+                    <div className="product-property-value product-repo col col-80">
+                      <OutboundLink to={repo_url}>{shortenUrl(repo_url)}</OutboundLink>
+                    </div>
+                  </div>
+                })}
                 {itemInfo.starsAsText &&
                 <div className="product-property row">
                   <div className="product-property-name col col-20"></div>

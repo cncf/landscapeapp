@@ -302,6 +302,9 @@ a {text-decoration: none; transition: all 0.5s; color: $blue;
   flex-wrap: wrap;
 }
 
+.oss img {background: white;}
+.nonoss img {background: #E4E4E4;}
+
 .mosaic {
   width: 100%; cursor: pointer; position: relative; border-radius: 2px;
   box-shadow: 1px 1px 3px #d6d6d6; background: #fff; border: 1px solid #fff;
@@ -326,8 +329,6 @@ a {text-decoration: none; transition: all 0.5s; color: $blue;
       @media (max-width: 550px) {width: 50%;}
     }
   }
-
-  &.nonoss {background: #eee;}
 
   .logo_wrapper{padding: 2px; width: 100%; cursor: pointer;
     display: flex; justify-content: center; align-items: center;

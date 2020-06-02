@@ -9,11 +9,10 @@ import {
   smallItemWidth
 } from "../../utils/landscapeCalculations";
 
-const LargeItem = (({ item, onSelectItem }) => {
+const LargeItem = (({ item, onSelectItem, isMember }) => {
   const relationInfo = fields.relation.values.find(({ id }) => id === item.relation);
   const color = relationInfo.big_picture_color;
   const label = relationInfo.big_picture_label;
-  const isMember = item.category === settings.global.membership;
   const textHeight = isMember ? 0 : 10
   const padding = 2
 
@@ -27,7 +26,6 @@ const LargeItem = (({ item, onSelectItem }) => {
               onClick={ () => onSelectItem(item.id)}
   >
     <img loading="lazy" src={item.href} style={{
-      background: isMember || item.oss ? 'white' : '#eee',
       width: `calc(100% - ${2 * padding}px)`,
       height: `calc(100% - ${2 * padding + textHeight}px)`,
       padding: 5,
@@ -48,7 +46,6 @@ const SmallItem = (({ item, onSelectItem }) => {
     border: `1px solid ${isMember ? 'white' : 'grey'}`,
     borderRadius: 2,
     padding: 1,
-    background: isMember || item.oss ? '' : '#eee',
     visibility: item.isVisible ? 'visible' : 'hidden'
   }}
               data-href={item.id}
@@ -61,7 +58,8 @@ const SmallItem = (({ item, onSelectItem }) => {
 })
 
 export default props => {
-  const { isLarge, isVisible } = props.item
+  const { isLarge, isVisible, category, oss } = props.item
+  const isMember = category === settings.global.membership;
 
   const style = {
     display: 'flex',
@@ -72,6 +70,8 @@ export default props => {
   }
 
   return <Fade timeout={1000} in={isVisible}>
-    <div style={style}>{isLarge ? <LargeItem {...props} /> : <SmallItem {...props} />}</div>
+    <div className={isMember || oss ? 'oss' : 'nonoss'} style={style}>
+      {isLarge ? <LargeItem {...props} isMember={isMember} /> : <SmallItem {...props} />}
+    </div>
   </Fade>
 }

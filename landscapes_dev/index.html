@@ -79,7 +79,7 @@
         <th>Landscape</th>
         <th>Repo</th>
         <th>Status</th>
-        <th>Published</th>
+        <th># of Tweets</th>
         <th>Data Refreshed</th>
         </thead>
 
@@ -135,7 +135,7 @@
       let landscapeEl = appendColumn()
       let repoEl = appendColumn()
       let statusEl = appendColumn({ className: "status" })
-      let publishedEl = appendColumn()
+      let numTweetsEl = appendColumn()
       let updatedEl = appendColumn()
       let previewEl = appendPreview()
 
@@ -157,7 +157,7 @@
         .then(async readme => {
           const statusUrl = readme.match(/https:\/\/api.netlify.com\/api\/v1\/badges[^)]*/)[0]
           const deploysUrl = readme.match(/https:\/\/app.netlify.com\/sites[^)]*/)[0]
-          statusEl.innerHTML = `<a href=${deploysUrl}><img src="${statusUrl}" alt="Netlify Status" /></a>`
+          statusEl.innerHTML = imageLinkTo(deploysUrl, statusUrl, "Netlify Status")
 
           const netlifyUrl = statusUrl.replace("badges", "sites").replace("/deploy-status", "")
           const netlifyInfo = await (await fetch(netlifyUrl)).json()
@@ -168,10 +168,12 @@
 
       fetchFile(`${repo}/master/processed_landscape.yml`)
         .then(processedLandscape => {
-          const { updated_at } = jsyaml.load(processedLandscape)
+          const { updated_at, twitter_options } = jsyaml.load(processedLandscape)
           const updatedAt = updated_at ? new Date(updated_at) : null
           const oneDayAgo = new Date() - 24 * 60 * 60 * 1000
           const className = updatedAt && updatedAt > oneDayAgo ? '' : 'has-text-danger'
+
+          numTweetsEl.innerHTML = (twitter_options ? twitter_options.count : 0).toString()
 
           updatedEl.innerHTML = `<div class="${className}">
               ${updated_at ? dateTimeFormat.format(updatedAt) : 'UNKNOWN'}

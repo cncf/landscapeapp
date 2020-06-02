@@ -397,20 +397,6 @@ async function main () {
     require('process').exit(1);
   }
 
-  var hasBadRepoUrl = false;
-  await Promise.mapSeries(itemsWithExtraFields, async function(item) {
-    if (item.repo_url
-      && (item.repo_url.indexOf('https://github.com') !== 0 || item.repo_url.split('/').filter( (x) => !!x).length !== 4)
-    ) {
-      hasBadRepoUrl = true;
-      await failOnMultipleErrors(`${item.name}  has a repo_url ${item.repo_url} which does not look like a good github repo url`);
-    }
-  });
-  if (hasBadRepoUrl) {
-    await reportFatalErrors();
-    require('process').exit(1);
-  }
-
   var hasBadImages = false;
   await Promise.mapSeries(itemsWithExtraFields, async function(item) {
     if (!item.image_data) {

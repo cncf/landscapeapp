@@ -30,6 +30,7 @@ const landscapeKeys = [
   'repo_url',
   'branch',
   'url_for_bestpractices',
+  'additional_repos',
   'stock_ticker',
   'logo',
   'enduser',

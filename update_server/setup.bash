@@ -21,6 +21,7 @@ export CRUNCHBASE_KEY=key
 export GITHUB_TOKEN=token
 export GITHUB_USER=CNCF-Bot
 export GITHUB_KEY=key
+export SLACK_ERROR_CHANNEL=channel
     ' > "/root/landscapes.env"
 )
 EOSSH
