@@ -28,10 +28,13 @@ const debug = function() {
   }
 }
 
-const runLocal = function(command) {
+const runLocal = function(command, assignFn) {
   return new Promise(function(resolve) {
     var spawn = require('child_process').spawn;
     var child = spawn('bash', ['-lc',`set -e \n${command}`]);
+    if (assignFn) {
+      assignFn(child);
+    }
     let output = [];
     child.stdout.on('data', function(data) {
       const text = maskSecrets(data.toString('utf-8'));
@@ -61,6 +64,7 @@ const runLocalWithoutErrors = async function(command) {
 }
 
 let buildDone = false;
+let localPid;
 
 const makeLocalBuild = async function() {
     const localOutput = await runLocal(`
@@ -77,7 +81,7 @@ const makeLocalBuild = async function() {
       npm install -g npm
       npm install
       PROJECT_PATH=../.. npm run build
-    `);
+    `, (x) => localPid = x);
 
     if (!buildDone) {
       buildDone = true;
@@ -304,12 +308,16 @@ EOSSH
   )
   if (!buildDone) {
     buildDone = true;
+    localPid.kill('SIGKILL');
     console.info('Remote build done!');
     console.info(output.text);
     await runLocalWithoutErrors(`
       rm -rf netlify/dist || true
+      rm -rf dist || true
       mkdir -p netlify/dist
+      mkdir -p dist
       cp -r distRemote/* netlify/dist
+      cp -r distRemote/* dist
       ls -la netlify/dist
     `);
     process.exit(0);
