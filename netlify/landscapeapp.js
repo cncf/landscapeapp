@@ -276,7 +276,7 @@ EOSSH
     rm -rf /root/builds/${folder}
     rm -rf /root/builds/${folder}_node || true
   `);
-  if (results.filter((x) => x.exitCode !== 0)[0]) {
+  if (results.filter((x) => x.exitCode !== 0 && x.landscape.required)[0]) {
     process.exit(1);
   }
   const redirects = results.map((result) => `
