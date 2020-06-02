@@ -1,3 +1,4 @@
+const skipCaching = process.env.SKIP_CACHING; // disable smart caching
 const path = require('path');
 const generateIndex = require('./generateIndex')
 const run = function(x) {
@@ -160,7 +161,18 @@ EOSSH
       `cd /opt/repo`,
       `npm install --no-progress --silent`
     ].join(' && ');
-    const npmInstallCommand = `
+    const npmInstallCommand = skipCaching ? `
+      mkdir -p /root/builds/${folder}_node
+      mkdir -p /root/builds/${folder}_node/{npm,nvm,node_modules}
+      chmod -R 777 /root/builds/${folder}_node
+      docker run --rm -t \
+        -v /root/builds/${folder}_node/node_modules:/opt/repo/node_modules \
+        -v /root/builds/${folder}_node/nvm:${dockerHome}/.nvm \
+        -v /root/builds/${folder}_node/npm:${dockerHome}/.npm \
+        -v /root/builds/${folder}:/opt/repo \
+        ${dockerImage} /bin/bash -lc "${buildCommand}"
+      chmod -R 777 /root/builds/${folder}_node
+    ` : `
       mkdir -p /root/builds/node_cache
       ls -l /root/builds/node_cache/${hash}/node_modules/react 2>/dev/null || (
           echo ${hash} folder not found, running npm install
@@ -207,6 +219,7 @@ EOSSH
       `bash build.sh ${landscape.repo} ${landscape.name} master`,
       `cp -r /opt/repo/${landscape.name}/dist /dist`
     ].join(' && ');
+    const nodeModulesFolder = skipCaching ? `${folder}_node` : `node_cache/${hash}`;
     const dockerCommand = `
       mkdir -p /root/builds/${outputFolder}
       chmod -R 777 /root/builds/${outputFolder}
@@ -218,9 +231,9 @@ EOSSH
         -e NVM_NO_PROGRESS=1 \
         -e NETLIFY=1 \
         -e PARALLEL=TRUE \
-        -v /root/builds/node_cache/${hash}/node_modules:/opt/repo/node_modules \
-        -v /root/builds/node_cache/${hash}/nvm:${dockerHome}/.nvm \
-        -v /root/builds/node_cache/${hash}/npm:${dockerHome}/.npm \
+        -v /root/builds/${nodeModulesFolder}/node_modules:/opt/repo/node_modules \
+        -v /root/builds/${nodeModulesFolder}/nvm:${dockerHome}/.nvm \
+        -v /root/builds/${nodeModulesFolder}/npm:${dockerHome}/.npm \
         -v /root/builds/${folder}:/opt/repo \
         -v /root/builds/${outputFolder}:/dist \
         ${dockerImage} /bin/bash -lc "${buildCommand}"
@@ -259,7 +272,10 @@ EOSSH
     )
     return output;
   }));
-  await runRemote(`rm -rf /root/builds/${folder}`);
+  await runRemote(`
+    rm -rf /root/builds/${folder}
+    rm -rf /root/builds/${folder}_node || true
+  `);
   if (results.filter((x) => x.exitCode !== 0)[0]) {
     process.exit(1);
   }
@@ -307,19 +323,21 @@ EOSSH
     // just for debug purpose
     //now we have a different hash, because we updated a version, but for build purposes we have exactly same npm modules
     const newHash = await runLocalWithoutErrors(sha256Command);
-    if (newHash !== hash) {
+    if (!skipCaching) {
+      if (newHash !== hash) {
+        await runRemoteWithoutErrors(`
+          rm -rf /root/builds/node_cache/${newHash} || true
+          ln -s /root/builds/node_cache/${hash} /root/builds/node_cache/${newHash}
+          chmod -R 777 /root/builds/node_cache/${newHash}
+        `);
+      }
+      // help for further deploys, do not make them install from sratch
       await runRemoteWithoutErrors(`
-        rm -rf /root/builds/node_cache/${newHash} || true
-        ln -s /root/builds/node_cache/${hash} /root/builds/node_cache/${newHash}
-        chmod -R 777 /root/builds/node_cache/${newHash}
+        mkdir -p /root/builds/node_cache/master
+        rm -rf /root/builds/node_cache/master/${nvmrc} || true
+        ln -s /root/builds/node_cache/${hash} /root/builds/node_cache/master/${nvmrc}
       `);
     }
-    // help for further deploys, do not make them install from sratch
-    await runRemoteWithoutErrors(`
-      mkdir -p /root/builds/node_cache/master
-      rm -rf /root/builds/node_cache/master/${nvmrc} || true
-      ln -s /root/builds/node_cache/${hash} /root/builds/node_cache/master/${nvmrc}
-    `);
     for (let landscape of landscapesInfo.landscapes) {
       console.info(`triggering a hook  for ${landscape.name}`);
       await runLocalWithoutErrors(`curl -X POST -d {} https://api.netlify.com/build_hooks/${landscape.hook}`);
