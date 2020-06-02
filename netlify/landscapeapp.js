@@ -276,8 +276,11 @@ EOSSH
     rm -rf /root/builds/${folder}
     rm -rf /root/builds/${folder}_node || true
   `);
-  if (results.filter((x) => x.exitCode !== 0 && x.landscape.required)[0]) {
-    process.exit(1);
+  for (let x of results) {
+    if (x.exitCode !== 0 && x.landscape.required) {
+      console.info(`a landscape ${x.landscape.name} failed but it is required = ${x.landscape.required}`);
+      process.exit(1);
+    }
   }
   const redirects = results.map((result) => `
     /${result.landscape.name}/ /${result.landscape.name}/prerender.html 200!
