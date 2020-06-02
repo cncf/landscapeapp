@@ -8,22 +8,27 @@ landscapes:
     name: aswf
     repo: AcademySoftwareFoundation/aswf-landscape
     hook: 5d5c7ca6dc2c51cf02381f63
+    required: true
   - landscape:
     name: cncf
     repo: cncf/landscape
     hook: 5c1bd8e14ed62f166e8d9f7f
+    required: true
   - landscape:
     name: cdf
     repo: cdfoundation/cdf-landscape
     hook: 5d8e8ecbeb12d77369f06dba
+    required: true
   - landscape:
     name: hl-landscape
     repo: hyperledger-landscape/hl-landscape
     hook: 5d8b7e9b2571ad2a23a392b8
+    required: true
   - landscape:
     name: graphql
     repo: graphql/graphql-landscape
     hook: 5d5c7ccf64ecb5bd3d2592f7
+    required: true
   - landscape:
     name: lf
     repo: jmertic/lf-landscape
@@ -32,10 +37,12 @@ landscapes:
     name: lfai
     repo: lfai/landscape
     hook: 5c1bd968fdd72a78a54bdcd1
+    required: true
   - landscape:
     name: lfedge
     repo: State-of-the-Edge/lfedge-landscape
     hook: 5c80e31894c5c7758edb31e4
+    required: true
   - landscape:
     name: lfenergy
     repo: lf-energy/lfenergy-landscape
@@ -44,19 +51,24 @@ landscapes:
     name: lfph
     repo: lfph/lfph-landscape
     hook: 5ec5145565b543b0b01aa9d7
+    required: true
   - landscape:
     name: openjsf
     repo: openjs-foundation/openjsf-landscape
     hook: 5de319ba9e61a5ddc3207294
+    required: true
   - landscape:
     name: omp
     repo: openmainframeproject/omp-landscape
     hook: 5d6a6f73080982abfbd46290
+    required: true
   - landscape:
     name: presto
     repo: prestodb/presto-landscape
     hook: 5ecd46d9f5ea8819a9d610a6
+    required: true
   - landscape:
     name: ucf
     repo: ucfoundation/ucf-landscape
     hook: 5d96662e28b476477790dd8a
+    required: true
