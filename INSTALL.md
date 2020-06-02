@@ -7,7 +7,7 @@
 
 ## Install on Linux
 1. `git clone git@github.com:cncf/landscape.git`
-2. Please follow [this script](https://github.com/cncf/landscape/blob/master/update_server/setup.bash) to install correct versions of `nodejs` and other packages on Linux.
+2. Please follow [this script](https://github.com/cncf/landscapeapp/blob/master/update_server/setup.bash) to install correct versions of `nodejs` and other packages on Linux.
 
 ## Local development
 1. `git pull`
@@ -21,7 +21,7 @@
 
 ## Updating data
 
-After making your changes to `landscape.yml`, run `npm run fetch` to fetch any needed data and generate [processed_landscape.yml](processed_landscape.yml) and [data.json](https://github.com/cncf/landscape/blob/master/src/data.json).
+After making your changes to `landscape.yml`, run `npm run fetch` to fetch any needed data and generate [processed_landscape.yml](https://github.com/cncf/landscape/blob/master/processed_landscape.yml) and [data.json](https://github.com/cncf/landscapeapp/blob/master/src/data.json).
 
 `npm run fetch` runs in 4 modes of increasingly aggressive downloading, with a default to easy. Reading data from the cache (meaning from processed_landscape.yml) means that no new data is fetched if the project/product already exists. The modes are:
 
