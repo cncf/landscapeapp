@@ -1,7 +1,8 @@
 import { env } from 'process';
 import { stringify } from 'query-string';
-import rp from './rpRetry';
+import requestPromise from 'request-promise';
 import _ from 'lodash'
+import Promise from "bluebird";
 
 ['CRUNCHBASE_KEY_4', 'GITHUB_KEY', 'TWITTER_KEYS'].forEach((key) => {
   if (!env[key]) {
@@ -10,6 +11,31 @@ import _ from 'lodash'
 });
 
 let requests = {};
+
+const maxAttempts = 5
+const delay = 5000
+
+const requestWithRetry = async ({ attempts = maxAttempts, retryStatuses, delayFn, ...rest }) => {
+  try {
+    return await requestPromise(rest);
+  } catch (ex) {
+    console.log(ex)
+    const { statusCode, options, error } = ex;
+    const message = [
+      `Attempt #${maxAttempts - attempts + 1}`,
+      `(Status Code: ${statusCode})`,
+      `(URI: ${options.uri.split('?')[0]})`
+    ].join(' ')
+    console.info(message);
+    const rateLimited = retryStatuses.includes(statusCode)
+    const dnsError = error && error.code === 'ENOTFOUND' && error.syscall === 'getaddrinfo'
+    if (attempts <= 0 || (!rateLimited && !dnsError)) {
+      throw ex;
+    }
+    await Promise.delay(delayFn ? delayFn(ex) : delay);
+    return await requestWithRetry({ attempts: attempts - 1, retryStatuses, delayFn, ...rest });
+  }
+}
 
 // We only want to retry a request when rate limited. By default the status code is 429.
 const ApiClient = ({ baseUrl, defaultOptions = {}, defaultParams = {}, retryStatuses = [429], delayFn = null }) => {
@@ -24,7 +50,7 @@ const ApiClient = ({ baseUrl, defaultOptions = {}, defaultParams = {}, retryStat
       const key = `${method} ${url}?${stringify(qs)}`;
 
       if (!requests[key]) {
-        requests[key] = rp({
+        requests[key] = requestWithRetry({
           method: method,
           uri: url,
           json: true,

@@ -1,4 +1,5 @@
 const path = require('path');
+const generateIndex = require('./generateIndex')
 const run = function(x) {
   console.info(require('child_process').execSync(x).toString())
 }
@@ -258,7 +259,7 @@ EOSSH
     )
     return output;
   }));
-  // await runRemote(`rm -rf /root/builds/${folder}`);
+  await runRemote(`rm -rf /root/builds/${folder}`);
   if (results.filter((x) => x.exitCode !== 0)[0]) {
     process.exit(1);
   }
@@ -267,7 +268,7 @@ EOSSH
     /${result.landscape.name} /${result.landscape.name}/prerender.html 200!
     /${result.landscape.name}/* /${result.landscape.name}/index.html 200
   `).join('\n');
-  const index = results.map((result) => `<div><a href="${result.landscape.name}/"><h1>${result.landscape.name}</h1></a></div>`).join('\n');
+  const index = generateIndex(results)
   const robots = `
     User-agent: *
     Disallow: /
