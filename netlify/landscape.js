@@ -1,4 +1,8 @@
 // We will execute this script from a landscape build
+const remote = `root@${process.env.BUILD_SERVER}`;
+const dockerImage = 'netlify/build:xenial';
+const dockerHome = '/opt/buildhome';
+
 const secrets = [
   process.env.CRUNCHBASE_KEY_4, process.env.TWITTER_KEYS, process.env.GITHUB_TOKEN, process.env.GITHUB_USER, process.env.GITHUB_KEY
 ].filter( (x) => !!x);
@@ -23,6 +27,7 @@ const debug = function() {
     console.info.apply(console, arguments);
   }
 }
+
 const runLocal = function(command) {
   return new Promise(function(resolve) {
     var spawn = require('child_process').spawn;
@@ -30,13 +35,11 @@ const runLocal = function(command) {
     let output = [];
     child.stdout.on('data', function(data) {
       const text = maskSecrets(data.toString('utf-8'));
-      console.info(text);
       output.push(text);
       //Here is where the output goes
     });
     child.stderr.on('data', function(data) {
       const text = maskSecrets(data.toString('utf-8'));
-      console.info(text);
       output.push(text);
       //Here is where the error output goes
     });
@@ -50,65 +53,72 @@ const runLocal = function(command) {
 const runLocalWithoutErrors = async function(command) {
   debug(command);
   const result = await runLocal(command);
+  console.info(result.text);
   if (result.exitCode !== 0) {
     throw new Error(`Failed to execute ${command}, exit code: ${result.exitCode}`);
   }
   return result.text.trim();
 }
 
-async function main() {
-  if (!process.env.BUILD_SERVER) {
-    console.info(`BUILD_SERVER variable not set, thus running a local build`);
-    await runLocalWithoutErrors(`
+let buildDone = false;
+
+const makeLocalBuild = async function() {
+    const localOutput = await runLocal(`
+      cd netlify
       . ~/.nvm/nvm.sh
       npm pack interactive-landscape@latest
-      tar xzf interactive*
-      cd package
-      mkdir -p ../node_modules
-      cp -r ../node_modules .
+      mkdir -p tmp1
+      rm -rf packageLocal || true
+      tar xzf interactive* -C tmp1
+      mv tmp1/package packageLocal
+      cd packageLocal
       nvm install \`cat .nvmrc\`
       nvm use \`cat .nvmrc\`
       npm install -g npm
       npm install
-      cp -r node_modules/* ../node_modules
       PROJECT_PATH=../.. npm run build
-      cd ../..
-      cp -r dist netlify
-      ls dist
-      ls netlify/dist
     `);
-    process.exit(0);
-  }
-  const LANDSCAPEAPP = process.env.LANDSCAPEAPP || "latest"
-  const path = require('path');
-  const run = function(x) {
-    console.info(require('child_process').execSync(x).toString())
-  }
-  if (!process.env.BUILD_SERVER) {
-  }
-  console.info('starting', process.cwd());
-  run(` rm -rf ../node_modules/* || true `);
-  run('rm -rf /opt/buildhome/cache/node_modules/* || true');
-  process.chdir('..');
 
-  console.info('starting real script', process.cwd());
+    if (!buildDone) {
+      buildDone = true;
+      console.info('Local build finished, exit code:', localOutput.exitCode);
+      console.info(localOutput.text);
+      if (localOutput.exitCode !== 0) {
+        process.exit(1);
+      } else {
+        await runLocalWithoutErrors(`
+          rm -rf netlify/dist || true
+          cp -r dist netlify
+          ls netlify/dist
+        `);
+        process.exit(0);
+      }
+    } else {
+      console.info('Ignore local build');
+    }
+}
 
-  const dockerImage = 'netlify/build:xenial';
-  const dockerHome = '/opt/buildhome';
-
-  run(`npm pack interactive-landscape@${LANDSCAPEAPP} && tar xzf interactive*.tgz`);
+const makeRemoteBuildWithCache = async function() {
+  await runLocalWithoutErrors(`
+    echo extracting
+    npm pack interactive-landscape@latest
+    mkdir -p tmp2
+    rm -rf packageRemote || true
+    tar xzf interactive*.tgz -C tmp2
+    mv tmp2/package packageRemote
+  `);
 
   //how to get a hash based on our files
-  const sha256Command = function() {
+  const getHash = function() {
     const crypto = require('crypto');
-    const p0 = require('fs').readFileSync('package/.nvmrc', 'utf-8').trim();
-    const p1 = crypto.createHash('sha256').update(require('fs').readFileSync('package/package.json')).digest('hex');
-    const p2 = crypto.createHash('sha256').update(require('fs').readFileSync('package/npm-shrinkwrap.json')).digest('hex');
+    const p0 = require('fs').readFileSync('packageRemote/.nvmrc', 'utf-8').trim();
+    const p1 = crypto.createHash('sha256').update(require('fs').readFileSync('packageRemote/package.json')).digest('hex');
+    const p2 = crypto.createHash('sha256').update(require('fs').readFileSync('packageRemote/npm-shrinkwrap.json')).digest('hex');
     return p0 + p1 + p2;
   }
   const getTmpFile = () => new Date().getTime().toString() + Math.random();
-  const nvmrc = require('fs').readFileSync('package/.nvmrc', 'utf-8').trim();
-  console.info(nvmrc);
+  const nvmrc = require('fs').readFileSync('packageRemote/.nvmrc', 'utf-8').trim();
+  console.info(`node version:`, nvmrc);
 
   const key = `
 -----BEGIN OPENSSH PRIVATE KEY-----
@@ -121,7 +131,6 @@ ${process.env.BUILDBOT_KEY.replace(/\s/g,'\n')}
 
   // now our goal is to run this on a remote server. Step 1 - xcopy the repo
   const folder = getTmpFile();
-  const remote = `root@${process.env.BUILD_SERVER}`;
 
   const runRemote = async function(command) {
     const bashCommand = `
@@ -137,26 +146,24 @@ EOSSH
 
   const runRemoteWithoutErrors = async function(command) {
     const result = await runRemote(command);
+    console.info(result.text.trim());
     if (result.exitCode !== 0) {
       throw new Error(`Failed to execute remote ${command}, exit code: ${result.exitCode}`);
     }
-    return result.text.trim();
   }
 
   await runLocalWithoutErrors(`
-      rm -rf dist || true
-      mkdir -p dist
+      rm -rf remoteDist || true
+      mkdir -p remoteDist
     `);
   await runRemoteWithoutErrors(`mkdir -p /root/builds`);
   await runRemoteWithoutErrors(`docker pull ${dockerImage}`);
-  console.info('Rsync start');
   await runLocalWithoutErrors(`
-      rsync --exclude="node_modules" --exclude="dist" -az -e "ssh -i /tmp/buildbot  -o StrictHostKeyChecking=no  " . ${remote}:/root/builds/${folder}
+      rsync --exclude="node_modules" -az -e "ssh -i /tmp/buildbot  -o StrictHostKeyChecking=no  " . ${remote}:/root/builds/${folder}
     `);
-  console.info('Rsync done');
   await runRemoteWithoutErrors(`chmod -R 777 /root/builds/${folder}`);
 
-  const hash = sha256Command();
+  const hash = getHash();
   const tmpHash = require('crypto').createHash('sha256').update(getTmpFile()).digest('hex');
   // lets guarantee npm install for this folder first
   {
@@ -166,21 +173,16 @@ EOSSH
       `nvm install ${nvmrc}`,
       `nvm use ${nvmrc}`,
       `npm install -g npm --no-progress`,
-      `cd /opt/repo/package`,
+      `cd /opt/repo/packageRemote`,
       `npm install --no-progress --silent`
     ].join(' && ');
     const npmInstallCommand = `
       mkdir -p /root/builds/node_cache
       ls -l /root/builds/node_cache/${hash}/node_modules/react 2>/dev/null || (
-          echo ${hash} folder not found, running npm install
-          cp -r /root/builds/node_cache/master/${nvmrc} /root/builds/node_cache/${tmpHash} 2>/dev/null || (
-            echo "node_cache from master branch not found, initializing an empty repo"
-            mkdir -p /root/builds/node_cache/${tmpHash}/{npm,nvm,node_modules}
-          )
-
+          mkdir -p /root/builds/node_cache/${tmpHash}/{npm,nvm,node_modules}
           chmod -R 777 /root/builds/node_cache/${tmpHash}
           docker run --rm -t \
-            -v /root/builds/node_cache/${tmpHash}/node_modules:/opt/repo/package/node_modules \
+            -v /root/builds/node_cache/${tmpHash}/node_modules:/opt/repo/packageRemote/node_modules \
             -v /root/builds/node_cache/${tmpHash}/nvm:${dockerHome}/.nvm \
             -v /root/builds/node_cache/${tmpHash}/npm:${dockerHome}/.npm \
             -v /root/builds/${folder}:/opt/repo \
@@ -194,20 +196,25 @@ EOSSH
       chmod -R 777 /root/builds/node_cache/${hash}
     `;
     debug(npmInstallCommand);
-    console.info(`Installing npm packages if required`);
+    console.info(`Remote with cache: Installing npm packages if required`);
     const output = await runRemote(npmInstallCommand);
-    console.info(`Output from npm install: exit code: ${output.exitCode}`);
+    console.info(`Remote with cache: Output from npm install: exit code: ${output.exitCode}`);
+    if (output.exitCode !== 0) {
+      console.info(output.text);
+      throw new Error('Remote with cahce: npm install failed');
+    }
+
     const lines = output.text.split('\n');
     const index = lines.indexOf(lines.filter( (line) => line.match(/added \d+ packages in/))[0]);
     const filteredLines = lines.slice(index !== -1 ? index : 0).join('\n');
-    console.info(filteredLines);
+    console.info(filteredLines || 'Reusing an existing folder for node');
 
   }
 
   const vars = ['CRUNCHBASE_KEY_4', 'GITHUB_KEY', 'TWITTER_KEYS'];
   const outputFolder = 'landscape' + getTmpFile();
   const buildCommand = [
-    `cd /opt/repo/package`,
+    `cd /opt/repo/packageRemote`,
     `. ~/.nvm/nvm.sh`,
     `nvm install ${nvmrc}`,
     `nvm use ${nvmrc}`,
@@ -226,7 +233,7 @@ EOSSH
         -e NVM_NO_PROGRESS=1 \
         -e NETLIFY=1 \
         -e PARALLEL=TRUE \
-        -v /root/builds/node_cache/${hash}/node_modules:/opt/repo/package/node_modules \
+        -v /root/builds/node_cache/${hash}/node_modules:/opt/repo/packageRemote/node_modules \
         -v /root/builds/node_cache/${hash}/nvm:${dockerHome}/.nvm \
         -v /root/builds/node_cache/${hash}/npm:${dockerHome}/.npm \
         -v /root/builds/${folder}:/opt/repo \
@@ -235,36 +242,35 @@ EOSSH
 
     `;
 
-  const buildCommandWithNpmInstall = [
-    `cd /opt/repo/package`,
-    `. ~/.nvm/nvm.sh`,
-    `nvm use`,
-    `npm install -g npm --no-progress --silent`,
-    `npm install --no-progress --silent`,
-    `PROJECT_PATH=.. npm run build`,
-    `cp -r /opt/repo/dist /dist`
-  ].join(' && ');
+  // const buildCommandWithNpmInstall = [
+    // `cd /opt/repo/package`,
+    // `. ~/.nvm/nvm.sh`,
+    // `nvm use`,
+    // `npm install -g npm --no-progress --silent`,
+    // `npm install --no-progress --silent`,
+    // `PROJECT_PATH=.. npm run build`,
+    // `cp -r /opt/repo/dist /dist`
+  // ].join(' && ');
 
-  const dockerCommandWithNpmInstall = `
-      mkdir -p /root/builds/${outputFolder}
-      chmod -R 777 /root/builds/${outputFolder}
-      chmod -R 777 /root/builds/${folder}
-      chmod -R 777 /root/builds/node_cache/${hash}
+  // const dockerCommandWithNpmInstall = `
+      // mkdir -p /root/builds/${outputFolder}
+      // chmod -R 777 /root/builds/${outputFolder}
+      // chmod -R 777 /root/builds/${folder}
+      // chmod -R 777 /root/builds/node_cache/${hash}
 
-      docker run --rm -t \
-        ${vars.map( (v) => ` -e ${v}="${process.env[v]}" `).join(' ')} \
-        -e NVM_NO_PROGRESS=1 \
-        -e NETLIFY=1 \
-        -e PARALLEL=TRUE \
-        -v /root/builds/node_cache/${hash}/nvm:${dockerHome}/.nvm \
-        -v /root/builds/node_cache/${hash}/npm:${dockerHome}/.npm \
-        -v /root/builds/${folder}:/opt/repo \
-        -v /root/builds/${outputFolder}:/dist \
-        ${dockerImage} /bin/bash -lc "${buildCommandWithNpmInstall}"
+      // docker run --rm -t \
+        // ${vars.map( (v) => ` -e ${v}="${process.env[v]}" `).join(' ')} \
+        // -e NVM_NO_PROGRESS=1 \
+        // -e NETLIFY=1 \
+        // -e PARALLEL=TRUE \
+        // -v /root/builds/node_cache/${hash}/nvm:${dockerHome}/.nvm \
+        // -v /root/builds/node_cache/${hash}/npm:${dockerHome}/.npm \
+        // -v /root/builds/${folder}:/opt/repo \
+        // -v /root/builds/${outputFolder}:/dist \
+        // ${dockerImage} /bin/bash -lc "${buildCommandWithNpmInstall}"
 
-    `;
+    // `;
 
-  console.info(`processed a remote build`);
   debug(dockerCommand);
 
   // run a build command remotely for a given repo
@@ -272,40 +278,54 @@ EOSSH
   output  = await runRemote(dockerCommand);
   console.info(`Output from remote build, exit code: ${output.exitCode}`);
   if (output.exitCode === 255) { // a single ssh failure
-    console.info('Retrying ...');
+    console.info('SSH failure! Retrying ...');
     output  = await runRemote(dockerCommand);
     console.info(`Output from remote build, exit code: ${output.exitCode}`);
   } else if (output.exitCode !== 0) {
+    console.info(output.text);
+    throw new Error('Remote build failed');
     // console.info('Retrying with reinstalling npm');
     // output  = await runRemote(dockerCommandWithNpmInstall);
     // console.info(`Output from remote build, exit code: ${output.exitCode}`);
   }
-
-  // check if the reason was a lack of npm install actually
-
+  console.info(output.text);
+  // a build is done
   console.info(await runLocalWithoutErrors(
     `
-      rm -rf dist 2>/dev/null || true;
-      rsync -az -e "ssh -i /tmp/buildbot  -o StrictHostKeyChecking=no " ${remote}:/root/builds/${outputFolder}/dist .
-      mkdir -p netlify/dist
-      cp -r dist/* netlify/dist
-      ls -la dist
-      ls -la netlify
-      ls -la netlify/dist
+      mkdir -p distRemote
+      rsync -az -e "ssh -i /tmp/buildbot  -o StrictHostKeyChecking=no " ${remote}:/root/builds/${outputFolder}/dist/* distRemote
     `
   ));
-
   await runRemoteWithoutErrors(
     `
       rm -rf /root/builds/${folder}
       rm -rf /root/builds/${outputFolder}
       `
   )
-
-  if (output.exitCode !== 0) {
-    console.info(`Bad exit code from the remote build. Exiting the build`);
-    process.exit(1);
+  if (!buildDone) {
+    buildDone = true;
+    console.info('Remote build done!');
+    console.info(output.text);
+    await runLocalWithoutErrors(`
+      rm -rf netlify/dist || true
+      mkdir -p netlify/dist
+      cp -r distRemote/* netlify/dist
+      ls -la netlify/dist
+    `);
+    process.exit(0);
   }
+}
+
+async function main() {
+  const LANDSCAPEAPP = process.env.LANDSCAPEAPP || "latest"
+  const path = require('path');
+  console.info('starting', process.cwd());
+  process.chdir('..');
+
+  await Promise.all([makeRemoteBuildWithCache().catch(function(ex) {
+    console.info('Remote build failed! Continuing with a local build', ex);
+  }), makeLocalBuild()]);
+
 }
 
 main().catch(function(ex) {
