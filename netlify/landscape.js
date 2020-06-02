@@ -173,7 +173,7 @@ EOSSH
       mkdir -p /root/builds/node_cache
       ls -l /root/builds/node_cache/${hash} 2>/dev/null || (
           echo ${hash} folder not found, running npm install
-          cp -r /root/builds/node_cache/master/${nvmrc} /root/builds/node_cache/${tmpHash}} 2>/dev/null || (
+          cp -r /root/builds/node_cache/master/${nvmrc} /root/builds/node_cache/${tmpHash} 2>/dev/null || (
             echo "node_cache from master branch not found, initializing an empty repo"
             mkdir -p /root/builds/node_cache/${tmpHash}/{npm,nvm,node_modules}
           )
