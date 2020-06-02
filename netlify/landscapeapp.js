@@ -305,6 +305,7 @@ EOSSH
     }
     // help for further deploys, do not make them install from sratch
     await runRemoteWithoutErrors(`
+      rm -rf /root/builds/node_cache/master || true
       mkdir -p /root/builds/node_cache/master
       cp -r /root/builds/node_cache/${hash} /root/builds/node_cache/master/${nvmrc}
       chmod -R 777 /root/builds/node_cache/master/${nvmrc}
