@@ -80,13 +80,13 @@ EOSSH
   `
     const result = await runLocal(bashCommand);
     let newOutput = [];
-    for (var l of result.output.split('\n')) {
+    for (var l of result.text.split('\n')) {
       newOutput.push(l);
       if (l.includes('mesg: ttyname failed: Inappropriate ioctl for device')) {
         newOutput = [];
       }
     }
-    result.output = newOutput.join('\n');
+    result.text = newOutput.join('\n');
     return result;
   };
 
@@ -302,7 +302,7 @@ EOSSH
     const newHash = await runLocalWithoutErrors(sha256Command);
     if (newHash !== hash) {
       await runRemoteWithoutErrors(`
-        rm -rf /root/builds/node_cache/${newHash}
+        rm -rf /root/builds/node_cache/${newHash} || true
         ln -s /root/builds/node_cache/${hash} /root/builds/node_cache/${newHash}
         chmod -R 777 /root/builds/node_cache/${newHash}
       `);
