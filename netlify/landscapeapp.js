@@ -13,12 +13,6 @@ const pause = function(i) {
   })
 };
 console.info('starting', process.cwd());
-run(`
-    rm -rf ../node_modules/* || true
-    rm -rf /opt/buildhome/.yarn_cache/* || true
-    ls /opt/buildhome/cache/* || true
-`);
-run('rm -rf /opt/buildhome/cache/*');
 run('npm init -y');
 console.info('installing js-yaml', process.cwd());
 run('npm install js-yaml');
@@ -84,7 +78,16 @@ ${process.env.BUILDBOT_KEY.replace(/\s/g,'\n')}
       ${command}
 EOSSH
   `
-    return await runLocal(bashCommand);
+    const result = await runLocal(bashCommand);
+    let newOutput = [];
+    for (var l of result.output.split('\n')) {
+      newOutput.push(l);
+      if (l.includes('mesg: ttyname failed: Inappropriate ioctl for device')) {
+        newOutput = [];
+      }
+    }
+    result.output = newOutput.join('\n');
+    return result;
   };
 
   const runLocal = function(command) {
@@ -299,16 +302,16 @@ EOSSH
     const newHash = await runLocalWithoutErrors(sha256Command);
     if (newHash !== hash) {
       await runRemoteWithoutErrors(`
-        cp -r /root/builds/node_cache/${hash} /root/builds/node_cache/${newHash}
+        rm -rf /root/builds/node_cache/${newHash}
+        ln -s /root/builds/node_cache/${hash} /root/builds/node_cache/${newHash}
         chmod -R 777 /root/builds/node_cache/${newHash}
       `);
     }
     // help for further deploys, do not make them install from sratch
     await runRemoteWithoutErrors(`
-      rm -rf /root/builds/node_cache/master || true
       mkdir -p /root/builds/node_cache/master
-      cp -r /root/builds/node_cache/${hash} /root/builds/node_cache/master/${nvmrc}
-      chmod -R 777 /root/builds/node_cache/master/${nvmrc}
+      rm -rf /root/builds/node_cache/master/${nvmrc} || true
+      ln -s /root/builds/node_cache/${hash} /root/builds/node_cache/master/${nvmrc}
     `);
     for (let landscape of landscapesInfo.landscapes) {
       console.info(`triggering a hook  for ${landscape.name}`);

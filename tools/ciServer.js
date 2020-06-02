@@ -6,40 +6,23 @@ import browserSync from 'browser-sync';
 import historyApiFallback from 'connect-history-api-fallback';
 import {chalkProcessing} from './chalkConfig';
 import { projectPath } from './settings';
-
-/* eslint-disable no-console */
-
-
+const app = require('connect')();
+const serveStatic = require('serve-static');
 console.log(chalkProcessing('running a dist server on http://localhost:4000 ...'));
-// Run Browsersync
-const result = browserSync({
-  port: 4000,
-  ui: {
-    port: 4001
-  },
-  open: false,
-  server: {
-    baseDir: path.resolve(projectPath, 'dist')
-  },
-  files: [
-    'src/*.html'
-  ],
-  ghostMode: false,
-  notify: false,
-  middleware: [
-    function (req, res, next) {
-
-      const contentPath = path.resolve(projectPath, 'dist', 'prerender.html');
-      if (req.url === '/' && require('fs').existsSync(contentPath)) {
-          console.info('Serving prerendered content for /');
-          const content = require('fs').readFileSync(contentPath, 'utf-8');
-          res.end(content);
-      } else {
-        next();
-      }
-    },
-    historyApiFallback()
-  ]
+app.use(function (req, res, next) {
+  const contentPath = path.resolve(projectPath, 'dist', 'prerender.html');
+  if (req.url === '/' && require('fs').existsSync(contentPath)) {
+    console.info('Serving prerendered content for /');
+    const content = require('fs').readFileSync(contentPath, 'utf-8');
+    res.end(content);
+  } else {
+    next();
+  }
 });
+app.use(serveStatic(path.resolve(projectPath, 'dist')));
+app.use(historyApiFallback());
+app.use(function(req, res) {
+  res.end(require('fs').readFileSync(path.resolve(projectPath, 'dist', 'index.html')));
+});
+app.listen(4000);
 require('fs').writeFileSync('/tmp/ci.pid', process.pid.toString());
-export default result;

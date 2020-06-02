@@ -7,7 +7,7 @@ const { run } = require("react-snap/index.js");
 
 function removeHttpLink(fileName) {
   const content = require('fs').readFileSync(fileName, 'utf-8');
-  const updated = content.replace('<link href="http://localhost:45678/" rel="canonical">', '');
+  const updated = content.replace('<link href="http://localhost:4000/" rel="canonical">', '');
   require('fs').writeFileSync(fileName, updated);
 }
 
@@ -58,8 +58,9 @@ async function main() {
     fs.unlinkSync(file200);
   }
   try {
-    console.info(path.relative('.', source));
     await run({
+      externalServer: true,
+      port: 4000,
       publicPath: "/",
       crawl: false,
       source: path.relative('.', source),
