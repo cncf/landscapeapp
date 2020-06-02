@@ -16,6 +16,10 @@ export async function report({ returnCode, logs, slackChannel, icon_url, name, o
     }
   });
 
+  if (returnCode === 0 && onlyErrors) {
+    return
+  }
+
   const logContent = (function() {
     const lines = logs.join('').split('\n');
     const lastYarnLine = lines.indexOf('Processing the tree');
