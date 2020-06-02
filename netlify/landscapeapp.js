@@ -281,6 +281,8 @@ EOSSH
   // comment below when about to test a googlebot rendering
   require('fs').appendFileSync("dist/robots.txt", "Disallow: /");
 
+  runLocalWithoutErrors('cp -r dist netlify');
+
   if (process.env.BRANCH === 'master') {
     runLocalWithoutErrors(`
       git config --global user.email "info@cncf.io"
