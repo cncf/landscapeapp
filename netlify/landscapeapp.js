@@ -175,7 +175,10 @@ EOSSH
             -v /root/builds/node_cache/${tmpHash}/npm:${dockerHome}/.npm \
             -v /root/builds/${folder}:/opt/repo \
             ${dockerImage} /bin/bash -lc "${buildCommand}"
-            mv -T /root/builds/node_cache/${tmpHash}/ /root/builds/node_cache/${hash}/ || true
+
+          ln -s /root/builds/node_cache/${tmpHash} /root/builds/node_cache/${hash} || (
+            rm -rf /root/builds/node_cache/${tmpHash}
+          )
           echo "node_modules for ${hash} had been installed"
       )
     `;
