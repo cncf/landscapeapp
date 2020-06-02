@@ -1,7 +1,6 @@
-
 import puppeteer from "puppeteer";
 require('expect-puppeteer');
-import { devicesMap } from 'puppeteer/DeviceDescriptors';
+import devices from 'puppeteer/DeviceDescriptors';
 import { paramCase } from 'change-case';
 import { settings } from '../tools/settings';
 import { projects } from '../tools/loadData';
@@ -10,11 +9,8 @@ const port = process.env.PORT || '4000';
 const appUrl = `http://localhost:${port}`;
 const width = 1920;
 const height = 1080;
-
-let setup;
 let browser;
-let page;
-let close = () => test('Closing a browser', async () => await browser.close());
+let setup;
 
 expect.extend({
   async toHaveElement(page, selectorOrXpath) {
@@ -50,121 +46,116 @@ async function makePage(initialUrl) {
 
 function embedTest() {
   describe("Embed test", () => {
-    describe("I visit an example embed page", () => {
-      let frame;
-      test('page is open and has a frame', async function(){
-        page = await makePage(appUrl + '/embed.html');
-        frame = await page.frames()[1];
-        await frame.waitForXPath(`//h1[contains(text(), 'full interactive landscape')]`);
-      });
+    test("I visit an example embed page", async () => {
+      console.info('about to open a page', appUrl);
+      const page = await makePage(appUrl + '/embed.html');
+      console.info('page is open');
 
-      test('Do not see a content from a main mode', async function() {
-        await expect(frame).not.toHaveElement(`//h1[text() = '${settings.test.header}']`);
-      });
+      const frame = await page.frames()[1];
+      // should be a clickable frame
+      await frame.waitForXPath(`//h1[contains(text(), 'full interactive landscape')]`);
+      // we should not see the content from a main mode
+      await expect(frame).not.toHaveElement(`//h1[text() = '${settings.test.header}']`);
 
       // ensure that it is clickable
-      test('I can click on a tile in a frame and I get a modal after that', async function() {
-        await expect(frame).toHaveElement(`.mosaic img`);
-        await frame.click(`.mosaic img`);
-        await frame.waitForSelector(".modal-content");
-      });
-      close();
+      await expect(frame).toHaveElement(`.mosaic img`);
+      await frame.click(`.mosaic img`);
+      await frame.waitForSelector(".modal-content");
     }, 6 * 60 * 1000); //give it up to 1 min to execute
   });
 }
 
 function mainTest() {
   describe("Main test", () => {
-    describe("I visit a main page and have all required elements", () => {
-      test('I can open a page', async function() {
-        page = await makePage(appUrl + '/format=card-mode');
-        await page.waitFor('.cards-section');
-      });
+    test("I visit a main page and have all required elements", async () => {
+      console.info('about to open a page', appUrl + '/format=card-mode');
+      const page = await makePage(appUrl + '/format=card-mode');
+      console.info('page is open');
+      await page.waitFor('.cards-section');
 
       //header
-      test('A proper header is present', async function() {
-        await expect(page).toHaveElement(`//h1[text() = '${settings.test.header}']`);
-      });
-      test('Group headers are ok', async function() {
-        await expect(page).toHaveElement(`//a[contains(text(), '${settings.test.section}')]`);
-      });
-      test('I see a You are viewing text', async function() {
-        await expect(page).toHaveElement(`//*[contains(text(), 'You are viewing ')]`);
-      });
-      test(`A proper card is present`, async function() {
-        await expect(page).toHaveElement(`.mosaic img[src='logos/${settings.test.logo}']`);
-      });
-      test(`If I click on a card, I see a modal dialog`, async function() {
-        await page.click(`.mosaic img[src='logos/${settings.test.logo}']`);
-        await page.waitForSelector(".modal-content");
-      });
-      close();
+      await expect(page).toHaveElement(`//h1[text() = '${settings.test.header}']`);
+      console.info('header is present');
+      //group headers
+      await expect(page).toHaveElement(`//a[contains(text(), '${settings.test.section}')]`);
+      console.info('group headers are ok');
+      // ensure that everything was loaded
+      await expect(page).toHaveElement(`//*[contains(text(), 'You are viewing ')]`);
+      console.info('group headers are ok');
+      //card
+      await expect(page).toHaveElement(`.mosaic img[src='logos/${settings.test.logo}']`);
+      console.info('there is a kubernetes card');
+      //click on a card
+      await page.click(`.mosaic img[src='logos/${settings.test.logo}']`);
+      console.info('it is clickable');
+      //await for a modal
+      await page.waitForSelector(".modal-content");
+      console.info('modal appears');
     }, 6 * 60 * 1000); //give it up to 1 min to execute
   });
 }
 
 function landscapeTest() {
   describe("Big Picture Test", () => {
-    describe("I visit a main landscape page and have all required elements", () => {
-      test('I open a landscape page and wait for it to load', async function() {
-        page = await makePage(appUrl);
-        await page.waitForSelector('.big-picture-section');
-      });
-      test('When I click on an item the modal is open', async function() {
-        await page.click('.big-picture-section img[src]');
-        await page.waitForSelector(".modal-content");
-      });
+    test("I visit a main landscape page and have all required elements", async () => {
+      console.info('about to open a main landscape page');
+      const page = await makePage(appUrl);
+      await page.waitForSelector('.big-picture-section');
+      await page.click('.big-picture-section img[src]');
+      await page.waitForSelector(".modal-content");
 
       // and check that without redirect it works too
-      test('If I would straight open the url with a selected id, a modal appears', async function() {
-        await page.goto(appUrl);
-        await page.waitForSelector('.big-picture-section');
-        await page.click('.big-picture-section img[src]');
-        await page.waitForSelector(".modal-content");
-      });
-      close();
+      await page.goto(appUrl);
+      await page.waitForSelector('.big-picture-section');
+      await page.click('.big-picture-section img[src]');
+      await page.waitForSelector(".modal-content");
     }, 6 * 60 * 1000); //give it up to 1 min to execute
   });
   landscapeSettingsList.slice(1).forEach(({ name, url }) => {
-    test(`I visit ${name} landscape page and have all required elements, elemens are clickable`, async () => {
+    test(`I visit ${name} landscape page and have all required elements`, async () => {
+      console.info(`about to open ${name} landscape page`);
       const page = await makePage(`${appUrl}/format=${url}`);
       await page.waitForSelector('.big-picture-section');
       await page.click('.big-picture-section img[src]');
       await page.waitForSelector(".modal-content");
     }, 6 * 60 * 1000); //give it up to 1 min to execute
-    close();
   })
 }
 
 describe("Normal browser", function() {
-  beforeAll(async function() {
+  beforeEach(async function() {
     setup = async (page) =>  await page.setViewport({ width, height });
+  })
+  afterEach(async function() {
+    browser.close();
   })
   mainTest();
   landscapeTest();
   embedTest();
 
-  describe("Filtering by organization", () => {
+  test("Filtering by organization", async () => {
     const project = projects[0];
     const organizationSlug = paramCase(project.organization);
     const otherProject = projects.find(({ organization }) => organization !== project.organization);
     const otherOrganizationSlug = paramCase(otherProject.organization);
 
-    test(`Checking we see ${project.name} when filtering by organization ${project.organization}`, async function() {
-      page = await makePage(`${appUrl}/organization=${organizationSlug}&format=card-mode`);
-      await expect(page).toHaveElement(`//div[contains(@class, 'mosaic')]//*[text()='${project.name}']`);
-    });
-    test(`Checking we don't see ${project.name} when filtering by organization ${otherProject.organization}`, async function() {
-      await page.goto(`${appUrl}/organization=${otherOrganizationSlug}&format=card-mode`);
-      await expect(page).not.toHaveElement(`//div[contains(@class, 'mosaic')]//*[text()='${project.name}']`);
-    });
-    close();
+    console.log(`Checking we see ${project.name} when filtering by organization ${project.organization}`);
+    const page = await makePage(`${appUrl}/organization=${organizationSlug}&format=card-mode`);
+    await expect(page).toHaveElement(`//div[contains(@class, 'mosaic')]//*[text()='${project.name}']`);
+
+    console.log(`Checking we don't see ${project.name} when filtering by organization ${otherProject.organization}`);
+    await page.goto(`${appUrl}/organization=${otherOrganizationSlug}&format=card-mode`);
+    await expect(page).not.toHaveElement(`//div[contains(@class, 'mosaic')]//*[text()='${project.name}']`);
   }, 6 * 60 * 1000);
 });
 
 describe("iPhone simulator", function() {
-  beforeAll(async function() {
-    setup = async (page) => await page.emulate(devicesMap['iPhone X'])
+  beforeEach(async function() {
+    setup = async (page) => await page.emulate(devices['iPhone X'])
+  })
+
+  afterEach(async function() {
+    browser.close();
   })
   mainTest();
   landscapeTest();
