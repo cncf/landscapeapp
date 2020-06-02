@@ -96,7 +96,6 @@
     "babel-polyfill": "6.26.0",
     "babel-preset-latest-node": "4.1.0",
     "bluebird": "3.7.2",
-    "browser-sync": "2.26.7",
     "caniuse-lite": "1.0.30001066",
     "chalk": "4.0.0",
     "change-case": "4.1.1",
