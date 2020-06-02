@@ -161,7 +161,7 @@ EOSSH
     ].join(' && ');
     const npmInstallCommand = `
       mkdir -p /root/builds/node_cache
-      ls -l /root/builds/node_cache/${hash} 2>/dev/null || (
+      ls -l /root/builds/node_cache/${hash}/node_modules/react 2>/dev/null || (
           echo ${hash} folder not found, running npm install
           cp -r /root/builds/node_cache/master/${nvmrc} /root/builds/node_cache/${tmpHash} 2>/dev/null || (
             echo "node_cache from master branch not found, initializing an empty repo"
