@@ -307,7 +307,6 @@ EOSSH
   if (!buildDone) {
     buildDone = true;
     await runLocalWithoutErrors(`ps`);
-    localPid.kill('');
     localPid.kill('SIGKILL');
 
     const pause = function(i) {
