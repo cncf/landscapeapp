@@ -68,9 +68,9 @@ let localPid;
 
 const makeLocalBuild = async function() {
     const localOutput = await runLocal(`
-      mkdir -p copy
-      rsync -az --exclude="copy" . copy
-      cd copy
+      # mkdir -p copy
+      # rsync -az --exclude="copy" . copy
+      # cd copy
       . ~/.nvm/nvm.sh
       npm pack interactive-landscape@latest
       tar xzf interactive*
@@ -91,9 +91,7 @@ const makeLocalBuild = async function() {
       } else {
         await runLocalWithoutErrors(`
           rm -rf netlify/dist || true
-          rm -rf dist || true
-          cp -r copy/dist netlify
-          cp -r copy/dist .
+          cp -r dist netlify
         `);
         process.exit(0);
       }
@@ -308,7 +306,16 @@ EOSSH
   )
   if (!buildDone) {
     buildDone = true;
+    localPid.kill('');
     localPid.kill('SIGKILL');
+
+    const pause = function(i) {
+      return new Promise(function(resolve) {
+        setTimeout(resolve, 5 * 1000);
+      })
+    };
+    await pause(); // allow the previous process to be killed
+
     console.info('Remote build done!');
     console.info(output.text);
     await runLocalWithoutErrors(`
