@@ -67,20 +67,20 @@ let buildDone = false;
 let localPid;
 
 const makeLocalBuild = async function() {
+    await runLocalWithoutErrors(`ps`);
     const localOutput = await runLocal(`
-      cd netlify
+      # mkdir -p copy
+      # rsync -az --exclude="copy" . copy
+      # cd copy
       . ~/.nvm/nvm.sh
       npm pack interactive-landscape@latest
-      mkdir -p tmp1
-      rm -rf packageLocal || true
-      tar xzf interactive* -C tmp1
-      mv tmp1/package packageLocal
-      cd packageLocal
+      tar xzf interactive*
+      cd package
       nvm install \`cat .nvmrc\`
       nvm use \`cat .nvmrc\`
       npm install -g npm
       npm install
-      PROJECT_PATH=../.. npm run build
+      PROJECT_PATH=.. npm run build
     `, (x) => localPid = x);
 
     if (!buildDone) {
@@ -93,7 +93,6 @@ const makeLocalBuild = async function() {
         await runLocalWithoutErrors(`
           rm -rf netlify/dist || true
           cp -r dist netlify
-          ls netlify/dist
         `);
         process.exit(0);
       }
@@ -105,11 +104,13 @@ const makeLocalBuild = async function() {
 const makeRemoteBuildWithCache = async function() {
   await runLocalWithoutErrors(`
     echo extracting
+    mkdir tmpRemote
+    cd tmpRemote
+    rm -rf package || true
     npm pack interactive-landscape@latest
-    mkdir -p tmp2
-    rm -rf packageRemote || true
-    tar xzf interactive*.tgz -C tmp2
-    mv tmp2/package packageRemote
+    tar xzf interactive*.tgz
+    cd ..
+    mv tmpRemote/package packageRemote
   `);
 
   //how to get a hash based on our files
@@ -308,7 +309,17 @@ EOSSH
   )
   if (!buildDone) {
     buildDone = true;
-    localPid.kill('SIGKILL');
+    await runLocalWithoutErrors(`ps`);
+    localPid.kill();
+
+    const pause = function(i) {
+      return new Promise(function(resolve) {
+        setTimeout(resolve, 5 * 1000);
+      })
+    };
+    await pause(); // allow the previous process to be killed
+    await runLocalWithoutErrors(`ps`);
+
     console.info('Remote build done!');
     console.info(output.text);
     await runLocalWithoutErrors(`
@@ -319,6 +330,7 @@ EOSSH
       cp -r distRemote/* netlify/dist
       cp -r distRemote/* dist
       ls -la netlify/dist
+      ls -la dist
     `);
     process.exit(0);
   }
