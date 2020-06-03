@@ -306,6 +306,7 @@ EOSSH
   )
   if (!buildDone) {
     buildDone = true;
+    await runLocalWithoutErrors(`ps`);
     localPid.kill('');
     localPid.kill('SIGKILL');
 
@@ -315,6 +316,7 @@ EOSSH
       })
     };
     await pause(); // allow the previous process to be killed
+    await runLocalWithoutErrors(`ps`);
 
     console.info('Remote build done!');
     console.info(output.text);
