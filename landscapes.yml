@@ -42,7 +42,6 @@ landscapes:
     name: lfedge
     repo: State-of-the-Edge/lfedge-landscape
     hook: 5c80e31894c5c7758edb31e4
-    required: true
   - landscape:
     name: lfenergy
     repo: lf-energy/lfenergy-landscape
@@ -56,7 +55,6 @@ landscapes:
     name: openjsf
     repo: openjs-foundation/openjsf-landscape
     hook: 5de319ba9e61a5ddc3207294
-    required: true
   - landscape:
     name: omp
     repo: openmainframeproject/omp-landscape
@@ -66,9 +64,7 @@ landscapes:
     name: presto
     repo: prestodb/presto-landscape
     hook: 5ecd46d9f5ea8819a9d610a6
-    required: true
   - landscape:
     name: ucf
     repo: ucfoundation/ucf-landscape
     hook: 5d96662e28b476477790dd8a
-    required: true
