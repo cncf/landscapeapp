@@ -68,10 +68,9 @@ let localPid;
 
 const makeLocalBuild = async function() {
     const localOutput = await runLocal(`
-      mkdir -p copy
-      cp * copy || true
-      cp -r cached_logos hosted_logos images .git copy || true
-      cd copy
+      mkdir -p ../copy
+      cp -r * ../copy || true
+      cd ../copy
       . ~/.nvm/nvm.sh
       npm pack interactive-landscape@latest
       tar xzf interactive*
@@ -93,8 +92,8 @@ const makeLocalBuild = async function() {
         await runLocalWithoutErrors(`
           rm -rf netlify/dist || true
           rm -rf dist || true
-          cp -r copy/dist netlify
-          cp -r copy/dist .
+          cp -r ../copy/dist netlify
+          cp -r ../copy/dist .
         `);
         process.exit(0);
       }
