@@ -67,6 +67,7 @@ let buildDone = false;
 let localPid;
 
 const makeLocalBuild = async function() {
+    await runLocalWithoutErrors(`ps`);
     const localOutput = await runLocal(`
       # mkdir -p copy
       # rsync -az --exclude="copy" . copy
@@ -103,11 +104,13 @@ const makeLocalBuild = async function() {
 const makeRemoteBuildWithCache = async function() {
   await runLocalWithoutErrors(`
     echo extracting
+    mkdir tmpRemote
+    cd tmpRemote
+    rm -rf package || true
     npm pack interactive-landscape@latest
-    mkdir -p tmp2
-    rm -rf packageRemote || true
-    tar xzf interactive*.tgz -C tmp2
-    mv tmp2/package packageRemote
+    tar xzf interactive*.tgz
+    cd ..
+    mv tmpRemote/package packageRemote
   `);
 
   //how to get a hash based on our files
@@ -307,7 +310,7 @@ EOSSH
   if (!buildDone) {
     buildDone = true;
     await runLocalWithoutErrors(`ps`);
-    localPid.kill('SIGKILL');
+    localPid.kill();
 
     const pause = function(i) {
       return new Promise(function(resolve) {
