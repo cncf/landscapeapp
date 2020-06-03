@@ -68,19 +68,19 @@ let localPid;
 
 const makeLocalBuild = async function() {
     const localOutput = await runLocal(`
-      cd netlify
+      mkdir -p copy
+      cp * copy || true
+      cp -r cached_logos hosted_logos images .git copy
+      cd copy
       . ~/.nvm/nvm.sh
       npm pack interactive-landscape@latest
-      mkdir -p tmp1
-      rm -rf packageLocal || true
-      tar xzf interactive* -C tmp1
-      mv tmp1/package packageLocal
-      cd packageLocal
+      tar xzf interactive*
+      cd package
       nvm install \`cat .nvmrc\`
       nvm use \`cat .nvmrc\`
       npm install -g npm
       npm install
-      PROJECT_PATH=../.. npm run build
+      PROJECT_PATH=.. npm run build
     `, (x) => localPid = x);
 
     if (!buildDone) {
@@ -92,8 +92,9 @@ const makeLocalBuild = async function() {
       } else {
         await runLocalWithoutErrors(`
           rm -rf netlify/dist || true
-          cp -r dist netlify
-          ls netlify/dist
+          rm -rf dist || true
+          cp -r copy/dist netlify
+          cp -r copy/dist .
         `);
         process.exit(0);
       }
@@ -319,6 +320,7 @@ EOSSH
       cp -r distRemote/* netlify/dist
       cp -r distRemote/* dist
       ls -la netlify/dist
+      ls -la dist
     `);
     process.exit(0);
   }
