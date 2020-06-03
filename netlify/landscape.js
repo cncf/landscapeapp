@@ -71,6 +71,7 @@ const makeLocalBuild = async function() {
       mkdir -p ../copy
       cp -r * ../copy || true
       cd ../copy
+      rm -rf .git* || true
       . ~/.nvm/nvm.sh
       npm pack interactive-landscape@latest
       tar xzf interactive*
