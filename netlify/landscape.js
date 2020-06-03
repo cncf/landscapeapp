@@ -69,8 +69,7 @@ let localPid;
 const makeLocalBuild = async function() {
     const localOutput = await runLocal(`
       mkdir -p copy
-      cp * copy || true
-      cp -r cached_logos hosted_logos images copy || true
+      rsync -az --exclude="copy" . copy
       cd copy
       . ~/.nvm/nvm.sh
       npm pack interactive-landscape@latest
