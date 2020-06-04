@@ -19,7 +19,6 @@ const requestWithRetry = async ({ attempts = maxAttempts, retryStatuses, delayFn
   try {
     return await requestPromise(rest);
   } catch (ex) {
-    console.log(ex)
     const { statusCode, options, error } = ex;
     const message = [
       `Attempt #${maxAttempts - attempts + 1}`,
