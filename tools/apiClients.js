@@ -13,7 +13,7 @@ import Promise from "bluebird";
 let requests = {};
 
 const maxAttempts = 5
-const delay = 5000
+const delay = 30000
 
 const requestWithRetry = async ({ attempts = maxAttempts, retryStatuses, delayFn, ...rest }) => {
   try {
