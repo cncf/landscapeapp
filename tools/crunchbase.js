@@ -13,6 +13,25 @@ const cacheMiss = colors.green;
 const debug = require('debug')('cb');
 import { CrunchbaseClient, YahooFinanceClient } from './apiClients';
 
+const EXCHANGE_SUFFIXES = {
+  'bit': 'MI', // Milan
+  'epa': 'PA', // Paris
+  'etr': 'DE', // XETRA
+  'hkg': 'HK', // Hong Kong
+  'lse': 'L', // London
+  'moex': 'ME', // Moscow
+  'sse': 'SS', // Shanghai
+  'swx': 'SW', // Zurich
+  'szse': 'SZ',  // Shenzhen
+  'tyo': 'T', // Tokyo
+}
+
+const getSymbolWithSuffix = (symbol, exchange) => {
+  const exchangeSuffix = EXCHANGE_SUFFIXES[exchange]
+
+  return [symbol, exchangeSuffix].filter(_ => _).join('.')
+}
+
 export async function getCrunchbaseOrganizationsList() {
   const traverse = require('traverse');
   const source = require('js-yaml').safeLoad(require('fs').readFileSync(path.resolve(projectPath, 'landscape.yml')));
@@ -135,7 +154,7 @@ export async function fetchData(name) {
   const parentLinks = parents.map( (item) => 'https://www.crunchbase.com/organization/' + item.identifier.permalink );
 
   const firstWithStockSymbol = _.find([result.properties].concat(parents), (x) => !!x.stock_symbol);
-  const stockSymbol = firstWithStockSymbol ? firstWithStockSymbol.stock_symbol.value : undefined;
+  const stockSymbol = firstWithStockSymbol && getSymbolWithSuffix(firstWithStockSymbol.stock_symbol.value, firstWithStockSymbol.stock_exchange_symbol)
   const firstWithTotalFunding = _.find([result.properties].concat(parents), (x) => !!x.funding_total);
   const totalFunding = firstWithTotalFunding ? + firstWithTotalFunding.funding_total.value_usd.toFixed() : undefined;
 
