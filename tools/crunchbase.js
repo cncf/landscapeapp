@@ -77,13 +77,18 @@ const getYahooFinanceData = async ticker => {
 }
 
 const marketCapCache = {};
-async function getMarketCap(ticker) {
+async function getMarketCap(ticker, stockExchange) {
   debug(`Extracting the ticker from ${ticker}`);
   let quote;
   try {
     quote = marketCapCache[ticker] || await getYahooFinanceData(ticker)
   } catch(ex) {
-    throw new Error(`Can't resolve stock ticker ${ticker}; please manually add a "stock_ticker" key to landscape.yml or set to null`);
+    try {
+      ticker = ticker.concat(".",stockExchange.substr(0, 2))
+      quote = marketCapCache[ticker] || await getYahooFinanceData(ticker)
+    } catch(ex) {
+      throw new Error(`Can't resolve stock ticker ${ticker}; please manually add a "stock_ticker" key to landscape.yml or set to null`);
+    }  
   }
   marketCapCache[ticker] = quote;
   const marketCap = quote;
