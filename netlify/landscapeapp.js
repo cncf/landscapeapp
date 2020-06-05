@@ -312,7 +312,7 @@ EOSSH
       git fetch github
       # git diff # Need to comment this when a diff is too large
       git checkout -- .
-      npm version patch
+      npm version patch || npm version patch || npm version patch
       git commit -m 'Update to a new version [skip ci]' --allow-empty --amend
       git branch -D tmp || true
       git checkout -b tmp
