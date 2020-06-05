@@ -182,7 +182,9 @@ async function main() {
   const newProcessedLandscape = tree.map(function(node) {
     if (node && node.item === null) {
       //crunchbase
-      if (node.unnamed_organization) {
+      if (node.organization) {
+        node.crunchbase_data = { ...node.organization, parents: [] }
+      } else if (node.unnamed_organization) {
         node.crunchbase = settings.global.self;
         node.crunchbase_data = _.clone({ ...settings.anonymous_organization, parents: [] });
       } else {

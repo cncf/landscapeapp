@@ -219,7 +219,7 @@ async function main () {
         twitter: getTwitter(),
         latestTweetDate: formatDate((node.twitter_data || {}).latest_tweet_date),
         description: getDescription(),
-        organization: (node.crunchbase_data || {}).name || node.organization,
+        organization: (node.crunchbase_data || {}).name,
         crunchbaseData: node.crunchbase_data,
         path: parts.join(' / '),
         landscape: parts.join(' / '),
@@ -349,7 +349,7 @@ async function main () {
 
   var hasBadCrunchbase = false;
   await Promise.mapSeries(itemsWithExtraFields, async function(item) {
-    if (!item.unnamed_organization && item.crunchbase.indexOf('https://www.crunchbase.com/organization/') !== 0) {
+    if (item.crunchbase && item.crunchbase.indexOf('https://www.crunchbase.com/organization/') !== 0) {
       hasBadCrunchbase = true;
       await failOnMultipleErrors(`${item.name}  has a crunchbase ${item.crunchbase} which does not start with 'https://www.crunchbase.com/organization'`);
     }

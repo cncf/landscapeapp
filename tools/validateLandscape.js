@@ -30,7 +30,8 @@ async function main() {
     'enduser',
     'open_source',
     'allow_duplicate_repo',
-    'unnamed_organization'
+    'unnamed_organization',
+    'organization'
   ];
 
   const addKeyError = (title, key) => {
