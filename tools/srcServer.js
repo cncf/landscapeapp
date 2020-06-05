@@ -1,6 +1,7 @@
 // This file configures the development web server
 // which supports hot reloading and synchronized testing.
 
+import open from 'open'
 import request from 'request-promise';
 import path from 'path';
 import historyApiFallback from 'connect-history-api-fallback';
@@ -74,3 +75,4 @@ app.use(function(req, res) {
 });
 app.listen(3000);
 console.info(`Server is running on http://localhost:3000`);
+open('http://localhost:3000');
