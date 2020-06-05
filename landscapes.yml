@@ -51,10 +51,6 @@ landscapes:
     hook: 5ec5145565b543b0b01aa9d7
     required: true
   - landscape:
-    name: lumberyard
-    repo: lumberyard3d/lumberyard-landscape
-    hook: 5eda654179ccc3f3ab1b21a9
-  - landscape:
     name: openjsf
     repo: openjs-foundation/openjsf-landscape
     hook: 5de319ba9e61a5ddc3207294
