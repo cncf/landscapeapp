@@ -304,7 +304,7 @@ EOSSH
   runLocalWithoutErrors('cp -r dist netlify');
 
   if (process.env.BRANCH === 'master') {
-    runLocalWithoutErrors(`
+    await runLocalWithoutErrors(`
       git config --global user.email "info@cncf.io"
       git config --global user.name "CNCF-bot"
       git remote rm github 2>/dev/null || true
