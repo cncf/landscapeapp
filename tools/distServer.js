@@ -1,5 +1,6 @@
 // This file configures a web server for testing the production build
 // on your local machine.
+import open from 'open';
 import path from 'path';
 import historyApiFallback from 'connect-history-api-fallback';
 import {chalkProcessing} from './chalkConfig';
@@ -23,3 +24,4 @@ app.use(function(req, res) {
   res.end(require('fs').readFileSync(path.resolve(projectPath, 'dist', 'index.html')));
 });
 app.listen(4000);
+open('http://localhost:4000');

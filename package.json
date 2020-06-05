@@ -140,6 +140,7 @@
     "minimatch": "3.0.4",
     "node-emoji": "1.10.0",
     "node-sass": "4.14.1",
+    "open": "7.0.4",
     "postcss-loader": "3.0.0",
     "prop-types": "15.7.2",
     "puppeteer": "3.0.4",
