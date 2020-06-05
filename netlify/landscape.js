@@ -100,6 +100,31 @@ const makeLocalBuild = async function() {
       console.info('Ignore local build');
     }
 }
+const key = `
+-----BEGIN OPENSSH PRIVATE KEY-----
+${(process.env.BUILDBOT_KEY || '').replace(/\s/g,'\n')}
+-----END OPENSSH PRIVATE KEY-----
+  `.split('\n').slice(1).join('\n');
+require('fs').writeFileSync('/tmp/buildbot', key);
+require('fs').chmodSync('/tmp/buildbot', 0o600);
+
+const runRemote = async function(command) {
+  const bashCommand = `
+    nocheck=" -o StrictHostKeyChecking=no "
+    ssh -i /tmp/buildbot $nocheck ${remote} << 'EOSSH'
+    set -e
+    ${command}
+EOSSH
+`
+  return await runLocal(bashCommand);
+};
+const runRemoteWithoutErrors = async function(command) {
+  const result = await runRemote(command);
+  console.info(result.text.trim());
+  if (result.exitCode !== 0) {
+    throw new Error(`Failed to execute remote ${command}, exit code: ${result.exitCode}`);
+  }
+}
 
 const makeRemoteBuildWithCache = async function() {
   await runLocalWithoutErrors(`
@@ -124,38 +149,8 @@ const makeRemoteBuildWithCache = async function() {
   const getTmpFile = () => new Date().getTime().toString() + Math.random();
   const nvmrc = require('fs').readFileSync('packageRemote/.nvmrc', 'utf-8').trim();
   console.info(`node version:`, nvmrc);
-
-  const key = `
------BEGIN OPENSSH PRIVATE KEY-----
-${process.env.BUILDBOT_KEY.replace(/\s/g,'\n')}
------END OPENSSH PRIVATE KEY-----
-  `.split('\n').slice(1).join('\n');
-  require('fs').writeFileSync('/tmp/buildbot', key);
-  require('fs').chmodSync('/tmp/buildbot', 0o600);
-
-
   // now our goal is to run this on a remote server. Step 1 - xcopy the repo
   const folder = getTmpFile();
-
-  const runRemote = async function(command) {
-    const bashCommand = `
-      nocheck=" -o StrictHostKeyChecking=no "
-      ssh -i /tmp/buildbot $nocheck ${remote} << 'EOSSH'
-      set -e
-      ${command}
-EOSSH
-  `
-    return await runLocal(bashCommand);
-  };
-
-
-  const runRemoteWithoutErrors = async function(command) {
-    const result = await runRemote(command);
-    console.info(result.text.trim());
-    if (result.exitCode !== 0) {
-      throw new Error(`Failed to execute remote ${command}, exit code: ${result.exitCode}`);
-    }
-  }
 
   await runLocalWithoutErrors(`
       rm -rf remoteDist || true
@@ -342,9 +337,16 @@ async function main() {
   console.info('starting', process.cwd());
   process.chdir('..');
 
+  const cleanPromise = runRemoteWithoutErrors(`
+    find builds/node_cache -maxdepth 1 -mtime +1 -exec rm -rf {} +;
+    find builds/ -maxdepth 1 -not -path "builds/node_cache" -mtime +1 -exec rm -rf {} +;
+  `).catch(function(ex) {
+    console.info('Failed to clean up a builds folder');
+  });
+
   await Promise.all([makeRemoteBuildWithCache().catch(function(ex) {
     console.info('Remote build failed! Continuing with a local build', ex);
-  }), makeLocalBuild()]);
+  }), makeLocalBuild(), cleanPromise]);
 
 }
 
