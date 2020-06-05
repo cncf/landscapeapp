@@ -20,10 +20,6 @@ landscapes:
     hook: 5d8e8ecbeb12d77369f06dba
     required: true
   - landscape:
-    name: finos
-    repo: finos/finos-landscape
-    hook: 5eda7140b186b66e915a15b8
-  - landscape:
     name: hl-landscape
     repo: hyperledger-landscape/hl-landscape
     hook: 5d8b7e9b2571ad2a23a392b8
