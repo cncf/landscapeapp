@@ -28,7 +28,21 @@ const debug = function() {
   }
 }
 
-const runLocal = function(command, assignFn) {
+const runLocal = function(command, options = {}) {
+  const { assignFn, showOutputFn } = options;
+
+  // report the output once every 5 seconds
+  let lastOutput = { s: '', time: new Date().getTime() };
+  let displayIfRequired = function(text) {
+    lastOutput.s = lastOutput.s + text;
+    if (showOutputFn && showOutputFn()) {
+      if (lastOutput.done || new Date().getTime() > lastOutput.time + 5 * 1000) {
+        console.info(lastOutput.s);
+        lastOutput.s = "";
+        lastOutput.time = new Date().getTime();
+      };
+    }
+  }
   return new Promise(function(resolve) {
     var spawn = require('child_process').spawn;
     var child = spawn('bash', ['-lc',`set -e \n${command}`]);
@@ -39,14 +53,18 @@ const runLocal = function(command, assignFn) {
     child.stdout.on('data', function(data) {
       const text = maskSecrets(data.toString('utf-8'));
       output.push(text);
+      displayIfRequired(text);
       //Here is where the output goes
     });
     child.stderr.on('data', function(data) {
       const text = maskSecrets(data.toString('utf-8'));
       output.push(text);
+      displayIfRequired(text);
       //Here is where the error output goes
     });
     child.on('close', function(exitCode) {
+      lastOutput.done = true;
+      displayIfRequired('');
       resolve({text: output.join(''), exitCode});
       //Here you can get the exit code of the script
     });
@@ -65,6 +83,7 @@ const runLocalWithoutErrors = async function(command) {
 
 let buildDone = false;
 let localPid;
+let remoteFailed = false;
 
 const makeLocalBuild = async function() {
     await runLocalWithoutErrors(`ps`);
@@ -81,12 +100,14 @@ const makeLocalBuild = async function() {
       npm install -g npm
       npm install
       PROJECT_PATH=.. npm run build
-    `, (x) => localPid = x);
+    `, { assignFn: (x) => localPid = x, showOutputFn: () => remoteFailed });
 
     if (!buildDone) {
       buildDone = true;
       console.info('Local build finished, exit code:', localOutput.exitCode);
-      console.info(localOutput.text);
+      if (!remoteFailed) {
+        console.info(localOutput.text);
+      }
       if (localOutput.exitCode !== 0) {
         process.exit(1);
       } else {
@@ -108,7 +129,7 @@ ${(process.env.BUILDBOT_KEY || '').replace(/\s/g,'\n')}
 require('fs').writeFileSync('/tmp/buildbot', key);
 require('fs').chmodSync('/tmp/buildbot', 0o600);
 
-const runRemote = async function(command) {
+const runRemote = async function(command, options) {
   const bashCommand = `
     nocheck=" -o StrictHostKeyChecking=no "
     ssh -i /tmp/buildbot $nocheck ${remote} << 'EOSSH'
@@ -116,7 +137,7 @@ const runRemote = async function(command) {
     ${command}
 EOSSH
 `
-  return await runLocal(bashCommand);
+  return await runLocal(bashCommand, options);
 };
 const runRemoteWithoutErrors = async function(command) {
   const result = await runRemote(command);
@@ -346,6 +367,7 @@ async function main() {
 
   await Promise.all([makeRemoteBuildWithCache().catch(function(ex) {
     console.info('Remote build failed! Continuing with a local build', ex);
+    remoteFailed = true;
   }), makeLocalBuild(), cleanPromise]);
 
 }
