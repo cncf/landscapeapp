@@ -94,6 +94,19 @@ EOSSH
 
   const runLocal = function(command) {
     return new Promise(function(resolve) {
+      let finished = false;
+      setTimeout(function() {
+        if (finished) {
+          return;
+        }
+        finished = true;
+        child.kill();
+        resolve({
+          exitCode: -1,
+          timeout: true,
+          text: 'A command took more than 15 minutes. \n' + output.join('')
+        });
+      }, 15 * 60 * 1000);
       var spawn = require('child_process').spawn;
       var child = spawn('bash', ['-lc',`set -e \n${command}`]);
       let output = [];
@@ -110,7 +123,10 @@ EOSSH
         //Here is where the error output goes
       });
       child.on('close', function(exitCode) {
-        resolve({text: output.join(''), exitCode});
+        if (!finished) {
+          finished = true;
+          resolve({text: output.join(''), exitCode});
+        }
         //Here you can get the exit code of the script
       });
     });
