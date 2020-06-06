@@ -1,6 +1,6 @@
 set -e
 rm -rf $2 || true
-git clone --quiet https://github.com/$1 $2
+timeout 120s git clone --quiet https://github.com/$1 $2
 cd $2
 git remote -v
 # git remote rm origin 2>/dev/null 1>/dev/null || true

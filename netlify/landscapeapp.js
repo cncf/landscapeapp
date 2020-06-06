@@ -102,11 +102,10 @@ EOSSH
         finished = true;
         child.kill();
         resolve({
-          exitCode: -1,
-          timeout: true,
-          text: 'A command took more than 15 minutes. \n' + output.join('')
+          exitCode: 'timeout',
+          text: 'A command took more than 25 minutes. \n' + output.join('')
         });
-      }, 15 * 60 * 1000);
+      }, 25 * 60 * 1000);
       var spawn = require('child_process').spawn;
       var child = spawn('bash', ['-lc',`set -e \n${command}`]);
       let output = [];

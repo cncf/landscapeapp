@@ -32,7 +32,7 @@ async function main() {
   set -e
   . ~/.nvm/nvm.sh
   rm -rf /repo || true
-  git clone https://$GITHUB_USER:$GITHUB_TOKEN@github.com/${landscape.repo} /repo
+  timeout 120s git clone https://$GITHUB_USER:$GITHUB_TOKEN@github.com/${landscape.repo} /repo
   cd /landscapeapp
   export PROJECT_PATH=/repo
   npm run update
