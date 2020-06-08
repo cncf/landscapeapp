@@ -95,7 +95,7 @@ EOSSH
   const runLocal = function(command) {
     return new Promise(function(resolve) {
       let finished = false;
-      setTimeout(function() {
+      let timeout = setTimeout(function() {
         if (finished) {
           return;
         }
@@ -111,12 +111,18 @@ EOSSH
       let output = [];
       child.stdout.on('data', function(data) {
         const text = maskSecrets(data.toString('utf-8'));
+        if (options.streamOutput) {
+          console.info(text);
+        }
         // console.info(text);
         output.push(text);
         //Here is where the output goes
       });
       child.stderr.on('data', function(data) {
         const text = maskSecrets(data.toString('utf-8'));
+        if (options.streamOutput) {
+          console.info(text);
+        }
         // console.info(text);
         output.push(text);
         //Here is where the error output goes
@@ -124,6 +130,7 @@ EOSSH
       child.on('close', function(exitCode) {
         if (!finished) {
           finished = true;
+          clearTimeout(timeout);
           resolve({text: output.join(''), exitCode});
         }
         //Here you can get the exit code of the script
@@ -132,8 +139,8 @@ EOSSH
   }
 
   const runLocalWithoutErrors = async function(command) {
-    const result = await runLocal(command);
-    console.info(result.text);
+    const result = await runLocal(command, {streamOutput: true});
+    // console.info(result.text);
     if (result.exitCode !== 0) {
       throw new Error(`Failed to execute ${command}, exit code: ${result.exitCode}`);
     }
@@ -274,6 +281,8 @@ EOSSH
       console.info(`Output from: ${output.landscape.name}, exit code: ${output.exitCode}`);
       console.info(output.text);
     }
+    landscape.done = true;
+    console.info(`Remaining : ${landscapesInfo.landscapes.filter( (x) => !x.done).map( (x) => x.name).join(',')}`);
 
     await runLocal(
       `
@@ -362,7 +371,9 @@ EOSSH
     }
   }
 }
-main().catch(function(ex) {
+main().then(function() {
+  process.exit(0);
+}).catch(function(ex) {
   console.info(ex);
   process.exit(1);
 });
