@@ -111,18 +111,12 @@ EOSSH
       let output = [];
       child.stdout.on('data', function(data) {
         const text = maskSecrets(data.toString('utf-8'));
-        if (options.streamOutput) {
-          console.info(text);
-        }
         // console.info(text);
         output.push(text);
         //Here is where the output goes
       });
       child.stderr.on('data', function(data) {
         const text = maskSecrets(data.toString('utf-8'));
-        if (options.streamOutput) {
-          console.info(text);
-        }
         // console.info(text);
         output.push(text);
         //Here is where the error output goes
@@ -139,8 +133,8 @@ EOSSH
   }
 
   const runLocalWithoutErrors = async function(command) {
-    const result = await runLocal(command, {streamOutput: true});
-    // console.info(result.text);
+    const result = await runLocal(command);
+    console.info(result.text);
     if (result.exitCode !== 0) {
       throw new Error(`Failed to execute ${command}, exit code: ${result.exitCode}`);
     }
