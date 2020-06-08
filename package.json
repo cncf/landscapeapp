@@ -172,7 +172,7 @@
     "serve-static": "1.14.1",
     "sitemap": "6.1.5",
     "style-loader": "1.2.1",
-    "svg-autocrop": "2.0.14",
+    "svg-autocrop": "2.0.15",
     "terser-webpack-plugin": "3.0.2",
     "traverse": "0.6.6",
     "typeface-roboto": "0.0.75",
