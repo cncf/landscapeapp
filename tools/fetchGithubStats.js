@@ -9,7 +9,7 @@ import makeReporter from './progressReporter';
 const debug = require('debug')('github');
 import shortRepoName from '../src/utils/shortRepoName';
 import getRepositoryInfo , { getLanguages, getWeeklyContributions}  from './getRepositoryInfo';
-import { cacheKey, getRepos } from './repos'
+import { cacheKey, fetchGithubOrgs, getRepos } from './repos'
 import { GithubClient} from './apiClients'
 
 import { getRepoLatestDate, getReleaseDate } from './githubDates';
@@ -43,7 +43,9 @@ const getContributorsList = async (repo, page = 1) => {
 }
 
 export async function fetchGithubEntries({cache, preferCache}) {
-  const repos = getRepos();
+  const githubOrgs = (await fetchGithubOrgs(preferCache))
+    .map(org => ({ url: org.url, repos: org.repos, cached: org.cached, ...org.github_data }))
+  const repos = [...getRepos(), ...githubOrgs.filter(org => !org.cached).map(org => org.repos).flat()]
   debug(cache);
   const errors = [];
   const reporter = makeReporter();
@@ -131,5 +133,5 @@ export async function fetchGithubEntries({cache, preferCache}) {
   }, {concurrency: 10});
   reporter.summary();
   _.each(errors, (x) => console.info(x));
-  return result;
+  return [...result, ...githubOrgs]
 }

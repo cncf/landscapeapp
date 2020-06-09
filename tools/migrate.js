@@ -1,7 +1,26 @@
 import traverse from 'traverse';
-import {settings, saveSettings} from './settings';
+import { settings, } from './settings';
+import { landscape, saveLandscape } from "./landscape";
+import { updateProcessedLandscape } from "./processedLandscape";
 
-let newSettings = traverse(settings).map(function () {
+if (settings.global.short_name === 'LFPH') {
+  const newLandscape = traverse(landscape).map(node => {
+    if (node && node.repo_url === 'https://github.com/CovidShield/mobile') {
+      const { repo_url, additional_repos, ...rest } = node
+      return { ...rest, project_org: 'https://github.com/CovidShield' }
+    }
+    return node
+  })
+
+  saveLandscape(newLandscape)
+}
+
+updateProcessedLandscape(processedLandscape => {
+  return traverse(processedLandscape).map(node => {
+    if (node && node.hasOwnProperty('item') && node.repo_url && !node.repos) {
+      const { additional_repos, ...rest } = node
+      const repos = [{ url: node.repo_url, stars: node.github_data.stars }, ...(additional_repos || []).map(repo => ({ url: repo.repo_url, stars: 0 }))]
+      return { ...rest, repos }
+    }
+  })
 })
-
-saveSettings(newSettings)

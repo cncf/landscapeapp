@@ -5,7 +5,7 @@ import colors from 'colors';
 import { addWarning, addError } from './reporter';
 import getRepositoryInfo from './getRepositoryInfo';
 import makeReporter from './progressReporter';
-import { cacheKey, getRepos } from './repos';
+import { cacheKey, getRepos, fetchGithubOrgs } from './repos';
 
 const error = colors.red;
 const fatal = (x) => colors.red(colors.inverse(x));
@@ -15,7 +15,9 @@ const debug = require('debug')('github');
 import { getRepoStartDate } from './githubDates';
 
 export async function fetchStartDateEntries({cache, preferCache}) {
-  const repos = getRepos();
+  const githubOrgs = (await fetchGithubOrgs(preferCache))
+    .map(org => ({ url: org.url, repos: org.repos, cached: org.cached, ...org.github_start_commit_data}))
+  const repos = [...getRepos(), ...githubOrgs.filter(org => !org.cached).map(org => org.repos).flat()]
   const errors = [];
   const reporter = makeReporter();
   const result =  await Promise.map(repos, async function(repo) {
@@ -57,5 +59,5 @@ export async function fetchStartDateEntries({cache, preferCache}) {
   }, {concurrency: 20});
   reporter.summary();
   _.each(errors, (x) => console.info(x));
-  return result;
+  return [...result, ...githubOrgs];
 }

@@ -1,5 +1,7 @@
 import traverse from 'traverse'
 import _ from 'lodash'
+import Promise from 'bluebird'
+import { GithubClient } from './apiClients'
 import { landscape } from './landscape'
 import { processedLandscape } from './processedLandscape'
 
@@ -7,15 +9,18 @@ export const cacheKey = (url, branch) => `${url}#${branch}`
 
 const deleteReposWithNewAdditionalRepos = (cache) => {
   const processedAdditionalRepos = traverse(processedLandscape).reduce((acc, node) => {
-    if (node && node.repo_url && node.additional_repos) {
-      acc[node.repo_url] = node.additional_repos.map(node => cacheKey(node.repo_url, node.branch)).sort()
+    if (node && node.repos && node.repos.length > 1) {
+      acc[node.repo_url] = node.repos
+        .map(({ url }) => url)
+        .filter(url => url !== node.repo_url)
+        .sort()
     }
     return acc
   }, {})
 
   traverse(landscape).forEach(node => {
     if (node && node.repo_url && node.additional_repos) {
-      const additionalRepos = node.additional_repos.map(node => cacheKey(node.repo_url, node.branch)).sort()
+      const additionalRepos = node.additional_repos.map(({ repo_url }) => repo_url).sort()
 
       if (JSON.stringify(processedAdditionalRepos[node.repo_url]) !== JSON.stringify(additionalRepos)) {
         delete cache[cacheKey(node.repo_url, node.branch)]
@@ -26,8 +31,13 @@ const deleteReposWithNewAdditionalRepos = (cache) => {
 
 export const getProcessedRepos = () => {
   let processedRepos = traverse(processedLandscape).reduce((acc, node) => {
-    if (node && node.github_data) {
-      acc[cacheKey(node.repo_url, node.branch)] = { ...node.github_data, url: node.repo_url, branch: node.branch }
+    if (node && node.github_data && node.repo_url) {
+      acc[cacheKey(node.repo_url, node.branch)] = {
+        ...node.github_data,
+        repos: node.repos,
+        url: node.repo_url,
+        branch: node.branch
+      }
     }
     return acc
   }, {})
@@ -35,6 +45,46 @@ export const getProcessedRepos = () => {
   deleteReposWithNewAdditionalRepos(processedRepos)
 
   return processedRepos
+}
+
+export const getProcessedGithubOrgs = () => {
+  return traverse(processedLandscape).reduce((acc, node) => {
+    if (node && node.github_data && node.project_org) {
+      const { project_org, github_data, github_start_commit_data, repos } = node
+      acc[project_org] = { github_data, github_start_commit_data, repos, url: project_org }
+    }
+    return acc
+  }, {})
+}
+
+export const getOrganizations = () => {
+  const orgs = traverse(landscape).reduce((acc, node) => {
+    if (node && node.project_org && node.hasOwnProperty('item')) {
+      acc.push({ url: node.project_org })
+    }
+    return acc
+  }, [])
+  return orgs
+}
+
+export const fetchGithubOrgs = async preferCache => {
+  const githubOrgs = getOrganizations()
+  const processedGithubOrgs = getProcessedGithubOrgs()
+  return await Promise.map(githubOrgs, async ({ url }) => {
+    const processedOrg = processedGithubOrgs[url]
+    if (processedOrg && preferCache) {
+      return { ...processedOrg, cached: true };
+    }
+    const orgName = url.split('/').pop()
+    const { description } = await GithubClient.request({ path: `orgs/${orgName}` })
+    const params = { type: 'public', per_page: 100 }
+    const path = `orgs/${orgName}/repos`
+    const response = await GithubClient.request({ path, params })
+    const repos = response.map(({ html_url, default_branch }) => {
+      return { url: html_url, branch: default_branch, multiple: true }
+    })
+    return { url, description, repos }
+  }, { concurrency: 10 })
 }
 
 export const getRepos = () => {
