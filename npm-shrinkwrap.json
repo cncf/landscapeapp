@@ -22703,9 +22703,9 @@
       }
     },
     "svg-autocrop": {
-      "version": "2.0.15",
-      "resolved": "https://registry.npmjs.org/svg-autocrop/-/svg-autocrop-2.0.15.tgz",
-      "integrity": "sha512-r/5dj/+cCvWaiia7t6amQ2iz8AgFP15HbLINvrF7nm/xhE8ePuPNPnRy2ZS5yOGVTJlz7lLccepEDy+WLjxVBA==",
+      "version": "2.0.16",
+      "resolved": "https://registry.npmjs.org/svg-autocrop/-/svg-autocrop-2.0.16.tgz",
+      "integrity": "sha512-N3+9iXgbGjTPhE/Z/YI/CgXFnJvm59BBA+pCNpMshfdFA8xbSEK25AQivhJEx2kR60Hw4y4hM3dFC8TW5Rxu+A==",
       "requires": {
         "file-url": "^3.0.0",
         "glob": "^7.1.6",
