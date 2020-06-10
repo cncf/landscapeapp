@@ -241,7 +241,7 @@ const makeRemoteBuildWithCache = async function() {
 
   }
 
-  const vars = ['CRUNCHBASE_KEY_4', 'GITHUB_KEY', 'TWITTER_KEYS', 'GA'];
+  const vars = ['CRUNCHBASE_KEY_4', 'GITHUB_KEY', 'TWITTER_KEYS', 'GA', 'BRANCH'];
   const outputFolder = 'landscape' + getTmpFile();
   const buildCommand = [
     `cd /opt/repo/packageRemote`,
