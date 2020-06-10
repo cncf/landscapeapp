@@ -95,7 +95,7 @@ EOSSH
   const runLocal = function(command) {
     return new Promise(function(resolve) {
       let finished = false;
-      setTimeout(function() {
+      let timeout = setTimeout(function() {
         if (finished) {
           return;
         }
@@ -124,6 +124,7 @@ EOSSH
       child.on('close', function(exitCode) {
         if (!finished) {
           finished = true;
+          clearTimeout(timeout);
           resolve({text: output.join(''), exitCode});
         }
         //Here you can get the exit code of the script
@@ -274,6 +275,8 @@ EOSSH
       console.info(`Output from: ${output.landscape.name}, exit code: ${output.exitCode}`);
       console.info(output.text);
     }
+    landscape.done = true;
+    console.info(`Remaining : ${landscapesInfo.landscapes.filter( (x) => !x.done).map( (x) => x.name).join(',')}`);
 
     await runLocal(
       `
@@ -362,7 +365,9 @@ EOSSH
     }
   }
 }
-main().catch(function(ex) {
+main().then(function() {
+  process.exit(0);
+}).catch(function(ex) {
   console.info(ex);
   process.exit(1);
 });

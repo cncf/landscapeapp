@@ -85,8 +85,17 @@ let buildDone = false;
 let localPid;
 let remoteFailed = false;
 
+async function getPids() {
+  const result = await runLocalWithoutErrors(`ps`);
+  const lines = result.split('\n').map( (x) => x.trim()).filter( (x) => x).slice(1);
+  const pids = lines.map( (line) => line.split(' ')[0]);
+  console.info('pids:', pids);
+  return pids;
+}
+
+let initialPids;
+
 const makeLocalBuild = async function() {
-    await runLocalWithoutErrors(`ps`);
     const localOutput = await runLocal(`
       # mkdir -p copy
       # rsync -az --exclude="copy" . copy
@@ -232,7 +241,18 @@ const makeRemoteBuildWithCache = async function() {
 
   }
 
-  const vars = ['CRUNCHBASE_KEY_4', 'GITHUB_KEY', 'TWITTER_KEYS', 'GA'];
+  // do not pass REVIEW_ID because on failure we will run it locally and report
+  // from there
+  const vars = [
+    'CRUNCHBASE_KEY_4',
+    'GITHUB_KEY',
+    'TWITTER_KEYS',
+    'GA',
+    'BRANCH',
+    'GITHUB_TOKEN',
+    'GITHUB_USER',
+    'REPOSITORY_URL'
+  ];
   const outputFolder = 'landscape' + getTmpFile();
   const buildCommand = [
     `cd /opt/repo/packageRemote`,
@@ -325,7 +345,10 @@ const makeRemoteBuildWithCache = async function() {
   )
   if (!buildDone) {
     buildDone = true;
-    await runLocalWithoutErrors(`ps`);
+    const newPids = await getPids();
+    const pidsToKill = newPids.filter( (x) => !initialPids.includes(x));
+    console.info(await runLocal(`kill -9 ${pidsToKill.join(' ')}`));
+
     localPid.kill();
 
     const pause = function(i) {
@@ -357,6 +380,8 @@ async function main() {
   const path = require('path');
   console.info('starting', process.cwd());
   process.chdir('..');
+
+  initialPids = await getPids();
 
   const cleanPromise = runRemoteWithoutErrors(`
     find builds/node_cache -maxdepth 1 -mtime +1 -exec rm -rf {} +;
