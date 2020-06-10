@@ -241,7 +241,18 @@ const makeRemoteBuildWithCache = async function() {
 
   }
 
-  const vars = ['CRUNCHBASE_KEY_4', 'GITHUB_KEY', 'TWITTER_KEYS', 'GA', 'BRANCH'];
+  // do not pass REVIEW_ID because on failure we will run it locally and report
+  // from there
+  const vars = [
+    'CRUNCHBASE_KEY_4',
+    'GITHUB_KEY',
+    'TWITTER_KEYS',
+    'GA',
+    'BRANCH',
+    'GITHUB_TOKEN',
+    'GITHUB_USER',
+    'REPOSITORY_URL'
+  ];
   const outputFolder = 'landscape' + getTmpFile();
   const buildCommand = [
     `cd /opt/repo/packageRemote`,
