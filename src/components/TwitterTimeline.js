@@ -1,5 +1,5 @@
 import React from "react";
-import Timeline from 'react-twitter-widgets/dist/components/Timeline.js';
+import { Timeline } from 'react-twitter-widgets/es';
 import currentDevice from 'current-device';
 
 class TwitterTimeline extends React.Component {
