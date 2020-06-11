@@ -81,6 +81,7 @@
         <th>Repo</th>
         <th>Status</th>
         <th># of Tweets</th>
+        <th>Published</th>
         <th>Data Refreshed</th>
         </thead>
 
@@ -137,13 +138,14 @@
       let repoEl = appendColumn()
       let statusEl = appendColumn({ className: "status" })
       let numTweetsEl = appendColumn()
+      let publishedEl = appendColumn()
       let updatedEl = appendColumn()
       let previewEl = appendPreview()
 
       repoEl.innerHTML = linkTo(`https://github.com/${repo}`, repo)
 
       fetchFile(`${repo}/master/settings.yml`)
-        .then(settings => {
+        .then(async settings => {
           const { company_url, short_name, short_domain, website } = jsyaml.load(settings).global
           organizationEl.innerHTML = imageLinkTo(company_url, `${website}/images/right-logo.svg`, short_name)
           landscapeEl.innerHTML = linkTo(website, short_domain)
@@ -152,6 +154,9 @@
                   <img src="${website}/images/right-logo.svg" class="logo" alt="${short_name}"/>
               </div>
               ${imageLinkTo(website, `${website}/images/landscape_preview.png`, short_domain)}`
+          const landscapeIndex = await (await fetch(website)).text()
+          const publishedAt = landscapeIndex.match(/lastUpdated\s*=\s*"([^"]*)"/)[1]
+          publishedEl.innerHTML = publishedAt ? dateTimeFormat.format(new Date(publishedAt)) : 'UNKNOWN'
         })
 
       fetchFile(`${repo}/master/README.md`)
@@ -159,12 +164,6 @@
           const statusUrl = readme.match(/https:\/\/api.netlify.com\/api\/v1\/badges[^)]*/)[0]
           const deploysUrl = readme.match(/https:\/\/app.netlify.com\/sites[^)]*/)[0]
           statusEl.innerHTML = imageLinkTo(deploysUrl, statusUrl, "Netlify Status")
-
-          const netlifyUrl = statusUrl.replace("badges", "sites").replace("/deploy-status", "")
-          const netlifyInfo = await (await fetch(netlifyUrl)).json()
-          const { published_at } = netlifyInfo.published_deploy
-
-          publishedEl.innerText = dateTimeFormat.format(new Date(published_at))
         })
 
       fetchFile(`${repo}/master/processed_landscape.yml`)
