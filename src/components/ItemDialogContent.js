@@ -317,9 +317,6 @@ function handleDown() {
   productScrollEl.scrollBy({top: 200, behavior: 'smooth' });
 }
 
-const $script = require('scriptjs'); // eslint-disable-line global-require
-$script('https://platform.twitter.com/widgets.js', 'twitter-widgets');
-
 let timeoutId;
 const ItemDialogContent = ({ itemInfo }) => {
   const setIsLandscape = useState(currentDevice.landscape())[1]

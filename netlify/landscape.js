@@ -211,7 +211,7 @@ const makeRemoteBuildWithCache = async function() {
       ls -l /root/builds/node_cache/${hash}/node_modules/react 2>/dev/null || (
           mkdir -p /root/builds/node_cache/${tmpHash}/{npm,nvm,node_modules}
           chmod -R 777 /root/builds/node_cache/${tmpHash}
-          docker run --rm -t \
+          docker run --shm-size 1G --rm -t \
             -v /root/builds/node_cache/${tmpHash}/node_modules:/opt/repo/packageRemote/node_modules \
             -v /root/builds/node_cache/${tmpHash}/nvm:${dockerHome}/.nvm \
             -v /root/builds/node_cache/${tmpHash}/npm:${dockerHome}/.npm \
@@ -269,7 +269,7 @@ const makeRemoteBuildWithCache = async function() {
       chmod -R 777 /root/builds/${folder}
       chmod -R 777 /root/builds/node_cache/${hash}
 
-      docker run --rm -t \
+      docker run --shm-size 1G --rm -t \
         ${vars.map( (v) => ` -e ${v}="${process.env[v]}" `).join(' ')} \
         -e NVM_NO_PROGRESS=1 \
         -e NETLIFY=1 \
@@ -299,7 +299,7 @@ const makeRemoteBuildWithCache = async function() {
       // chmod -R 777 /root/builds/${folder}
       // chmod -R 777 /root/builds/node_cache/${hash}
 
-      // docker run --rm -t \
+      // docker run --shm-size 1G --rm -t \
         // ${vars.map( (v) => ` -e ${v}="${process.env[v]}" `).join(' ')} \
         // -e NVM_NO_PROGRESS=1 \
         // -e NETLIFY=1 \
