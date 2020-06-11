@@ -28,3 +28,12 @@ updateProcessedLandscape(processedLandscape => {
     }
   })
 })
+
+updateProcessedLandscape(processedLandscape => {
+  return traverse(processedLandscape).map(node => {
+    if (node && node.crunchbase === 'https://www.crunchbase.com/organization/octo-technology' && node.crunchbase_data.ticker === 'ALOCT.PA') {
+      const { crunchbase_data, ...rest } = node
+      return rest
+    }
+  })
+})
