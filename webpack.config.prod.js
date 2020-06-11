@@ -138,7 +138,11 @@ export default {
         }]
       },
       {
-        test: /\.ejs$/, loader: 'ejs-loader',
+        test: /\.ejs$/,
+        loader: 'ejs-loader',
+        options: {
+          esModule: false
+        }
       },
       {
         test: /\.eot(\?v=\d+.\d+.\d+)?$/,
