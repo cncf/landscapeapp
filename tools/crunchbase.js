@@ -17,10 +17,13 @@ const EXCHANGE_SUFFIXES = {
   'bit': 'MI', // Milan
   'epa': 'PA', // Paris
   'etr': 'DE', // XETRA
+  'fra': 'F',  // Frankfurt
   'hel': 'HE', // Helsinki
   'hkg': 'HK', // Hong Kong
+  'krx': 'KS', // South Korea
   'lse': 'L', // London
   'moex': 'ME', // Moscow
+  'nse': 'NS', // India
   'sse': 'SS', // Shanghai
   'swx': 'SW', // Zurich
   'szse': 'SZ',  // Shenzhen
