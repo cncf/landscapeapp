@@ -35,7 +35,7 @@ landscapes:
   - landscape:
     name: lfai
     repo: lfai/landscape
-    hook: 5c1bd968fdd72a78a54bdcd1
+    hook: 5ee219e3a8ae10e0246a9533
     required: true
   - landscape:
     name: lfedge
