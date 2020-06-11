@@ -195,42 +195,59 @@ async function main() {
         node.crunchbase_data = crunchbaseInfo;
       }
       //github
-      var githubEntry = _.clone(_.find(githubEntries, {url: node.repo_url}));
+      var githubEntry = _.clone(_.find(githubEntries, { url: node.project_org }) ||
+                                _.find(githubEntries, { url: node.repo_url }))
       if (githubEntry) {
         node.github_data = githubEntry;
-        if (node.additional_repos && !githubEntry.cached) {
-          const additionalReposEntries = node.additional_repos.map(node => _.find(githubEntries, {url: node.repo_url}))
-          const allRepos = [githubEntry, ...additionalReposEntries]
-          node.github_data.contributors_count = aggregateContributors(allRepos)
-          node.github_data.contributions = aggregateContributions(allRepos)
-          node.github_data.stars = [githubEntry.stars, ...additionalReposEntries.map(({ stars }) => stars)].reduce((a, s) => a + s)
-          node.github_data.languages = aggregateLanguages(allRepos)
+        const mainRepo = _.clone(_.find(githubEntries, { url: node.repo_url }));
+        const additionalRepos = [...(node.additional_repos || []), ...(githubEntry.repos || [])]
+          .map(node => node && _.find(githubEntries, { url: node.repo_url || node.url }))
+          .filter(n => n && node.repo_url !== n.url)
+          .sort((a, b) => b.stars - a.stars)
+        const repos = [mainRepo, ...additionalRepos]
 
-          const { latest_commit_link, latest_commit_date } = getRepoWithLatestCommit(allRepos)
+        if (repos.length > 1 && !githubEntry.cached) {
+          node.github_data.contributors_count = aggregateContributors(repos)
+          node.github_data.contributions = aggregateContributions(repos)
+          node.github_data.stars = repos.reduce((acc, { stars }) => acc + stars, 0)
+          node.github_data.languages = aggregateLanguages(repos)
+
+          const { latest_commit_link, latest_commit_date } = getRepoWithLatestCommit(repos)
           node.github_data.latest_commit_link = latest_commit_link
           node.github_data.latest_commit_date = latest_commit_date
+          node.github_data.firstWeek = repos[0].firstWeek
+          node.github_data.license = repos[0].license
+          node.github_data.contributors_link = repos[0].contributors_link
         }
+
+        node.repos = githubEntry.cached ? githubEntry.repos : repos.map(repo => ({ url: repo.url, stars: repo.stars }))
         delete node.github_data.url;
         delete node.github_data.branch;
         delete node.github_data.contributors_list
         delete node.github_data.cached
+        delete node.github_data.repos
       }
       //github start dates
-      var dateEntry = _.clone(_.find(startDateEntries, {url: node.repo_url}));
+      var dateEntry = _.clone(_.find(startDateEntries, {url: node.project_org || node.repo_url }));
       if (dateEntry) {
         node.github_start_commit_data = dateEntry;
+        const mainRepo = _.clone(_.find(startDateEntries, {url: node.repo_url }));
+        const repos = [mainRepo, ...(node.additional_repos || []), ...(dateEntry.repos || [])]
+                          .filter(_ => _)
+                          .map(node => _.find(startDateEntries, {url: node.repo_url || node.url}))
 
-        if (node.additional_repos && !dateEntry.cached) {
-          const additionalReposEntries = node.additional_repos.map(node => _.find(startDateEntries, {url: node.repo_url}))
-          const allRepos = [dateEntry, ...additionalReposEntries]
-          const firstCommit = getRepoWithFirstCommit(allRepos)
-          node.github_start_commit_data = firstCommit
+        if (repos.length > 1 && !dateEntry.cached) {
+          node.github_start_commit_data = getRepoWithFirstCommit(repos)
         }
 
         delete node.github_start_commit_data.url;
         delete node.github_start_commit_data.branch;
         delete node.github_start_commit_data.cached;
+        delete node.github_start_commit_data.repos;
       }
+
+      delete node.additional_repos
+
       //yahoo finance. we will just extract it
       if (node.crunchbase_data && node.crunchbase_data.effective_ticker) {
         node.yahoo_finance_data = {

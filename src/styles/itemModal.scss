@@ -99,6 +99,14 @@ $mobilewidth: 1000px;
     }
   }
   &-repo {
+    a,
+    &-stars-label,
+    .primary-repo {
+      margin-right: 10px;
+    }
+    .primary-repo {
+      color: black;
+    }
     &-stars {color: $navy; font-size: 0.8rem; white-space: nowrap; line-height: 16px; display: inline-block;
       svg {width: 16px; height: 16px; display: inline-block; vertical-align: top; }
     }

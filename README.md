@@ -46,7 +46,7 @@ Here are the steps for Inkscape:
 
 ## New Entries
 
-When creating new entries, the only 4 required fields are `name`, `homepage_url`, `logo`, and `crunchbase`. It's generally easier to have the landscape fetch an SVG by adding it's URL rather than saving it yourself in the `hosted_logos` folder. Only add a `twitter` if the value in Crunchbase is incorrect. For delisted and many foreign countries, you'll need to add `stock_ticker` with the value to look up on Yahoo Finance to find the market cap. If you add a `repo_url` the card will be white instead of grey.
+When creating new entries, the only 4 required fields are `name`, `homepage_url`, `logo`, and `crunchbase`. It's generally easier to have the landscape fetch an SVG by adding it's URL rather than saving it yourself in the `hosted_logos` folder. Only add a `twitter` if the value in Crunchbase is incorrect. For delisted and many foreign countries, you'll need to add `stock_ticker` with the value to look up on Yahoo Finance to find the market cap. If you add a `repo_url` the card will be white instead of grey. Additonally, when using `repo_url`, `project_org` can be set pointing to an organization on GitHub, this will have the effect of pulling the information for all the repos belonging to that organization but using `repo_url` for information regarding license and best practices.
 
 ## Crunchbase Requirement
 

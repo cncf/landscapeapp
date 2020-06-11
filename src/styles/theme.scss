@@ -33,6 +33,10 @@ a {text-decoration: none; transition: all 0.5s; color: $blue;
   &:hover {transition: all 0.1s; color: $blue-hover;}
 }
 
+.hidden {
+  display: none !important;
+}
+
 .wrapper{
   overflow:hidden;
   font-family: "Roboto", "Helvetica", "Arial", sans-serif;

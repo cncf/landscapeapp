@@ -1,5 +1,4 @@
-import React, { Fragment } from 'react';
-import { pure, withState } from 'recompose';
+import React, { Fragment, useState } from 'react';
 import SvgIcon from '@material-ui/core/SvgIcon';
 import StarIcon from '@material-ui/icons/Star';
 import KeyHandler from 'react-key-handler';
@@ -322,7 +321,10 @@ const $script = require('scriptjs'); // eslint-disable-line global-require
 $script('https://platform.twitter.com/widgets.js', 'twitter-widgets');
 
 let timeoutId;
-const ItemDialogContent = ({itemInfo, isLandscape, setIsLandscape}) => {
+const ItemDialogContent = ({ itemInfo }) => {
+  const setIsLandscape = useState(currentDevice.landscape())[1]
+  const [showAllRepos, setShowAllRepos] = useState(false)
+  
   if (!timeoutId) {
     timeoutId = setInterval(function() {
       setIsLandscape(currentDevice.landscape());
@@ -513,26 +515,35 @@ const ItemDialogContent = ({itemInfo, isLandscape, setIsLandscape}) => {
                     <OutboundLink to={itemInfo.homepage_url}>{shortenUrl(itemInfo.homepage_url)}</OutboundLink>
                   </div>
                 </div>
-                {itemInfo.repo_url &&
-                <div className="product-property row">
-                  <div className="product-property-name col col-20">{ itemInfo.additional_repos ? 'Repositories' : 'Repository' }</div>
-                  <div className="product-property-value product-repo col col-80">
-                    <OutboundLink to={itemInfo.repo_url}>{shortenUrl(itemInfo.repo_url)}</OutboundLink>
-                  </div>
-                </div>
-                }
-                { itemInfo.additional_repos && itemInfo.additional_repos.map(({ repo_url }) => {
-                  return <div className="product-property row">
-                    <div className="product-property-name col col-20"></div>
+                { itemInfo.repos && itemInfo.repos.map(({ url, stars }, idx) => {
+                  return <div className={`product-property row ${ idx < 3 || showAllRepos ? '' : 'hidden' }`}>
+                    <div className="product-property-name col col-20">
+                      { idx === 0 && (itemInfo.repos.length > 1 ? 'Repositories' : 'Repository') }
+                    </div>
                     <div className="product-property-value product-repo col col-80">
-                      <OutboundLink to={repo_url}>{shortenUrl(repo_url)}</OutboundLink>
+                      <OutboundLink to={url}>{shortenUrl(url)}</OutboundLink>
+
+                      { idx === 0 && itemInfo.repos.length > 1 && <span className="primary-repo">(primary)</span> }
+
+                      <span className="product-repo-stars">
+                        <SvgIcon style={{ color: '#7b7b7b' }}>{iconGithub}</SvgIcon>
+                        <StarIcon style={{ color: '#7b7b7b' }}/>{formatNumber(stars)}
+                      </span>
                     </div>
                   </div>
                 })}
-                {itemInfo.starsAsText &&
+                {itemInfo.repos && itemInfo.repos.length > 1 &&
                 <div className="product-property row">
                   <div className="product-property-name col col-20"></div>
-                  <div className="product-property-value col col-80">
+                  <div className="product-property-value product-repo col col-80">
+                    {itemInfo.repos && itemInfo.repos.length > 3 &&
+                      <span>
+                        <a href="#" onClick={() => setShowAllRepos(!showAllRepos)}>{ showAllRepos ? 'less...' : 'more...' }</a>
+                      </span>
+                    }
+                    <span className="product-repo-stars-label">
+                      total:
+                    </span>
                     <span className="product-repo-stars">
                       <SvgIcon style={{color: '#7b7b7b'}}>{iconGithub}</SvgIcon>
                       <StarIcon style={{color: '#7b7b7b'}} />
@@ -614,5 +625,4 @@ const ItemDialogContent = ({itemInfo, isLandscape, setIsLandscape}) => {
         </div>
   );
 }
-const wrapper = withState('isLandscape', 'setIsLandscape', currentDevice.landscape());
-export default wrapper(pure(ItemDialogContent));
+export default ItemDialogContent

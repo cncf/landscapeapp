@@ -21,6 +21,7 @@ async function main() {
     'twitter',
     'crunchbase',
     'repo_url',
+    'project_org',
     'additional_repos',
     'stock_ticker',
     'description',
@@ -64,6 +65,16 @@ async function main() {
     }
   }
 
+  const validateGithubOrg = ({ name, repo_url, project_org, additional_repos }) => {
+    if (project_org && !repo_url) {
+      errors.push(`item ${name} has project_org set which requires repo_url to be set`)
+    } else if (project_org && additional_repos) {
+      errors.push(`item ${name} cannot have project_org and additional_repos set simultaneously`)
+    } else if (project_org && !project_org.match(new RegExp('^https://github\.com/[^/]+$'))) {
+      errors.push(`item ${name} has an invalid github organization ${project_org}`)
+    }
+  }
+
   function checkItem(item) {
     if (item.item !== null) {
       errors.push(`item ${item.name} does not have a "- item:" part `);
@@ -82,6 +93,7 @@ async function main() {
 
     validateTwitterUrl(item);
     validateRepos(item)
+    validateGithubOrg(item)
   }
 
   function checkCategoryEntry(item) {
