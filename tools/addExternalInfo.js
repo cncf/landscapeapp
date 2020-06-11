@@ -195,14 +195,16 @@ async function main() {
         node.crunchbase_data = crunchbaseInfo;
       }
       //github
-      var githubEntry = _.clone(_.find(githubEntries, { url: node.repo_url || node.project_org }));
+      var githubEntry = _.clone(_.find(githubEntries, { url: node.project_org }) ||
+                                _.find(githubEntries, { url: node.repo_url }))
       if (githubEntry) {
         node.github_data = githubEntry;
-        const repos = [node.repo_url, ...(node.additional_repos || []), ...(githubEntry.repos || [])]
-          .filter(_ => _)
-          .map(node => _.find(githubEntries, { url: node.repo_url || node.url }))
-          .filter(_ => _)
+        const mainRepo = _.clone(_.find(githubEntries, { url: node.repo_url }));
+        const additionalRepos = [...(node.additional_repos || []), ...(githubEntry.repos || [])]
+          .map(node => node && _.find(githubEntries, { url: node.repo_url || node.url }))
+          .filter(n => n && node.repo_url !== n.url)
           .sort((a, b) => b.stars - a.stars)
+        const repos = [mainRepo, ...additionalRepos]
 
         if (repos.length > 1 && !githubEntry.cached) {
           node.github_data.contributors_count = aggregateContributors(repos)
@@ -214,8 +216,7 @@ async function main() {
           node.github_data.latest_commit_link = latest_commit_link
           node.github_data.latest_commit_date = latest_commit_date
           node.github_data.firstWeek = repos[0].firstWeek
-          node.github_data.license = repos.map(repo => repo.license)
-            .filter(license => license && license.toLowerCase().indexOf('unknown') === -1)[0] || "Unknown License"
+          node.github_data.license = repos[0].license
           node.github_data.contributors_link = repos[0].contributors_link
         }
 
@@ -227,10 +228,11 @@ async function main() {
         delete node.github_data.repos
       }
       //github start dates
-      var dateEntry = _.clone(_.find(startDateEntries, {url: node.repo_url || node.project_org}));
+      var dateEntry = _.clone(_.find(startDateEntries, {url: node.project_org || node.repo_url }));
       if (dateEntry) {
         node.github_start_commit_data = dateEntry;
-        const repos = [node, ...(node.additional_repos || []), ...(dateEntry.repos || [])]
+        const mainRepo = _.clone(_.find(startDateEntries, {url: node.repo_url }));
+        const repos = [mainRepo, ...(node.additional_repos || []), ...(dateEntry.repos || [])]
                           .filter(_ => _)
                           .map(node => _.find(startDateEntries, {url: node.repo_url || node.url}))
 

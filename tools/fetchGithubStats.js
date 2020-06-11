@@ -44,7 +44,7 @@ const getContributorsList = async (repo, page = 1) => {
 
 export async function fetchGithubEntries({cache, preferCache}) {
   const githubOrgs = (await fetchGithubOrgs(preferCache))
-    .map(org => ({ url: org.url, repos: org.repos, cached: org.cached, ...org.github_data }))
+    .map(org => ({ ...org.data, ...org.github_data }))
   const repos = [...getRepos(), ...githubOrgs.filter(org => !org.cached).map(org => org.repos).flat()]
   debug(cache);
   const errors = [];

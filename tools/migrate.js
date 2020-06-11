@@ -5,8 +5,8 @@ import { updateProcessedLandscape } from "./processedLandscape";
 
 if (settings.global.short_name === 'LFPH') {
   const newLandscape = traverse(landscape).map(node => {
-    if (node && node.repo_url === 'https://github.com/CovidShield/mobile') {
-      const { repo_url, additional_repos, ...rest } = node
+    if (node && node.repo_url === 'https://github.com/CovidShield/mobile' && !node.project_org) {
+      const { additional_repos, ...rest } = node
       return { ...rest, project_org: 'https://github.com/CovidShield' }
     }
     return node
@@ -17,6 +17,10 @@ if (settings.global.short_name === 'LFPH') {
 
 updateProcessedLandscape(processedLandscape => {
   return traverse(processedLandscape).map(node => {
+    if (node && node.hasOwnProperty('item') && node.repo_url === 'https://github.com/CovidShield/mobile' && !node.repos) {
+      const { github_data, github_start_commit_data, ...rest } = node
+      return rest
+    }
     if (node && node.hasOwnProperty('item') && node.repo_url && !node.repos) {
       const { additional_repos, ...rest } = node
       const repos = [{ url: node.repo_url, stars: node.github_data.stars }, ...(additional_repos || []).map(repo => ({ url: repo.repo_url, stars: 0 }))]

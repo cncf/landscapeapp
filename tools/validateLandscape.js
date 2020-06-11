@@ -65,9 +65,11 @@ async function main() {
     }
   }
 
-  const validateGithubOrg = ({ name, repo_url, project_org }) => {
-    if (project_org && repo_url) {
-      errors.push(`item ${name} cannot have project_org and repo_url set simultaneously`)
+  const validateGithubOrg = ({ name, repo_url, project_org, additional_repos }) => {
+    if (project_org && !repo_url) {
+      errors.push(`item ${name} has project_org set which requires repo_url to be set`)
+    } else if (project_org && additional_repos) {
+      errors.push(`item ${name} cannot have project_org and additional_repos set simultaneously`)
     } else if (project_org && !project_org.match(new RegExp('^https://github\.com/[^/]+$'))) {
       errors.push(`item ${name} has an invalid github organization ${project_org}`)
     }

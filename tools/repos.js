@@ -73,7 +73,8 @@ export const fetchGithubOrgs = async preferCache => {
   return await Promise.map(githubOrgs, async ({ url }) => {
     const processedOrg = processedGithubOrgs[url]
     if (processedOrg && preferCache) {
-      return { ...processedOrg, cached: true };
+      const { github_data, github_start_commit_data, repos } = processedOrg
+      return { data: { url, repos, cached: true }, github_data, github_start_commit_data }
     }
     const orgName = url.split('/').pop()
     const { description } = await GithubClient.request({ path: `orgs/${orgName}` })
@@ -83,13 +84,13 @@ export const fetchGithubOrgs = async preferCache => {
     const repos = response.map(({ html_url, default_branch }) => {
       return { url: html_url, branch: default_branch, multiple: true }
     })
-    return { url, description, repos }
+    return { data: { url, repos }, github_data: { description } }
   }, { concurrency: 10 })
 }
 
 export const getRepos = () => {
   const repos = traverse(landscape).reduce((acc, node) => {
-    if (node && node.repo_url && node.hasOwnProperty('item')) {
+    if (node && node.repo_url && node.hasOwnProperty('item') && !node.project_org) {
       acc.push({ url: node.repo_url, branch: node.branch, multiple: !!node.additional_repos })
 
       if (node.additional_repos) {

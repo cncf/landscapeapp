@@ -523,6 +523,8 @@ const ItemDialogContent = ({ itemInfo }) => {
                     <div className="product-property-value product-repo col col-80">
                       <OutboundLink to={url}>{shortenUrl(url)}</OutboundLink>
 
+                      { idx === 0 && itemInfo.repos.length > 1 && <span className="primary-repo">(primary)</span> }
+
                       <span className="product-repo-stars">
                         <SvgIcon style={{ color: '#7b7b7b' }}>{iconGithub}</SvgIcon>
                         <StarIcon style={{ color: '#7b7b7b' }}/>{formatNumber(stars)}

@@ -16,7 +16,7 @@ import { getRepoStartDate } from './githubDates';
 
 export async function fetchStartDateEntries({cache, preferCache}) {
   const githubOrgs = (await fetchGithubOrgs(preferCache))
-    .map(org => ({ url: org.url, repos: org.repos, cached: org.cached, ...org.github_start_commit_data}))
+    .map(org => ({ ...org.data, ...org.github_start_commit_data}))
   const repos = [...getRepos(), ...githubOrgs.filter(org => !org.cached).map(org => org.repos).flat()]
   const errors = [];
   const reporter = makeReporter();
