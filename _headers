@@ -1,5 +1,6 @@
 /*
   X-Robots-Tag: all
+  Access-Control-Allow-Origin: https://landscapes.dev
 
 /*.svg
   Content-Type: image/svg+xml; charset=utf-8
