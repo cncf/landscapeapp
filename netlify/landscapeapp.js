@@ -181,7 +181,7 @@ EOSSH
       mkdir -p /root/builds/${folder}_node
       mkdir -p /root/builds/${folder}_node/{npm,nvm,node_modules}
       chmod -R 777 /root/builds/${folder}_node
-      docker run --rm -t \
+      docker run --shm-size 1G --rm -t \
         -v /root/builds/${folder}_node/node_modules:/opt/repo/node_modules \
         -v /root/builds/${folder}_node/nvm:${dockerHome}/.nvm \
         -v /root/builds/${folder}_node/npm:${dockerHome}/.npm \
@@ -198,7 +198,7 @@ EOSSH
           )
 
           chmod -R 777 /root/builds/node_cache/${tmpHash}
-          docker run --rm -t \
+          docker run --shm-size 1G --rm -t \
             -v /root/builds/node_cache/${tmpHash}/node_modules:/opt/repo/node_modules \
             -v /root/builds/node_cache/${tmpHash}/nvm:${dockerHome}/.nvm \
             -v /root/builds/node_cache/${tmpHash}/npm:${dockerHome}/.npm \
@@ -242,7 +242,7 @@ EOSSH
       REPO_PATH=/root/builds/${folder}
       OUTPUT_PATH=/root/builds/${outputFolder}
 
-      docker run --rm -t \
+      docker run --shm-size 1G --rm -t \
         ${vars.map( (v) => ` -e ${v}="${process.env[v]}" `).join(' ')} \
         -e NVM_NO_PROGRESS=1 \
         -e NETLIFY=1 \
