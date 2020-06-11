@@ -22775,9 +22775,9 @@
       }
     },
     "svg-autocrop": {
-      "version": "2.0.16",
-      "resolved": "https://registry.npmjs.org/svg-autocrop/-/svg-autocrop-2.0.16.tgz",
-      "integrity": "sha512-N3+9iXgbGjTPhE/Z/YI/CgXFnJvm59BBA+pCNpMshfdFA8xbSEK25AQivhJEx2kR60Hw4y4hM3dFC8TW5Rxu+A==",
+      "version": "2.0.17",
+      "resolved": "https://registry.npmjs.org/svg-autocrop/-/svg-autocrop-2.0.17.tgz",
+      "integrity": "sha512-p6VvcXe4urXCsX29awAvFBBZTKsnugvsqY7teo7U+qM0NMkzhLSuuDUh1D4UMeA3Vp7aEJnNOYXxLhJAEOlJWw==",
       "requires": {
         "file-url": "^3.0.0",
         "glob": "^7.1.6",
@@ -22785,7 +22785,7 @@
         "jimp": "^0.12.1",
         "lodash": "^4.17.15",
         "prettydiff": "^101.2.6",
-        "puppeteer": "^3.0.4",
+        "puppeteer": "^3.3.0",
         "svgo": "^1.3.2",
         "ws": "^7.3.0",
         "xml-beautifier": "^0.4.3"
@@ -23747,9 +23747,9 @@
           "integrity": "sha1-WKnS1ywCwfbwKg70qRZicrd2CSI="
         },
         "extract-zip": {
-          "version": "2.0.0",
-          "resolved": "https://registry.npmjs.org/extract-zip/-/extract-zip-2.0.0.tgz",
-          "integrity": "sha512-i42GQ498yibjdvIhivUsRslx608whtGoFIhF26Z7O4MYncBxp8CwalOs1lnHy21A9sIohWO2+uiE4SRtC9JXDg==",
+          "version": "2.0.1",
+          "resolved": "https://registry.npmjs.org/extract-zip/-/extract-zip-2.0.1.tgz",
+          "integrity": "sha512-GDhU9ntwuKyGXdZBUgTIe+vXnWj0fppUEtMDL0+idd5Sta8TGpHssn/eusA9mrPr9qNDym6SxAYZjNvCn/9RBg==",
           "requires": {
             "@types/yauzl": "^2.9.1",
             "debug": "^4.1.1",
@@ -24517,9 +24517,9 @@
           }
         },
         "puppeteer": {
-          "version": "3.0.4",
-          "resolved": "https://registry.npmjs.org/puppeteer/-/puppeteer-3.0.4.tgz",
-          "integrity": "sha512-1QEb4tJXXbNId7WSHlcDkS3B4GklTIebKn8Y9D6B7tAdUjQncb+8QlTjbQsAgGX5dhRG32Qycuk5XKzJgLs0sg==",
+          "version": "3.3.0",
+          "resolved": "https://registry.npmjs.org/puppeteer/-/puppeteer-3.3.0.tgz",
+          "integrity": "sha512-23zNqRltZ1PPoK28uRefWJ/zKb5Jhnzbbwbpcna2o5+QMn17F0khq5s1bdH3vPlyj+J36pubccR8wiNA/VE0Vw==",
           "requires": {
             "debug": "^4.1.0",
             "extract-zip": "^2.0.0",
