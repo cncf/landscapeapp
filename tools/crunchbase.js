@@ -17,6 +17,7 @@ const EXCHANGE_SUFFIXES = {
   'bit': 'MI', // Milan
   'epa': 'PA', // Paris
   'etr': 'DE', // XETRA
+  'hel': 'HE', // Helsinki
   'hkg': 'HK', // Hong Kong
   'lse': 'L', // London
   'moex': 'ME', // Moscow
@@ -113,12 +114,20 @@ async function getMarketCap(ticker) {
   return result;
 }
 
-export async function fetchData(name) {
-  const result = await CrunchbaseClient.request({
-    path: `entities/organizations/${name}`,
-    params:{'card_ids': 'headquarters_address,acquiree_acquisitions,parent_organization', 'field_ids': 'num_employees_enum,linkedin,twitter,name,website,short_description,funding_total,stock_symbol,stock_exchange_symbol' }
-  });
+const isDelisted = entry => !!_.get(entry, ['cards', 'ipos', '0', 'delisted_on', 'value'])
 
+const fetchCrunchbaseOrganization = async id => {
+  return await CrunchbaseClient.request({
+    path: `entities/organizations/${id}`,
+    params:{ 
+      'card_ids': 'headquarters_address,acquiree_acquisitions,parent_organization,ipos', 
+      'field_ids': 'num_employees_enum,linkedin,twitter,name,website,short_description,funding_total,stock_symbol,stock_exchange_symbol' 
+    }
+  });
+}
+
+export async function fetchData(name) {
+  const result = await fetchCrunchbaseOrganization(name)
   const mapAcquisitions = function(a) {
     const result = {
       date: a.announced_on.value,
@@ -144,16 +153,13 @@ export async function fetchData(name) {
   let parents = [];
   let lastOrganization = result;
   while (lastOrganization.cards.parent_organization[0]) {
-    parents.push(lastOrganization.cards.parent_organization[0]);
-    const url =  `entities/organizations/${lastOrganization.cards.parent_organization[0].identifier.permalink}`;
-    lastOrganization = await CrunchbaseClient.request({
-      path: url,
-      params:{'card_ids': 'parent_organization', 'field_ids': '' }
-    });
+    const parentOrganization = lastOrganization.cards.parent_organization[0].identifier.permalink
+    lastOrganization = await fetchCrunchbaseOrganization(parentOrganization)
+    parents.push({ ...lastOrganization.properties, delisted: isDelisted(lastOrganization) })
   }
   const parentLinks = parents.map( (item) => 'https://www.crunchbase.com/organization/' + item.identifier.permalink );
 
-  const firstWithStockSymbol = _.find([result.properties].concat(parents), (x) => !!x.stock_symbol);
+  const firstWithStockSymbol = _.find([{ ...result.properties, delisted: isDelisted(result) }].concat(parents), (x) => !!x.stock_symbol && !x.delisted);
   const stockSymbol = firstWithStockSymbol && getSymbolWithSuffix(firstWithStockSymbol.stock_symbol.value, firstWithStockSymbol.stock_exchange_symbol)
   const firstWithTotalFunding = _.find([result.properties].concat(parents), (x) => !!x.funding_total);
   const totalFunding = firstWithTotalFunding ? + firstWithTotalFunding.funding_total.value_usd.toFixed() : undefined;
