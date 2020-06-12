@@ -117,7 +117,7 @@ async function getMarketCap(ticker) {
   return result;
 }
 
-const isDelisted = entry => !!_.get(entry, ['cards', 'ipos', '0', 'delisted_on', 'value'])
+const isDelisted = entry => !!_.get(entry, ['cards', 'ipos', '0', 'delisted_on'])
 
 const fetchCrunchbaseOrganization = async id => {
   return await CrunchbaseClient.request({
