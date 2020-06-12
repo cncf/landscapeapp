@@ -1,6 +1,7 @@
 import _ from 'lodash';
 import { landscape, saveLandscape } from "./landscape";
 import { processedLandscape } from "./processedLandscape";
+import { YahooFinanceClient } from "./apiClients";
 
 function find({source, categoryName, subcategoryName, itemName}) {
   let result = null;
@@ -19,7 +20,7 @@ function find({source, categoryName, subcategoryName, itemName}) {
 const cleanupFile = function() {
   _.each(landscape.landscape, function(category) {
     _.each(category.subcategories, function(subcategory) {
-      _.each(subcategory.items, function(item) {
+      _.each(subcategory.items, async function(item) {
         const processed = find({source: processedLandscape, categoryName: category.name, subcategoryName: subcategory.name, itemName: item.name});
         if (!processed) {
           console.info(`FATAL: entry ${item.name} at ${category.name}/${subcategory.name} not found in the processed_landscape.yml`);
@@ -35,9 +36,19 @@ const cleanupFile = function() {
           console.info(`Deleted ${item.twitter} twitter for ${item.name} because it is available from ${item.crunchbase}`);
           delete item.twitter;
         }
-        if (item.hasOwnProperty('stock_ticker') && (processed.crunchbase_data.ticker || null) === item.stock_ticker) {
-          console.info(`Deleted ${item.stock_ticker} ticker for ${item.name} because it is available from ${item.crunchbase}`);
-          delete item.stock_ticker;
+        if (item.hasOwnProperty('stock_ticker') && processed.crunchbase_data) {
+          const crunchbaseTicker = processed.crunchbase_data.ticker || null
+          if(crunchbaseTicker === item.stock_ticker) {
+            console.info(`Deleted ${item.stock_ticker} ticker for ${item.name} because it is available from ${item.crunchbase}`);
+            delete item.stock_ticker;
+          }
+          if(crunchbaseTicker && item.stock_ticker === null) {
+            try {
+              const path = `/v10/finance/quoteSummary/${crunchbaseTicker}?modules=summaryDetail`
+              await YahooFinanceClient.request({ path })
+              console.info(`Deleted null ticker for ${item.name} because the stock exists (${crunchbaseTicker})`);
+            } catch (e) {}
+          }
         }
       });
     });
