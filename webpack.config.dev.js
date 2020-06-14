@@ -2,6 +2,7 @@ import webpack from 'webpack';
 import HtmlWebpackPlugin from 'html-webpack-plugin';
 import path from 'path';
 import {projectPath, settings} from './tools/settings';
+const PnpWebpackPlugin = require(`pnp-webpack-plugin`);
 
 const source =  require('js-yaml').safeLoad(require('fs').readFileSync(require('path').resolve(projectPath, 'processed_landscape.yml')));
 export default {
@@ -10,7 +11,15 @@ export default {
     alias: {
       'project': path.resolve(projectPath),
       'favicon.png': path.resolve(projectPath, 'images/favicon.png')
-    }
+    },
+    plugins: [
+      PnpWebpackPlugin,
+    ]
+  },
+  resolveLoader: {
+    plugins: [
+      PnpWebpackPlugin.moduleLoader(module),
+    ],
   },
   externals: {
     moment: 'moment'

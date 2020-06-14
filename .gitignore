@@ -40,3 +40,9 @@ dist
 
 /cncf
 /lfai
+
+# Yarn, without .pnp.js
+.yarn/*
+!.yarn/releases
+!.yarn/plugins
+.pnp.*

@@ -9,11 +9,13 @@ const debug = function() {
     console.info.apply(console, arguments);
   }
 }
+
 const pause = function(i) {
   return new Promise(function(resolve) {
     setTimeout(resolve, i * 1000);
   })
 };
+
 console.info('starting', process.cwd());
 run('npm init -y');
 console.info('installing js-yaml', process.cwd());
