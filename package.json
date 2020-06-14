@@ -41,7 +41,7 @@
     "build": "((echo 1 && yarn fetch && yarn clean-dist && babel-node tools/build.js && yarn copy-dist && yarn setup-robots && yarn stop-old-ci && yarn start-ci && babel-node tools/parallelWithRetry integration-test check-landscape render-landscape funding) || (yarn stop-old-ci && false)) && babel-node tools/parallelWithRetry prerender && babel-node tools/parallelWithRetry integration-test && yarn stop-ci",
     "show-report": "open dist/report.html",
     "analyze-bundle": "babel-node ./tools/analyzeBundle.js",
-    "latest": "npm install",
+    "latest": "yarn",
     "reset-tweet-count": "babel-node tools/resetTweetCount.js"
   },
   "author": "CNCF",
