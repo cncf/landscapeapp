@@ -1,4 +1,3 @@
-const skipCaching = process.env.SKIP_CACHING; // disable smart caching
 const path = require('path');
 const generateIndex = require('./generateIndex')
 const run = function(x) {
@@ -27,17 +26,6 @@ const landscapesInfo = yaml.safeLoad(require('fs').readFileSync('landscapes.yml'
 
 const dockerImage = 'netlify/build:xenial';
 const dockerHome = '/opt/buildhome';
-
-//how to get a hash based on our files
-const sha256Command = `node -e "
-  const crypto = require('crypto');
-  const p0 = require('fs').readFileSync('.nvmrc', 'utf-8').trim();
-  const p1 = (crypto.createHash('sha256').update(require('fs').readFileSync('package.json')).digest('hex'));
-  const p2 = (crypto.createHash('sha256').update(require('fs').readFileSync('npm-shrinkwrap.json')).digest('hex'));
-  console.info(p0 + p1 + p2);
-  "
-`;
-
 
 async function main() {
   const nvmrc = require('fs').readFileSync('.nvmrc', 'utf-8').trim();
@@ -164,10 +152,7 @@ EOSSH
   console.info('Rsync done');
   await runRemoteWithoutErrors(`chmod -R 777 /root/builds/${folder}`);
 
-  const hash = await runLocalWithoutErrors(sha256Command);
-  const tmpHash = require('crypto').createHash('sha256').update(`${Math.random()}${new Date().getTime()}`).digest('hex');
   // lets guarantee npm install for this folder first
-  //
   const branch = process.env.BRANCH;
   {
     const buildCommand = [
@@ -175,45 +160,21 @@ EOSSH
       ". ~/.nvm/nvm.sh",
       `nvm install ${nvmrc}`,
       `nvm use ${nvmrc}`,
-      `npm install -g npm --no-progress`,
+      `npm install -g yarn --no-progress --silent`,
       `cd /opt/repo`,
-      `npm install --no-progress --silent`
+      `yarn`
     ].join(' && ');
-    const npmInstallCommand = skipCaching ? `
+    const npmInstallCommand = `
       mkdir -p /root/builds/${folder}_node
-      mkdir -p /root/builds/${folder}_node/{npm,nvm,node_modules}
+      mkdir -p /root/builds/${folder}_node/{yarnGlobal,nvm}
       chmod -R 777 /root/builds/${folder}_node
       docker run --shm-size 1G --rm -t \
-        -v /root/builds/${folder}_node/node_modules:/opt/repo/node_modules \
         -v /root/builds/${folder}_node/nvm:${dockerHome}/.nvm \
-        -v /root/builds/${folder}_node/npm:${dockerHome}/.npm \
+        -v /root/builds/${folder}_node/yarnGlobal:${dockerHome}/.yarn \
         -v /root/builds/${folder}:/opt/repo \
         ${dockerImage} /bin/bash -lc "${buildCommand}"
       chmod -R 777 /root/builds/${folder}_node
-    ` : `
-      mkdir -p /root/builds/node_cache
-      ls -l /root/builds/node_cache/${hash}/node_modules/react 2>/dev/null || (
-          echo ${hash} folder not found, running npm install
-          cp -r /root/builds/node_cache/master/${nvmrc} /root/builds/node_cache/${tmpHash} 2>/dev/null || (
-            echo "node_cache from master branch not found, initializing an empty repo"
-            mkdir -p /root/builds/node_cache/${tmpHash}/{npm,nvm,node_modules}
-          )
-
-          chmod -R 777 /root/builds/node_cache/${tmpHash}
-          docker run --shm-size 1G --rm -t \
-            -v /root/builds/node_cache/${tmpHash}/node_modules:/opt/repo/node_modules \
-            -v /root/builds/node_cache/${tmpHash}/nvm:${dockerHome}/.nvm \
-            -v /root/builds/node_cache/${tmpHash}/npm:${dockerHome}/.npm \
-            -v /root/builds/${folder}:/opt/repo \
-            ${dockerImage} /bin/bash -lc "${buildCommand}"
-
-          ln -s /root/builds/node_cache/${tmpHash} /root/builds/node_cache/${hash} || (
-            rm -rf /root/builds/node_cache/${tmpHash}
-          )
-          echo "node_modules for ${hash} had been installed"
-      )
-      chmod -R 777 /root/builds/node_cache/${hash}
-    `;
+    `
     debug(npmInstallCommand);
     console.info(`Installing npm packages`);
     const output = await runRemote(npmInstallCommand);
@@ -237,7 +198,7 @@ EOSSH
       `bash build.sh ${landscape.repo} ${landscape.name} master`,
       `cp -r /opt/repo/${landscape.name}/dist /dist`
     ].join(' && ');
-    const nodeModulesFolder = skipCaching ? `${folder}_node` : `node_cache/${hash}`;
+    const nodeModulesFolder = `${folder}_node`;
     const dockerCommand = `
       mkdir -p /root/builds/${outputFolder}
       chmod -R 777 /root/builds/${outputFolder}
@@ -249,9 +210,8 @@ EOSSH
         -e NVM_NO_PROGRESS=1 \
         -e NETLIFY=1 \
         -e PARALLEL=TRUE \
-        -v /root/builds/${nodeModulesFolder}/node_modules:/opt/repo/node_modules \
         -v /root/builds/${nodeModulesFolder}/nvm:${dockerHome}/.nvm \
-        -v /root/builds/${nodeModulesFolder}/npm:${dockerHome}/.npm \
+        -v /root/builds/${nodeModulesFolder}/yarnGlobal:${dockerHome}/.yarn \
         -v /root/builds/${folder}:/opt/repo \
         -v /root/builds/${outputFolder}:/dist \
         ${dockerImage} /bin/bash -lc "${buildCommand}"
@@ -345,22 +305,6 @@ EOSSH
     `);
     // just for debug purpose
     //now we have a different hash, because we updated a version, but for build purposes we have exactly same npm modules
-    const newHash = await runLocalWithoutErrors(sha256Command);
-    if (!skipCaching) {
-      if (newHash !== hash) {
-        await runRemoteWithoutErrors(`
-          rm -rf /root/builds/node_cache/${newHash} || true
-          ln -s /root/builds/node_cache/${hash} /root/builds/node_cache/${newHash}
-          chmod -R 777 /root/builds/node_cache/${newHash}
-        `);
-      }
-      // help for further deploys, do not make them install from sratch
-      await runRemoteWithoutErrors(`
-        mkdir -p /root/builds/node_cache/master
-        rm -rf /root/builds/node_cache/master/${nvmrc} || true
-        ln -s /root/builds/node_cache/${hash} /root/builds/node_cache/master/${nvmrc}
-      `);
-    }
     for (let landscape of landscapesInfo.landscapes) {
       console.info(`triggering a hook  for ${landscape.name}`);
       await runLocalWithoutErrors(`curl -X POST -d {} https://api.netlify.com/build_hooks/${landscape.hook}`);
