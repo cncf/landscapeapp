@@ -26,7 +26,7 @@
     "remove-dist": "rimraf \"$PROJECT_PATH\"/dist",
     "precommit": "yarn fetch",
     "host-images": "babel-node tools/hostImages.js && yarn fetch",
-    "start-ci": "yarn exec bash -c \"(babel-node tools/ciServer &) && sleep 10\"",
+    "start-ci": "yarn exec bash -c \"(yarn run babel-node tools/ciServer &) && sleep 10\"",
     "stop-old-ci": "yarn run babel-node tools/stopOldCiServer",
     "stop-ci": "yarn exec bash -c \"kill -9 `cat /tmp/ci.pid` && rm /tmp/ci.pid\"",
     "integration-test": "jest --reporters=./tools/jestReporter.js --reporters=jest-standard-reporter",
