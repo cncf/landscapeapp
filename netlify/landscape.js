@@ -180,7 +180,7 @@ const makeRemoteBuildWithCache = async function() {
     const p0 = require('fs').readFileSync('packageRemote/.nvmrc', 'utf-8').trim();
     const p1 = crypto.createHash('sha256').update(require('fs').readFileSync('packageRemote/package.json')).digest('hex');
     const p2 = crypto.createHash('sha256').update(require('fs').readFileSync('packageRemote/yarn.lock')).digest('hex');
-    const p3 = crypto.createHash('sha256').update(require('fs').readFileSync('packageRemote/.yarnrc.yaml')).digest('hex');
+    const p3 = crypto.createHash('sha256').update(require('fs').readFileSync('packageRemote/.yarnrc.yml')).digest('hex');
     return p0 + p1 + p2 + p3;
   }
 
