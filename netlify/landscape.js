@@ -217,7 +217,7 @@ const makeRemoteBuildWithCache = async function() {
     ].join(' && ');
     const npmInstallCommand = `
       mkdir -p /root/builds/node_cache
-      ls -l /root/builds/node_cache/${hash}/.yarn/unplugged 2>/dev/null || (
+      ls -l /root/builds/node_cache/${hash}/yarnLocal/unplugged 2>/dev/null || (
           mkdir -p /root/builds/node_cache/${tmpHash}/{yarnLocal,nvm,yarnGlobal}
           cp -r /root/builds/${folder}/packageRemote/.yarn/* /root/builds/node_cache/${tmpHash}/yarnLocal
           chmod -R 777 /root/builds/node_cache/${tmpHash}
