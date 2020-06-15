@@ -197,7 +197,7 @@ const makeRemoteBuildWithCache = async function() {
   await runRemoteWithoutErrors(`mkdir -p /root/builds`);
   await runRemoteWithoutErrors(`docker pull ${dockerImage}`);
   await runLocalWithoutErrors(`
-      rsync -az -e "ssh -i /tmp/buildbot  -o StrictHostKeyChecking=no  " . ${remote}:/root/builds/${folder}
+      rsync --exclude="package" -az -e  "ssh -i /tmp/buildbot  -o StrictHostKeyChecking=no  " . ${remote}:/root/builds/${folder}
     `);
   await runRemoteWithoutErrors(`chmod -R 777 /root/builds/${folder}`);
 
@@ -219,6 +219,7 @@ const makeRemoteBuildWithCache = async function() {
       mkdir -p /root/builds/node_cache
       ls -l /root/builds/node_cache/${hash}/.yarn/unplugged 2>/dev/null || (
           mkdir -p /root/builds/node_cache/${tmpHash}/{yarnLocal,nvm,yarnGlobal}
+          cp -r /root/builds/${folder}/packageRemote/.yarn/* /root/builds/node_cache/${tmpHash}/yarnLocal
           chmod -R 777 /root/builds/node_cache/${tmpHash}
           docker run --shm-size 1G --rm -t \
             -v /root/builds/node_cache/${tmpHash}/yarnLocal:/opt/repo/packageRemote/.yarn \
