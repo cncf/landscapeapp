@@ -30,6 +30,12 @@ expect.extend({
 
 jest.setTimeout(process.env.SHOW_BROWSER ? 30000 : 20000);
 
+const sectionTitle = () => {
+  return settings.relation.values.flatMap(relation => relation.children || relation)
+    .find(relation => projects.find(project => (project.project || false) === relation.id))
+    .label
+}
+
 async function makePage(initialUrl) {
   try {
     browser = await puppeteer.launch({args: ['--no-sandbox', '--disable-setuid-sandbox'], headless: !process.env.SHOW_BROWSER});
@@ -59,7 +65,7 @@ function embedTest() {
       });
 
       test('Do not see a content from a main mode', async function() {
-        await expect(frame).not.toHaveElement(`//h1[text() = '${settings.test.header}']`);
+        await expect(frame).not.toHaveElement("//img[@src='./images/left-logo.svg']");
       });
 
       // ensure that it is clickable
@@ -83,22 +89,14 @@ function mainTest() {
 
       //header
       test('A proper header is present', async function() {
-        await expect(page).toHaveElement(`//h1[text() = '${settings.test.header}']`);
+        await expect(page).toHaveElement("//img[@src='./images/left-logo.svg']");
       });
       test('Group headers are ok', async function() {
-        await expect(page).toHaveElement(`//a[contains(text(), '${settings.test.section}')]`);
+        await expect(page).toHaveElement(`//a[contains(text(), '${sectionTitle()}')]`);
       });
       test('I see a You are viewing text', async function() {
         await expect(page).toHaveElement(`//*[contains(text(), 'You are viewing ')]`);
       });
-      test(`A proper card is present`, async function() {
-        await expect(page).toHaveElement(`.mosaic img[src='logos/${settings.test.logo}']`);
-      });
-      test(`If I click on a card, I see a modal dialog`, async function() {
-        await page.click(`.mosaic img[src='logos/${settings.test.logo}']`);
-        await page.waitForSelector(".modal-content");
-      });
-      close();
     }, 6 * 60 * 1000); //give it up to 1 min to execute
   });
 }
