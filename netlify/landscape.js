@@ -112,6 +112,8 @@ const makeLocalBuild = async function() {
       nvm use \`cat .nvmrc\`
       npm install -g npm --no-progress
       npm install -g yarn@latest
+      which yarn
+      yarn -v
       yarn
       PROJECT_PATH=.. yarn build
     `, { assignFn: (x) => localPid = x, showOutputFn: () => remoteFailed });
