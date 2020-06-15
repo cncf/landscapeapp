@@ -1,5 +1,5 @@
 // We will execute this script from a landscape build
-const LANDSCAPEAPP = process.env.LANDSCAPEAPP || "interactive-landscape@latest"
+const LANDSCAPEAPP = process.env.LANDSCAPEAPP || "latest"
 const remote = `root@${process.env.BUILD_SERVER}`;
 const dockerImage = 'netlify/build:xenial';
 const dockerHome = '/opt/buildhome';
