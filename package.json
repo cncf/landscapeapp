@@ -42,7 +42,9 @@
     "show-report": "open dist/report.html",
     "analyze-bundle": "babel-node ./tools/analyzeBundle.js",
     "latest": "yarn",
-    "reset-tweet-count": "babel-node tools/resetTweetCount.js"
+    "reset-tweet-count": "babel-node tools/resetTweetCount.js",
+    "prepublish": "cp yarn.lock _yarn.lock",
+    "postpublish": "rm _yarn.lock || true"
   },
   "author": "CNCF",
   "license": "Apache-2.0",

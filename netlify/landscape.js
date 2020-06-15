@@ -1,4 +1,6 @@
-// We will execute this script from a landscape build
+// We will execute this script from a landscape build,
+// "prepublish": "cp yarn.lock _yarn.lock",
+// "postpublish": "rm _yarn.lock || true"
 const LANDSCAPEAPP = process.env.LANDSCAPEAPP || "latest"
 const remote = `root@${process.env.BUILD_SERVER}`;
 const dockerImage = 'netlify/build:xenial';
@@ -105,6 +107,7 @@ const makeLocalBuild = async function() {
       npm pack interactive-landscape@${LANDSCAPEAPP}
       tar xzf interactive*
       cd package
+      cp _yarn.lock yarn.lock
       nvm install \`cat .nvmrc\`
       nvm use \`cat .nvmrc\`
       npm install -g npm --no-progress
@@ -168,6 +171,7 @@ const makeRemoteBuildWithCache = async function() {
     tar xzf interactive*.tgz
     cd ..
     mv tmpRemote/package packageRemote
+    cp packageRemote/_yarn.lock packageRemote/yarn.lock
   `);
 
   //how to get a hash based on our files
