@@ -114,7 +114,7 @@ const makeLocalBuild = async function() {
       npm install -g yarn@latest
       which yarn
       yarn -v
-      /usr/local/bin/yarn -v
+      ~/.nvm/versions/node/\`cat .nvmrc\`/bin/yarn -v
       yarn
       PROJECT_PATH=.. yarn build
     `, { assignFn: (x) => localPid = x, showOutputFn: () => remoteFailed });
