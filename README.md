@@ -101,11 +101,12 @@ So, if you're in a directory called `dev`, you would do:
 dev$ git clone git@github.com:cncf/landscapeapp.git
 dev$ git clone git@github.com:cdfoundation/cdf-landscape.git
 dev$ cd landscapeapp
-dev$ npm install
+dev$ npm install -g yarn
+dev$ yarn
 ```
 Now, to use the local landscapeapp you can add the following to your `~/.bash_profile`:
 ```sh
-function y { PROJECT_PATH=`pwd` npm run --prefix ../landscapeapp "$@"; }
+function y { PROJECT_PATH=`pwd` && (cd ../landscapeapp && yarn run "$@")}
 export -f y
 # yf does a normal build and full test run
 alias yf='y fetch'
