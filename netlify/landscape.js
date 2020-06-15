@@ -111,7 +111,7 @@ const makeLocalBuild = async function() {
       nvm install \`cat .nvmrc\`
       nvm use \`cat .nvmrc\`
       npm install -g npm --no-progress
-      npm install -g yarn
+      npm install -g yarn@latest
       yarn
       PROJECT_PATH=.. yarn build
     `, { assignFn: (x) => localPid = x, showOutputFn: () => remoteFailed });
@@ -211,7 +211,7 @@ const makeRemoteBuildWithCache = async function() {
       `nvm install ${nvmrc}`,
       `nvm use ${nvmrc}`,
       `npm install -g npm --no-progress`,
-      `npm install -g yarn`,
+      `npm install -g yarn@latest`,
       `cd /opt/repo/packageRemote`,
       `yarn`
     ].join(' && ');
