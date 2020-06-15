@@ -355,6 +355,7 @@ async function main() {
   const path = require('path');
   console.info('starting', process.cwd());
   process.chdir('..');
+  await runLocal('rm package*.json');
 
   initialPids = await getPids();
 
