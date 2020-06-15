@@ -17,10 +17,11 @@ function find({source, categoryName, subcategoryName, itemName}) {
   return result;
 }
 
-const cleanupFile = function() {
+const cleanupFile = async () => {
+  let promises = []
   _.each(landscape.landscape, function(category) {
     _.each(category.subcategories, function(subcategory) {
-      _.each(subcategory.items, async function(item) {
+      _.each(subcategory.items, function(item) {
         const processed = find({source: processedLandscape, categoryName: category.name, subcategoryName: subcategory.name, itemName: item.name});
         if (!processed) {
           console.info(`FATAL: entry ${item.name} at ${category.name}/${subcategory.name} not found in the processed_landscape.yml`);
@@ -43,16 +44,21 @@ const cleanupFile = function() {
             delete item.stock_ticker;
           }
           if(crunchbaseTicker && item.stock_ticker === null) {
-            try {
+            const promise = new Promise(resolve => {
               const path = `/v10/finance/quoteSummary/${crunchbaseTicker}?modules=summaryDetail`
-              await YahooFinanceClient.request({ path })
-              console.info(`Deleted null ticker for ${item.name} because the stock exists (${crunchbaseTicker})`);
-            } catch (e) {}
+              YahooFinanceClient.request({ path }).then(() => {
+                delete item.stock_ticker;
+                console.info(`Deleted null ticker for ${item.name} because the stock exists (${crunchbaseTicker})`);
+                resolve()
+              }).catch(resolve)
+            })
+            promises.push(promise)
           }
         }
       });
     });
   });
+  await Promise.all(promises)
   saveLandscape(landscape)
 }
 cleanupFile();
