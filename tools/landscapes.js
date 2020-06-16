@@ -36,7 +36,6 @@ async function main() {
   cd /landscapeapp
   export PROJECT_PATH=/repo
   npm run update
-  npm run check-links
   cd /repo
   git add .
   git config --global user.email "info@cncf.io"
