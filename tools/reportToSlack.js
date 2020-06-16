@@ -33,7 +33,6 @@ export async function report({ returnCode, logs, slackChannel, icon_url, name, o
     } catch(ex) {
       return {
         messages: '',
-        numberOfRedirects: 0,
         numberOfErrors: 0
       }
     }
@@ -46,18 +45,11 @@ export async function report({ returnCode, logs, slackChannel, icon_url, name, o
     color: returnCode === 0 ? 'good' : 'danger'
   }
 
-  const checkLinksMessages = checkLinksData && checkLinksData.messages.split("\n").filter(l => {
-    return onlyErrors ? l.indexOf('ERROR') > -1 : true
-  }).join("\n")
-
   const linksAttachment = {
     title: 'Check links result',
-    text: checkLinksMessages,
-    color: checkLinksData.numberOfErrors > 0 ? 'danger' : (checkLinksData.numberOfRedirects > 0 ? 'warning' : 'good'),
+    text: checkLinksData.messages,
+    color: checkLinksData.numberOfErrors > 0 ? 'danger' : 'good',
     fields: [{
-      title: '# of Redirects',
-      value: checkLinksData.numberOfRedirects
-    }, {
       title: '# of Errors',
       value: checkLinksData.numberOfErrors
     }]
