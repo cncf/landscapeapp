@@ -35,12 +35,7 @@ async function main() {
   timeout 120s git clone https://$GITHUB_USER:$GITHUB_TOKEN@github.com/${landscape.repo} /repo
   cd /landscapeapp
   export PROJECT_PATH=/repo
-<<<<<<< HEAD
   yarn run update
-  yarn run check-links
-=======
-  npm run update
->>>>>>> origin/master
   cd /repo
   git add .
   git config --global user.email "info@cncf.io"
