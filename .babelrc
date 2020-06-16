@@ -1,4 +1,5 @@
 {
+      "ignore": [".yarn", ".pnp.js"],
       "presets": [ ["babel-preset-latest-node", {target: "current"}] ],
       "plugins": [
           ["module-resolver", {
