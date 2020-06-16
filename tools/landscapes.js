@@ -35,6 +35,7 @@ async function main() {
   timeout 120s git clone https://$GITHUB_USER:$GITHUB_TOKEN@github.com/${landscape.repo} /repo
   cd /landscapeapp
   export PROJECT_PATH=/repo
+  npm install -g yarn
   yarn run update
   cd /repo
   git add .
