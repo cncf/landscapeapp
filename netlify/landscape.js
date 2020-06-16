@@ -112,7 +112,7 @@ const makeLocalBuild = async function() {
       nvm use \`cat .nvmrc\`
       npm install -g npm --no-progress
       npm install -g yarn@latest
-      ~/.nvm/versions/node/\`cat .nvmrc\`/bin/yarn
+      ~/.nvm/versions/node/\`cat .nvmrc\`/bin/yarn >/dev/null
       PROJECT_PATH=.. ~/.nvm/versions/node/\`cat .nvmrc\`/bin/yarn build
     `, { assignFn: (x) => localPid = x, showOutputFn: () => remoteFailed });
 
@@ -213,7 +213,7 @@ const makeRemoteBuildWithCache = async function() {
       `npm install -g npm --no-progress`,
       `npm install -g yarn@latest`,
       `cd /opt/repo/packageRemote`,
-      `yarn`
+      `yarn >/dev/null`
     ].join(' && ');
     const npmInstallCommand = `
       mkdir -p /root/builds/node_cache
