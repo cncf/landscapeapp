@@ -61,9 +61,10 @@ const checkUrl = (url, attempt = 1) => {
     })
 }
 
-const normalizeUrl = url => {
+const normalizeUrl = (url, keepWww = false) => {
   if (url) {
-    return url.replace('www.', '')
+    return url.replace('www.', keepWww ? 'www.' : '')
+      .replace(':443', '')
       .replace(/#.*/, '')
       .replace(/\?.*/, '')
       .replace(/\/$/, '')
@@ -110,7 +111,7 @@ const main = async () => {
     await new Promise(resolve => setTimeout(resolve, delay))
     const { status, success, effectiveUrl } = await checkUrl(url);
     if (success && normalizeUrl(url) !== normalizeUrl(effectiveUrl)) {
-      redirects[url] = effectiveUrl
+      redirects[url] = normalizeUrl(effectiveUrl, true)
       process.stdout.write(redirect('R')) 
     } else if (success) {
       process.stdout.write('.') 
