@@ -213,11 +213,12 @@ const makeRemoteBuildWithCache = async function() {
       `npm install -g npm --no-progress`,
       `npm install -g yarn@latest`,
       `cd /opt/repo/packageRemote`,
-      `yarn`
+      `yarn`,
+      `cp .pnp.js .yarn`
     ].join(' && ');
     const npmInstallCommand = `
       mkdir -p /root/builds/node_cache
-      ls -l /root/builds/node_cache/${hash}/yarnLocal/unplugged 2>/dev/null || (
+      ls -l /root/builds/node_cache/${hash}/yarnLocal/.pnp.js 2>/dev/null || (
           mkdir -p /root/builds/node_cache/${tmpHash}/{yarnLocal,nvm,yarnGlobal}
           cp -r /root/builds/${folder}/packageRemote/.yarn/* /root/builds/node_cache/${tmpHash}/yarnLocal
           chmod -R 777 /root/builds/node_cache/${tmpHash}
@@ -269,6 +270,7 @@ const makeRemoteBuildWithCache = async function() {
     `. ~/.nvm/nvm.sh`,
     `nvm install ${nvmrc}`,
     `nvm use ${nvmrc}`,
+    `cp .yarn/.pnp.js .`,
     `PROJECT_PATH=.. yarn run build`,
     `cp -r /opt/repo/dist /dist`
   ].join(' && ');
