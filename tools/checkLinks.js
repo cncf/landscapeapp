@@ -83,13 +83,13 @@ const main = async () => {
     ...errors.map(url => `ERROR: invalid URL ${url}`),
     ...warnings.map(url => `WARNING: could not verify ${url}`),
     ...Object.keys(redirects).map(url => `REDIRECT: ${url} ==> ${redirects[url]}`)
-  ]
+  ].join("\n")
   const result = {
-    numberOfErrors: errors.size,
+    numberOfErrors: errors.length,
     numberOfRedirects: Object.keys(redirects).length,
     messages
   }
-  console.log(messages.join("\n"))
+  console.log(messages)
   writeFileSync('/tmp/links.json', JSON.stringify(result, null, 4));
 }
 
