@@ -163,6 +163,7 @@ EOSSH
     git checkout origin/master
     cd ..
     export PROJECT_PATH=cncf
+    mkdir -p cncf/dist/images
     PROJECT_NAME=cncf ~/.nvm/versions/node/\`cat .nvmrc\`/bin/yarn fetch
     PROJECT_NAME=cncf ~/.nvm/versions/node/\`cat .nvmrc\`/bin/yarn render-landscape
 
