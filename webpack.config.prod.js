@@ -8,6 +8,7 @@ import path from 'path';
 import FaviconsWebpackPlugin from 'favicons-webpack-plugin';
 // const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
 const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
+const PnpWebpackPlugin = require(`pnp-webpack-plugin`);
 import {projectPath, settings} from './tools/settings';
 
 const source =  require('js-yaml').safeLoad(require('fs').readFileSync(require('path').resolve(projectPath, 'processed_landscape.yml')));
@@ -45,7 +46,15 @@ export default {
       // for an upstream/downastream setup
       'project': path.resolve(projectPath),
       'favicon.png': path.resolve(projectPath, 'images/favicon.png'),
-    }
+    },
+    plugins: [
+      PnpWebpackPlugin,
+    ]
+  },
+  resolveLoader: {
+    plugins: [
+      PnpWebpackPlugin.moduleLoader(module),
+    ],
   },
   externals: {
     moment: 'moment'

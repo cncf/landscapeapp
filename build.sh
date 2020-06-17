@@ -8,7 +8,7 @@ git remote -v
 git checkout origin/$3
 cd ..
 export PROJECT_PATH=$2
-PROJECT_NAME=$2 npm run build
+PROJECT_NAME=$2 yarn build
 # rm -rf ./$2
 # echo "/$2/* /$2/index.html 200" >> dist/_redirects
 # echo "<div><a href="$2/"><h1>$2</h1></a></div>" >> dist/index.html

@@ -5,7 +5,7 @@ function runIt({task, showOutput}) {
   return new Promise(function(resolve) {
     let resolved = false;
     var spawn = require('child_process').spawn;
-    var child = spawn('bash', ['-c', `npm run ${task}`]);
+    var child = spawn('bash', ['-c', `yarn run ${task}`]);
     const output = [];
     child.stdout.on('data', function(data) {
       const text = (data.toString('utf-8'));

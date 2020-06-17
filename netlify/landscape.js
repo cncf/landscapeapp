@@ -1,4 +1,7 @@
-// We will execute this script from a landscape build
+// We will execute this script from a landscape build,
+// "prepublish": "cp yarn.lock _yarn.lock",
+// "postpublish": "rm _yarn.lock || true"
+const LANDSCAPEAPP = process.env.LANDSCAPEAPP || "latest"
 const remote = `root@${process.env.BUILD_SERVER}`;
 const dockerImage = 'netlify/build:xenial';
 const dockerHome = '/opt/buildhome';
@@ -101,14 +104,16 @@ const makeLocalBuild = async function() {
       # rsync -az --exclude="copy" . copy
       # cd copy
       . ~/.nvm/nvm.sh
-      npm pack interactive-landscape@latest
+      npm pack interactive-landscape@${LANDSCAPEAPP}
       tar xzf interactive*
       cd package
+      cp _yarn.lock yarn.lock
       nvm install \`cat .nvmrc\`
       nvm use \`cat .nvmrc\`
-      npm install -g npm
-      npm install
-      PROJECT_PATH=.. npm run build
+      npm install -g npm --no-progress
+      npm install -g yarn@latest
+      ~/.nvm/versions/node/\`cat .nvmrc\`/bin/yarn >/dev/null
+      PROJECT_PATH=.. ~/.nvm/versions/node/\`cat .nvmrc\`/bin/yarn build
     `, { assignFn: (x) => localPid = x, showOutputFn: () => remoteFailed });
 
     if (!buildDone) {
@@ -162,10 +167,11 @@ const makeRemoteBuildWithCache = async function() {
     mkdir tmpRemote
     cd tmpRemote
     rm -rf package || true
-    npm pack interactive-landscape@latest
+    npm pack interactive-landscape@${LANDSCAPEAPP}
     tar xzf interactive*.tgz
     cd ..
     mv tmpRemote/package packageRemote
+    cp packageRemote/_yarn.lock packageRemote/yarn.lock
   `);
 
   //how to get a hash based on our files
@@ -173,9 +179,11 @@ const makeRemoteBuildWithCache = async function() {
     const crypto = require('crypto');
     const p0 = require('fs').readFileSync('packageRemote/.nvmrc', 'utf-8').trim();
     const p1 = crypto.createHash('sha256').update(require('fs').readFileSync('packageRemote/package.json')).digest('hex');
-    const p2 = crypto.createHash('sha256').update(require('fs').readFileSync('packageRemote/npm-shrinkwrap.json')).digest('hex');
-    return p0 + p1 + p2;
+    const p2 = crypto.createHash('sha256').update(require('fs').readFileSync('packageRemote/yarn.lock')).digest('hex');
+    const p3 = crypto.createHash('sha256').update(require('fs').readFileSync('packageRemote/.yarnrc.yml')).digest('hex');
+    return p0 + p1 + p2 + p3;
   }
+
   const getTmpFile = () => new Date().getTime().toString() + Math.random();
   const nvmrc = require('fs').readFileSync('packageRemote/.nvmrc', 'utf-8').trim();
   console.info(`node version:`, nvmrc);
@@ -189,7 +197,7 @@ const makeRemoteBuildWithCache = async function() {
   await runRemoteWithoutErrors(`mkdir -p /root/builds`);
   await runRemoteWithoutErrors(`docker pull ${dockerImage}`);
   await runLocalWithoutErrors(`
-      rsync --exclude="node_modules" -az -e "ssh -i /tmp/buildbot  -o StrictHostKeyChecking=no  " . ${remote}:/root/builds/${folder}
+      rsync --exclude="package" -az -e  "ssh -i /tmp/buildbot  -o StrictHostKeyChecking=no  " . ${remote}:/root/builds/${folder}
     `);
   await runRemoteWithoutErrors(`chmod -R 777 /root/builds/${folder}`);
 
@@ -198,30 +206,32 @@ const makeRemoteBuildWithCache = async function() {
   // lets guarantee npm install for this folder first
   {
     const buildCommand = [
-      "(ls . ~/.nvm/nvm.sh || curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.35.3/install.sh | bash)",
+      "(ls . ~/.nvm/nvm.sh || (curl -s -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.35.3/install.sh | bash >/dev/null))",
       ". ~/.nvm/nvm.sh",
       `nvm install ${nvmrc}`,
       `nvm use ${nvmrc}`,
       `npm install -g npm --no-progress`,
+      `npm install -g yarn@latest`,
       `cd /opt/repo/packageRemote`,
-      `npm install --no-progress --silent`
+      `yarn >/dev/null`
     ].join(' && ');
     const npmInstallCommand = `
       mkdir -p /root/builds/node_cache
-      ls -l /root/builds/node_cache/${hash}/node_modules/react 2>/dev/null || (
-          mkdir -p /root/builds/node_cache/${tmpHash}/{npm,nvm,node_modules}
+      ls -l /root/builds/node_cache/${hash}/yarnLocal/unplugged 2>/dev/null || (
+          mkdir -p /root/builds/node_cache/${tmpHash}/{yarnLocal,nvm,yarnGlobal}
+          cp -r /root/builds/${folder}/packageRemote/.yarn/* /root/builds/node_cache/${tmpHash}/yarnLocal
           chmod -R 777 /root/builds/node_cache/${tmpHash}
           docker run --shm-size 1G --rm -t \
-            -v /root/builds/node_cache/${tmpHash}/node_modules:/opt/repo/packageRemote/node_modules \
+            -v /root/builds/node_cache/${tmpHash}/yarnLocal:/opt/repo/packageRemote/.yarn \
             -v /root/builds/node_cache/${tmpHash}/nvm:${dockerHome}/.nvm \
-            -v /root/builds/node_cache/${tmpHash}/npm:${dockerHome}/.npm \
+            -v /root/builds/node_cache/${tmpHash}/yarnGlobal:${dockerHome}/.yarn \
             -v /root/builds/${folder}:/opt/repo \
             ${dockerImage} /bin/bash -lc "${buildCommand}"
 
           ln -s /root/builds/node_cache/${tmpHash} /root/builds/node_cache/${hash} || (
             rm -rf /root/builds/node_cache/${tmpHash}
           )
-          echo "node_modules for ${hash} had been installed"
+          echo "packages for ${hash} had been installed"
       )
       chmod -R 777 /root/builds/node_cache/${hash}
     `;
@@ -259,7 +269,8 @@ const makeRemoteBuildWithCache = async function() {
     `. ~/.nvm/nvm.sh`,
     `nvm install ${nvmrc}`,
     `nvm use ${nvmrc}`,
-    `PROJECT_PATH=.. npm run build`,
+    `yarn`,
+    `PROJECT_PATH=.. yarn run build`,
     `cp -r /opt/repo/dist /dist`
   ].join(' && ');
 
@@ -274,43 +285,14 @@ const makeRemoteBuildWithCache = async function() {
         -e NVM_NO_PROGRESS=1 \
         -e NETLIFY=1 \
         -e PARALLEL=TRUE \
-        -v /root/builds/node_cache/${hash}/node_modules:/opt/repo/packageRemote/node_modules \
+        -v /root/builds/node_cache/${hash}/yarnLocal:/opt/repo/packageRemote/.yarn \
         -v /root/builds/node_cache/${hash}/nvm:${dockerHome}/.nvm \
-        -v /root/builds/node_cache/${hash}/npm:${dockerHome}/.npm \
+        -v /root/builds/node_cache/${hash}/yarnGlobal:${dockerHome}/.yarn \
         -v /root/builds/${folder}:/opt/repo \
         -v /root/builds/${outputFolder}:/dist \
         ${dockerImage} /bin/bash -lc "${buildCommand}"
 
     `;
-
-  // const buildCommandWithNpmInstall = [
-    // `cd /opt/repo/package`,
-    // `. ~/.nvm/nvm.sh`,
-    // `nvm use`,
-    // `npm install -g npm --no-progress --silent`,
-    // `npm install --no-progress --silent`,
-    // `PROJECT_PATH=.. npm run build`,
-    // `cp -r /opt/repo/dist /dist`
-  // ].join(' && ');
-
-  // const dockerCommandWithNpmInstall = `
-      // mkdir -p /root/builds/${outputFolder}
-      // chmod -R 777 /root/builds/${outputFolder}
-      // chmod -R 777 /root/builds/${folder}
-      // chmod -R 777 /root/builds/node_cache/${hash}
-
-      // docker run --shm-size 1G --rm -t \
-        // ${vars.map( (v) => ` -e ${v}="${process.env[v]}" `).join(' ')} \
-        // -e NVM_NO_PROGRESS=1 \
-        // -e NETLIFY=1 \
-        // -e PARALLEL=TRUE \
-        // -v /root/builds/node_cache/${hash}/nvm:${dockerHome}/.nvm \
-        // -v /root/builds/node_cache/${hash}/npm:${dockerHome}/.npm \
-        // -v /root/builds/${folder}:/opt/repo \
-        // -v /root/builds/${outputFolder}:/dist \
-        // ${dockerImage} /bin/bash -lc "${buildCommandWithNpmInstall}"
-
-    // `;
 
   debug(dockerCommand);
 
@@ -376,10 +358,10 @@ const makeRemoteBuildWithCache = async function() {
 }
 
 async function main() {
-  const LANDSCAPEAPP = process.env.LANDSCAPEAPP || "latest"
   const path = require('path');
   console.info('starting', process.cwd());
   process.chdir('..');
+  await runLocal('rm package*.json');
 
   initialPids = await getPids();
 

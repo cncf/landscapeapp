@@ -101,11 +101,12 @@ So, if you're in a directory called `dev`, you would do:
 dev$ git clone git@github.com:cncf/landscapeapp.git
 dev$ git clone git@github.com:cdfoundation/cdf-landscape.git
 dev$ cd landscapeapp
-dev$ npm install
+dev$ npm install -g yarn@latest
+dev$ yarn
 ```
 Now, to use the local landscapeapp you can add the following to your `~/.bash_profile`:
 ```sh
-function y { PROJECT_PATH=`pwd` npm run --prefix ../landscapeapp "$@"; }
+function y { export PROJECT_PATH=`pwd` && (cd ../landscapeapp && yarn run "$@")}
 export -f y
 # yf does a normal build and full test run
 alias yf='y fetch'
@@ -115,7 +116,7 @@ alias yq='y remove-quotes'
 alias yp='y build && y open:dist'
 # yo does a quick build and opens up the landscape in your browser
 alias yo='y open:src'
-alias a='for path in /Users/your-username/dev/{landscapeapp,cdf-landscape,lfai-landscape}; do echo $path; git -C $path pull -p; done; npm --prefix /Users/your-username/dev/landscapeapp update;'
+alias a='for path in /Users/your-username/dev/{landscapeapp,cdf-landscape,lfai-landscape}; do echo $path; git -C $path pull -p; done; (cd /Users/your-username/dev/landscapeapp && yarn);'
 
 ```
 Reload with `. ~/.bash_profile` and then use `yo`, `yf`, etc. to run functions on the landscape in your landscape directory. `a` will do a git pull on each of the project directories you specify and install any necessary node modules for landscapeapp.
