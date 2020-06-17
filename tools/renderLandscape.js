@@ -45,18 +45,18 @@ async function main() {
       ignoreHTTPSErrors: true,
   });
   console.info(chromium.puppeteer);
-  const browser = await chromium.puppeteer.launch({
-      args: chromium.args,
-      defaultViewport: chromium.defaultViewport,
-      executablePath: await chromium.executablePath,
-      headless: true,
-      ignoreHTTPSErrors: true,
-  });
 
   await Promise.mapSeries([previews, full_sizes], async function(series) {
     for (const pageInfo of series) {
       const { url, deviceScaleFactor, fileName, pdfFileName } = pageInfo
       const { width, height } = sizes[url]
+      const browser = await chromium.puppeteer.launch({
+        args: chromium.args,
+        defaultViewport: chromium.defaultViewport,
+        executablePath: await chromium.executablePath,
+        headless: true,
+        ignoreHTTPSErrors: true,
+      });
       const page = await browser.newPage();
       await page.setViewport({ width, height, deviceScaleFactor })
 
@@ -68,9 +68,9 @@ async function main() {
         await page.emulateMediaType('screen');
         await page.pdf({path: resolve(projectPath, 'dist', 'images', pdfFileName), width, height, printBackground: true, pageRanges: '1' });
       }
+      await browser.close();
     }
   });
-  await browser.close();
 }
 main().catch(function(e) {
   console.info(e);
