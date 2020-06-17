@@ -14,6 +14,7 @@ const debug = require('debug')('cb');
 import { CrunchbaseClient, YahooFinanceClient } from './apiClients';
 
 const EXCHANGE_SUFFIXES = {
+  'ams': 'AS', // Amsterdam
   'bit': 'MI', // Milan
   'epa': 'PA', // Paris
   'etr': 'DE', // XETRA
@@ -28,6 +29,7 @@ const EXCHANGE_SUFFIXES = {
   'swx': 'SW', // Zurich
   'szse': 'SZ',  // Shenzhen
   'tyo': 'T', // Tokyo
+  'vie': 'VI', // Viena
 }
 
 const getSymbolWithSuffix = (symbol, exchange) => {
