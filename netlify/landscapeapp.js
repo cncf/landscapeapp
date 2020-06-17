@@ -163,7 +163,7 @@ EOSSH
     git checkout origin/master
     cd ..
     export PROJECT_PATH=cncf
-    PROJECT_NAME=cncf ~/.nvm/versions/node/\`cat .nvmrc\`/bin/yarn build
+    PROJECT_NAME=cncf ~/.nvm/versions/node/\`cat .nvmrc\`/bin/yarn render-landscape
 
   `);
   process.exit(1);
