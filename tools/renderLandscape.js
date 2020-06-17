@@ -35,7 +35,7 @@ async function main() {
     return { fileName, pdfFileName, url, deviceScaleFactor: 4 };
   });
 
-  const browser = await puppeteer.launch({args: ['--no-sandbox', '--disable-setuid-sandbox'] });
+  const browser = await puppeteer.launch({args: ['--no-sandbox', '--disable-setuid-sandbox', '--disable-gpu', '--disable-dev-shm-usage']});
   await Promise.mapSeries([previews, full_sizes], async function(series) {
     for (const pageInfo of series) {
       const { url, deviceScaleFactor, fileName, pdfFileName } = pageInfo
