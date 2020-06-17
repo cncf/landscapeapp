@@ -28,6 +28,10 @@ const dockerImage = 'netlify/build:xenial';
 const dockerHome = '/opt/buildhome';
 
 async function main() {
+
+
+
+
   const nvmrc = require('fs').readFileSync('.nvmrc', 'utf-8').trim();
   const secrets = [
     process.env.CRUNCHBASE_KEY_4, process.env.TWITTER_KEYS, process.env.GITHUB_TOKEN, process.env.GITHUB_USER, process.env.GITHUB_KEY
@@ -139,6 +143,30 @@ EOSSH
     }
     return result.text.trim();
   }
+
+  await runLocalWithoutErrors(`
+    cd ..
+    . ~/.nvm/nvm.sh
+
+    nvm install \`cat .nvmrc\`
+    nvm use \`cat .nvmrc\`
+    npm install -g npm --no-progress
+    npm install -g yarn@latest
+    ~/.nvm/versions/node/\`cat .nvmrc\`/bin/yarn >/dev/null
+
+    PROJECT_PATH=..
+
+    set -e
+    timeout 120s git clone --quiet https://github.com/cncf/landscape cncf
+    cd cncf
+    git remote -v
+    git checkout origin/master
+    cd ..
+    export PROJECT_PATH=cncf
+    PROJECT_NAME=cncf ~/.nvm/versions/node/\`cat .nvmrc\`/bin/yarn build
+
+  `);
+  process.exit(1);
 
   await runLocalWithoutErrors(`
       rm -rf dist || true
