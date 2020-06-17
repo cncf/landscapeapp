@@ -164,8 +164,8 @@ EOSSH
     cd ..
     export PROJECT_PATH=cncf
     mkdir -p cncf/dist/images
-    # ~/.nvm/versions/node/\`cat .nvmrc\`/bin/yarn remove puppeteer
-    # ~/.nvm/versions/node/\`cat .nvmrc\`/bin/yarn add puppeteer-core
+    ~/.nvm/versions/node/\`cat .nvmrc\`/bin/yarn remove puppeteer
+    ~/.nvm/versions/node/\`cat .nvmrc\`/bin/yarn add puppeteer@3.0.4
     PROJECT_NAME=cncf ~/.nvm/versions/node/\`cat .nvmrc\`/bin/yarn fetch
     PROJECT_NAME=cncf ~/.nvm/versions/node/\`cat .nvmrc\`/bin/yarn render-landscape
 
