@@ -145,8 +145,6 @@ EOSSH
   }
 
   await runLocalWithoutErrors(`
-    ls
-    cd ..
     . ~/.nvm/nvm.sh
 
     ls
