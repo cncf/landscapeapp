@@ -156,7 +156,7 @@ EOSSH
   const branch = process.env.BRANCH;
   {
     const buildCommand = [
-      "(ls . ~/.nvm/nvm.sh || (curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.35.3/install.sh | bash >/dev/null))",
+      "(ls . ~/.nvm/nvm.sh || (curl -s -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.35.3/install.sh | bash >/dev/null))",
       ". ~/.nvm/nvm.sh",
       `nvm install ${nvmrc} >/dev/null`,
       `nvm use ${nvmrc}`,

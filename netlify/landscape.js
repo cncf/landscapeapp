@@ -206,7 +206,7 @@ const makeRemoteBuildWithCache = async function() {
   // lets guarantee npm install for this folder first
   {
     const buildCommand = [
-      "(ls . ~/.nvm/nvm.sh || (curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.35.3/install.sh | bash >/dev/null))",
+      "(ls . ~/.nvm/nvm.sh || (curl -s -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.35.3/install.sh | bash >/dev/null))",
       ". ~/.nvm/nvm.sh",
       `nvm install ${nvmrc}`,
       `nvm use ${nvmrc}`,
