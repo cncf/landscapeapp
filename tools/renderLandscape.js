@@ -60,7 +60,7 @@ async function main() {
       const page = await browser.newPage();
       await page.setViewport({ width, height, deviceScaleFactor })
 
-      const fullUrl = `http://l.cncf.io/${url}?version=${version}&scale=false&pdf`
+      const fullUrl = `http://landscape.cncf.io/${url}?version=${version}&scale=false&pdf`
       console.info(`visiting ${fullUrl}`);
       await page.goto(fullUrl, { waitUntil: 'networkidle0'});
       await page.screenshot({ path: resolve(projectPath, 'dist', 'images', fileName), fullPage: false });
