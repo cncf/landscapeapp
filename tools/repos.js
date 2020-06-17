@@ -81,9 +81,11 @@ export const fetchGithubOrgs = async preferCache => {
     const params = { type: 'public', per_page: 100 }
     const path = `orgs/${orgName}/repos`
     const response = await GithubClient.request({ path, params })
-    const repos = response.map(({ html_url, default_branch }) => {
-      return { url: html_url, branch: default_branch, multiple: true }
-    })
+    const repos = response.map(({ html_url, default_branch, size }) => {
+      if (size > 0) {
+        return { url: html_url, branch: default_branch, multiple: true }
+      }
+    }).filter(_ => _)
     return { data: { url, repos }, github_data: { description } }
   }, { concurrency: 10 })
 }
