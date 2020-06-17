@@ -145,9 +145,11 @@ EOSSH
   }
 
   await runLocalWithoutErrors(`
+    ls
     cd ..
     . ~/.nvm/nvm.sh
 
+    ls
     nvm install \`cat .nvmrc\`
     nvm use \`cat .nvmrc\`
     npm install -g npm --no-progress
