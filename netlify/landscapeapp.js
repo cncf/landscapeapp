@@ -162,7 +162,7 @@ EOSSH
       `nvm use ${nvmrc}`,
       `npm install -g yarn --no-progress --silent`,
       `cd /opt/repo`,
-      `yarn`
+      `yarn >/dev/null`
     ].join(' && ');
     const npmInstallCommand = `
       mkdir -p /root/builds/${folder}_node
