@@ -29,7 +29,7 @@
     "start-ci": "yarn exec bash -c \"(yarn run babel-node tools/ciServer &) && sleep 10\"",
     "stop-old-ci": "yarn run babel-node tools/stopOldCiServer",
     "stop-ci": "yarn exec bash -c \"kill -9 `cat /tmp/ci.pid` && rm /tmp/ci.pid\"",
-    "integration-test": "jest --reporters=./tools/jestReporter.js --reporters=jest-standard-reporter",
+    "integration-test": "jest $JEST_OPTIONS --reporters=./tools/jestReporter.js --reporters=jest-standard-reporter",
     "check-landscape": "babel-node tools/checkLandscape",
     "render-landscape": "babel-node tools/renderLandscape",
     "funding": "babel-node tools/fundingForMasterBranch",

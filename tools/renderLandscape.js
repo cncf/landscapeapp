@@ -12,7 +12,19 @@ async function main() {
   const sha = await getLastCommitSha();
   const time = new Date().toISOString().slice(0, 19) + 'Z';
   const version = `${time} ${sha}`;
-  // const puppeteer = require('puppeteer');
+  if (process.env.USE_OLD_PUPPETEER) {
+    const run = function(x) {
+      console.info(require('child_process').execSync(x).toString())
+    }
+    run('~/.nvm/versions/node/`cat .nvmrc`/bin/yarn remove puppeteer');
+    run('~/.nvm/versions/node/`cat .nvmrc`/bin/yarn add puppeteer@3.0.4');
+    process.on('exit', function() {
+      run('~/.nvm/versions/node/`cat .nvmrc`/bin/yarn remove puppeteer');
+      run('~/.nvm/versions/node/`cat .nvmrc`/bin/yarn add puppeteer@3.3.0');
+    });
+  }
+  const puppeteer = require('puppeteer');
+
 
 
   const sizes = landscapeSettingsList.reduce((acc, landscapeSettings) => {
@@ -36,31 +48,15 @@ async function main() {
     return { fileName, pdfFileName, url, deviceScaleFactor: 4 };
   });
 
-  const chromium = require('chrome-aws-lambda');
-  console.info({
-      args: chromium.args,
-      defaultViewport: chromium.defaultViewport,
-      executablePath: await chromium.executablePath,
-      headless: true,
-      ignoreHTTPSErrors: true,
-  });
-  console.info(chromium.puppeteer);
-
+  const browser = await puppeteer.launch({args: ['--no-sandbox', '--disable-setuid-sandbox', '--disable-gpu', '--disable-dev-shm-usage']});
   await Promise.mapSeries([previews, full_sizes], async function(series) {
     for (const pageInfo of series) {
       const { url, deviceScaleFactor, fileName, pdfFileName } = pageInfo
       const { width, height } = sizes[url]
-      const browser = await chromium.puppeteer.launch({
-        args: chromium.args,
-        defaultViewport: chromium.defaultViewport,
-        executablePath: await chromium.executablePath,
-        headless: true,
-        ignoreHTTPSErrors: true,
-      });
       const page = await browser.newPage();
       await page.setViewport({ width, height, deviceScaleFactor })
 
-      const fullUrl = `http://landscape.cncf.io/${url}?version=${version}&scale=false&pdf`
+      const fullUrl = `http://localhost:${port}/${url}?version=${version}&scale=false&pdf`
       console.info(`visiting ${fullUrl}`);
       await page.goto(fullUrl, { waitUntil: 'networkidle0'});
       await page.screenshot({ path: resolve(projectPath, 'dist', 'images', fileName), fullPage: false });
@@ -68,9 +64,9 @@ async function main() {
         await page.emulateMediaType('screen');
         await page.pdf({path: resolve(projectPath, 'dist', 'images', pdfFileName), width, height, printBackground: true, pageRanges: '1' });
       }
-      await browser.close();
     }
   });
+  await browser.close();
 }
 main().catch(function(e) {
   console.info(e);
