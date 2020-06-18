@@ -87,7 +87,8 @@ export default {
       template: path.resolve(__dirname, './src/index.ejs'),
       favicon: path.resolve(projectPath, './images/favicon.png'),
       minify: false,
-      inject: true,
+      inject: 'head',
+      scriptLoading: 'defer',
       // custom properties
       GA :require('process').env['GA'],
       prefix: process.env.PROJECT_NAME || '',
