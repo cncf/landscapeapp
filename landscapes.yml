@@ -12,7 +12,7 @@ landscapes:
   - landscape:
     name: cncf
     repo: cncf/landscape
-    hook: 5c1bd8e14ed62f166e8d9f7f
+    hook: 5c1bd968fdd72a78a54bdcd1
     required: true
   - landscape:
     name: cdf
