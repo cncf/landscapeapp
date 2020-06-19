@@ -55,6 +55,9 @@
       }
     });
   </script>
+  <% Object.keys(compilation.assets).filter(f => f.match(/.*\.woff2$/)).forEach(file => { %>
+    <link rel="preload" href="./<%= file %>" as="font" type="font/woff2" crossorigin>
+  <% }) %>
 </head>
 <body>
   <div id="app"></div>

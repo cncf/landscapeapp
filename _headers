@@ -11,5 +11,8 @@
 /*.css
   Cache-Control: public, max-age=31536000, immutable
 
+/*.woff2
+  Cache-Control: public, max-age=31536000, immutable
+
 /*.json
   Content-Type: application/json; charset=utf-8
