@@ -125,7 +125,7 @@
     "file-loader": "6.0.0",
     "format-number": "3.0.0",
     "git-branch": "2.0.1",
-    "history": "5.0.0",
+    "history": "4.10.1",
     "iframe-resizer": "4.2.11",
     "jest": "26.0.1",
     "jest-cli": "26.0.1",
