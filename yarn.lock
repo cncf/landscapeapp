@@ -5011,17 +5011,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"chrome-aws-lambda@npm:^3.1.1":
-  version: 3.1.1
-  resolution: "chrome-aws-lambda@npm:3.1.1"
-  dependencies:
-    lambdafs: ^1.3.0
-  peerDependencies:
-    puppeteer-core: 3.1.x
-  checksum: a55cf4fd291cbfd9d3d628433da4bb67273b7b10c93544fa179b8f48dedc66a5751ea3b48e84d4a03f64d3c30926ca3d818f70f7a4404426d6eb26794fec9f02
-  languageName: node
-  linkType: hard
-
 "chrome-trace-event@npm:^1.0.2":
   version: 1.0.2
   resolution: "chrome-trace-event@npm:1.0.2"
@@ -8809,7 +8798,6 @@ fsevents@^1.2.7:
     change-case: 4.1.1
     chart.js: 2.9.3
     chartjs-adapter-date-fns: 1.0.0
-    chrome-aws-lambda: ^3.1.1
     classnames: 2.2.6
     colors: 1.4.0
     connect: 3.7.0
@@ -8857,8 +8845,7 @@ fsevents@^1.2.7:
     pnp-webpack-plugin: ^1.6.4
     postcss-loader: 3.0.0
     prop-types: 15.7.2
-    puppeteer: ^4.0.0
-    puppeteer-core: ^4.0.0
+    puppeteer: 3.3.0
     query-string: 6.13.0
     raf: 3.4.1
     react: 16.13.1
@@ -10420,17 +10407,6 @@ fsevents@^1.2.7:
   languageName: node
   linkType: hard
 
-"lambdafs@npm:^1.3.0":
-  version: 1.3.0
-  resolution: "lambdafs@npm:1.3.0"
-  dependencies:
-    tar-fs: ^2.0.0
-  bin:
-    lambdafs: bin/brotli.js
-  checksum: a777d85a0839982c522cec1398f145737b5b8f7201a27a000a86976fca7379041ff036bad3c5df64705db10cd7928a9604487e58e144eb476e15f693c4b401f9
-  languageName: node
-  linkType: hard
-
 "lazy-cache@npm:^0.2.3":
   version: 0.2.7
   resolution: "lazy-cache@npm:0.2.7"
@@ -11180,13 +11156,6 @@ fsevents@^1.2.7:
     stream-each: ^1.1.0
     through2: ^2.0.0
   checksum: 6d30a5ba65e27cdd453148abfeadf9f4a64a156a0dd17640876bf4f75d4ee3d5fbd7658f11cc6322b56c81628585de96dbb2b177476012470df6d05323b46e29
-  languageName: node
-  linkType: hard
-
-"mitt@npm:^2.0.1":
-  version: 2.0.1
-  resolution: "mitt@npm:2.0.1"
-  checksum: b871dc5c3c462731dca812ffe5179a02f98cf5cf9199819a542e244cd29b13a38da02aa8bbc4144c858e55bf5e1a94f0419bddd0264de35bfd7111ec3729b292
   languageName: node
   linkType: hard
 
@@ -13153,42 +13122,7 @@ fsevents@^1.2.7:
   languageName: node
   linkType: hard
 
-"puppeteer-core@npm:^4.0.0":
-  version: 4.0.0
-  resolution: "puppeteer-core@npm:4.0.0"
-  dependencies:
-    debug: ^4.1.0
-    extract-zip: ^2.0.0
-    https-proxy-agent: ^4.0.0
-    mime: ^2.0.3
-    mitt: ^2.0.1
-    progress: ^2.0.1
-    proxy-from-env: ^1.0.0
-    rimraf: ^3.0.2
-    tar-fs: ^2.0.0
-    unbzip2-stream: ^1.3.3
-    ws: ^7.2.3
-  checksum: 1cdb71cc6dea6df732a117693c6a0fa32b080c91544e0371bf05976d344501816119bfea6ae2c1bba004ea94974e3a09e23af2ee58f29e964202970b5715c6f8
-  languageName: node
-  linkType: hard
-
-"puppeteer@npm:^1.8.0":
-  version: 1.20.0
-  resolution: "puppeteer@npm:1.20.0"
-  dependencies:
-    debug: ^4.1.0
-    extract-zip: ^1.6.6
-    https-proxy-agent: ^2.2.1
-    mime: ^2.0.3
-    progress: ^2.0.1
-    proxy-from-env: ^1.0.0
-    rimraf: ^2.6.1
-    ws: ^6.1.0
-  checksum: 34c6ed5829325a11a9dfbf63c422dec057680bd36b640f610cabbcb105fb3b02510ef844fa99883a461e971b68b3e542e786a3d2dea5414b805ebeea3e8f14fe
-  languageName: node
-  linkType: hard
-
-"puppeteer@npm:^3.3.0":
+"puppeteer@npm:3.3.0, puppeteer@npm:^3.3.0":
   version: 3.3.0
   resolution: "puppeteer@npm:3.3.0"
   dependencies:
@@ -13206,22 +13140,19 @@ fsevents@^1.2.7:
   languageName: node
   linkType: hard
 
-"puppeteer@npm:^4.0.0":
-  version: 4.0.0
-  resolution: "puppeteer@npm:4.0.0"
+"puppeteer@npm:^1.8.0":
+  version: 1.20.0
+  resolution: "puppeteer@npm:1.20.0"
   dependencies:
     debug: ^4.1.0
-    extract-zip: ^2.0.0
-    https-proxy-agent: ^4.0.0
+    extract-zip: ^1.6.6
+    https-proxy-agent: ^2.2.1
     mime: ^2.0.3
-    mitt: ^2.0.1
     progress: ^2.0.1
     proxy-from-env: ^1.0.0
-    rimraf: ^3.0.2
-    tar-fs: ^2.0.0
-    unbzip2-stream: ^1.3.3
-    ws: ^7.2.3
-  checksum: 9f25d7bdad5a403cf761b4cc7b22894b8a24219bc17fdfd6e85c5aa25591561eec0187d81cf44e318665082f36774fbc468f8c10796e2e206692d0bbbd921c1c
+    rimraf: ^2.6.1
+    ws: ^6.1.0
+  checksum: 34c6ed5829325a11a9dfbf63c422dec057680bd36b640f610cabbcb105fb3b02510ef844fa99883a461e971b68b3e542e786a3d2dea5414b805ebeea3e8f14fe
   languageName: node
   linkType: hard
 
