@@ -297,6 +297,8 @@ const participation = function(itemInfo) {
         }
       }],
       yAxes: [{
+        labelString: 'Commitsd',
+        display: true,
         ticks: {
           beginAtZero: true,
           callback: function (value) { if (Number.isInteger(value)) { return value; } }
