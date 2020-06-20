@@ -305,8 +305,15 @@ const participation = function(itemInfo) {
     }
   };
   const width = Math.min(innerWidth - 110, 300);
-  return <div style={{width: width, height: 150}}>
+  return <div style={{width: width, height: 150, position: 'relative'}}>
     <Bar height={150} width={width} data={data} legend={{display: false}} options={options} />
+    <div style={{
+      transform: 'rotate(-90deg)',
+      position: 'absolute',
+      left: -24,
+      fontSize: 10,
+      top: 59
+    }}>Commits</div>
   </div>;
 }
 
@@ -321,7 +328,7 @@ let timeoutId;
 const ItemDialogContent = ({ itemInfo }) => {
   const setIsLandscape = useState(currentDevice.landscape())[1]
   const [showAllRepos, setShowAllRepos] = useState(false)
-  
+
   if (!timeoutId) {
     timeoutId = setInterval(function() {
       setIsLandscape(currentDevice.landscape());
