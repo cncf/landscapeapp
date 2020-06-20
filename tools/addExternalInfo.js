@@ -304,12 +304,12 @@ async function main() {
     }
   });
 
-  updateProcessedLandscape(processedLandscape => {
+  await updateProcessedLandscape(processedLandscape => {
     const { twitter_options, updated_at } = processedLandscape
-
     console.info('saving!');
     return { ...newProcessedLandscape, twitter_options, updated_at }
   })
+  process.exit(0);
 }
 main().catch(function(x) {
   console.info('Reporting exception');
