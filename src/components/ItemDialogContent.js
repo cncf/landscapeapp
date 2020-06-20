@@ -328,7 +328,6 @@ let timeoutId;
 const ItemDialogContent = ({ itemInfo }) => {
   const setIsLandscape = useState(currentDevice.landscape())[1]
   const [showAllRepos, setShowAllRepos] = useState(false)
-
   if (!timeoutId) {
     timeoutId = setInterval(function() {
       setIsLandscape(currentDevice.landscape());
