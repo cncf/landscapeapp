@@ -113,6 +113,7 @@ const makeLocalBuild = async function() {
       npm install -g npm --no-progress
       npm install -g yarn@latest
       ~/.nvm/versions/node/\`cat .nvmrc\`/bin/yarn >/dev/null
+      export NODE_OPTIONS="--unhandled-rejections=strict"
       export JEST_OPTIONS="-i"
       export USE_OLD_PUPPETEER=1
       PROJECT_PATH=.. ~/.nvm/versions/node/\`cat .nvmrc\`/bin/yarn build
@@ -272,6 +273,7 @@ const makeRemoteBuildWithCache = async function() {
     `nvm install ${nvmrc}`,
     `nvm use ${nvmrc}`,
     `yarn`,
+    `export NODE_OPTIONS="--unhandled-rejections=strict"`,
     `PROJECT_PATH=.. yarn run build`,
     `cp -r /opt/repo/dist /dist`
   ].join(' && ');
