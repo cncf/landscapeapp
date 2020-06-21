@@ -36,7 +36,7 @@ async function main() {
   cd /landscapeapp
   export PROJECT_PATH=/repo
   npm install -g yarn
-  yarn run update
+  NETLIFY=1 yarn run update
   cd /repo
   git add .
   git config --global user.email "info@cncf.io"
