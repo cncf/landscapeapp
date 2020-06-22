@@ -1,6 +1,7 @@
 /* eslint-disable import/no-named-as-default */
 import React from 'react';
 import PropTypes from 'prop-types';
+import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import { Switch, Route } from 'react-router-dom';
 
@@ -15,6 +16,10 @@ import { landscapeSettingsList } from "../utils/landscapeSettings";
 const possiblePrefix = window.possiblePrefix || '';
 const prefix = (possiblePrefix && location.pathname.indexOf(possiblePrefix) === 1) ? (possiblePrefix + '/') : '';
 window.prefix = prefix;
+
+const theme = createMuiTheme({
+   typography: { "fontFamily": '"Helvetica Neue", "Helvetica", "Arial", sans-serif' }
+});
 
 // This is a class-based component because the current
 // version of hot reloading won't hot reload a stateless
@@ -47,6 +52,7 @@ class App extends React.Component {
 
   render() {
     return (
+      <MuiThemeProvider theme={theme}>
       <div className={this.state.isZoomed ? "zoomed-in" : ""}>
         <CssBaseline />
         <Switch>
@@ -57,6 +63,7 @@ class App extends React.Component {
           <Route component={NotFoundPage} />
         </Switch>
       </div>
+      </MuiThemeProvider>
     );
   }
 }
