@@ -106,7 +106,5 @@ async function main() {
     }
   }
 }
-main().catch(function(ex) {
-  throw ex;
-});
 
+document.addEventListener('DOMContentLoaded', main)
