@@ -88,7 +88,7 @@ export default {
       favicon: path.resolve(projectPath, './images/favicon.png'),
       minify: false,
       inject: 'head',
-      scriptLoading: 'deferr',
+      scriptLoading: 'defer',
       // custom properties
       GA :require('process').env['GA'],
       prefix: process.env.PROJECT_NAME || '',
