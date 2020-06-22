@@ -15,7 +15,6 @@ import ReactGA from 'react-ga';
 import isDesktop from './utils/isDesktop';
 import iframeResizerContentWindow from 'iframe-resizer/js/iframeResizer.contentWindow';
 require('favicon.png'); // Tell webpack to load favicon.png
-import "./styles/roboto.css";
 
 async function main() {
   // redux + react-snap specific hacks
@@ -106,7 +105,5 @@ async function main() {
     }
   }
 }
-main().catch(function(ex) {
-  throw ex;
-});
 
+document.addEventListener('DOMContentLoaded', main)
