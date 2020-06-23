@@ -36,7 +36,7 @@
     "copy-dist": "cp -r _headers _redirects \"$PROJECT_PATH\"/data.json \"$PROJECT_PATH\"/images src/embed.html \"$PROJECT_PATH\"/dist/ && cp -r \"$PROJECT_PATH\"/cached_logos \"$PROJECT_PATH\"/dist/logos && yarn copy-iframe-resizer",
     "copy-iframe-resizer": "cp .yarn/unplugged/iframe-resizer*/node_modules/iframe-resizer/js/iframeResizer.min.js \"$PROJECT_PATH\"/dist/iframeResizer.js && yarn exec bash -c 'echo \"`cat \"$PROJECT_PATH\"/dist/iframeResizer.js`\n`cat src/iframeResizer.js`\" > \"$PROJECT_PATH\"/dist/iframeResizer.js'",
     "setup-robots": "babel-node tools/sitemap && babel-node tools/addRobots",
-    "quick-build": "babel-node tools/build.js && yarn copy-dist && yarn setup-robots",
+    "quick-build": "yarn clean-dist && babel-node tools/build.js && yarn copy-dist && yarn setup-robots",
     "prerender": "babel-node tools/prerender",
     "build": "((echo 1 && yarn fetch && yarn clean-dist && babel-node tools/build.js && yarn copy-dist && yarn setup-robots && yarn stop-old-ci && yarn start-ci && babel-node tools/parallelWithRetry integration-test check-landscape render-landscape funding) || (yarn stop-old-ci && false)) && babel-node tools/parallelWithRetry prerender && babel-node tools/parallelWithRetry integration-test && yarn stop-ci",
     "show-report": "open dist/report.html",
@@ -91,6 +91,7 @@
     "babel-plugin-lodash": "3.3.4",
     "babel-plugin-module-resolver": "4.0.0",
     "babel-plugin-root-import": "6.5.0",
+    "babel-plugin-styled-components": "^1.10.7",
     "babel-plugin-transform-react-remove-prop-types": "0.4.24",
     "babel-polyfill": "6.26.0",
     "babel-preset-latest-node": "4.1.0",
@@ -154,6 +155,7 @@
     "react-dom": "16.13.1",
     "react-ga": "3.0.0",
     "react-hot-loader": "4.12.21",
+    "react-is": "^16.13.1",
     "react-key-handler": "1.2.0-beta.3",
     "react-redux": "7.2.0",
     "react-router": "5.2.0",
@@ -176,6 +178,7 @@
     "serve-static": "1.14.1",
     "sitemap": "6.1.5",
     "style-loader": "1.2.1",
+    "styled-components": "^5.1.1",
     "svg-autocrop": "2.0.18",
     "terser-webpack-plugin": "3.0.6",
     "traverse": "0.6.6",
@@ -229,5 +232,8 @@
     "open": {
       "unplugged": true
     }
+  },
+  "resolutions": {
+    "styled-components": "^5"
   }
 }

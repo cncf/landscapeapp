@@ -127,6 +127,7 @@ export default {
                '@babel/preset-react'
             ],
             plugins: [
+              ["babel-plugin-styled-components", { "pure": true }],
               "lodash",
               "@babel/plugin-proposal-class-properties",
               "@babel/plugin-transform-react-constant-elements",

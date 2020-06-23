@@ -1,4 +1,5 @@
 import React from "react";
+import styled from 'styled-components'
 import Fade from "@material-ui/core/Fade";
 import settings from 'project/settings.yml'
 import fields from "../../types/fields";
@@ -9,69 +10,76 @@ import {
   smallItemWidth
 } from "../../utils/landscapeCalculations";
 
+const LargeWrapper = styled.div`
+  cursor: pointer;
+  position: relative;
+  width: ${largeItemWidth}px;
+  height: ${largeItemHeight}px;
+`
+
+const LargeImage = styled.img`
+  width: ${props => `calc(100% - ${2 * props.padding}px)`};
+  height: ${props => `calc(100% - ${2 * props.padding + props.textHeight}px)`};
+  padding: 5;
+  margin: ${props => `${props.padding}px ${props.padding}px 0 ${props.padding}px`};
+`
+
+const LargeItemLabel = styled.div`
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  height: ${props => props.textHeight + props.padding}px;
+  text-align: center;
+  vertical-align: middle;
+  color: white;
+  font-size: 6.7px;
+  line-height: 13px;
+`
+
 const LargeItem = (({ item, onSelectItem, isMember }) => {
   const relationInfo = fields.relation.values.find(({ id }) => id === item.relation);
-  const color = relationInfo.big_picture_color;
+  const background = relationInfo.big_picture_color;
   const label = relationInfo.big_picture_label;
   const textHeight = isMember ? 0 : 10
   const padding = 2
 
-  return <div style={{
-    cursor: 'pointer',
-    position: 'relative',
-    background: color,
-    visibility: item.isVisible ? 'visible' : 'hidden',
-    width: largeItemWidth,
-    height: largeItemHeight }}
-              onClick={ () => onSelectItem(item.id)}
-  >
-    <img loading="lazy" src={item.href} style={{
-      width: `calc(100% - ${2 * padding}px)`,
-      height: `calc(100% - ${2 * padding + textHeight}px)`,
-      padding: 5,
-      margin: `${padding}px ${padding}px 0 ${padding}px`,
-    }} data-href={item.id} alt={item.name} />
-    <div style={{position: 'absolute', bottom: 0, width: '100%', height: textHeight + padding, textAlign: 'center', verticalAlign: 'middle', background: color, color: 'white', fontSize: 6.7, lineHeight: '13px'}}>
-      {label}
-    </div>
-  </div>;
+  return <LargeWrapper style={{ background }} onClick={() => onSelectItem(item.id)}>
+    <LargeImage loading="lazy" src={item.href} data-href={item.id} alt={item.name} padding={padding} textHeight={textHeight} />
+    <LargeItemLabel textHeight={textHeight} padding={padding}>{label}</LargeItemLabel>
+  </LargeWrapper>;
 })
+
+const SmallImage = styled.img`
+  cursor: pointer;
+  width: ${smallItemWidth}px;
+  height: ${smallItemHeight}px;
+  border: 1px solid ${props => props.isMember ? 'white' : 'grey'};
+  border-radius: 2px;
+  padding: 1px;
+`
 
 const SmallItem = (({ item, onSelectItem }) => {
-  const isMember = item.category === settings.global.membership;
-  return <img style={{
-    cursor: 'pointer',
-    width: smallItemWidth,
-    height: smallItemHeight,
-    border: `1px solid ${isMember ? 'white' : 'grey'}`,
-    borderRadius: 2,
-    padding: 1,
-    visibility: item.isVisible ? 'visible' : 'hidden'
-  }}
-              data-href={item.id}
-              loading="lazy"
-              src={item.href}
-              onClick={() => onSelectItem(item.id)}
-              alt={item.name}
-  />
-
+  const { id, href, name, category } = item
+  const isMember = category === settings.global.membership;
+  return <SmallImage data-href={id} loading="lazy" src={href} onClick={() => onSelectItem(id)} alt={name} isMember={isMember} />
 })
+
+const ItemWrapper = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  grid-column-end: span ${props => props.isLarge ? 2 : 1};
+  grid-row-end: span ${props => props.isLarge ? 2 : 1};
+  visibility: ${props => props.isVisible ? 'visible' : 'hidden'};
+`
 
 export default props => {
   const { isLarge, isVisible, category, oss } = props.item
   const isMember = category === settings.global.membership;
 
-  const style = {
-    display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'center',
-    gridColumnEnd: `span ${isLarge ? 2 : 1}`,
-    gridRowEnd: `span ${isLarge ? 2 : 1}`
-  }
-
   return <Fade timeout={1000} in={isVisible}>
-    <div className={isMember || oss ? 'oss' : 'nonoss'} style={style}>
+    <ItemWrapper className={isMember || oss ? 'oss' : 'nonoss'} isLarge={isLarge} isVisible={isVisible}>
       {isLarge ? <LargeItem {...props} isMember={isMember} /> : <SmallItem {...props} />}
-    </div>
+    </ItemWrapper>
   </Fade>
 }

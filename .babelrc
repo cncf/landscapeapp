@@ -2,6 +2,7 @@
       "ignore": [".yarn", ".pnp.js"],
       "presets": [ ["babel-preset-latest-node", {target: "current"}] ],
       "plugins": [
+          ["babel-plugin-styled-components", { "pure": true }],
           ["module-resolver", {
               "root": ["./src"],
               "alias": {
