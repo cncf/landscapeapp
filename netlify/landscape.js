@@ -87,6 +87,7 @@ const runLocalWithoutErrors = async function(command) {
 let buildDone = false;
 let localPid;
 let remoteFailed = false;
+let localFailed = false;
 
 async function getPids() {
   const result = await runLocalWithoutErrors(`ps`);
@@ -120,20 +121,22 @@ const makeLocalBuild = async function() {
     `, { assignFn: (x) => localPid = x, showOutputFn: () => remoteFailed });
 
     if (!buildDone) {
-      buildDone = true;
       console.info('Local build finished, exit code:', localOutput.exitCode);
-      if (!remoteFailed) {
-        console.info(localOutput.text);
-      }
       if (localOutput.exitCode !== 0) {
-        process.exit(1);
-      } else {
-        await runLocalWithoutErrors(`
+        console.info(localOutput.text);
+        localFailed = true;
+        if (!remoteFailed) {
+          return;
+        } else {
+          process.exit(1);
+        }
+      }
+      buildDone = true;
+      await runLocalWithoutErrors(`
           rm -rf netlify/dist || true
           cp -r dist netlify
         `);
-        process.exit(0);
-      }
+      process.exit(0);
     } else {
       console.info('Ignore local build');
     }
@@ -379,6 +382,9 @@ async function main() {
   await Promise.all([makeRemoteBuildWithCache().catch(function(ex) {
     console.info('Remote build failed! Continuing with a local build', ex);
     remoteFailed = true;
+    if (localFailed) {
+      process.exit(1);
+    }
   }), makeLocalBuild(), cleanPromise]);
 
 }
