@@ -271,7 +271,7 @@ EOSSH
     )
     return output;
   }));
-  await testFetchImagesOnNetlify();
+  await testFetchImagesOnNetlify;
   const results = await promises;
   await runRemote(`
     rm -rf /root/builds/${folder}
