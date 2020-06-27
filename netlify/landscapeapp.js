@@ -186,6 +186,22 @@ EOSSH
 
   }
   // all landscapes
+  const testFetchImagesOnNetlify = async function() {
+    const output = await runLocalWithoutErrors(`
+        git clone https://github.com/cncf/landscape cncf
+        nvm install \`cat .nvmrc\`
+        nvm use \`cat .nvmrc\`
+        npm install -g npm --no-progress
+        npm install -g yarn@latest
+        ~/.nvm/versions/node/\`cat .nvmrc\`/bin/yarn >/dev/null
+        export NODE_OPTIONS="--unhandled-rejections=strict"
+        export JEST_OPTIONS="-i"
+        export USE_OLD_PUPPETEER=1
+        export IGNORE_IMAGES_CACHE=1
+        PROJECT_PATH=cncf ~/.nvm/versions/node/\`cat .nvmrc\`/bin/yarn fetch
+    `)
+    return output;
+  };
 
   const results = await Promise.all(landscapesInfo.landscapes.map(async function(landscape, i) {
     await pause(i);
@@ -253,7 +269,7 @@ EOSSH
       `
     )
     return output;
-  }));
+  }).concat[testFetchImagesOnNetlify]);
   await runRemote(`
     rm -rf /root/builds/${folder}
     rm -rf /root/builds/${folder}_node || true
