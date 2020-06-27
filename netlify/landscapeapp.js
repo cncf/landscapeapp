@@ -196,6 +196,7 @@ EOSSH
       `. ~/.nvm/nvm.sh`,
       `nvm use`,
       `export NODE_OPTIONS="--unhandled-rejections=strict"`,
+      `export IGNORE_IMAGES_CACHE=1`,
       `bash build.sh ${landscape.repo} ${landscape.name} master`,
       `cp -r /opt/repo/${landscape.name}/dist /dist`
     ].join(' && ');
