@@ -189,6 +189,7 @@ EOSSH
   const testFetchImagesOnNetlify = async function() {
     const output = await runLocalWithoutErrors(`
         git clone https://github.com/cncf/landscape cncf
+        . ~/.nvm/nvm.sh
         nvm install \`cat .nvmrc\`
         nvm use \`cat .nvmrc\`
         npm install -g npm --no-progress
