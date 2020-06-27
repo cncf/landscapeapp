@@ -203,7 +203,7 @@ EOSSH
     return output;
   }();
 
-  const results = await Promise.all(landscapesInfo.landscapes.map(async function(landscape, i) {
+  const promises = await Promise.all(landscapesInfo.landscapes.map(async function(landscape, i) {
     await pause(i);
     const vars = ['CRUNCHBASE_KEY_4', 'GITHUB_KEY', 'TWITTER_KEYS'];
     const outputFolder = landscape.name + new Date().getTime();
@@ -269,7 +269,9 @@ EOSSH
       `
     )
     return output;
-  }).concat[testFetchImagesOnNetlify]);
+  }));
+  await testFetchImagesOnNetlify();
+  const results = await promises;
   await runRemote(`
     rm -rf /root/builds/${folder}
     rm -rf /root/builds/${folder}_node || true
