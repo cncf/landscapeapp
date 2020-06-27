@@ -201,7 +201,7 @@ EOSSH
         PROJECT_PATH=cncf ~/.nvm/versions/node/\`cat .nvmrc\`/bin/yarn fetch
     `)
     return output;
-  };
+  }();
 
   const results = await Promise.all(landscapesInfo.landscapes.map(async function(landscape, i) {
     await pause(i);
