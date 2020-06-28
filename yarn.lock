@@ -9086,7 +9086,7 @@ fsevents@^1.2.7:
     serve-static: 1.14.1
     sitemap: 6.1.6
     style-loader: 1.2.1
-    svg-autocrop: 2.0.25
+    svg-autocrop: 2.0.26
     terser-webpack-plugin: 3.0.6
     traverse: 0.6.6
     url-loader: 4.1.0
@@ -15557,9 +15557,9 @@ fsevents@^1.2.7:
   languageName: node
   linkType: hard
 
-"svg-autocrop@npm:2.0.25":
-  version: 2.0.25
-  resolution: "svg-autocrop@npm:2.0.25"
+"svg-autocrop@npm:2.0.26":
+  version: 2.0.26
+  resolution: "svg-autocrop@npm:2.0.26"
   dependencies:
     file-url: ^3.0.0
     glob: ^7.1.6
@@ -15574,7 +15574,7 @@ fsevents@^1.2.7:
     xml-beautifier: ^0.4.3
   bin:
     svg-autocrop: fix.js
-  checksum: e31d4a91e45e88028eaca2f3761c694a521e378652e4a7f2d6193ed4e5ede7198d6bffc4d9327537b2a09d21aab7e925cf3032b5d75f777e22516532bfb69d62
+  checksum: 585e1be74997eb3a52db76ea75e1f21d8baea6bd75802da005e0ccf2171bdb95b57b0c8ef370e6286772708c9c61c8b97b630a7003b1aa0054f17952f4fa98b7
   languageName: node
   linkType: hard
 

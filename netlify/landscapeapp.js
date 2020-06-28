@@ -141,13 +141,19 @@ EOSSH
   }
 
   await runLocalWithoutErrors(`
-        git clone https://github.com/cncf/svg-autocrop
-        cd svg-autocrop
+        git clone https://github.com/lfph/lfph-landscape lfph
         . ~/.nvm/nvm.sh
-        nvm install v14.3.0
-        nvm use v14.3.0
-        npm install
-        DEBUG_SVG=1 npm run test
+        nvm install \`cat .nvmrc\`
+        nvm use \`cat .nvmrc\`
+        npm install -g npm --no-progress
+        npm install -g yarn@latest
+        ~/.nvm/versions/node/\`cat .nvmrc\`/bin/yarn >/dev/null
+        export NODE_OPTIONS="--unhandled-rejections=strict"
+        export JEST_OPTIONS="-i"
+        export USE_OLD_PUPPETEER=1
+        export IGNORE_IMAGES_CACHE=1
+        echo "Yarn fetch"
+        PROJECT_PATH=lfph ~/.nvm/versions/node/\`cat .nvmrc\`/bin/yarn fetch
   `);
   process.exit(1);
 
