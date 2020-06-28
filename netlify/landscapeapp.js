@@ -101,7 +101,7 @@ EOSSH
       let output = [];
       child.stdout.on('data', function(data) {
         const text = maskSecrets(data.toString('utf-8'));
-        // console.info(text);
+        console.info(text);
         output.push(text);
         //Here is where the output goes
       });
@@ -203,6 +203,8 @@ EOSSH
     `)
     return output;
   }();
+  await testFetchImagesOnNetlify;
+  process.exit(1);
 
   const promises = await Promise.all(landscapesInfo.landscapes.map(async function(landscape, i) {
     await pause(i);
