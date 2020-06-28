@@ -4496,7 +4496,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"bluebird@npm:3.7.2, bluebird@npm:^3.5.0, bluebird@npm:^3.5.5":
+"bluebird@npm:3.7.2, bluebird@npm:^3.5.0, bluebird@npm:^3.5.5, bluebird@npm:^3.7.2":
   version: 3.7.2
   resolution: "bluebird@npm:3.7.2"
   checksum: 4f2288662f3d4eadbb82d4daa4a7d7976a28fa3c7eb4102c9b4033b03e5be4574ba123ac52a7c103cde4cb7b2d2afc1dbe41817ca15a29ff21ecd258d0286047
@@ -9086,7 +9086,7 @@ fsevents@^1.2.7:
     serve-static: 1.14.1
     sitemap: 6.1.6
     style-loader: 1.2.1
-    svg-autocrop: latest
+    svg-autocrop: 2.0.29
     terser-webpack-plugin: 3.0.6
     traverse: 0.6.6
     url-loader: 4.1.0
@@ -15557,10 +15557,11 @@ fsevents@^1.2.7:
   languageName: node
   linkType: hard
 
-"svg-autocrop@npm:latest":
-  version: 2.0.27
-  resolution: "svg-autocrop@npm:2.0.27"
+"svg-autocrop@npm:2.0.29":
+  version: 2.0.29
+  resolution: "svg-autocrop@npm:2.0.29"
   dependencies:
+    bluebird: ^3.7.2
     file-url: ^3.0.0
     glob: ^7.1.6
     https-proxy-agent: ^5.0.0
@@ -15574,7 +15575,7 @@ fsevents@^1.2.7:
     xml-beautifier: ^0.4.3
   bin:
     svg-autocrop: fix.js
-  checksum: 9f4c76be8f1f4e599d8bbc737eeb14f309f93d6327c7df830002347ccc375c51d583c9f788e3ca91f62afa71df2709f985bcee8315cfe0a7b216481cdc1c0859
+  checksum: 21b267d68567badd811c0a31ee60157b5b8af1f3f936c7b7360d3be43705af0fe882332c754a64374e0f962067e266f50f3c6f1fb64357e94fafa9728647a474
   languageName: node
   linkType: hard
 
