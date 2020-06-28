@@ -148,9 +148,6 @@ EOSSH
         npm install -g npm --no-progress
         npm install -g yarn@latest
         ~/.nvm/versions/node/\`cat .nvmrc\`/bin/yarn >/dev/null
-        export NODE_OPTIONS="--unhandled-rejections=strict"
-        export JEST_OPTIONS="-i"
-        export USE_OLD_PUPPETEER=1
         export IGNORE_IMAGES_CACHE=1
         echo "Yarn fetch"
         DEBUG=images DEBUG_SVG=1 PROJECT_PATH=lfph ~/.nvm/versions/node/\`cat .nvmrc\`/bin/yarn fetch
