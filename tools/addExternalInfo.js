@@ -146,6 +146,7 @@ async function main() {
 
   console.info('Fetching images');
   const savedImageEntries = await extractSavedImageEntries();
+  console.info('got image entries');
   const { imageEntries, imageErrors } = await fetchImageEntries({
     cache: savedImageEntries,
     preferCache: useImagesCache

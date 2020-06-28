@@ -83,6 +83,7 @@ export async function fetchImageEntries({cache, preferCache}) {
   const errors = [];
   const reporter = makeReporter();
   const result = await Promise.map(items, async function(item) {
+    console.info(item.logo);
     let cachedEntry;
     let url = item.logo;
     try {
