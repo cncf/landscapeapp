@@ -9086,7 +9086,7 @@ fsevents@^1.2.7:
     serve-static: 1.14.1
     sitemap: 6.1.6
     style-loader: 1.2.1
-    svg-autocrop: 2.0.29
+    svg-autocrop: 2.0.30
     terser-webpack-plugin: 3.0.6
     traverse: 0.6.6
     url-loader: 4.1.0
@@ -15557,9 +15557,9 @@ fsevents@^1.2.7:
   languageName: node
   linkType: hard
 
-"svg-autocrop@npm:2.0.29":
-  version: 2.0.29
-  resolution: "svg-autocrop@npm:2.0.29"
+"svg-autocrop@npm:2.0.30":
+  version: 2.0.30
+  resolution: "svg-autocrop@npm:2.0.30"
   dependencies:
     bluebird: ^3.7.2
     file-url: ^3.0.0
@@ -15575,7 +15575,7 @@ fsevents@^1.2.7:
     xml-beautifier: ^0.4.3
   bin:
     svg-autocrop: fix.js
-  checksum: 21b267d68567badd811c0a31ee60157b5b8af1f3f936c7b7360d3be43705af0fe882332c754a64374e0f962067e266f50f3c6f1fb64357e94fafa9728647a474
+  checksum: 6d8e8ecc832bde4c716b2cabcc39eb8032746d15754f8d1555aa42790671dc15c471b084e4c070d686f4636e8615f789470b755aa96003a346868f131b995ff2
   languageName: node
   linkType: hard
 

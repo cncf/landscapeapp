@@ -176,7 +176,7 @@
     "serve-static": "1.14.1",
     "sitemap": "6.1.6",
     "style-loader": "1.2.1",
-    "svg-autocrop": "2.0.29",
+    "svg-autocrop": "2.0.30",
     "terser-webpack-plugin": "3.0.6",
     "traverse": "0.6.6",
     "url-loader": "4.1.0",
