@@ -153,7 +153,7 @@ EOSSH
         export USE_OLD_PUPPETEER=1
         export IGNORE_IMAGES_CACHE=1
         echo "Yarn fetch"
-        PROJECT_PATH=lfph ~/.nvm/versions/node/\`cat .nvmrc\`/bin/yarn fetch
+        DEBUG=images PROJECT_PATH=lfph ~/.nvm/versions/node/\`cat .nvmrc\`/bin/yarn fetch
   `);
   process.exit(1);
 
