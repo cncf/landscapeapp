@@ -11,7 +11,6 @@ import { settings, projectPath } from './settings';
 import makeReporter from './progressReporter';
 import { addError, addWarning } from './reporter';
 import autoCropSvg from 'svg-autocrop';
-import retry from "./retry";
 const debug = require('debug')('images');
 
 const error = colors.red;
@@ -134,7 +133,7 @@ export async function fetchImageEntries({cache, preferCache}) {
           timeout: 30 * 1000
         });
       }
-      const croppedSvgResult = await retry(() => autoCropSvg(response, {title: `${item.name} logo`}), 2, 1000);
+      const croppedSvgResult = await autoCropSvg(response, {title: `${item.name} logo`});
       const croppedSvg = croppedSvgResult.result;
       require('fs').writeFileSync(path.resolve(projectPath, `cached_logos/${fileName}`), croppedSvg);
       reporter.write(cacheMiss('*'));
