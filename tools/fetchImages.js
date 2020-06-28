@@ -11,7 +11,7 @@ import { settings, projectPath } from './settings';
 import makeReporter from './progressReporter';
 import { addError, addWarning } from './reporter';
 import autoCropSvg from 'svg-autocrop';
-const debug = require('debug')('images');
+const debug = (x) => console.info(x);
 
 const error = colors.red;
 const fatal = (x) => colors.red(colors.inverse(x));
@@ -92,7 +92,7 @@ export async function fetchImageEntries({cache, preferCache}) {
       if (hash) {
         searchOptions.hash = hash;
       }
-      // console.info(searchOptions);
+       console.info(searchOptions);
       cachedEntry = _.find(cache, searchOptions);
       if (preferCache && cachedEntry && imageExist(cachedEntry)) {
         debug(`Found cached entry for ${item.name} with logo ${item.logo}`);
