@@ -141,6 +141,17 @@ EOSSH
   }
 
   await runLocalWithoutErrors(`
+        git clone https://github.com/cncf/svg-autocrop
+        cd svg-autocrop
+        . ~/.nvm/nvm.sh
+        nvm install v14.3.0
+        nvm use v14.3.0
+        npm install
+        DEBUG_SVG=1 npm run test
+  `);
+  process.exit(1);
+
+  await runLocalWithoutErrors(`
       rm -rf dist || true
       mkdir -p dist
     `);
