@@ -188,7 +188,7 @@ EOSSH
   // all landscapes
   const testFetchImagesOnNetlify = async function() {
     const output = await runLocalWithoutErrors(`
-        git clone https://github.com/State-of-the-Edge/lfedge-landscape lfedge
+        git clone https://github.com/lfph/lfph-landscape lfph
         . ~/.nvm/nvm.sh
         nvm install \`cat .nvmrc\`
         nvm use \`cat .nvmrc\`
@@ -199,7 +199,7 @@ EOSSH
         export JEST_OPTIONS="-i"
         export USE_OLD_PUPPETEER=1
         export IGNORE_IMAGES_CACHE=1
-        PROJECT_PATH=lfedge ~/.nvm/versions/node/\`cat .nvmrc\`/bin/yarn fetch
+        PROJECT_PATH=lfph-landscape ~/.nvm/versions/node/\`cat .nvmrc\`/bin/yarn fetch
     `)
     return output;
   }();
