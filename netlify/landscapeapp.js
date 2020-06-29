@@ -101,7 +101,7 @@ EOSSH
       let output = [];
       child.stdout.on('data', function(data) {
         const text = maskSecrets(data.toString('utf-8'));
-        console.info(text);
+        // console.info(text);
         output.push(text);
         //Here is where the output goes
       });
@@ -139,20 +139,6 @@ EOSSH
     }
     return result.text.trim();
   }
-
-  await runLocalWithoutErrors(`
-        git clone https://github.com/lfph/lfph-landscape lfph
-        . ~/.nvm/nvm.sh
-        nvm install \`cat .nvmrc\`
-        nvm use \`cat .nvmrc\`
-        npm install -g npm --no-progress
-        npm install -g yarn@latest
-        ~/.nvm/versions/node/\`cat .nvmrc\`/bin/yarn >/dev/null
-        export IGNORE_IMAGES_CACHE=1
-        echo "Yarn fetch"
-        DEBUG=images DEBUG_SVG=1 PROJECT_PATH=lfph ~/.nvm/versions/node/\`cat .nvmrc\`/bin/yarn fetch
-  `);
-  process.exit(1);
 
   await runLocalWithoutErrors(`
       rm -rf dist || true
@@ -199,7 +185,8 @@ EOSSH
     console.info(filteredLines);
 
   }
-  // all landscapes
+
+  // Ensure that netlify is able to process images
   const testFetchImagesOnNetlify = async function() {
     const output = await runLocalWithoutErrors(`
         git clone https://github.com/lfph/lfph-landscape lfph
@@ -217,8 +204,6 @@ EOSSH
     `)
     return output;
   }();
-  await testFetchImagesOnNetlify;
-  process.exit(1);
 
   const promises = await Promise.all(landscapesInfo.landscapes.map(async function(landscape, i) {
     await pause(i);
@@ -229,7 +214,6 @@ EOSSH
       `. ~/.nvm/nvm.sh`,
       `nvm use`,
       `export NODE_OPTIONS="--unhandled-rejections=strict"`,
-      `export IGNORE_IMAGES_CACHE=1`,
       `bash build.sh ${landscape.repo} ${landscape.name} master`,
       `cp -r /opt/repo/${landscape.name}/dist /dist`
     ].join(' && ');
