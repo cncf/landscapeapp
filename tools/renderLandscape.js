@@ -2,6 +2,7 @@ import Promise from 'bluebird';
 import { projectPath } from './settings';
 import { resolve } from 'path';
 import { writeFileSync } from 'fs';
+const puppeteer = require('puppeteer');
 import { landscapeSettingsList } from "../src/utils/landscapeSettings";
 import { calculateSize, outerPadding, headerHeight } from "../src/utils/landscapeCalculations";
 
@@ -21,20 +22,6 @@ async function main() {
   const sha = await getLastCommitSha();
   const time = new Date().toISOString().slice(0, 19) + 'Z';
   const version = `${time} ${sha}`;
-  if (process.env.USE_OLD_PUPPETEER) {
-    const run = function(x) {
-      console.info(require('child_process').execSync(x).toString())
-    }
-    run('~/.nvm/versions/node/`cat .nvmrc`/bin/yarn remove puppeteer');
-    run('~/.nvm/versions/node/`cat .nvmrc`/bin/yarn add puppeteer@3.0.4');
-    process.on('exit', function() {
-      run('~/.nvm/versions/node/`cat .nvmrc`/bin/yarn remove puppeteer');
-      run('~/.nvm/versions/node/`cat .nvmrc`/bin/yarn add puppeteer@3.3.0');
-    });
-  }
-  const puppeteer = require('puppeteer');
-
-
 
   const sizes = landscapeSettingsList.reduce((acc, landscapeSettings) => {
     const { width, height } = calculateSize(landscapeSettings)
