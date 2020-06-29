@@ -160,7 +160,7 @@ export async function fetchImageEntries({cache, preferCache}) {
         return null;
       }
     }
-  }, {concurrency: process.env.NETLIFY ? 1 : 5});
+  }, {concurrency: 1 });
   reporter.summary();
   _.each(errors, function(error) {
     console.info('error: ', error);
