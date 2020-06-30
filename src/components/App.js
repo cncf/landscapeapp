@@ -18,7 +18,7 @@ const prefix = (possiblePrefix && location.pathname.indexOf(possiblePrefix) === 
 window.prefix = prefix;
 
 const theme = createMuiTheme({
-   typography: { "fontFamily": '"Helvetica Neue", "Helvetica", "Arial", "Liberation Sans", FreeSans, sans-serif' }
+   typography: { "fontFamily": 'Roboto, "Helvetica Neue", "Helvetica", "Arial", sans-serif' }
 });
 
 // This is a class-based component because the current
