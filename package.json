@@ -1,6 +1,6 @@
 {
   "name": "interactive-landscape",
-  "version": "1.0.451",
+  "version": "1.0.453",
   "description": "Visualization tool for building interactive landscapes",
   "engines": {
     "npm": ">=3",
@@ -179,6 +179,7 @@
     "svg-autocrop": "2.0.32",
     "terser-webpack-plugin": "3.0.6",
     "traverse": "0.6.6",
+    "typeface-roboto": "^0.0.75",
     "url-loader": "4.1.0",
     "webpack": "4.43.0",
     "webpack-bundle-analyzer": "3.8.0",
