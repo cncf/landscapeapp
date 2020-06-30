@@ -22,7 +22,7 @@ const traverse = require('traverse');
 const _ = require('lodash');
 
 var useCrunchbaseCache = true;
-var useImagesCache=true;
+var useImagesCache = !process.env.IGNORE_IMAGES_CACHE;
 var useGithubCache=true;
 var useGithubStartDatesCache=true;
 var useTwitterCache = true;
@@ -146,6 +146,7 @@ async function main() {
 
   console.info('Fetching images');
   const savedImageEntries = await extractSavedImageEntries();
+  console.info('got image entries');
   const { imageEntries, imageErrors } = await fetchImageEntries({
     cache: savedImageEntries,
     preferCache: useImagesCache
