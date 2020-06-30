@@ -55,7 +55,6 @@ const Fullscreen = ({ready, groupedItems, landscapeSettings, version}) => {
 
   return (
       <div className="gradient-bg" style={{
-        fontFamily: 'roboto',
         width: wrapperWidth * zoom,
         height: wrapperHeight * zoom,
         overflow: 'hidden'

@@ -8903,6 +8903,7 @@ fsevents@^1.2.7:
     svg-autocrop: 2.0.32
     terser-webpack-plugin: 3.0.6
     traverse: 0.6.6
+    typeface-roboto: ^0.0.75
     url-loader: 4.1.0
     webpack: 4.43.0
     webpack-bundle-analyzer: 3.8.0
@@ -16039,6 +16040,13 @@ fsevents@^1.2.7:
   version: 0.0.6
   resolution: "typedarray@npm:0.0.6"
   checksum: c9ef0176aaf32593514c31e5c6edc1db970847aff6e1f0a0570a6ac0cc996335792f394c2fcec59cc76691d22a01888ea073a2f3c6930cfcf7c519addf4e2ad7
+  languageName: node
+  linkType: hard
+
+"typeface-roboto@npm:^0.0.75":
+  version: 0.0.75
+  resolution: "typeface-roboto@npm:0.0.75"
+  checksum: ee56f5cc5720b2c15ee851652f3584a53d56ec2d1448dc757e0097808071f4d7d6843e66e343483a92e94d7b3f3a9436153517818834a367977bea888fc6d429
   languageName: node
   linkType: hard
 

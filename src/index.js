@@ -14,6 +14,7 @@ import './styles/theme.scss';
 import ReactGA from 'react-ga';
 import isDesktop from './utils/isDesktop';
 import iframeResizerContentWindow from 'iframe-resizer/js/iframeResizer.contentWindow';
+import './styles/roboto.css';
 require('favicon.png'); // Tell webpack to load favicon.png
 
 async function main() {
