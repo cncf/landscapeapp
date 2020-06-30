@@ -173,7 +173,7 @@ export default {
             options: {
               limit: 10000,
               mimetype: 'application/font-woff',
-              name: '[name].[ext]'
+              name: '[name].[contenthash].[ext]'
             }
           }
         ]
