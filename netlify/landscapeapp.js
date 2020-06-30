@@ -185,27 +185,9 @@ EOSSH
     console.info(filteredLines);
 
   }
+  // all landscapes
 
-  // Ensure that netlify is able to process images
-  const testFetchImagesOnNetlify = async function() {
-    const output = await runLocalWithoutErrors(`
-        git clone https://github.com/lfph/lfph-landscape lfph
-        . ~/.nvm/nvm.sh
-        nvm install \`cat .nvmrc\`
-        nvm use \`cat .nvmrc\`
-        npm install -g npm --no-progress
-        npm install -g yarn@latest
-        ~/.nvm/versions/node/\`cat .nvmrc\`/bin/yarn >/dev/null
-        export NODE_OPTIONS="--unhandled-rejections=strict"
-        export JEST_OPTIONS="-i"
-        export USE_OLD_PUPPETEER=1
-        export IGNORE_IMAGES_CACHE=1
-        PROJECT_PATH=lfph ~/.nvm/versions/node/\`cat .nvmrc\`/bin/yarn fetch
-    `)
-    return output;
-  }();
-
-  const promises = await Promise.all(landscapesInfo.landscapes.map(async function(landscape, i) {
+  const results = await Promise.all(landscapesInfo.landscapes.map(async function(landscape, i) {
     await pause(i);
     const vars = ['CRUNCHBASE_KEY_4', 'GITHUB_KEY', 'TWITTER_KEYS'];
     const outputFolder = landscape.name + new Date().getTime();
@@ -271,8 +253,6 @@ EOSSH
     )
     return output;
   }));
-  await testFetchImagesOnNetlify;
-  const results = await promises;
   await runRemote(`
     rm -rf /root/builds/${folder}
     rm -rf /root/builds/${folder}_node || true

@@ -11,7 +11,8 @@ import { settings, projectPath } from './settings';
 import makeReporter from './progressReporter';
 import { addError, addWarning } from './reporter';
 import autoCropSvg from 'svg-autocrop';
-const debug = (x) => console.info(x);
+import retry from "./retry";
+const debug = require('debug')('images');
 
 const error = colors.red;
 const fatal = (x) => colors.red(colors.inverse(x));
@@ -83,7 +84,6 @@ export async function fetchImageEntries({cache, preferCache}) {
   const errors = [];
   const reporter = makeReporter();
   const result = await Promise.map(items, async function(item) {
-    console.info(item.logo);
     let cachedEntry;
     let url = item.logo;
     try {
@@ -92,7 +92,7 @@ export async function fetchImageEntries({cache, preferCache}) {
       if (hash) {
         searchOptions.hash = hash;
       }
-       console.info(searchOptions);
+      // console.info(searchOptions);
       cachedEntry = _.find(cache, searchOptions);
       if (preferCache && cachedEntry && imageExist(cachedEntry)) {
         debug(`Found cached entry for ${item.name} with logo ${item.logo}`);
@@ -134,7 +134,7 @@ export async function fetchImageEntries({cache, preferCache}) {
           timeout: 30 * 1000
         });
       }
-      const croppedSvgResult = await autoCropSvg(response, {title: `${item.name} logo`});
+      const croppedSvgResult = await retry(() => autoCropSvg(response, {title: `${item.name} logo`}), 2, 1000);
       const croppedSvg = croppedSvgResult.result;
       require('fs').writeFileSync(path.resolve(projectPath, `cached_logos/${fileName}`), croppedSvg);
       reporter.write(cacheMiss('*'));
