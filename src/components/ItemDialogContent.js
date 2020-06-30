@@ -24,7 +24,7 @@ import useWindowSize from "@rooks/use-window-size"
 import classNames from 'classnames'
 import CreateWidthMeasurer from 'measure-text-width';
 
-const measureWidth = CreateWidthMeasurer(window).setFont("0.6rem Roboto");
+const measureWidth = CreateWidthMeasurer(window).setFont('0.6rem Roboto');
 
 
 let productScrollEl = null;
