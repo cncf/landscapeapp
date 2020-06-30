@@ -20,7 +20,7 @@ async function main() {
     run('~/.nvm/versions/node/`cat .nvmrc`/bin/yarn add puppeteer@3.0.4');
     process.on('exit', function() {
       run('~/.nvm/versions/node/`cat .nvmrc`/bin/yarn remove puppeteer');
-      run('~/.nvm/versions/node/`cat .nvmrc`/bin/yarn add puppeteer@3.3.0');
+      run('~/.nvm/versions/node/`cat .nvmrc`/bin/yarn add puppeteer@4.0.1');
     });
   }
   const puppeteer = require('puppeteer');
