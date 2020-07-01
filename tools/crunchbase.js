@@ -159,6 +159,10 @@ export async function fetchData(name) {
   let lastOrganization = result;
   while (lastOrganization.cards.parent_organization[0]) {
     const parentOrganization = lastOrganization.cards.parent_organization[0].identifier.permalink
+    if (parents.map(p => p.identifier.permalink).includes(parentOrganization)) {
+      const { permalink } = lastOrganization.properties.identifier
+      throw new Error(`Circular dependency detected: ${permalink} and ${parentOrganization} are parents of each other`)
+    }
     lastOrganization = await fetchCrunchbaseOrganization(parentOrganization)
     parents.push({ ...lastOrganization.properties, delisted: isDelisted(lastOrganization) })
   }
@@ -261,8 +265,8 @@ export async function fetchCrunchbaseEntries({cache, preferCache}) {
         // console.info(c.name);
         addError('crunchbase');
         debug(`normal request failed, and no cached entry for ${c.name}`);
-        setFatalError(`No cached entry, and can not fetch: ${c.name} ` + ex.message.substring(0, 200));
-        errors.push(fatal(`No cached entry, and can not fetch: ${c.name} ` +  ex.message.substring(0, 200)));
+        setFatalError(`No cached entry, and can not fetch: ${c.name}. ` + ex.message.substring(0, 200));
+        errors.push(fatal(`No cached entry, and can not fetch: ${c.name}. ` +  ex.message.substring(0, 200)));
         reporter.write(fatal("F"));
         return null;
       }
