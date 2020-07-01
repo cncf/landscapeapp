@@ -39,7 +39,7 @@ const requestWithRetry = async ({ attempts = maxAttempts, retryStatuses, delayFn
 // We only want to retry a request when rate limited. By default the status code is 429.
 const ApiClient = ({ baseUrl, defaultOptions = {}, defaultParams = {}, retryStatuses = [429], delayFn = null }) => {
   return {
-    request: async ({ path = null, url = null, method = 'GET', params = {} }) => {
+    request: async ({ path = null, url = null, method = 'GET', params = {}, ...rest }) => {
       const qs = { ...defaultParams, ...params };
 
       if (path) {
@@ -54,6 +54,7 @@ const ApiClient = ({ baseUrl, defaultOptions = {}, defaultParams = {}, retryStat
           uri: url,
           json: true,
           ...defaultOptions,
+          ...rest,
           qs,
           retryStatuses,
           delayFn

@@ -2,8 +2,7 @@ import { setFatalError } from './fatalErrors';
 import colors from 'colors';
 const Promise = require('bluebird');
 import _ from 'lodash';
-import rp from './rpRetry';
-import { JSDOM } from 'jsdom';
+import { parse } from 'querystring'
 import { addError, addWarning } from './reporter';
 import makeReporter from './progressReporter';
 const debug = require('debug')('github');
@@ -20,18 +19,24 @@ const error = colors.red;
 const fatal = (x) => colors.red(colors.inverse(x));
 const cacheMiss = colors.green;
 
-const getContributorsCount = async (repoUrl) => {
-  var response = await rp({
-    uri: `${repoUrl}/contributors_size`,
-    followRedirect: true,
-    timeout: 30 * 1000,
-    simple: true
-  });
-  const dom = new JSDOM(response);
-  const doc = dom.window.document;
-  var element = doc.querySelector('.num');
-  var count = element.textContent.replace(/[^\d]/g, '').trim();
-  return parseInt(count);
+const getContributorsCount = async repo => {
+  const per_page = 100
+  const path = `/repos/${repo}/contributors`
+  const request = ({ page = 1 } = {}) => GithubClient.request({ path, params: { page, per_page, anon: 1 }, resolveWithFullResponse: true })
+  const { body, headers } = await request()
+
+  let totalPages, lastPageContributors
+
+  if (headers.link) {
+    const lastPageUrl = headers.link.split(',').find(s => s.indexOf('last') > -1).split(';')[0].replace(/[<>]/g, '')
+    totalPages = parseInt(parse(lastPageUrl.split('?')[1]).page)
+    lastPageContributors = (await request({ page: totalPages })).body
+  } else {
+    totalPages = 1
+    lastPageContributors = body
+  }
+
+  return (totalPages - 1) * per_page + lastPageContributors.length
 };
 
 const getContributorsList = async (repo, page = 1) => {
@@ -88,7 +93,7 @@ export async function fetchGithubEntries({cache, preferCache}) {
 
       const releaseDate = await getReleaseDate({repo: repoName});
       const releaseLink = releaseDate && `${url}/releases`;
-      const contributorsCount = await getContributorsCount(url);
+      const contributorsCount = await getContributorsCount(repoName);
       const contributorsList = repo.multiple ? await getContributorsList(repoName) : []
       const contributorsLink = `${url}/graphs/contributors`;
       // console.info(contributorsCount, contributorsLink);
