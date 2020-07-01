@@ -380,7 +380,9 @@ const ItemDialogContent = ({ itemInfo }) => {
                       <div className="product-property row">
                         <div className="product-property-name col col-40">Contributors</div>
                         <div className="product-property-value tight-col col-60">
-                          <OutboundLink to={itemInfo.contributorsLink}>{itemInfo.contributorsCount}</OutboundLink>
+                          <OutboundLink to={itemInfo.contributorsLink}>
+                            {itemInfo.contributorsCount > 500 ? '500+' : itemInfo.contributorsCount }
+                          </OutboundLink>
                         </div>
                       </div>
                     ) : null;
