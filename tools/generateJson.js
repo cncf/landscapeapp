@@ -605,7 +605,8 @@ async function main () {
         level: 1,
         children: children.map( (x) => (x.headquarters))
       });
-      _.each(_.orderBy(children,  (x) => x.headquarters), function(record) {
+      const stateAndCity = (x) => x.country === 'United States' ? x.headquarters.split(', ')[1] + x.headquarters.split(', ')[0] : x.headquarters.split(', ')[0];
+      _.each(_.orderBy(children,  (x) => stateAndCity(x) ), function(record) {
         result.push({
           id: record.headquarters,
           label: record.country === 'United States' ? record.headquarters :  record.headquarters.split(', ')[0],
