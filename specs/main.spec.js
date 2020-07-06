@@ -6,7 +6,7 @@ import { settings } from '../tools/settings';
 import { projects } from '../tools/loadData';
 import { landscapeSettingsList } from "../src/utils/landscapeSettings";
 
-const { devicesMap } = puppeteer.devices;
+const devicesMap = puppeteer.devices;
 const port = process.env.PORT || '4000';
 const appUrl = `http://localhost:${port}`;
 const width = 1920;
