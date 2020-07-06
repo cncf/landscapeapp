@@ -1,6 +1,7 @@
 // This file configures the development web server
 // which supports hot reloading and synchronized testing.
 
+import checkVersion from './checkVersion';
 import open from 'open'
 import request from 'request-promise';
 import path from 'path';
@@ -73,6 +74,10 @@ app.use(function(req, res) {
     res.end(result);
   });
 });
-app.listen(3000);
-console.info(`Server is running on http://localhost:3000`);
-open('http://localhost:3000');
+async function main() {
+  await checkVersion();
+  app.listen(3000);
+  console.info(`Server is running on http://localhost:3000`);
+  open('http://localhost:3000');
+}
+main();

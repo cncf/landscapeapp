@@ -1,3 +1,4 @@
+import checkVersion from './checkVersion';
 import { hasFatalErrors, reportFatalErrors } from './fatalErrors';
 import process from 'process';
 import path from 'path';
@@ -109,7 +110,7 @@ const aggregateLanguages = repos => {
 }
 
 async function main() {
-
+  await checkVersion();
   var crunchbaseEntries;
   var savedCrunchbaseEntries = await extractSavedCrunchbaseEntries();
   if (process.env.CRUNCHBASE_KEY_4) {
