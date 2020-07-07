@@ -9189,7 +9189,7 @@ fsevents@^1.2.7:
     pnp-webpack-plugin: ^1.6.4
     postcss-loader: 3.0.0
     prop-types: 15.7.2
-    puppeteer: 5.0.0
+    puppeteer: "patch:puppeteer@5.0.0#./puppeteer.patch"
     query-string: 6.13.1
     raf: 3.4.1
     react: 16.13.1
@@ -13504,7 +13504,7 @@ fsevents@^1.2.7:
   languageName: node
   linkType: hard
 
-"puppeteer@npm:5.0.0, puppeteer@npm:^5.0.0":
+"puppeteer@5.0.0, puppeteer@npm:^5.0.0":
   version: 5.0.0
   resolution: "puppeteer@npm:5.0.0"
   dependencies:
@@ -13537,6 +13537,26 @@ fsevents@^1.2.7:
     rimraf: ^2.6.1
     ws: ^6.1.0
   checksum: 34c6ed5829325a11a9dfbf63c422dec057680bd36b640f610cabbcb105fb3b02510ef844fa99883a461e971b68b3e542e786a3d2dea5414b805ebeea3e8f14fe
+  languageName: node
+  linkType: hard
+
+"puppeteer@patch:puppeteer@5.0.0#./puppeteer.patch::locator=interactive-landscape%40workspace%3A.":
+  version: 5.0.0
+  resolution: "puppeteer@patch:puppeteer@npm%3A5.0.0#./puppeteer.patch::version=5.0.0&hash=2b90aa&locator=interactive-landscape%40workspace%3A."
+  dependencies:
+    debug: ^4.1.0
+    extract-zip: ^2.0.0
+    https-proxy-agent: ^4.0.0
+    mime: ^2.0.3
+    mitt: ^2.0.1
+    pkg-dir: ^4.2.0
+    progress: ^2.0.1
+    proxy-from-env: ^1.0.0
+    rimraf: ^3.0.2
+    tar-fs: ^2.0.0
+    unbzip2-stream: ^1.3.3
+    ws: ^7.2.3
+  checksum: efb7c0b342ceee98d9b2508d27adc8ae4434722222a75b1654d69fe654c8c336b1b709806638482fca38e549061e5b7afb3e884bb6d8b7a699b9af9b32eecc63
   languageName: node
   linkType: hard
 
