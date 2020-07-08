@@ -1,11 +1,12 @@
 
 import puppeteer from "puppeteer";
 require('expect-puppeteer');
-import { devicesMap } from 'puppeteer/DeviceDescriptors';
 import { paramCase } from 'change-case';
 import { settings } from '../tools/settings';
 import { projects } from '../tools/loadData';
 import { landscapeSettingsList } from "../src/utils/landscapeSettings";
+
+const devicesMap = puppeteer.devices;
 const port = process.env.PORT || '4000';
 const appUrl = `http://localhost:${port}`;
 const width = 1920;
