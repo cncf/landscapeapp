@@ -10,14 +10,7 @@
 2. Please follow [this script](https://github.com/cncf/landscapeapp/blob/master/update_server/setup.bash) to install correct versions of `nodejs` and other packages on Linux.
 
 ## Local development
-1. `git pull`
-2. `npm install` (installs dependencies)
-* `npm run open:src` (starts a development server) or
-* `npm build`, then `npm run open:dist` (compiles and opens a production build)
-
-## Review build details
-1. `npm run build`
-1. `open dist/report.html`
+Please follow the [directions](https://github.com/cncf/landscapeapp#installing-locally) to setup aliases for running your landscape.
 
 ## Updating data
 
