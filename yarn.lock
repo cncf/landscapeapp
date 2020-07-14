@@ -3463,10 +3463,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/node@npm:^14.0.14":
-  version: 14.0.14
-  resolution: "@types/node@npm:14.0.14"
-  checksum: 0a2072aa7de32e6535ce6bc7383965fc0a4b7bbf6d76f69027db72e86381921c820a8a2173f75fa210d9fb3286c707079d3804ef33c76a065bcb890858e50ee9
+"@types/node@npm:^14.0.18":
+  version: 14.0.23
+  resolution: "@types/node@npm:14.0.23"
+  checksum: 35415a294f536c2b14d29ec02a733af23405f4e7e87dace5b4392a69358aae7a14d28805a528b6e9a5f55cfbd9e035bd817e4db0325945fe0332db40ecabdf84
   languageName: node
   linkType: hard
 
@@ -4288,12 +4288,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"autoprefixer@npm:9.8.4":
-  version: 9.8.4
-  resolution: "autoprefixer@npm:9.8.4"
+"autoprefixer@npm:^9.8.5":
+  version: 9.8.5
+  resolution: "autoprefixer@npm:9.8.5"
   dependencies:
     browserslist: ^4.12.0
-    caniuse-lite: ^1.0.30001087
+    caniuse-lite: ^1.0.30001097
     colorette: ^1.2.0
     normalize-range: ^0.1.2
     num2fraction: ^1.2.2
@@ -4301,7 +4301,7 @@ __metadata:
     postcss-value-parser: ^4.1.0
   bin:
     autoprefixer: bin/autoprefixer
-  checksum: 0b3aa6fccff8d48b1375d9c009ebde4cb45f54a9cd540f46a4c3a2efcf34e56128a9daef211916cce01da51280ab2bea4814fde0176ce1d65bf6a1d5c3569f04
+  checksum: 90c2b6b32801c5c58a4d6e540e554085bb00bac3599455110c6f65cfd6e31ab0d677a68c6a7ca02dc50f12f9a570802a85ec8009c3032a6bfd74a41b0d562be0
   languageName: node
   linkType: hard
 
@@ -5149,13 +5149,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"caniuse-lite@npm:1.0.30001094":
-  version: 1.0.30001094
-  resolution: "caniuse-lite@npm:1.0.30001094"
-  checksum: 7b3ee77fda7b03fd613f39098452eecba004345c511779ed242393c06e45c9540dbb7deb9b21fc7a355ae6d8194e014395630d9a11172749f02f355a71665213
-  languageName: node
-  linkType: hard
-
 "caniuse-lite@npm:^1.0.0, caniuse-lite@npm:^1.0.30001043":
   version: 1.0.30001081
   resolution: "caniuse-lite@npm:1.0.30001081"
@@ -5163,10 +5156,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"caniuse-lite@npm:^1.0.30001087":
-  version: 1.0.30001089
-  resolution: "caniuse-lite@npm:1.0.30001089"
-  checksum: c4aeb153f17889009802249c2698d69356c2485ef5f18599b04af2cab656b7ffc27d36095eaafbaf0a7370b5fd58f596c2d52e3b81b42e4fba475ccdb197b0aa
+"caniuse-lite@npm:^1.0.30001097, caniuse-lite@npm:^1.0.30001099":
+  version: 1.0.30001099
+  resolution: "caniuse-lite@npm:1.0.30001099"
+  checksum: 5dc9193728a894cfb5b3b5e7b96b670c1114fda75461cd87ae8fd41968aca4d1d1bc01a5bcf2a5b61cf0d33b5dd128a10dd563aa0c2d81f6a1e3e3c2e815f33c
   languageName: node
   linkType: hard
 
@@ -9125,7 +9118,7 @@ fsevents@^1.2.7:
     "@material-ui/lab": 4.0.0-alpha.56
     "@material-ui/pickers": 3.2.10
     "@rooks/use-window-size": 3.6.0
-    autoprefixer: 9.8.4
+    autoprefixer: ^9.8.5
     axe-puppeteer: 1.1.0
     babel-eslint: 10.1.0
     babel-jest: 26.1.0
@@ -9137,7 +9130,7 @@ fsevents@^1.2.7:
     babel-polyfill: 6.26.0
     babel-preset-latest-node: 4.1.0
     bluebird: 3.7.2
-    caniuse-lite: 1.0.30001094
+    caniuse-lite: ^1.0.30001099
     chalk: 4.1.0
     change-case: 4.1.1
     chart.js: 2.9.3
@@ -9175,10 +9168,10 @@ fsevents@^1.2.7:
     jest-puppeteer: 4.4.0
     jest-standard-reporter: 1.0.4
     js-yaml: 3.14.0
-    jsdom: 16.2.2
+    jsdom: ^16.3.0
     json-loader: 0.5.7
     json2csv: 5.0.1
-    lodash: ^4.17.15
+    lodash: ^4.17.19
     measure-text-width: 0.0.4
     millify: 3.2.1
     mini-css-extract-plugin: 0.9.0
@@ -9195,7 +9188,7 @@ fsevents@^1.2.7:
     react: 16.13.1
     react-chartjs-2: 2.9.0
     react-dom: 16.13.1
-    react-ga: 3.1.1
+    react-ga: ^3.1.2
     react-hot-loader: 4.12.21
     react-key-handler: 1.2.0-beta.3
     react-redux: 7.2.0
@@ -9215,11 +9208,11 @@ fsevents@^1.2.7:
     request-promise: 4.2.5
     reselect: 4.0.0
     rimraf: 3.0.2
-    sass-loader: 9.0.1
+    sass-loader: ^9.0.2
     serve-static: 1.14.1
-    sitemap: 6.1.7
+    sitemap: ^6.2.0
     style-loader: 1.2.1
-    svg-autocrop: 2.0.33
+    svg-autocrop: ^2.0.34
     terser-webpack-plugin: 3.0.6
     traverse: 0.6.6
     typeface-roboto: ^0.0.75
@@ -10441,7 +10434,7 @@ fsevents@^1.2.7:
   languageName: node
   linkType: hard
 
-"jsdom@npm:16.2.2, jsdom@npm:^16.2.2":
+"jsdom@npm:^16.2.2":
   version: 16.2.2
   resolution: "jsdom@npm:16.2.2"
   dependencies:
@@ -10477,6 +10470,45 @@ fsevents@^1.2.7:
     canvas:
       optional: true
   checksum: a03c24449070206c22b17822f38d615ded858444bf63ddfa102f11df193c658b581a45a8ad1dda123b5881be5f52ca539de257a94227f56237e1127d03e46a66
+  languageName: node
+  linkType: hard
+
+"jsdom@npm:^16.3.0":
+  version: 16.3.0
+  resolution: "jsdom@npm:16.3.0"
+  dependencies:
+    abab: ^2.0.3
+    acorn: ^7.1.1
+    acorn-globals: ^6.0.0
+    cssom: ^0.4.4
+    cssstyle: ^2.2.0
+    data-urls: ^2.0.0
+    decimal.js: ^10.2.0
+    domexception: ^2.0.1
+    escodegen: ^1.14.1
+    html-encoding-sniffer: ^2.0.1
+    is-potential-custom-element-name: ^1.0.0
+    nwsapi: ^2.2.0
+    parse5: 5.1.1
+    request: ^2.88.2
+    request-promise-native: ^1.0.8
+    saxes: ^5.0.0
+    symbol-tree: ^3.2.4
+    tough-cookie: ^3.0.1
+    w3c-hr-time: ^1.0.2
+    w3c-xmlserializer: ^2.0.0
+    webidl-conversions: ^6.1.0
+    whatwg-encoding: ^1.0.5
+    whatwg-mimetype: ^2.3.0
+    whatwg-url: ^8.0.0
+    ws: ^7.2.3
+    xml-name-validator: ^3.0.0
+  peerDependencies:
+    canvas: ^2.5.0
+  peerDependenciesMeta:
+    canvas:
+      optional: true
+  checksum: 8136e06866a1e59610054d219110fb015650f9e1187443a5b21aa30f845368ddd16495c935f3967a9e0005af62059ec069cd929d5a201005a67f4909d048e3ea
   languageName: node
   linkType: hard
 
@@ -11019,6 +11051,13 @@ fsevents@^1.2.7:
   version: 4.17.15
   resolution: "lodash@npm:4.17.15"
   checksum: aec3fbb7570aa67bda500b8299b1b1821d60646bede87f76a74dfcc7666ab3445267d734ec71424d70809d52ad67a1356fab5ab694a3faa1908d68e9d48f00f5
+  languageName: node
+  linkType: hard
+
+"lodash@npm:^4.17.19":
+  version: 4.17.19
+  resolution: "lodash@npm:4.17.19"
+  checksum: ff2b7a95f0129dba9101e346d44e0eda0f159d76bbbf23721eec1969b87a32bde3de0cfef0733218c64620e9be08040a973278d46a686540233b356115f3527c
   languageName: node
   linkType: hard
 
@@ -13726,13 +13765,13 @@ fsevents@^1.2.7:
   languageName: node
   linkType: hard
 
-"react-ga@npm:3.1.1":
-  version: 3.1.1
-  resolution: "react-ga@npm:3.1.1"
+"react-ga@npm:^3.1.2":
+  version: 3.1.2
+  resolution: "react-ga@npm:3.1.2"
   peerDependencies:
     prop-types: ^15.6.0
     react: ^15.6.2 || ^16.0
-  checksum: 6190b05867523995c0b4bb8d7ecd94bb2e3122c03ae46c881c886541f80da79d05e9ce60254425aaddff2b5dcd5f21924c274d493575d523e22d9984ea5c633f
+  checksum: c1941f97b81a85c2f62b5407ea679b704385bdd287cb2a698f9bfdd001c684e08c69a441cdfe9ed5b3e994644f7018783c666bbffa027a16e084e1a9ba7fb9d2
   languageName: node
   linkType: hard
 
@@ -14618,9 +14657,9 @@ fsevents@^1.2.7:
   languageName: node
   linkType: hard
 
-"sass-loader@npm:9.0.1":
-  version: 9.0.1
-  resolution: "sass-loader@npm:9.0.1"
+"sass-loader@npm:^9.0.2":
+  version: 9.0.2
+  resolution: "sass-loader@npm:9.0.2"
   dependencies:
     klona: ^1.1.1
     loader-utils: ^2.0.0
@@ -14639,7 +14678,7 @@ fsevents@^1.2.7:
       optional: true
     sass:
       optional: true
-  checksum: 3d492ed76cbb3d754b0a6d970605d8bdd2b68e52a74e25c60affb093c25d431130daface391891ec79c342e75d030fc684d07c065f89f4325e17dde83c483555
+  checksum: 4a27190349c3e0cd61995d45c3fbc3356a50dea5c58829e5c1d04eb66036a22350918821e73cd8f12c3a26680397a915e5af68128bcfdef566ca7c85c32355ee
   languageName: node
   linkType: hard
 
@@ -15020,17 +15059,17 @@ fsevents@^1.2.7:
   languageName: node
   linkType: hard
 
-"sitemap@npm:6.1.7":
-  version: 6.1.7
-  resolution: "sitemap@npm:6.1.7"
+"sitemap@npm:^6.2.0":
+  version: 6.2.0
+  resolution: "sitemap@npm:6.2.0"
   dependencies:
-    "@types/node": ^14.0.14
+    "@types/node": ^14.0.18
     "@types/sax": ^1.2.1
     arg: ^4.1.3
     sax: ^1.2.4
   bin:
     sitemap: dist/cli.js
-  checksum: 5a59fd28174caf871297b680f0f933fbf5e36178f2575b86cf04393157e54d7ed0b9e0cd08b4ec84ce075c3beda54bbac4e1cad345a07f860a9f138fc703ec15
+  checksum: efc7711d8d44f2a3228d49aa22a46e70003cbbef9d6b3e840c63fe66d0e61e43653b564d52e409abe5a0bdd9b4b4ef3291c9b0bd4dd113d3bc7d0c8c2c0323ea
   languageName: node
   linkType: hard
 
@@ -15710,9 +15749,9 @@ fsevents@^1.2.7:
   languageName: node
   linkType: hard
 
-"svg-autocrop@npm:2.0.33":
-  version: 2.0.33
-  resolution: "svg-autocrop@npm:2.0.33"
+"svg-autocrop@npm:^2.0.34":
+  version: 2.0.34
+  resolution: "svg-autocrop@npm:2.0.34"
   dependencies:
     bluebird: ^3.7.2
     file-url: ^3.0.0
@@ -15728,7 +15767,7 @@ fsevents@^1.2.7:
     xml-beautifier: ^0.4.3
   bin:
     svg-autocrop: fix.js
-  checksum: 16c9b28bf672a8e4f9a345213867ac67468dbc4e34d05aa9fdb939cedccb4f6192ff01e877aa9ba27986a635de3ae0d67769a42593985eb8e29d3865e9f5a4fe
+  checksum: 8f4cc3a129a306982b248dc7e15767f1c494d730251ef1976a03eff3827502e3cb8445a0220473605c31918a08cc9b1540a774ea7b2cf09d937bdb7127fe6eec
   languageName: node
   linkType: hard
 
@@ -16819,7 +16858,7 @@ fsevents@^1.2.7:
   languageName: node
   linkType: hard
 
-"webidl-conversions@npm:^6.0.0":
+"webidl-conversions@npm:^6.0.0, webidl-conversions@npm:^6.1.0":
   version: 6.1.0
   resolution: "webidl-conversions@npm:6.1.0"
   checksum: 0ded175044ec0a06f41014b9ffc36a67eb22bff53b9cb43fa1e9d05eaded43a100d993a8179d3a9f0f820ff1e5b812107a97c8643b600a6ab5bef1e11fcae66b
