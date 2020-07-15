@@ -68,6 +68,10 @@ landscapes:
     repo: prestodb/presto-landscape
     hook: 5ecd46d9f5ea8819a9d610a6
   - landscape:
+    name: tarscloud
+    repo: TarsCloud/TARS_landscape
+    hook: 5f0e8a006cae8a2b52061c81
+  - landscape:
     name: ucf
     repo: ucfoundation/ucf-landscape
     hook: 5d96662e28b476477790dd8a
