@@ -5,7 +5,7 @@ import getGroupedItems from '../utils/itemsCalculator';
 
 
 const mapStateToProps = (state) => ({
-  isLogoMode: state.main.isLogoMode,
+  cardMode: state.main.cardMode,
   groupedItems: getGroupedItems(state)
 });
 const mapDispatchToProps = {
