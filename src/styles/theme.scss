@@ -405,6 +405,28 @@ a {text-decoration: none; transition: all 0.5s; color: $blue;
   }
 }
 
+.borderless-mode {
+  .mosaic-wrap {
+    padding: 20px;
+  }
+  .sh_wrapper {
+    background: transparent;
+    font-size: 24px;
+    div .items-count {
+      display: none
+    }
+  }
+  .mosaic .logo {
+    height: 160px;
+    width: 100%;
+  }
+  .mosaic {
+    box-shadow: inherit;
+    border: inherit;
+    background: inherit;
+  }
+}
+
 .ios {
   body {
     user-select: none;

@@ -29,6 +29,8 @@ function getRelationStyle(relation) {
 const Card = pure(({cardMode, item, handler, itemRef, ...props}) => {
   if (cardMode === 'flat') {
     return FlatCard({item, handler, itemRef, ...props});
+  } else if (cardMode = 'borderless') {
+    return BorderlessCard({item, handler, itemRef, ...props});
   } else {
     return DefaultCard({item, handler, itemRef, ...props});
   }
@@ -70,7 +72,17 @@ const FlatCard = function({item, handler, itemRef, ...props}) {
               <div className="mosaic" onClick={() => handler(item.id)} >
                 <img src={item.href} className='logo' alt={item.name} />
                 <div className="separator"/>
-                <h5>{item.name}</h5>
+                <h5>{item.flatName}</h5>
+              </div>
+            </div>
+  );
+}
+
+const BorderlessCard = function({item, handler, itemRef, ...props}) {
+  return (
+            <div ref={itemRef} className="mosaic-wrap" key={item.id} {...props}>
+              <div className="mosaic" onClick={() => handler(item.id)} >
+                <img src={item.href} className='logo' alt={item.name} />
               </div>
             </div>
   );

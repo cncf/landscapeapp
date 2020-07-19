@@ -270,6 +270,7 @@ async function main () {
     return {
       ...item,
       id: id,
+      flatName: item.name.replace('(member)', '').replace('(supporter)', '')
     }
   });
 
