@@ -14,7 +14,7 @@ const sortOptions = options.map(function(x) {
 import settings from 'project/settings.yml';
 import { findLandscapeSettings } from './landscapeSettings';
 
-export function filtersToUrl({filters, grouping, sortField, selectedItemId, zoom, mainContentMode = 'card', isLogoMode = false, isFullscreen}) {
+export function filtersToUrl({filters, grouping, sortField, selectedItemId, zoom, mainContentMode = 'card', cardMode = 'card', isFullscreen}) {
   const prefix = window.prefix;
   const params = {};
   var fieldNames = _.keys(fields);
@@ -25,7 +25,7 @@ export function filtersToUrl({filters, grouping, sortField, selectedItemId, zoom
   addSortFieldToParams({sortField: sortField, params: params});
   // addSortDirectionToParams({sortDirection: sortDirection, params: params});
   addSelectedItemIdToParams({selectedItemId: selectedItemId, params: params });
-  addMainContentModeToParams({mainContentMode: mainContentMode, isLogoMode: isLogoMode, params: params});
+  addMainContentModeToParams({mainContentMode: mainContentMode, cardMode: cardMode, params: params});
   addZoomToParams({zoom: zoom, mainContentMode: mainContentMode, params: params});
   addFullscreenToParams({isFullscreen: isFullscreen, params: params});
   if (_.isEmpty(params)) {
@@ -110,21 +110,13 @@ function addSortFieldToParams({sortField, params}) {
   }
 }
 
-function addMainContentModeToParams({mainContentMode, isLogoMode, params}) {
-  const initialMainContentMode = initialState.isLogoMode ? 'logo-mode' : initialState.mainContentMode;
-  if (isLogoMode) {
-    mainContentMode = 'logo-mode';
-  }
-
+function addMainContentModeToParams({mainContentMode, cardMode, params}) {
+  const initialMainContentMode = initialState.mainContentMode;
   if (mainContentMode !== initialMainContentMode) {
     if (findLandscapeSettings(mainContentMode)) {
       params['format'] = mainContentMode
-    }
-    if (mainContentMode === 'card') {
-      params['format'] = 'card-mode';
-    }
-    if (mainContentMode === 'logo-mode') {
-      params['format'] = 'logo-mode';
+    } else {
+      params['format'] = cardMode + '-mode';
     }
   }
 }
@@ -213,12 +205,9 @@ function setMainContentModeFromParams({ newParameters, params}) {
     newParameters.mainContentMode = settings.big_picture.main.url;
   } else if (findLandscapeSettings(format)) {
     newParameters.mainContentMode = format;
-  } else if (format === 'card-mode') {
+  } else if (format.split('-mode')[0]) {
     newParameters.mainContentMode = 'card';
-    newParameters.isLogoMode = false;
-  } else if (format === 'logo-mode') {
-    newParameters.mainContentMode = 'card';
-    newParameters.isLogoMode = true;
+    newParameters.cardMode = format.split('-mode')[0];
   }
 }
 

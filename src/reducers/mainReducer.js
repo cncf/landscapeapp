@@ -39,7 +39,7 @@ export const initialState = {
   sortDirection: 'asc',
   selectedItemId: null,
   mainContentMode: settings.big_picture.main.url, // also landscape or serverless for a big picture
-  isLogoMode: false,
+  cardMode: 'card', // one of card, logo, flat, borderless
   filtersVisible: false,
   zoom: 1,
   isFullscreen: false
@@ -400,7 +400,7 @@ function setParametersHandler(state, action) {
     sortDirection: action.value.sortDirection || initialState.sortDirection,
     selectedItemId: action.value.selectedItemId || initialState.selectedItemId,
     mainContentMode: action.value.mainContentMode || initialState.mainContentMode,
-    isLogoMode: !_.isUndefined(action.value.isLogoMode) ? action.value.isLogoMode : state.isLogoMode,
+    cardMode: !_.isUndefined(action.value.cardMode) ? action.value.cardMode : state.cardMode,
     zoom: action.value.zoom  || state.zoom,
     isFullscreen: !_.isUndefined(action.value.isFullscreen) ? action.value.isFullscreen : state.isFullscreen
   };
