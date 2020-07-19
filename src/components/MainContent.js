@@ -67,7 +67,7 @@ const DefaultCard = pure(({item, handler, itemRef, ...props}) => {
 const FlatCard = function({item, handler, itemRef, ...props}) {
   return (
             <div ref={itemRef} className="mosaic-wrap" key={item.id} {...props}>
-              <div className="mosaic">
+              <div className="mosaic" onClick={() => handler(item.id)} >
                 <img src={item.href} className='logo' alt={item.name} />
                 <div className="separator"/>
                 <h5>{item.name}</h5>

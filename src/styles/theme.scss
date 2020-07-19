@@ -386,6 +386,7 @@ a {text-decoration: none; transition: all 0.5s; color: $blue;
   .mosaic .logo {
     height: 130px;
     width: 100%;
+    padding: 2px;
   }
   .mosaic h5 {
     font-size: 16px;
@@ -401,8 +402,6 @@ a {text-decoration: none; transition: all 0.5s; color: $blue;
     box-shadow: inherit;
     border: 1px solid grey;
     background: inherit;
-  }
-  .mosaic-wrap {
   }
 }
 
