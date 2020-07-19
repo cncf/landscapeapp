@@ -32,6 +32,6 @@ After updating the landscapeapp repo, rerun the script again
       process.exit(1);
     }
   } catch(ex) {
-    console.warning('Warning: please ensure that your landscapeapp repo is up to date');
+    console.warn('Warning: please ensure that your landscapeapp repo is up to date');
   }
 }
