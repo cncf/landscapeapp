@@ -26,17 +26,17 @@ function getRelationStyle(relation) {
   }
 }
 
-const Card = pure(({cardMode, item, handler, itemRef, ...props}) => {
+const Card = (({cardMode, item, handler, itemRef, ...props}) => {
   if (cardMode === 'flat') {
     return FlatCard({item, handler, itemRef, ...props});
-  } else if (cardMode = 'borderless') {
+  } else if (cardMode === 'borderless') {
     return BorderlessCard({item, handler, itemRef, ...props});
   } else {
     return DefaultCard({item, handler, itemRef, ...props});
   }
 });
 
-const DefaultCard = pure(({item, handler, itemRef, ...props}) => {
+const DefaultCard = (({item, handler, itemRef, ...props}) => {
   return (
             <div ref={itemRef} className="mosaic-wrap" key={item.id} {...props}>
             <div className={classNames('mosaic', {nonoss : item.oss === false})} style={getRelationStyle(item.relation)}
@@ -88,7 +88,7 @@ const BorderlessCard = function({item, handler, itemRef, ...props}) {
   );
 }
 
-const Header = pure(({groupedItem, itemRef, ...props}) => {
+const Header = (({groupedItem, itemRef, ...props}) => {
   return (
           <div ref={itemRef} className="sh_wrapper" key={"subheader:" + groupedItem.header} {...props}>
             <ListSubheader component="div" style={{fontSize: 24, paddingLeft: 16 }}>
@@ -437,4 +437,4 @@ const MainContent = ({groupedItems, cardMode, onSelectItem, onOpenItemInNewTab})
   );
 };
 
-export default pure(MainContent);
+export default MainContent;
