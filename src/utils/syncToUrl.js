@@ -111,11 +111,7 @@ function addSortFieldToParams({sortField, params}) {
 }
 
 function addMainContentModeToParams({mainContentMode, cardMode, params}) {
-  const initialMainContentMode = initialState.cardMode;
-  if (cardMode !== 'card') {
-    mainContentMode = cardMode + '-logo';
-  }
-
+  const initialMainContentMode = initialState.mainContentMode;
   if (mainContentMode !== initialMainContentMode) {
     if (findLandscapeSettings(mainContentMode)) {
       params['format'] = mainContentMode

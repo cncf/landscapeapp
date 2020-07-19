@@ -26,7 +26,15 @@ function getRelationStyle(relation) {
   }
 }
 
-const Card = pure(({item, handler, itemRef, ...props}) => {
+const Card = pure(({cardMode, item, handler, itemRef, ...props}) => {
+  if (cardMode === 'flat') {
+    return FlatCard({item, handler, itemRef, ...props});
+  } else {
+    return DefaultCard({item, handler, itemRef, ...props});
+  }
+});
+
+const DefaultCard = pure(({item, handler, itemRef, ...props}) => {
   return (
             <div ref={itemRef} className="mosaic-wrap" key={item.id} {...props}>
             <div className={classNames('mosaic', {nonoss : item.oss === false})} style={getRelationStyle(item.relation)}
@@ -56,12 +64,24 @@ const Card = pure(({item, handler, itemRef, ...props}) => {
   );
 });
 
+const FlatCard = function({item, handler, itemRef, ...props}) {
+  return (
+            <div ref={itemRef} className="mosaic-wrap" key={item.id} {...props}>
+              <div className="mosaic">
+                <img src={item.href} className='logo' alt={item.name} />
+                <div className="separator"/>
+                <h5>{item.name}</h5>
+              </div>
+            </div>
+  );
+}
+
 const Header = pure(({groupedItem, itemRef, ...props}) => {
   return (
           <div ref={itemRef} className="sh_wrapper" key={"subheader:" + groupedItem.header} {...props}>
             <ListSubheader component="div" style={{fontSize: 24, paddingLeft: 16 }}>
               { groupedItem.href ?  <InternalLink  to={groupedItem.href}>{groupedItem.header}</InternalLink> : <span>{groupedItem.header}</span> }
-              <span> ({groupedItem.items.length})</span></ListSubheader>
+              <span className="items-count"> ({groupedItem.items.length})</span></ListSubheader>
           </div>
   );
 })
@@ -84,8 +104,6 @@ const MainContent = ({groupedItems, cardMode, onSelectItem, onOpenItemInNewTab})
     isSpecialMode ? onOpenItemInNewTab(itemId) : onSelectItem(itemId);
   };
 
-
-
   const newItemsAndHeaderIds = _.flatten(_.map(groupedItems, function(x) {
     return [x.header].concat(x.items.map( (y) => y.id ));
   }));
@@ -105,7 +123,7 @@ const MainContent = ({groupedItems, cardMode, onSelectItem, onOpenItemInNewTab})
         })()
       ].concat(_.map(groupedItem.items, function(item) {
         if (newItemsAndHeaderIds.indexOf(item.id) >= maxAnimatedElements) {
-          return <Card key={Math.random()} item={item} handler={handler} />;
+          return <Card cardMode={cardMode} key={Math.random()} item={item} handler={handler} />;
         }
         return [];
       }));
@@ -323,13 +341,13 @@ const MainContent = ({groupedItems, cardMode, onSelectItem, onOpenItemInNewTab})
 
         if (kind === 'new' || kind === 'up') {
           return (
-              <Card key={Math.random()} itemRef={captureFadeIn(item.id)} item={item} handler={handler} />
+              <Card cardMode={cardMode} key={Math.random()} itemRef={captureFadeIn(item.id)} item={item} handler={handler} />
           );
         }
         if (kind === 'move') {
           return [
-            <Card itemRef={captureNew(item.id)} item={item} handler={handler} key={Math.random()} />,
-            <Card itemRef={captureNewCopy(item.id)} item={item} handler={handler} key={Math.random()} style={{position: 'absolute'}}/>
+            <Card cardMode={cardMode} itemRef={captureNew(item.id)} item={item} handler={handler} key={Math.random()} />,
+            <Card cardMode={cardMode} itemRef={captureNewCopy(item.id)} item={item} handler={handler} key={Math.random()} style={{position: 'absolute'}}/>
           ];
         }
       }));
@@ -365,11 +383,11 @@ const MainContent = ({groupedItems, cardMode, onSelectItem, onOpenItemInNewTab})
         const kind = index === -1 ? 'old' : index < maxAnimatedElements ? 'move' : 'down';
         if (kind === 'old' || kind === 'down') {
           return (
-              <Card key={Math.random()} itemRef={captureFadeOut(item.id)} item={item} handler={handler} />
+              <Card cardMode={cardMode} key={Math.random()} itemRef={captureFadeOut(item.id)} item={item} handler={handler} />
           );
         }
         if (kind === 'move') {
-          return <Card key={Math.random()} itemRef={captureOld(item.id)} item={item} handler={handler} />;
+          return <Card cardMode={cardMode} key={Math.random()} itemRef={captureOld(item.id)} item={item} handler={handler} />;
         }
       }));
     });
