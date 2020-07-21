@@ -148,7 +148,7 @@ describe("Normal browser", function() {
   describe("Filtering by organization", () => {
     const project = projects[0];
     const organizationSlug = paramCase(project.organization);
-    const otherProject = projects.find(({ organization }) => organization !== project.organization);
+    const otherProject = projects.find(({ organization }) => organization.toLowerCase() !== project.organization.toLowerCase());
     const otherOrganizationSlug = paramCase(otherProject.organization);
 
     test(`Checking we see ${project.name} when filtering by organization ${project.organization}`, async function() {
