@@ -562,7 +562,7 @@ async function main () {
 
   const getGroupingLabel = function({category, node}) {
     const categoriesToHide = (settings.global.flags || {}).hide_category_from_subcategories || [];
-    if (categoriesToHide.includes(category)) {
+    if (categoriesToHide.includes(node.name)) {
       return node.name;
     } else {
       return category + ' - ' + node.name;
