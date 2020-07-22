@@ -560,6 +560,15 @@ async function main () {
     }).value();
   };
 
+  const getGroupingLabel = function({category, node}) {
+    const categoriesToHide = (settings.global.flags || {}).hide_category_from_subcategories || [];
+    if (categoriesToHide.includes(category)) {
+      return node.name;
+    } else {
+      return category + ' - ' + node.name;
+    }
+  }
+
   const generateLandscapeHierarchy = function() {
     var result = [];
     tree.map(function(node) {
@@ -582,7 +591,7 @@ async function main () {
           id: category + ' / ' + node.name,
           parentId: category,
           label: node.name,
-          groupingLabel: category + ' - ' + node.name,
+          groupingLabel: getGroupingLabel({category, node}),
           url: saneName(node.name),
           level: 2
         }
