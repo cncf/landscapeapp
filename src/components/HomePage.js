@@ -33,6 +33,7 @@ import isIphone from '../utils/isIphone';
 import isGoogle from '../utils/isGoogle';
 import bus from '../reducers/bus';
 import settings from 'project/settings.yml'
+import isModalOnly from "../utils/isModalOnly";
 
 const state = {
   lastScrollPosition: 0
@@ -75,7 +76,12 @@ const HomePage = ({isEmbed, mainContentMode, ready, hasSelectedItem, filtersVisi
     )
   }
   document.title = title;
-  if (isGoogle && hasSelectedItem) {
+
+  if (isModalOnly) {
+    document.querySelector('body').classList.add('popup');
+  }
+
+  if ((isGoogle || isModalOnly) && hasSelectedItem) {
     return <ItemDialogContainer />;
   }
 

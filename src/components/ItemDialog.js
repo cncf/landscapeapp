@@ -8,6 +8,7 @@ import ItemDialogButtonsContainer from './ItemDialogButtonsContainer';
 
 import '../styles/itemModal.scss';
 import fields from '../types/fields';
+import isModalOnly from "../utils/isModalOnly";
 
 let lastItemInfo;
 function getRelationStyle(relation) {
@@ -23,14 +24,15 @@ function getRelationStyle(relation) {
 
 const ItemDialog = ({onClose, itemInfo}) => {
   const recentItemInfo = itemInfo || lastItemInfo || {};
+  const closeDialog = isModalOnly ? _ => _ : onClose
   if (itemInfo) {
     lastItemInfo = itemInfo;
   }
   return (
-      <Dialog open={!!itemInfo} onClose={() => onClose() } transitionDuration={400}
+      <Dialog open={!!itemInfo} onClose={closeDialog} transitionDuration={400}
         classes={{paper:'modal-body'}}
         className={classNames('modal', 'product', {nonoss : recentItemInfo.oss === false})}>
-          { itemInfo && <ItemDialogButtonsContainer/> }
+          { itemInfo && !isModalOnly && <ItemDialogButtonsContainer/> }
           { (itemInfo || lastItemInfo) && <ItemDialogContent itemInfo={itemInfo || lastItemInfo}/> }
       </Dialog>
   );

@@ -26,8 +26,8 @@ html.react-snap {
   }
 }
 
-body {background-color:#F4F4f4 !important; }
-body.popup {background-color:transparent !important;}
+body.popup {background-color:transparent !important; }
+body.popup .MuiBackdrop-root { display: none }
 
 a {text-decoration: none; transition: all 0.5s; color: $blue;
   &:hover {transition: all 0.1s; color: $blue-hover;}
