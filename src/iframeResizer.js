@@ -1,7 +1,7 @@
 document.addEventListener('DOMContentLoaded', function() {
   iFrameResize({
-    log:true,
-    messageCallback         : function(messageData){ // Callback fn when message is received
+    log: false,
+    onMessage : function(messageData){ // Callback fn when message is received
       if (messageData.message.type === 'showModal') {
         document.querySelector('body').style.overflow = 'hidden';
       }
