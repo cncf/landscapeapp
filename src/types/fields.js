@@ -207,6 +207,11 @@ const fields = {
     url: 'googlebot',
     values: [{ id: true, url: 'yes' }, { id: false, url: 'no' }]
   },
+  onlyModal: {
+    id: 'only-modal',
+    url: 'only-modal',
+    values: [{ id: true, url: 'yes' }, { id: false, url: 'no' }]
+  },
   parents: {
     id: 'parent',
     url: 'parent',

@@ -13,6 +13,7 @@ import InternalLink from './InternalLink';
 import '../styles/itemModal.scss';
 import fields from '../types/fields';
 import isGoogle from '../utils/isGoogle';
+import isModalOnly from '../utils/isModalOnly';
 import isEmbed from '../utils/isEmbed';
 import settings from 'project/settings.yml';
 import TweetButton from './TweetButton';
@@ -498,18 +499,18 @@ const ItemDialogContent = ({ itemInfo }) => {
 
   const productInfo = <Fragment>
               <div className="product-main">
-                { !isGoogle && <React.Fragment>
-                    <div className="product-name">{itemInfo.name}</div>
-                    <div className="product-parent"><InternalLink to={linkToOrganization}><span>{itemInfo.organization}</span>{memberTag(itemInfo)}</InternalLink></div>
-                    <div className="product-category">{itemCategory(itemInfo.landscape)}</div>
-                    <div className="product-description">{itemInfo.description}</div>
-                  </React.Fragment>
-                }
-                { isGoogle && <React.Fragment>
+                { (isGoogle || isModalOnly) ?
+                  <React.Fragment>
                     <div className="product-name">{itemInfo.name}</div>
                     <div className="product-description">{itemInfo.description}</div>
                     <div className="product-parent"><InternalLink to={linkToOrganization}>{itemInfo.organization}</InternalLink></div>
                     <div className="product-category">{itemCategory(itemInfo.landscape)}</div>
+                  </React.Fragment> :
+                  <React.Fragment>
+                    <div className="product-name">{itemInfo.name}</div>
+                    <div className="product-parent"><InternalLink to={linkToOrganization}><span>{itemInfo.organization}</span>{memberTag(itemInfo)}</InternalLink></div>
+                    <div className="product-category">{itemCategory(itemInfo.landscape)}</div>
+                    <div className="product-description">{itemInfo.description}</div>
                   </React.Fragment>
                 }
               </div>
