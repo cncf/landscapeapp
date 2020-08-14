@@ -81,7 +81,7 @@ export const GithubClient = ApiClient({
     if (rateLimitRemaining > 0) {
       return 30000
     } else {
-      const delay = Math.ceil((new Date(rateLimitReset)) - (new Date()))
+      const delay = Math.max(Math.ceil((new Date(rateLimitReset)) - (new Date())), 60000)
       console.log(`Hourly rate limit exceeded on Github, delaying for ${Math.round(delay / 1000 / 60)} minutes`)
       return delay
     }
