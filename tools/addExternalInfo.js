@@ -1,5 +1,5 @@
 import checkVersion from './checkVersion';
-import { hasFatalErrors, reportFatalErrors } from './fatalErrors';
+import { hasFatalErrors, reportFatalErrors, setFatalError } from './fatalErrors';
 import process from 'process';
 import path from 'path';
 import { projectPath, settings } from './settings';
@@ -112,8 +112,11 @@ const aggregateLanguages = repos => {
 async function main() {
   await checkVersion();
   var crunchbaseEntries;
-  var savedCrunchbaseEntries = await extractSavedCrunchbaseEntries();
-  if (process.env.CRUNCHBASE_KEY_4) {
+  var savedCrunchbaseEntries;
+  if (settings.global.skip_crunchbase) {
+    console.info('This project does not fetch crunchbase entries');
+    savedCrunchbaseEntries = [];
+  } else if (process.env.CRUNCHBASE_KEY_4) {
     console.info('Fetching crunchbase entries');
     crunchbaseEntries = await fetchCrunchbaseEntries({
       cache: savedCrunchbaseEntries,
@@ -186,15 +189,24 @@ async function main() {
       //crunchbase
       if (node.organization) {
         node.crunchbase_data = { ...node.organization, parents: [] }
+        if (node.crunchbase) {
+          console.info(`FATAL: the project does not use a crunchbase, but a crunchbase "${node.crunchbase}" is present for an item "${node.name}"`);
+          setFatalError(`the project does not use a crunchbase, but a crunchbase ${node.crunchbase} is present for a ${node.name}`);
+        }
       } else if (node.unnamed_organization) {
         node.crunchbase = settings.global.self;
         node.crunchbase_data = _.clone({ ...settings.anonymous_organization, parents: [] });
       } else {
-        var crunchbaseInfo = _.clone(_.find(crunchbaseEntries, {url: node.crunchbase}));
-        if (crunchbaseInfo) {
-          delete crunchbaseInfo.url;
+        if (settings.global.skip_crunchbase) {
+          console.info(`FATAL: organization field is not provided for a ${node.name}. Crunchbase fetching is disabled for this project`);
+          setFatalError(`organization field is not provided for a ${node.name}. Crunchbase fetching is disabled for this project`);
+        } else {
+          var crunchbaseInfo = _.clone(_.find(crunchbaseEntries, {url: node.crunchbase}));
+          if (crunchbaseInfo) {
+            delete crunchbaseInfo.url;
+          }
+          node.crunchbase_data = crunchbaseInfo;
         }
-        node.crunchbase_data = crunchbaseInfo;
       }
       //github
       var githubEntry = _.clone(_.find(githubEntries, { url: node.project_org }) ||
@@ -305,6 +317,12 @@ async function main() {
 
     }
   });
+
+  if (hasFatalErrors()) {
+    console.info('Reporting fatal errors');
+    await reportFatalErrors();
+    process.exit(1);
+  }
 
   await updateProcessedLandscape(processedLandscape => {
     const { twitter_options, updated_at } = processedLandscape
