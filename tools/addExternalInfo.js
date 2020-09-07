@@ -118,6 +118,7 @@ async function main() {
     savedCrunchbaseEntries = [];
   } else if (process.env.CRUNCHBASE_KEY_4) {
     console.info('Fetching crunchbase entries');
+    savedCrunchbaseEntries = await extractSavedCrunchbaseEntries();
     crunchbaseEntries = await fetchCrunchbaseEntries({
       cache: savedCrunchbaseEntries,
       preferCache: useCrunchbaseCache});
