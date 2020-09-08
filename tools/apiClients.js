@@ -4,7 +4,7 @@ import requestPromise from 'request-promise';
 import _ from 'lodash'
 import Promise from "bluebird";
 
-['CRUNCHBASE_KEY_4', 'GITHUB_KEY', 'TWITTER_KEYS'].forEach((key) => {
+['GITHUB_KEY', 'TWITTER_KEYS'].forEach((key) => {
   if (!env[key]) {
     console.info(`${key} not provided`);
   }
