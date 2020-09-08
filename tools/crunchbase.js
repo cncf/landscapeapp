@@ -124,9 +124,9 @@ const isDelisted = entry => !!_.get(entry, ['cards', 'ipos', '0', 'delisted_on']
 const fetchCrunchbaseOrganization = async id => {
   return await CrunchbaseClient.request({
     path: `entities/organizations/${id}`,
-    params:{ 
-      'card_ids': 'headquarters_address,acquiree_acquisitions,parent_organization,ipos', 
-      'field_ids': 'num_employees_enum,linkedin,twitter,name,website,short_description,funding_total,stock_symbol,stock_exchange_symbol' 
+    params:{
+      'card_ids': 'headquarters_address,acquiree_acquisitions,parent_organization,ipos',
+      'field_ids': 'num_employees_enum,linkedin,twitter,name,website,short_description,funding_total,stock_symbol,stock_exchange_symbol'
     }
   });
 }
@@ -188,6 +188,10 @@ export async function fetchData(name) {
     }
   })();
 
+  if (!result.cards.headquarters_address[0]) {
+    return 'no address';
+  }
+
   const employee_parts = (result.properties.num_employees_enum || '').split('_');
   return {
     name: result.properties.name,
@@ -227,6 +231,14 @@ export async function fetchCrunchbaseEntries({cache, preferCache}) {
     }
     try {
       const result = await fetchData(c.name);
+      if (result === 'no address') {
+        addError('crunchbase');
+        debug(`no headquarter addresses for ${c.name} at ${c.crunchbase}`);
+        setFatalError(`no headquarter addresses for ${c.name} at ${c.crunchbase}`);
+        errors.push(fatal(`no headquarter addresses for ${c.name} at ${c.crunchbase}`));
+        reporter.write(fatal("F"));
+        return null;
+      }
 
       const entry = {
         url: c.crunchbase,
