@@ -133,6 +133,9 @@ const licenseTag = function({relation, license, hideLicense}) {
   return linkTag(label, { name: "License", url, color: "purple", multiline: width > 90 });
 }
 const badgeTag = function(itemInfo) {
+  if (settings.global.hide_best_practices) {
+    return null;
+  }
   if (!itemInfo.bestPracticeBadgeId) {
     if (itemInfo.oss) {
       const emptyUrl="https://bestpractices.coreinfrastructure.org/";
