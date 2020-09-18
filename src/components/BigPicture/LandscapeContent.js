@@ -14,29 +14,28 @@ const extractKeys = (obj, keys) => {
 }
 
 const LandscapeContent = ({groupedItems, onSelectItem, zoom, switchToLandscape, landscapeSettings, padding = 10 }) => {
-  const elements = landscapeSettings.elements.map(function(element) {
-    if (element.type === 'HorizontalCategory') {
-      const cat = _.find(groupedItems, {key: element.category});
-      const attributes = extractKeys(element, ['width', 'height', 'top', 'left', 'color', 'fit_width'])
-      return <HorizontalCategory {...cat} {...attributes} onSelectItem={onSelectItem}/>
-    }
-    if (element.type === 'VerticalCategory') {
-      const cat = _.find(groupedItems, {key: element.category});
-      const attributes = extractKeys(element, ['width', 'height', 'top', 'left', 'color', 'fit_width'])
-      return <VerticalCategory {...cat} {...attributes} onSelectItem={onSelectItem}/>
-    }
+  const elements = landscapeSettings.elements.map(element => {
     if (element.type === 'LandscapeLink') {
       return <OtherLandscapeLink {..._.pick(element, ['width','height','top','left','color', 'layout', 'title', 'url']) }
-        onClick={() => switchToLandscape(element.url)}
-        key={element.url}
+                                 onClick={() => switchToLandscape(element.url)}
+                                 key={element.url}
       />
     }
     if (element.type === 'LandscapeInfo') {
       return <LandscapeInfo {..._.pick(element, ['width', 'height', 'top', 'left']) } childrenInfo={element.children}
-        key='landscape-info'
+                            key='landscape-info'
       />
     }
-    return null;
+
+    const category = groupedItems.find(c => c.key === element.category) || {}
+    const attributes = extractKeys(element, ['width', 'height', 'top', 'left', 'color', 'fit_width', 'is_large'])
+    const subcategories = category.subcategories.map(subcategory => {
+      const allItems = subcategory.allItems.map(item => ({ ...item, categoryAttrs: attributes }))
+      return { ...subcategory, allItems }
+    })
+
+    const Component = element.type === 'HorizontalCategory' ? HorizontalCategory : VerticalCategory
+    return <Component {...category} subcategories={subcategories} {...attributes} onSelectItem={onSelectItem}/>
   });
 
   const { width, height } = calculateSize(landscapeSettings)

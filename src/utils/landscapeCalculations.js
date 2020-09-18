@@ -15,13 +15,13 @@ export const outerPadding = 20
 export const headerHeight = 40
 
 // Check if item is large
-const isLargeFn = ({ relation, category, member }) => {
+const isLargeFn = ({ relation, category, member, categoryAttrs }) => {
   const relationInfo = fields.relation.values.find(({ id }) => id === relation);
   if (category === settings.global.membership) {
     const membershipInfo = settings.membership[member];
     return membershipInfo && !!membershipInfo.is_large;
   }
-  return !!relationInfo.big_picture_order;
+  return !!categoryAttrs.isLarge || !!relationInfo.big_picture_order;
 }
 
 // Compute if items are large and/or visible.
