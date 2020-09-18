@@ -12,7 +12,7 @@ const calculateZoom = (width, height, zoomedIn) => {
   const aspectRatio = innerWidth / innerHeight
   const adjustedWidth = outerWidth
   const adjustedHeight = adjustedWidth / aspectRatio
-  let baseZoom = Math.min(adjustedHeight / boxHeight, adjustedWidth / boxWidth).toPrecision(4)
+  let baseZoom = Math.min(adjustedHeight / boxHeight, adjustedWidth / boxWidth, 2).toPrecision(4)
   let wrapperWidth, wrapperHeight
 
   if (baseZoom <= 0.95 || !isDesktop || isFirefox || location.search.indexOf('scale=false') > -1) {
