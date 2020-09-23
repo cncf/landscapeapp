@@ -69,8 +69,10 @@ const calculateHorizontalFixedWidth = ({ subcategories, maxColumns, maxRows, fit
     .sort((a, b) => b.rows - a.rows)
     .forEach((subcategory, idx, collection) => {
       const nextSubcategory = collection[idx + 1]
-      while (availableColumns > 0 && (!nextSubcategory || subcategory.rows >= nextSubcategory.rows)) {
-        subcategory.columns += 1
+      const nextRows = (nextSubcategory && nextSubcategory.rows) || 0
+      const { largeItemsCount } = subcategory
+      while ((availableColumns > 1 || (availableColumns > 0 && subcategory.columns >= largeItemsCount * 2)) && subcategory.rows >= nextRows) {
+        subcategory.columns += subcategory.columns < largeItemsCount * 2 ? 2 : 1
         subcategory.rows =  Math.ceil(subcategory.itemsCount / subcategory.columns)
         availableColumns -= 1
       }
