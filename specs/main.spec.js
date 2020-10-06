@@ -149,16 +149,18 @@ describe("Normal browser", function() {
     const project = projects[0];
     const organizationSlug = paramCase(project.organization);
     const otherProject = projects.find(({ organization }) => organization.toLowerCase() !== project.organization.toLowerCase());
-    const otherOrganizationSlug = paramCase(otherProject.organization);
+    if (otherProject) {
+      const otherOrganizationSlug = paramCase(otherProject.organization);
 
-    test(`Checking we see ${project.name} when filtering by organization ${project.organization}`, async function() {
-      page = await makePage(`${appUrl}/organization=${organizationSlug}&format=card-mode`);
-      await expect(page).toHaveElement(`//div[contains(@class, 'mosaic')]//*[text()='${project.name}']`);
-    });
-    test(`Checking we don't see ${project.name} when filtering by organization ${otherProject.organization}`, async function() {
-      await page.goto(`${appUrl}/organization=${otherOrganizationSlug}&format=card-mode`);
-      await expect(page).not.toHaveElement(`//div[contains(@class, 'mosaic')]//*[text()='${project.name}']`);
-    });
+      test(`Checking we see ${project.name} when filtering by organization ${project.organization}`, async function() {
+        page = await makePage(`${appUrl}/organization=${organizationSlug}&format=card-mode`);
+        await expect(page).toHaveElement(`//div[contains(@class, 'mosaic')]//*[text()='${project.name}']`);
+      });
+      test(`Checking we don't see ${project.name} when filtering by organization ${otherProject.organization}`, async function() {
+        await page.goto(`${appUrl}/organization=${otherOrganizationSlug}&format=card-mode`);
+        await expect(page).not.toHaveElement(`//div[contains(@class, 'mosaic')]//*[text()='${project.name}']`);
+      });
+    }
     close();
   }, 6 * 60 * 1000);
 });
