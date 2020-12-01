@@ -243,6 +243,9 @@ a {text-decoration: none; transition: all 0.5s; color: $blue;
     min-height: 500px;
   }
 }
+body.embed {
+  background-color: inherit;
+}
 
 @media (max-width: $lg-screen) {
   .big-picture .main {
