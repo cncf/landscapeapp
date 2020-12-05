@@ -13,6 +13,7 @@ landscapes:
     name: cncf
     repo: cncf/landscape
     hook: 5c1bd968fdd72a78a54bdcd1
+    required: true
   - landscape:
     name: cdf
     repo: cdfoundation/cdf-landscape
@@ -52,7 +53,6 @@ landscapes:
     name: lfph
     repo: lfph/lfph-landscape
     hook: 5ec5145565b543b0b01aa9d7
-    required: true
   - landscape:
     name: openjsf
     repo: openjs-foundation/openjsf-landscape
