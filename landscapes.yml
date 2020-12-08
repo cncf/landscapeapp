@@ -53,6 +53,7 @@ landscapes:
     name: lfph
     repo: lfph/lfph-landscape
     hook: 5ec5145565b543b0b01aa9d7
+    required: true
   - landscape:
     name: openjsf
     repo: openjs-foundation/openjsf-landscape
