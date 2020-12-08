@@ -57,6 +57,28 @@
   </script>
 </head>
 <body>
+  <script>
+    p = new URLSearchParams(window.location.pathname.split('/').slice(-1)[0]);
+    if (p.get('loading')) {
+      const el = document.createElement('div');
+      el.innerHTML = p.get('loading');
+      el.id = 'loading-indicator';
+      el.style.marginLeft = '40px';
+      el.style.marginRight = '40px';
+      el.style.fontSize = '40px';
+      el.style.color = '#aaa';
+      el.style.position = 'absolute';
+      document.body.appendChild(el);
+      const timeoutId = setInterval(function() {
+        const loadingEl = document.querySelector('#loading-indicator');
+        const cardsEl = document.querySelector('.cards-section');
+        if (loadingEl && cardsEl) {
+          loadingEl.style.display = 'none';
+          clearInterval(timeoutId);
+        }
+      }, 100);
+    }
+  </script>
   <div id="app"></div>
   </body>
 </html>

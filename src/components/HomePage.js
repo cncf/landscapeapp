@@ -155,6 +155,7 @@ const HomePage = ({isEmbed, mainContentMode, ready, hasSelectedItem, filtersVisi
     document.querySelector('body').classList.add('embed');
   }
 
+
   return (
     <div>
     <HomePageScrollerContainer/>
