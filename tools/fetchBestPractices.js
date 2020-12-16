@@ -42,6 +42,7 @@ async function fetchEntriesNoRetry() {
       json: true,
       url: `https://bestpractices.coreinfrastructure.org/en/projects.json?page=${number}`
     });
+    console.info('Fetching page #', number);
     return result.map(x => ({
       id: x.id,
       repo_url: x.repo_url,
