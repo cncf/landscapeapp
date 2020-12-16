@@ -46,7 +46,7 @@ async function fetchEntriesNoRetry() {
       repo_url: x.repo_url,
       percentage: x.badge_percentage_0
     })).filter(x => !!x.repo_url);
-  }, {concurrency: 10});
+  }, {concurrency: 1});
   return _.flatten(items);
 }
 
