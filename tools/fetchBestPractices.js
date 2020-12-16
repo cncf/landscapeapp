@@ -2,6 +2,7 @@ import { setFatalError } from './fatalErrors';
 import colors from 'colors';
 import rp from 'request-promise';
 import retry from './retry';
+import rpRetry from './rpRetry';
 import Promise from 'bluebird';
 import _ from 'lodash';
 import { addWarning } from './reporter';
@@ -37,7 +38,7 @@ async function getLandscapeItems() {
 async function fetchEntriesNoRetry() {
   const maxNumber = 200;
   const items = await Promise.map(_.range(1, maxNumber), async function(number) {
-    const result = await rp({
+    const result = await rpRetry({
       json: true,
       url: `https://bestpractices.coreinfrastructure.org/en/projects.json?page=${number}`
     });
@@ -51,7 +52,7 @@ async function fetchEntriesNoRetry() {
 }
 
 async function fetchEntryNoRetry(url) {
-  let result = await rp({
+  let result = await rpRetry({
     json: true,
     url: `https://bestpractices.coreinfrastructure.org/en/projects.json?pq=${encodeURIComponent(url)}`
   });
