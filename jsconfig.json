@@ -1,0 +1,9 @@
+{
+  "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "project/settings.yml": ["./tools/resolve-settings.js"],
+      "project/lookup.json": ["./tools/resolve-lookup.js"]
+    }
+  }
+}

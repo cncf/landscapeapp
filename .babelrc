@@ -1,13 +1,4 @@
 {
-      "ignore": [".yarn", ".pnp.js"],
-      "presets": [ ["babel-preset-latest-node", {target: "current"}] ],
-      "plugins": [
-          ["module-resolver", {
-              "root": ["./src"],
-              "alias": {
-                "project/settings.yml": "./tools/resolve-settings.js",
-                "project/lookup.json": "./tools/resolve-lookup.js",
-              }
-          }]
-      ]
+  "ignore": [".yarn", ".pnp.js"],
+  "presets": [ ["babel-preset-latest-node", {target: "current"}] ]
 }
