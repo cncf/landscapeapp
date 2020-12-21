@@ -1,4 +1,3 @@
-import { connect } from 'react-redux';
 import GroupingSelector from './GroupingSelector';
 import { changeGrouping } from '../reducers/mainReducer.js';
 import fields from '../types/fields';
@@ -27,4 +26,4 @@ const mapDispatchToProps = {
   onChange: onChange
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(GroupingSelector);
+export default GroupingSelector

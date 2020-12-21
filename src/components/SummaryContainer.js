@@ -1,4 +1,3 @@
-import { connect } from 'react-redux';
 import Summary from './Summary';
 import getSummary from '../utils/summaryCalculator';
 
@@ -10,4 +9,4 @@ const mapDispatchToProps = {
 
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(Summary);
+export default Summary

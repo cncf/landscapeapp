@@ -1,5 +1,4 @@
 // locate zoom buttons
-import { connect } from 'react-redux';
 import settings from '../utils/settings.js'
 import qs from 'query-string';
 
@@ -36,5 +35,4 @@ const mapStateToProps = (state) => ({
 });
 const mapDispatchToProps = {};
 
-const TweetButtonContainer = connect(mapStateToProps, mapDispatchToProps)(TweetButton);
-export default TweetButtonContainer;
+export default TweetButton

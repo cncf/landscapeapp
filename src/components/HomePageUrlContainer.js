@@ -1,6 +1,5 @@
 import React from 'react';
 import { pure } from 'recompose';
-import { connect } from 'react-redux';
 
 import createSelector from '../utils/createSelector';
 import { parseUrl } from '../utils/syncToUrl';
@@ -29,4 +28,4 @@ const render = ({info, changeParameters}) => {
 }
 
 
-export default connect(mapStateToProps, mapDispatchToProps)(pure(render));
+export default pure(render)

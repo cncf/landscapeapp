@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { connect } from "react-redux";
 import { isZoomedIn } from "../utils/browserZoom";
 
 class AutoSizer extends React.PureComponent {
@@ -93,4 +92,4 @@ const mapStateToProps = ({ router }) => ({
   location: router.location
 });
 
-export default connect(mapStateToProps)(AutoSizer);
+export default AutoSizer

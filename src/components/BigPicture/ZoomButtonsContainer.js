@@ -1,4 +1,3 @@
-import { connect } from 'react-redux';
 import ZoomButtons from './ZoomButtons';
 import { makeZoomIn, makeZoomOut, makeZoomReset} from '../../reducers/mainReducer';
 import { zoomLevels } from '../../utils/zoom';
@@ -16,4 +15,4 @@ const mapDispatchToProps = {
   onZoomReset: makeZoomReset
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(ZoomButtons);
+export default ZoomButtons

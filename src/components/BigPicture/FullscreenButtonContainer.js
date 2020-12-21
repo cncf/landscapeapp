@@ -1,4 +1,3 @@
-import { connect } from 'react-redux';
 import FullscreenButton from './FullscreenButton';
 
 import { makeFullscreenEnabled, makeFullscreenDisabled} from '../../reducers/mainReducer';
@@ -13,4 +12,4 @@ const mapDispatchToProps = {
   disableFullscreen: makeFullscreenDisabled
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(FullscreenButton);
+export default FullscreenButton

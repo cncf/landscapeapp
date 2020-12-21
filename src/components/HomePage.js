@@ -19,8 +19,6 @@ import {
 } from './BigPicture';
 import TweetButton from './TweetButton';
 import MainContentContainer from './MainContentContainer';
-import HomePageUrlContainer from './HomePageUrlContainer';
-import HomePageScrollerContainer from './HomePageScrollerContainer';
 import ResetFiltersContainer from './ResetFiltersContainer';
 import ItemDialogContainer from './ItemDialogContainer';
 import HeaderContainer from './HeaderContainer';
@@ -72,7 +70,6 @@ const HomePage = ({mainContentMode, ready, hasSelectedItem, filtersVisible, hide
   if (!ready) {
     return (
       <div>
-        <HomePageUrlContainer />
       </div>
     )
   }
@@ -181,8 +178,6 @@ const HomePage = ({mainContentMode, ready, hasSelectedItem, filtersVisible, hide
         }
 
         <div className="app-overlay" onClick={hideFilters}></div>
-
-        <HomePageUrlContainer />
 
         <div className={classNames('main', {'embed': isEmbed()})}>
           { !isEmbed() && <div className="disclaimer">

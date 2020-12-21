@@ -1,4 +1,3 @@
-import { connect } from 'react-redux';
 import createSelector from '../utils/createSelector';
 import ItemDialog from './ItemDialog';
 
@@ -28,4 +27,4 @@ const mapDispatchToProps = {
   onSelectItem: changeSelectedItemId
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(ItemDialog);
+export default ItemDialog

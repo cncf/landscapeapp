@@ -1,4 +1,3 @@
-import { connect } from 'react-redux';
 import createSelector from '../utils/createSelector';
 import HomePage from '../components/HomePage';
 import {showFilters, hideFilters, closeDialog } from '../reducers/mainReducer';
@@ -34,4 +33,4 @@ const mapDispatchToProps = {
   onClose: closeDialog
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(HomePage);
+export default HomePage

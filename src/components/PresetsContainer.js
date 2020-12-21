@@ -1,4 +1,3 @@
-import { connect } from 'react-redux';
 import createSelector from '../utils/createSelector';
 
 import Presets from './Presets';
@@ -39,4 +38,4 @@ const mapStateToProps = (state) => ({
 const mapDispatchToProps = {
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(Presets);
+export default Presets

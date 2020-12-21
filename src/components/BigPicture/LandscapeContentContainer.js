@@ -1,4 +1,3 @@
-import { connect } from 'react-redux';
 import LandscapeContent from './LandscapeContent';
 import { changeSelectedItemId, changeMainContentMode } from '../../reducers/mainReducer';
 import { getGroupedItemsForBigPicture } from '../../utils/itemsCalculator';
@@ -18,4 +17,4 @@ const mapDispatchToProps = {
   switchToLandscape: changeMainContentMode,
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(LandscapeContent);
+export default LandscapeContent

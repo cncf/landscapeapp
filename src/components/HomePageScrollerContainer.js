@@ -1,5 +1,4 @@
 import { pure } from 'recompose';
-import { connect } from 'react-redux';
 import getGroupedItems from '../utils/itemsCalculator';
 
 const mapStateToProps = (state) => ({
@@ -15,4 +14,4 @@ const Component = function({groupedItems}) {
   return null;
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(pure(Component));
+export default pure(Component)
