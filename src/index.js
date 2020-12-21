@@ -1,7 +1,7 @@
 // Set up your application entry point here...
 /* eslint-disable import/default */
 
-import 'current-device';
+import currentDevice from 'current-device'
 import 'babel-polyfill';
 import React from 'react';
 import { hydrate, render } from 'react-dom';
@@ -12,7 +12,6 @@ import {loadMainData} from './reducers/mainReducer.js';
 import { loadData } from './reducers/api.js';
 import './styles/theme.css';
 import ReactGA from 'react-ga';
-import isDesktop from './utils/isDesktop';
 import iframeResizerContentWindow from 'iframe-resizer/js/iframeResizer.contentWindow';
 import './styles/roboto.css';
 require('favicon.png'); // Tell webpack to load favicon.png
@@ -21,8 +20,8 @@ async function main() {
   // redux + react-snap specific hacks
   const rootElement = document.getElementById("app");
   const isPrerendered = rootElement.hasChildNodes();
-  const isPrerendering = navigator.userAgent === "ReactSnap";
-  if (isPrerendering) {
+  const isPrerendering = () => window && navigator.userAgent === "ReactSnap";
+  if (isPrerendering()) {
     document.querySelector('html').classList.add('react-snap');
   }
 
@@ -92,7 +91,7 @@ async function main() {
   }
 
   // Event listener to determine change (horizontal/portrait)
-  if (!isDesktop) {
+  if (!currentDevice.desktop()) {
     window.addEventListener("orientationchange", updateOrientation);
     setInterval(updateOrientation, 1000);
   }

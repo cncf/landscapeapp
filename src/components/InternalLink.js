@@ -12,7 +12,7 @@ const InternalLink = ({to, children, onClick, className, ...other}) => {
       onClick();
     };
   }
-  if (isEmbed || isGoogle || isModalOnly || !to) {
+  if (isEmbed() || isGoogle() || isModalOnly() || !to) {
     return <span className={`${className}`} {...other}>{children}</span>;
   } else {
     return <NavLink className={`${className}  nav-link`} {...other} to={to}>{children}</NavLink>

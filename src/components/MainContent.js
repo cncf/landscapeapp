@@ -1,5 +1,4 @@
 import React from 'react';
-import { pure } from 'recompose';
 import StarIcon from '@material-ui/icons/Star';
 import millify from 'millify'
 import classNames from 'classnames'
@@ -7,7 +6,7 @@ import ListSubheader from '@material-ui/core/ListSubheader';
 import _ from 'lodash';
 import InternalLink from './InternalLink';
 import isEmbed from '../utils/isEmbed';
-import isMobile from '../utils/isMobile';
+import currentDevice from '../utils/currentDevice'
 import Delay from './DelayRender';
 import fields from '../types/fields';
 
@@ -112,7 +111,7 @@ const Header = (({groupedItem, itemRef, ...props}) => {
 
 const MainContent = ({groupedItems, cardMode, onSelectItem, onOpenItemInNewTab}) => {
   const handler = function(itemId) {
-    const isSpecialMode = ( isMobile || window.innerWidth < 768 ) && isEmbed;
+    const isSpecialMode = ( currentDevice.mobile() || window.innerWidth < 768 ) && isEmbed();
     isSpecialMode ? onOpenItemInNewTab(itemId) : onSelectItem(itemId);
   };
 

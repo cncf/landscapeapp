@@ -1,10 +1,10 @@
 // locate zoom buttons
 import { connect } from 'react-redux';
-import { withState, pure } from 'recompose';
 import settings from '../utils/settings.js'
 import qs from 'query-string';
 
 import React from 'react';
+import isBrowser from '../utils/isBrowser'
 
 const bird = ( <svg
   viewBox="0 0 300 244">
@@ -14,10 +14,10 @@ const bird = ( <svg
   </g>
 </svg>);
 
-const isPrerendering = navigator.userAgent === "ReactSnap";
+const isPrerendering = () => isBrowser() && navigator.userAgent === "ReactSnap";
 
 const TweetButton = function({url, cls}) {
-  if (isPrerendering) {
+  if (isPrerendering()) {
     return null;
   }
   const params = qs.stringify({

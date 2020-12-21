@@ -22,7 +22,7 @@ function getRelationStyle(relation) {
 
 const ItemDialog = ({onClose, itemInfo}) => {
   const recentItemInfo = itemInfo || lastItemInfo || {};
-  const closeDialog = isModalOnly ? _ => _ : onClose
+  const closeDialog = isModalOnly() ? _ => _ : onClose
   if (itemInfo) {
     lastItemInfo = itemInfo;
   }
@@ -30,7 +30,7 @@ const ItemDialog = ({onClose, itemInfo}) => {
       <Dialog open={!!itemInfo} onClose={closeDialog} transitionDuration={400}
         classes={{paper:'modal-body'}}
         className={classNames('modal', 'product', {nonoss : recentItemInfo.oss === false})}>
-          { itemInfo && !isModalOnly && <ItemDialogButtonsContainer/> }
+          { itemInfo && !isModalOnly() && <ItemDialogButtonsContainer/> }
           { (itemInfo || lastItemInfo) && <ItemDialogContent itemInfo={itemInfo || lastItemInfo}/> }
       </Dialog>
   );

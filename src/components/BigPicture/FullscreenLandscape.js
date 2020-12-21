@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { pure } from 'recompose';
 import LandscapeContent from './LandscapeContent';
 import { calculateSize, outerPadding, headerHeight } from "../../utils/landscapeCalculations";
-import isDesktop from "../../utils/isDesktop";
+import currentDevice from '../../utils/currentDevice'
 
 const calculateZoom = (width, height, zoomedIn) => {
   const boxHeight = height + headerHeight + 2 * outerPadding
@@ -15,7 +15,7 @@ const calculateZoom = (width, height, zoomedIn) => {
   let baseZoom = Math.min(adjustedHeight / boxHeight, adjustedWidth / boxWidth, 2).toPrecision(4)
   let wrapperWidth, wrapperHeight
 
-  if (baseZoom <= 0.95 || !isDesktop || isFirefox || location.search.indexOf('scale=false') > -1) {
+  if (baseZoom <= 0.95 || !currentDevice.desktop() || isFirefox || location.search.indexOf('scale=false') > -1) {
     wrapperWidth = Math.max(boxWidth, innerWidth)
     wrapperHeight = Math.max(boxHeight, innerHeight)
     baseZoom = 1
@@ -71,7 +71,7 @@ const Fullscreen = ({ready, groupedItems, landscapeSettings, version}) => {
           justifyContent: 'center'
         }}>
           <div
-            onClick={isDesktop && onZoom}
+            onClick={currentDevice.desktop() && onZoom}
             style={{
               position: 'absolute',
               top: 0,

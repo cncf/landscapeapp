@@ -6,7 +6,7 @@ import InternalLink from '../InternalLink';
 import isEmbed from '../../utils/isEmbed';
 
 const SwitchButton = function({mainContentMode, changeMainContentMode, cards}) {
-  if (isEmbed) {
+  if (isEmbed()) {
     return null;
   }
   return [

@@ -5,6 +5,7 @@ import {showFilters, hideFilters, closeDialog } from '../reducers/mainReducer';
 import isEmbed from '../utils/isEmbed';
 import getGroupedItems, {getGroupedItemsForBigPicture } from '../utils/itemsCalculator';
 import selectedItemCalculator from '../utils/selectedItemCalculator';
+import settings from '../utils/settings'
 
 const defaultTitle =  settings.global.meta.title;
 const getTitle = createSelector([state => state], function(state) {
@@ -21,8 +22,7 @@ const getTitle = createSelector([state => state], function(state) {
 
 const mapStateToProps = (state) => ({
   ready: state.main.ready,
-  filtersVisible: state.main.filtersVisible && !isEmbed,
-  isEmbed: isEmbed,
+  filtersVisible: state.main.filtersVisible && !isEmbed(),
   isFullscreen: state.main.isFullscreen && state.main.mainContentMode !== 'card',
   mainContentMode: state.main.mainContentMode,
   hasSelectedItem: !!state.main.selectedItemId,

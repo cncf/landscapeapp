@@ -29,9 +29,9 @@ export function filtersToUrl({filters, grouping, sortField, selectedItemId, zoom
   addZoomToParams({zoom: zoom, mainContentMode: mainContentMode, params: params});
   addFullscreenToParams({isFullscreen: isFullscreen, params: params});
   if (_.isEmpty(params)) {
-    return `/${prefix}` + (isEmbed ? 'embed=yes' : '');
+    return `/${prefix}` + (isEmbed() ? 'embed=yes' : '');
   }
-  const filtersPart = qs.stringify(params, {encode: false}) + (isEmbed ? '&embed=yes':'');
+  const filtersPart = qs.stringify(params, {encode: false}) + (isEmbed() ? '&embed=yes':'');
 
   return `/${prefix}` + filtersPart;
 }

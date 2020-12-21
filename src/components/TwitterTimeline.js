@@ -1,6 +1,6 @@
 import React from "react";
-import { Timeline } from 'react-twitter-widgets/es';
-import currentDevice from 'current-device';
+import { Timeline } from 'react-twitter-widgets';
+import currentDevice from '../utils/currentDevice'
 
 class TwitterTimeline extends React.Component {
   constructor(props) {

@@ -16,15 +16,16 @@ import isModalOnly from '../utils/isModalOnly';
 import isEmbed from '../utils/isEmbed';
 import settings from '../utils/settings.js';
 import TweetButton from './TweetButton';
-import currentDevice from 'current-device';
+import currentDevice from '../utils/currentDevice'
 import TwitterTimeline from "./TwitterTimeline";
 import {Bar, Pie, defaults} from 'react-chartjs-2';
 import 'chartjs-adapter-date-fns';
 import useWindowSize from "@rooks/use-window-size"
 import classNames from 'classnames'
 import CreateWidthMeasurer from 'measure-text-width';
+import isBrowser from '../utils/isBrowser'
 
-const measureWidth = CreateWidthMeasurer(window).setFont('0.6rem Roboto');
+const measureWidth = () => isBrowser() && CreateWidthMeasurer(window).setFont('0.6rem Roboto');
 
 
 let productScrollEl = null;
@@ -51,7 +52,7 @@ function getRelationStyle(relation) {
 }
 
 
-const showTwitter = !isGoogle;
+const showTwitter = !isGoogle();
 
 const iconGithub = <svg viewBox="0 0 24 24">
     <path d="M12,2A10,10 0 0,0 2,12C2,16.42 4.87,20.17 8.84,21.5C9.34,21.58
@@ -154,7 +155,7 @@ const badgeTag = function(itemInfo) {
 }
 
 const chart = function(itemInfo) {
-  if (isEmbed || !itemInfo.github_data || !itemInfo.github_data.languages) {
+  if (isEmbed() || !itemInfo.github_data || !itemInfo.github_data.languages) {
     return null;
   }
   const callbacks = defaults.global.tooltips.callbacks;
@@ -243,7 +244,7 @@ const chart = function(itemInfo) {
 
 const participation = function(itemInfo) {
   const { innerWidth } = useWindowSize();
-  if (isEmbed || !itemInfo.github_data || !itemInfo.github_data.contributions) {
+  if (isEmbed() || !itemInfo.github_data || !itemInfo.github_data.contributions) {
     return null;
   }
   let lastMonth = null;
@@ -501,7 +502,7 @@ const ItemDialogContent = ({ itemInfo }) => {
 
   const productInfo = <Fragment>
               <div className="product-main">
-                { (isGoogle || isModalOnly) ?
+                { (isGoogle() || isModalOnly()) ?
                   <React.Fragment>
                     <div className="product-name">{itemInfo.name}</div>
                     <div className="product-description">{itemInfo.description}</div>
@@ -616,7 +617,7 @@ const ItemDialogContent = ({ itemInfo }) => {
             <KeyHandler keyEventName="keydown" keyValue="ArrowUp" onKeyHandle={handleUp} />
             <KeyHandler keyEventName="keydown" keyValue="ArrowDown" onKeyHandle={handleDown} />
 
-            { !scrollAllContent && !isGoogle && productLogoAndTagsAndCharts }
+            { !scrollAllContent && !isGoogle() && productLogoAndTagsAndCharts }
 
             <div className="product-scroll" ref={(x) => productScrollEl = x }>
               { !scrollAllContent && productInfo }
@@ -629,7 +630,7 @@ const ItemDialogContent = ({ itemInfo }) => {
 
               { showTwitter && itemInfo.twitter && <TwitterTimeline twitter={itemInfo.twitter} />}
             </div>
-            { !scrollAllContent && isGoogle && productLogoAndTags }
+            { !scrollAllContent && isGoogle() && productLogoAndTags }
         </div>
   );
 }

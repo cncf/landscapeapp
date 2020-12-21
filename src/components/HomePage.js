@@ -29,11 +29,12 @@ import ExportCsvContainer from './ExportCsvContainer';
 import Footer from './Footer';
 import EmbeddedFooter from './EmbeddedFooter';
 
-import isIphone from '../utils/isIphone';
 import isGoogle from '../utils/isGoogle';
 import bus from '../reducers/bus';
 import settings from '../utils/settings.js'
 import isModalOnly from "../utils/isModalOnly";
+import currentDevice from '../utils/currentDevice'
+import isEmbed from '../utils/isEmbed'
 
 const state = {
   lastScrollPosition: 0
@@ -66,7 +67,7 @@ function enableScroll(){
   document.body.removeEventListener('touchmove', preventDefault);
 }
 
-const HomePage = ({isEmbed, mainContentMode, ready, hasSelectedItem, filtersVisible, hideFilters, showFilters, onClose, title, isFullscreen}) => {
+const HomePage = ({mainContentMode, ready, hasSelectedItem, filtersVisible, hideFilters, showFilters, onClose, title, isFullscreen}) => {
   const isBigPicture = mainContentMode !== 'card';
   if (!ready) {
     return (
@@ -77,11 +78,11 @@ const HomePage = ({isEmbed, mainContentMode, ready, hasSelectedItem, filtersVisi
   }
   document.title = title;
 
-  if (isModalOnly) {
+  if (isModalOnly()) {
     document.querySelector('body').classList.add('popup');
   }
 
-  if ((isGoogle || isModalOnly) && hasSelectedItem) {
+  if ((isGoogle() || isModalOnly()) && hasSelectedItem) {
     return <ItemDialogContainer />;
   }
 
@@ -97,7 +98,7 @@ const HomePage = ({isEmbed, mainContentMode, ready, hasSelectedItem, filtersVisi
     document.querySelector('html').classList.remove('fullscreen');
   }
 
-  if (isIphone) {
+  if (currentDevice.ios()) {
     if (hasSelectedItem) {
       if (!document.querySelector('.iphone-scroller')) {
         state.lastScrollPosition = (document.scrollingElement || document.body).scrollTop;
@@ -163,9 +164,9 @@ const HomePage = ({isEmbed, mainContentMode, ready, hasSelectedItem, filtersVisi
     <div className={classNames('app',{'filters-opened' : filtersVisible})}>
       <div />
       <div style={{marginTop: (isIphone && hasSelectedItem) ? -state.lastScrollPosition : 0}} className={classNames({"iphone-scroller": isIphone && hasSelectedItem}, 'main-parent')} >
-        { !isEmbed && !isFullscreen && <HeaderContainer/> }
-        { !isEmbed && !isFullscreen && <IconButton className="sidebar-show" title="Show sidebar" onClick={showFilters}><MenuIcon /></IconButton> }
-        { !isEmbed && !isFullscreen && <div className="sidebar">
+        { !isEmbed() && !isFullscreen && <HeaderContainer/> }
+        { !isEmbed() && !isFullscreen && <IconButton className="sidebar-show" title="Show sidebar" onClick={showFilters}><MenuIcon /></IconButton> }
+        { !isEmbed() && !isFullscreen && <div className="sidebar">
           <div className="sidebar-scroll">
             <IconButton className="sidebar-collapse" title="Hide sidebar" onClick={hideFilters}><CloseIcon /></IconButton>
             <ResetFiltersContainer />
@@ -183,13 +184,13 @@ const HomePage = ({isEmbed, mainContentMode, ready, hasSelectedItem, filtersVisi
 
         <HomePageUrlContainer />
 
-        <div className={classNames('main', {'embed': isEmbed})}>
-          { !isEmbed && <div className="disclaimer">
+        <div className={classNames('main', {'embed': isEmbed()})}>
+          { !isEmbed() && <div className="disclaimer">
             <span  dangerouslySetInnerHTML={{__html: settings.home.header}} />
             Please <OutboundLink to={`https://github.com/${settings.global.repo}`}>open</OutboundLink> a pull request to
             correct any issues. Greyed logos are not open source. Last Updated: {window.lastUpdated}
           </div> }
-          { !isEmbed && <SummaryContainer /> }
+          { !isEmbed() && <SummaryContainer /> }
 
           <div className="cards-section">
             <SwitchButtonContainer />
@@ -209,8 +210,8 @@ const HomePage = ({isEmbed, mainContentMode, ready, hasSelectedItem, filtersVisi
             }
             { !isBigPicture && <MainContentContainer/> }
           </div>
-          { !isEmbed && !isBigPicture && <Footer/> }
-          { isEmbed && <EmbeddedFooter/> }
+          { !isEmbed() && !isBigPicture && <Footer/> }
+          { isEmbed() && <EmbeddedFooter/> }
         </div>
       </div>
     </div>
