@@ -1,4 +1,4 @@
-import settings from 'project/settings.yml';
+import settings from '../utils/settings.js';
 import { connect } from 'react-redux';
 import SortFieldSelector from './SortFieldSelector';
 import { changeSortFieldAndDirection } from '../reducers/mainReducer.js';

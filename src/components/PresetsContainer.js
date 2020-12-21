@@ -2,7 +2,7 @@ import { connect } from 'react-redux';
 import createSelector from '../utils/createSelector';
 
 import Presets from './Presets';
-import settings from 'project/settings.yml';
+import settings from '../utils/settings.js';
 import { parseUrl, filtersToUrl } from '../utils/syncToUrl';
 import _ from 'lodash';
 

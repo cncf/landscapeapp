@@ -1,11 +1,10 @@
 import { connect } from 'react-redux';
 import createSelector from '../utils/createSelector';
-import HomePage from './HomePage';
+import HomePage from '../components/HomePage';
 import {showFilters, hideFilters, closeDialog } from '../reducers/mainReducer';
 import isEmbed from '../utils/isEmbed';
 import getGroupedItems, {getGroupedItemsForBigPicture } from '../utils/itemsCalculator';
 import selectedItemCalculator from '../utils/selectedItemCalculator';
-import settings from 'project/settings.yml'
 
 const defaultTitle =  settings.global.meta.title;
 const getTitle = createSelector([state => state], function(state) {

@@ -2,7 +2,7 @@ import { connect } from 'react-redux';
 import SwitchButton from './SwitchButton';
 import { changeMainContentMode } from '../../reducers/mainReducer.js';
 import { filtersToUrl } from '../../utils/syncToUrl';
-import settings from 'project/settings.yml';
+import settings from '../../utils/settings.js'
 import _ from 'lodash';
 
 const mainCard = [{shortTitle: 'Card', title: 'Card Mode', mode: 'card', tabIndex: 0}];

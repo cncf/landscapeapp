@@ -1,7 +1,7 @@
 // locate zoom buttons
 import { connect } from 'react-redux';
 import { withState, pure } from 'recompose';
-import settings from 'project/settings.yml'
+import settings from '../utils/settings.js'
 import qs from 'query-string';
 
 import React from 'react';

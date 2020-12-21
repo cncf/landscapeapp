@@ -2,7 +2,7 @@
 
 // State Description (TODO: Add FLOW here!)
 // data: null | { .. Data ... }
-import settings from 'project/settings.yml';
+import settings from '../utils/settings.js';
 import { loadData} from './api';
 import { filtersToUrl } from '../utils/syncToUrl';
 import _ from 'lodash';

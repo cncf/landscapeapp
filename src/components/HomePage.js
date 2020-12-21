@@ -32,7 +32,7 @@ import EmbeddedFooter from './EmbeddedFooter';
 import isIphone from '../utils/isIphone';
 import isGoogle from '../utils/isGoogle';
 import bus from '../reducers/bus';
-import settings from 'project/settings.yml'
+import settings from '../utils/settings.js'
 import isModalOnly from "../utils/isModalOnly";
 
 const state = {

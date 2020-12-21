@@ -5,8 +5,6 @@ import classNames from 'classnames'
 import _ from 'lodash';
 import ItemDialogContent from './ItemDialogContent';
 import ItemDialogButtonsContainer from './ItemDialogButtonsContainer';
-
-import '../styles/itemModal.css';
 import fields from '../types/fields';
 import isModalOnly from "../utils/isModalOnly";
 

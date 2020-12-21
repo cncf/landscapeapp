@@ -11,7 +11,7 @@ const sortOptions = options.map(function(x) {
   }
 });
 
-import settings from 'project/settings.yml';
+import settings from '../utils/settings.js';
 import { findLandscapeSettings } from './landscapeSettings';
 
 export function filtersToUrl({filters, grouping, sortField, selectedItemId, zoom, mainContentMode = 'card', cardMode = 'card', isFullscreen}) {

@@ -1,4 +1,4 @@
-import settings from 'project/settings.yml';
+import settings from '../utils/settings.js';
 
 export const landscapeSettingsList = Object.values(settings.big_picture)
                                            .sort((a, b) => a.tab_index - b.tab_index);
