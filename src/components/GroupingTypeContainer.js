@@ -1,6 +1,8 @@
+import { useContext } from 'react'
 import GroupingSelector from './GroupingSelector';
 import { changeGrouping } from '../reducers/mainReducer.js';
 import fields from '../types/fields';
+import RootContext from '../contexts/RootContext'
 
 const groupingFields = ['landscape', 'relation', 'license', 'organization', 'headquarters'];
 const options = [{
@@ -14,16 +16,12 @@ const options = [{
   };
 }));
 
-const mapStateToProps = (state) => ({
-  isBigPicture: state.main.mainContentMode !== 'card',
-  value: state.main.grouping,
-  options: options
-});
-const onChange = function(newValue) {
-  return changeGrouping(newValue);
-}
-const mapDispatchToProps = {
-  onChange: onChange
-};
+const GroupingTypeContainer = () => {
+  const { params } = useContext(RootContext)
+  const { grouping, mainContentMode } = params
+  const isBigPicture = mainContentMode !== 'card'
 
-export default GroupingSelector
+  return <GroupingSelector onChange={changeGrouping} grouping={grouping} isBigPicture={isBigPicture} options={options}/>
+}
+
+export default GroupingTypeContainer

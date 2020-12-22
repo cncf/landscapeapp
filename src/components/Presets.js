@@ -13,7 +13,9 @@ const Presets = ({presets, activePreset}) => {
   return (
     <div className="sidebar-presets">
       <h4>Example filters:</h4>{presets.map( preset => (
-        <div key={preset.url}><NavLink className="preset" isActive={() => preset === activePreset} activeClassName="active" to={normalizeUrl(preset.url)}>{preset.label}</NavLink></div>
+        // TODO: put back
+        // <div key={preset.url}><NavLink className="preset" isActive={() => preset === activePreset} activeClassName="active" to={normalizeUrl(preset.url)}>{preset.label}</NavLink></div>
+        <div key={preset.url}><span className="preset" isActive={() => preset === activePreset} activeClassName="active" to={normalizeUrl(preset.url)}>{preset.label}</span></div>
     ))}
     </div>
   )

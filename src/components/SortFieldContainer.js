@@ -1,7 +1,8 @@
-import settings from '../utils/settings.js';
-import { connect } from 'react-redux';
-import SortFieldSelector from './SortFieldSelector';
-import { changeSortFieldAndDirection } from '../reducers/mainReducer.js';
+import { useContext } from 'react'
+import settings from '../utils/settings.js'
+import SortFieldSelector from './SortFieldSelector'
+import { changeSortFieldAndDirection } from '../reducers/mainReducer.js'
+import RootContext from '../contexts/RootContext'
 
 export const options = [{
   id: {field: 'name', direction: 'asc'},
@@ -35,19 +36,16 @@ export const options = [{
   }
 });
 
-const mapStateToProps = (state) => ({
-  isBigPicture: state.main.mainContentMode !== 'card',
-  value: JSON.stringify({
-    field: state.main.sortField,
-    direction: state.main.sortDirection
-  }),
-  options: options
-});
 const onChange = function(newValue) {
   return changeSortFieldAndDirection(JSON.parse(newValue));
 }
-const mapDispatchToProps = {
-  onChange: onChange
-};
 
-export default connect(mapStateToProps, mapDispatchToProps)(SortFieldSelector);
+const SortFieldContainer = () => {
+  const { params } = useContext(RootContext)
+  const isBigPicture = params.mainContentMode !== 'card'
+  const value = JSON.stringify({ field: params.sortField, direction: params.sortDirection })
+
+  return <SortFieldSelector isBigPicture={isBigPicture} value={value} onChange={onChange} options={options} />
+}
+
+export default SortFieldContainer

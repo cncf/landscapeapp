@@ -38,7 +38,9 @@ export function filtersToUrl({filters, grouping, sortField, selectedItemId, zoom
   return `/${prefix}` + filtersPart;
 }
 export function parseUrl(url) {
-  const prefix = window.prefix;
+  // TODO: put back
+  // const prefix = window.prefix;
+  const prefix = ''
   const args = qs.parse(url.replace(prefix, ''));
   const newParameters = {
     filters: {

@@ -1,9 +1,9 @@
-import createSelector from '../utils/createSelector';
-
 import Presets from './Presets';
 import settings from '../utils/settings.js';
 import { parseUrl, filtersToUrl } from '../utils/syncToUrl';
 import _ from 'lodash';
+import { useContext } from 'react'
+import RootContext from '../contexts/RootContext'
 
 const normalizeUrl = function(url) {
   if (url.indexOf('/') === 0) {
@@ -11,31 +11,26 @@ const normalizeUrl = function(url) {
   }
   return url;
 }
-const presets = ( function() {
-  return settings.presets.map( (preset) => ({...preset, url: normalizeUrl(preset.url)}));
-})();
-const activePresetSelector = createSelector( (state) => state.main.filters, (state) => state.main.grouping, (state) => state.main.sortField,
-  function(filters, grouping, sortField) {
-    return  _.find(presets, function(preset) {
-      const url = normalizeUrl(preset.url);
-      const parts = parseUrl(url);
-      const importantParts = _.pick(parts, ['filters', 'grouping', 'sortField']);
-      const currentOptions = _.pick(parseUrl(normalizeUrl(filtersToUrl({
-        filters: filters,
-        grouping: grouping,
-        sortField: sortField
-      }))), ['filters', 'grouping', 'sortField']);
-      return JSON.stringify(importantParts) === JSON.stringify(currentOptions);
-    });
-  }
-)
+const presets = settings.presets.map(preset => ({...preset, url: normalizeUrl(preset.url)}))
 
+const findPreset = ({ filters, grouping, sortField }) => {
+  return presets.find(preset => {
+    const url = normalizeUrl(preset.url);
+    const parts = parseUrl(url);
+    const importantParts = _.pick(parts, ['filters', 'grouping', 'sortField']);
+    const currentOptions = _.pick(parseUrl(normalizeUrl(filtersToUrl({
+      filters: filters,
+      grouping: grouping,
+      sortField: sortField
+    }))), ['filters', 'grouping', 'sortField']);
+    return JSON.stringify(importantParts) === JSON.stringify(currentOptions);
+  })
+}
 
-const mapStateToProps = (state) => ({
-  presets: presets,
-  activePreset: activePresetSelector(state)
-});
-const mapDispatchToProps = {
-};
+const PresetsContainer = () => {
+  const { params } = useContext(RootContext)
+  const activePreset = findPreset(params)
+  return <Presets presets={presets} activePreset={activePreset} />
+}
 
-export default Presets
+export default PresetsContainer

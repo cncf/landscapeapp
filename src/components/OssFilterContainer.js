@@ -1,17 +1,18 @@
-import { connect } from 'react-redux';
+import { useContext } from 'react'
 import ComboboxSelector from './ComboboxSelector';
 import { changeFilter } from '../reducers/mainReducer.js';
 import { options } from '../types/fields';
+import RootContext from '../contexts/RootContext'
 
-const mapStateToProps = (state) => ({
-  value: state.main.filters.oss,
-  options: options('oss')
-});
 const onChange = function(newValue) {
   return changeFilter('oss', newValue);
 }
-const mapDispatchToProps = {
-  onChange: onChange
-};
 
-export default connect(mapStateToProps, mapDispatchToProps)(ComboboxSelector);
+const OssFilterContainer = () => {
+  const { params } = useContext(RootContext)
+  const value = params.filters.oss
+  const _options = options('oss')
+  return <ComboboxSelector onChange={onChange} value={value} options={_options}/>
+}
+
+export default OssFilterContainer

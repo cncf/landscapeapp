@@ -18,7 +18,6 @@ import {
 } from './BigPicture';
 import TweetButton from './TweetButton';
 import MainContentContainer from './MainContentContainer';
-import ResetFiltersContainer from './ResetFiltersContainer';
 import ItemDialogContainer from './ItemDialogContainer';
 import HeaderContainer from './HeaderContainer';
 import SummaryContainer from './SummaryContainer';
@@ -38,6 +37,7 @@ import { findLandscapeSettings } from '../utils/landscapeSettings'
 import { getGroupedItemsForBigPicture } from '../utils/itemsCalculator'
 import RootContext from '../contexts/RootContext'
 import EntriesContext from '../contexts/EntriesContext'
+import ResetFilters from './ResetFilters'
 
 const state = {
   lastScrollPosition: 0
@@ -173,16 +173,16 @@ const HomePage = ({hasSelectedItem, filtersVisible, hideFilters, showFilters, on
         { !isEmbed() && !isFullscreen && <HeaderContainer/> }
         { !isEmbed() && !isFullscreen && <IconButton className="sidebar-show" title="Show sidebar" onClick={showFilters}><MenuIcon /></IconButton> }
         { !isEmbed() && !isFullscreen && <div className="sidebar">
-          {/*<div className="sidebar-scroll">*/}
-          {/*  <IconButton className="sidebar-collapse" title="Hide sidebar" onClick={hideFilters}><CloseIcon /></IconButton>*/}
-          {/*  <ResetFiltersContainer />*/}
-          {/*  <Grouping/>*/}
-          {/*  <Sorting/>*/}
-          {/*  <Filters />*/}
-          {/*  <PresetsContainer />*/}
-          {/*  <ExportCsvContainer />*/}
-          {/*  <Ad />*/}
-          {/*</div>*/}
+          <div className="sidebar-scroll">
+            <IconButton className="sidebar-collapse" title="Hide sidebar" onClick={hideFilters}><CloseIcon /></IconButton>
+            <ResetFilters />
+            <Grouping/>
+            <Sorting/>
+            <Filters />
+            <PresetsContainer />
+            <ExportCsvContainer />
+            <Ad />
+          </div>
         </div>
         }
 

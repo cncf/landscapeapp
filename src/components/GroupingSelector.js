@@ -5,9 +5,9 @@ import Select from '@material-ui/core/Select';
 import ComboboxSelector from './ComboboxSelector';
 
 
-const GroupingSelector = ({isBigPicture, value, options, onChange}) => {
+const GroupingSelector = ({isBigPicture, value, grouping, onChange}) => {
   if (!isBigPicture) {
-    return <ComboboxSelector value={value} options={options} onChange={onChange} />;
+    return <ComboboxSelector value={value} options={grouping} onChange={onChange} />;
   } else {
     return (
       <Select
