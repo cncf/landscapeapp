@@ -3,8 +3,11 @@ import { changeMainContentMode } from '../../reducers/mainReducer.js';
 import { filtersToUrl } from '../../utils/syncToUrl';
 import settings from '../../utils/settings.js'
 import _ from 'lodash';
+import { useContext } from 'react'
+import RootContext from '../../contexts/RootContext'
 
 const mainCard = [{shortTitle: 'Card', title: 'Card Mode', mode: 'card', tabIndex: 0}];
+
 const landscapes = _.map(settings.big_picture, function(section) {
   return {
     title: section.name,
@@ -13,15 +16,15 @@ const landscapes = _.map(settings.big_picture, function(section) {
     tabIndex: section.tab_index
   }
 });
-const cards = _.orderBy(mainCard.concat(landscapes), 'tabIndex').map( item => _.pick(item, ['title', 'mode', 'shortTitle']));
 
-const mapStateToProps = (state) => ({
-  mainContentMode: state.main.mainContentMode,
-  cards: cards.map( (card) => ({ ...card, url: filtersToUrl({filters: state.main.filters, grouping: state.main.grouping, sortField: state.main.sortField, mainContentMode: card.mode})})),
-});
-const mapDispatchToProps = {
-  changeMainContentMode: changeMainContentMode
-};
+const _cards = _.orderBy(mainCard.concat(landscapes), 'tabIndex').map( item => _.pick(item, ['title', 'mode', 'shortTitle']));
 
-// TODO: put back
-export default () => <div></div>
+const SwitchButtonContainer = () => {
+  const { params } = useContext(RootContext)
+  const { mainContentMode, filters, grouping, sortField } = params
+  const cards = _cards.map(card => ({ ...card, url: filtersToUrl({filters, grouping, sortField, mainContentMode: card.mode})}))
+
+  return <SwitchButton changeMainContentMode={changeMainContentMode} mainContentMode={mainContentMode} cards={cards}/>
+}
+
+export default SwitchButtonContainer
