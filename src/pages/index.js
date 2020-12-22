@@ -7,8 +7,11 @@ import selectedItemCalculator from '../utils/selectedItemCalculator';
 import settings from '../utils/settings'
 import EntriesContext from '../contexts/EntriesContext'
 import { projects } from '../../tools/loadData'
+import Head from 'next/head'
 
 const defaultTitle =  settings.global.meta.title;
+
+// TODO: sort this
 const getTitle = createSelector([state => state], function(state) {
     if (!state.main.ready) {
       return defaultTitle;
@@ -37,6 +40,9 @@ const mapDispatchToProps = {
 
 const HomePage = ({ entries }) => {
   return <EntriesContext.Provider value={{entries}}>
+    <Head>
+      <title>{defaultTitle}</title>
+    </Head>
     <HomePageComponent />
   </EntriesContext.Provider>
 }
@@ -46,6 +52,5 @@ export async function getStaticProps(context) {
     props: { entries: projects }
   }
 }
-
 
 export default HomePage
