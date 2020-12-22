@@ -1,25 +1,18 @@
 import React from 'react';
-import { pure } from 'recompose';
+import Link from 'next/link'
 import isEmbed from '../utils/isEmbed';
 import isGoogle from '../utils/isGoogle';
 import isModalOnly from '../utils/isModalOnly';
-import { NavLink } from 'react-router-dom';
-const skipDefaultHandler = (e) => e.preventDefault();
+
 const InternalLink = ({to, children, onClick, className, ...other}) => {
-  if (onClick) {
-    other.onClick = function(e) {
-      skipDefaultHandler(e);
-      onClick();
-    };
-  }
   if (isEmbed() || isGoogle() || isModalOnly() || !to) {
     return <span className={`${className}`} {...other}>{children}</span>;
   } else {
-    return <span className={`${className}`} {...other}>{children}</span>
-    // TODO: put back
-    // return <NavLink className={`${className}  nav-link`} {...other} to={to}>{children}</NavLink>
+    return <Link href={to}>
+      <a className={`${className} nav-link`} {...other}>{children}</a>
+    </Link>
   }
 }
-export default pure(InternalLink);
+export default InternalLink
 
 

@@ -6,7 +6,7 @@ const isGoogle = () => {
     return false
   }
 
-  return navigator.userAgent.indexOf('bot.html') === -1 || window.location.href.indexOf('googlebot=yes') === -1
+  return navigator.userAgent.indexOf('bot.html') !== -1 || window.location.href.indexOf('googlebot=yes') !== -1
 }
 
 export default isGoogle

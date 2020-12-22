@@ -1,6 +1,6 @@
-import React from 'react';
-import { pure } from 'recompose';
-import { NavLink } from 'react-router-dom';
+import React from 'react'
+import { pure } from 'recompose'
+import InternalLink from './InternalLink'
 
 const Presets = ({presets, activePreset}) => {
   const normalizeUrl = function(url) {
@@ -13,9 +13,11 @@ const Presets = ({presets, activePreset}) => {
   return (
     <div className="sidebar-presets">
       <h4>Example filters:</h4>{presets.map( preset => (
-        // TODO: put back
-        // <div key={preset.url}><NavLink className="preset" isActive={() => preset === activePreset} activeClassName="active" to={normalizeUrl(preset.url)}>{preset.label}</NavLink></div>
-        <div key={preset.url}><span className="preset" isActive={() => preset === activePreset} activeClassName="active" to={normalizeUrl(preset.url)}>{preset.label}</span></div>
+        <div key={preset.url}>
+          <InternalLink className={`preset ${preset === activePreset ? 'active' : null}`} to={normalizeUrl(preset.url)}>
+            {preset.label}
+          </InternalLink>
+        </div>
     ))}
     </div>
   )
