@@ -9,4 +9,5 @@ const mapDispatchToProps = {
 
 };
 
-export default Summary
+// TODO: put back
+export default () => <div></div>

@@ -26,7 +26,8 @@ const TweetButton = function({url, cls}) {
   const twitterUrl = `https://twitter.com/intent/tweet?${params}`;
   return <div className={`tweet-button ${cls}`}>
     <a href={twitterUrl}>{bird}<span>Tweet</span></a>
-    <div className="tweet-count-wrapper"><div className="tweet-count">{window.tweets}</div></div>
+    {/* TODO: put back*/}
+    {/*<div className="tweet-count-wrapper"><div className="tweet-count">{window.tweets}</div></div>*/}
   </div>
 }
 

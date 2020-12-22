@@ -23,4 +23,5 @@ const mapDispatchToProps = {
   changeMainContentMode: changeMainContentMode
 };
 
-export default SwitchButton
+// TODO: put back
+export default () => <div></div>

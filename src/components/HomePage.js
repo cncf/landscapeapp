@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { pure } from 'recompose';
 import IconButton from '@material-ui/core/IconButton';
 import CloseIcon from '@material-ui/icons/Close';
@@ -12,7 +12,6 @@ import Ad from './Ad';
 import AutoSizer from './CustomAutoSizer';
 import OutboundLink from './OutboundLink';
 import {
-  LandscapeContentContainer,
   SwitchButtonContainer,
   ZoomButtonsContainer,
   FullscreenButtonContainer
@@ -33,6 +32,12 @@ import settings from '../utils/settings.js'
 import isModalOnly from "../utils/isModalOnly";
 import currentDevice from '../utils/currentDevice'
 import isEmbed from '../utils/isEmbed'
+import isBrowser from '../utils/isBrowser'
+import LandscapeContent from './BigPicture/LandscapeContent'
+import { findLandscapeSettings } from '../utils/landscapeSettings'
+import { getGroupedItemsForBigPicture } from '../utils/itemsCalculator'
+import RootContext from '../contexts/RootContext'
+import EntriesContext from '../contexts/EntriesContext'
 
 const state = {
   lastScrollPosition: 0
@@ -65,15 +70,17 @@ function enableScroll(){
   document.body.removeEventListener('touchmove', preventDefault);
 }
 
-const HomePage = ({mainContentMode, ready, hasSelectedItem, filtersVisible, hideFilters, showFilters, onClose, title, isFullscreen}) => {
+const HomePage = ({hasSelectedItem, filtersVisible, hideFilters, showFilters, onClose, title, isFullscreen}) => {
+  const { params } = useContext(RootContext)
+  const { entries } = useContext(EntriesContext)
+  const { mainContentMode, zoom } = params
+  const landscapeSettings = findLandscapeSettings(mainContentMode)
+  const groupedItems = getGroupedItemsForBigPicture(params, entries, landscapeSettings)
   const isBigPicture = mainContentMode !== 'card';
-  if (!ready) {
-    return (
-      <div>
-      </div>
-    )
+
+  if (isBrowser()) {
+    document.title = title;
   }
-  document.title = title;
 
   if (isModalOnly()) {
     document.querySelector('body').classList.add('popup');
@@ -83,19 +90,21 @@ const HomePage = ({mainContentMode, ready, hasSelectedItem, filtersVisible, hide
     return <ItemDialogContainer />;
   }
 
-  if (isBigPicture) {
-    document.querySelector('html').classList.add('big-picture');
-  } else {
-    document.querySelector('html').classList.remove('big-picture');
+  if (isBrowser()) {
+    if (isBigPicture) {
+      document.querySelector('html').classList.add('big-picture');
+    } else {
+      document.querySelector('html').classList.remove('big-picture');
+    }
+
+    if (isFullscreen) {
+      document.querySelector('html').classList.add('fullscreen');
+    } else {
+      document.querySelector('html').classList.remove('fullscreen');
+    }
   }
 
-  if (isFullscreen) {
-    document.querySelector('html').classList.add('fullscreen');
-  } else {
-    document.querySelector('html').classList.remove('fullscreen');
-  }
-
-  if (currentDevice.ios()) {
+  if (isBrowser() && currentDevice.ios()) {
     if (hasSelectedItem) {
       if (!document.querySelector('.iphone-scroller')) {
         state.lastScrollPosition = (document.scrollingElement || document.body).scrollTop;
@@ -112,7 +121,7 @@ const HomePage = ({mainContentMode, ready, hasSelectedItem, filtersVisible, hide
     }
   }
 
-  if (isEmbed) {
+  if (isEmbed()) {
     if (window.parentIFrame) {
       if (hasSelectedItem) {
         window.parentIFrame.sendMessage({type: 'showModal'})
@@ -153,10 +162,10 @@ const HomePage = ({mainContentMode, ready, hasSelectedItem, filtersVisible, hide
     document.querySelector('body').classList.add('embed');
   }
 
+  const isIphone = isBrowser() && currentDevice.ios()
 
   return (
     <div>
-    <HomePageScrollerContainer/>
     <ItemDialogContainer/>
     <div className={classNames('app',{'filters-opened' : filtersVisible})}>
       <div />
@@ -164,16 +173,16 @@ const HomePage = ({mainContentMode, ready, hasSelectedItem, filtersVisible, hide
         { !isEmbed() && !isFullscreen && <HeaderContainer/> }
         { !isEmbed() && !isFullscreen && <IconButton className="sidebar-show" title="Show sidebar" onClick={showFilters}><MenuIcon /></IconButton> }
         { !isEmbed() && !isFullscreen && <div className="sidebar">
-          <div className="sidebar-scroll">
-            <IconButton className="sidebar-collapse" title="Hide sidebar" onClick={hideFilters}><CloseIcon /></IconButton>
-            <ResetFiltersContainer />
-            <Grouping/>
-            <Sorting/>
-            <Filters />
-            <PresetsContainer />
-            <ExportCsvContainer />
-            <Ad />
-          </div>
+          {/*<div className="sidebar-scroll">*/}
+          {/*  <IconButton className="sidebar-collapse" title="Hide sidebar" onClick={hideFilters}><CloseIcon /></IconButton>*/}
+          {/*  <ResetFiltersContainer />*/}
+          {/*  <Grouping/>*/}
+          {/*  <Sorting/>*/}
+          {/*  <Filters />*/}
+          {/*  <PresetsContainer />*/}
+          {/*  <ExportCsvContainer />*/}
+          {/*  <Ad />*/}
+          {/*</div>*/}
         </div>
         }
 
@@ -183,7 +192,7 @@ const HomePage = ({mainContentMode, ready, hasSelectedItem, filtersVisible, hide
           { !isEmbed() && <div className="disclaimer">
             <span  dangerouslySetInnerHTML={{__html: settings.home.header}} />
             Please <OutboundLink to={`https://github.com/${settings.global.repo}`}>open</OutboundLink> a pull request to
-            correct any issues. Greyed logos are not open source. Last Updated: {window.lastUpdated}
+            correct any issues. Greyed logos are not open source. Last Updated: {process.env.lastUpdated}
           </div> }
           { !isEmbed() && <SummaryContainer /> }
 
@@ -198,7 +207,7 @@ const HomePage = ({mainContentMode, ready, hasSelectedItem, filtersVisible, hide
             <AutoSizer>
               {({ height }) => (
                 <div className="landscape-wrapper" style={{height: height}}>
-                  <LandscapeContentContainer />
+                  <LandscapeContent zoom={zoom} groupedItems={groupedItems} landscapeSettings={landscapeSettings} />
                 </div>
               )}
             </AutoSizer>

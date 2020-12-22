@@ -1,10 +1,12 @@
 import createSelector from '../utils/createSelector';
-import HomePage from '../components/HomePage';
+import HomePageComponent from '../components/HomePage';
 import {showFilters, hideFilters, closeDialog } from '../reducers/mainReducer';
 import isEmbed from '../utils/isEmbed';
 import getGroupedItems, {getGroupedItemsForBigPicture } from '../utils/itemsCalculator';
 import selectedItemCalculator from '../utils/selectedItemCalculator';
 import settings from '../utils/settings'
+import EntriesContext from '../contexts/EntriesContext'
+import { projects } from '../../tools/loadData'
 
 const defaultTitle =  settings.global.meta.title;
 const getTitle = createSelector([state => state], function(state) {
@@ -32,5 +34,18 @@ const mapDispatchToProps = {
   hideFilters: hideFilters,
   onClose: closeDialog
 };
+
+const HomePage = ({ entries }) => {
+  return <EntriesContext.Provider value={{entries}}>
+    <HomePageComponent />
+  </EntriesContext.Provider>
+}
+
+export async function getStaticProps(context) {
+  return {
+    props: { entries: projects }
+  }
+}
+
 
 export default HomePage

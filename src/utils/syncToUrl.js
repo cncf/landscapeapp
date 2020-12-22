@@ -15,7 +15,9 @@ import settings from '../utils/settings.js';
 import { findLandscapeSettings } from './landscapeSettings';
 
 export function filtersToUrl({filters, grouping, sortField, selectedItemId, zoom, mainContentMode = 'card', cardMode = 'card', isFullscreen}) {
-  const prefix = window.prefix;
+  // TODO: put back
+  // const prefix = window.prefix;
+  const prefix = ''
   const params = {};
   var fieldNames = _.keys(fields);
   _.each(fieldNames, function(field) {

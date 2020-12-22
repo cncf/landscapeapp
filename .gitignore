@@ -28,6 +28,8 @@ node_modules
 #dist folder
 dist
 
+public
+
 # IDEA/Webstorm project files
 .idea
 *.iml

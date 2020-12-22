@@ -13,9 +13,10 @@ import { findLandscapeSettings } from "./landscapeSettings";
 const landscape = fields.landscape.values;
 
 export const getFilteredItems = createSelector(
-  [(state) => state.main.data,
-    (state) => state.main.filters,
-    (state) => state.main.mainContentMode
+  [
+    (params) => params.data,
+    (params) => params.filters,
+    (params) => params.mainContentMode
   ],
   function(data, filters, mainContentMode) {
     var filterHostedProject = filterFn({field: 'relation', filters});
@@ -47,8 +48,9 @@ const addExtraFields = function(data) {
 }
 
 const getFilteredItemsForBigPicture = createSelector(
-  [(state) => state.main.data,
-  (state) => state.main.filters
+  [
+    (_, entries) => entries,
+    (params) => params.filters
   ],
   function(data, filters) {
     var filterHostedProject = filterFn({field: 'relation', filters});
@@ -72,8 +74,8 @@ const getExtraFields = createSelector(
 const getSortedItems = createSelector(
   [
   getExtraFields,
-  (state) => state.main.sortField,
-  (state) => state.main.sortDirection
+  (params) => params.sortField,
+  (params) => params.sortDirection
   ],
   function(data, sortField, sortDirection) {
     const fieldInfo = fields[sortField];
@@ -121,9 +123,9 @@ const getSortedItems = createSelector(
 const getGroupedItems = createSelector(
   [
   getSortedItems,
-  (state) => state.main.grouping,
-  (state) => state.main.filters,
-  (state) => state.main.sortField
+  (params) => params.grouping,
+  (params) => params.filters,
+  (params) => params.sortField
   ],
   function(items, grouping, filters, sortField) {
     if (grouping === 'no') {
@@ -168,26 +170,26 @@ const bigPictureSortOrder = [
   }
 ];
 
-export const getGroupedItemsForBigPicture = function(state, landscapeSettings = null) {
+export const getGroupedItemsForBigPicture = function(params, entries, landscapeSettings = null) {
   if (!landscapeSettings) {
-    landscapeSettings = findLandscapeSettings(state.main.mainContentMode);
+    landscapeSettings = findLandscapeSettings(params.mainContentMode);
   }
-  if (state.main.mainContentMode === 'card') {
+  if (params.mainContentMode === 'card') {
     return [];
   } else if (landscapeSettings.url === 'landscape') {
-    return getGroupedItemsForMainLandscape(state, landscapeSettings);
+    return getGroupedItemsForMainLandscape(params, entries, landscapeSettings);
   } else {
-    return getGroupedItemsForAdditionalLandscape(state, landscapeSettings)
+    return getGroupedItemsForAdditionalLandscape(params, entries, landscapeSettings)
   }
 }
 
 const getGroupedItemsForMainLandscape = createSelector(
   [ getFilteredItemsForBigPicture,
-    (state) => state.main.data,
-    (state) => state.main.grouping,
-    (state) => state.main.filters,
-    (state) => state.main.sortField,
-    (state, landscapeSettings) => landscapeSettings
+    (_, entries) => entries,
+    (params) => params.grouping,
+    (params) => params.filters,
+    (params) => params.sortField,
+    (params, entries, landscapeSettings) => landscapeSettings
   ],
   function(items, allItems, grouping, filters, sortField, landscapeSettings) {
     const categories = getLandscapeCategories({landscapeSettings, landscape });
@@ -217,11 +219,11 @@ const getGroupedItemsForMainLandscape = createSelector(
 
 const getGroupedItemsForAdditionalLandscape = createSelector([
      getFilteredItemsForBigPicture,
-    (state) => state.main.data,
-    (state) => state.main.grouping,
-    (state) => state.main.filters,
-    (state) => state.main.sortField,
-    (state, landscapeSettings) => landscapeSettings
+    (_, entries) => entries,
+    (params) => params.grouping,
+    (params) => params.filters,
+    (params) => params.sortField,
+    (params, entries, landscapeSettings) => landscapeSettings
   ],
   function(items, allItems, grouping, filters, sortField, landscapeSettings) {
     const category = getLandscapeCategories({landscapeSettings, landscape})[0];
@@ -256,8 +258,8 @@ const getGroupedItemsForAdditionalLandscape = createSelector([
   }
 );
 
-export function getItemsForExport(state) {
-  return _.flatten(getGroupedItems(state).map((x) => x.items));
+export function getItemsForExport(params) {
+  return _.flatten(getGroupedItems(params).map((x) => x.items));
 }
 
 export default getGroupedItems;

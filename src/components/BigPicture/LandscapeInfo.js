@@ -1,6 +1,7 @@
 import React from 'react';
 import { pure } from 'recompose';
 import _ from 'lodash';
+import isBrowser from '../../utils/isBrowser'
 
 const LandscapeInfo = ({width, height, top, left, childrenInfo}) => {
   const children = childrenInfo.map(function(info) {
@@ -15,7 +16,7 @@ const LandscapeInfo = ({width, height, top, left, childrenInfo}) => {
     };
     if (info.type === 'text') {
       // pdf requires a normal version without a zoom trick
-      if (window.location.href.indexOf('&pdf') !== -1) {
+      if (isBrowser() && window.location.href.indexOf('&pdf') !== -1) {
         return <div key='text' style={{
           ...positionProps,
           fontSize: info.font_size,

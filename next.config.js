@@ -13,6 +13,8 @@ const settings = JSON.stringify(safeLoad(readFileSync(settingsPath)))
 const lookupsPath =  path.resolve(process.env.PROJECT_PATH, 'lookup.json')
 const lookups = readFileSync(lookupsPath, 'utf-8')
 
+const lastUpdated = new Date().toISOString().substring(0, 19).replace('T', ' ') + 'Z'
+
 module.exports = {
-  env: { settings, lookups }
+  env: { settings, lookups, lastUpdated }
 }

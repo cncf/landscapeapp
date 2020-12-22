@@ -12,6 +12,8 @@ const mapStateToProps = (state) => {
     landscapeSettings: landscapeSettings
   }
 };
+
+// TODO: pass this to LandscapeContent
 const mapDispatchToProps = {
   onSelectItem: changeSelectedItemId,
   switchToLandscape: changeMainContentMode,

@@ -8,7 +8,7 @@
   },
   "scripts": {
     "autocrop-images": "babel-node tools/autocropImages",
-    "dev": "yarn yaml2json && next dev",
+    "dev": "yarn yaml2json && yarn copy-landscape && next dev",
     "open:dist": "babel-node tools/distServer.js",
     "landscapes": "babel-node tools/landscapes.js",
     "lint": "esw webpack.config.* src tools --color",
@@ -35,6 +35,7 @@
     "funding": "babel-node tools/fundingForMasterBranch",
     "copy-dist": "cp -r _headers _redirects \"$PROJECT_PATH\"/data.json \"$PROJECT_PATH\"/images src/embed.html \"$PROJECT_PATH\"/dist/ && cp -r \"$PROJECT_PATH\"/cached_logos \"$PROJECT_PATH\"/dist/logos && yarn copy-iframe-resizer",
     "copy-iframe-resizer": "cp .yarn/unplugged/iframe-resizer*/node_modules/iframe-resizer/js/iframeResizer.min.js \"$PROJECT_PATH\"/dist/iframeResizer.js && babel-node tools/copyIframeResizer.js",
+    "copy-landscape": "rm -rf public && mkdir -p public && cp -r \"$PROJECT_PATH\"/images \"$PROJECT_PATH\"/cached_logos public && mv public/cached_logos public/logos",
     "setup-robots": "babel-node tools/sitemap && babel-node tools/addRobots",
     "quick-build": "babel-node tools/build.js && yarn copy-dist && yarn setup-robots",
     "prerender": "babel-node tools/prerender",
