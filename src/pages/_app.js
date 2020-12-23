@@ -1,3 +1,4 @@
+import { useRouter } from 'next/router'
 import CssBaseline from '@material-ui/core/CssBaseline'
 import Head from 'next/head'
 import RootContext from '../contexts/RootContext'
@@ -37,6 +38,10 @@ export const initialState = {
 };
 
 export default function App({ Component, pageProps }) {
+  const router = useRouter()
+  const { path } = router.query
+  const mainContentMode = path ? path[0] : 'landscape'
+
   return <>
     <Head>
       {/*<title>CNCF Radars</title>*/}
@@ -44,7 +49,7 @@ export default function App({ Component, pageProps }) {
       {/*<link rel="icon" href="/favicon.png"/>*/}
     </Head>
 
-    <RootContext.Provider value={{ params: initialState }}>
+    <RootContext.Provider value={{ params: { ...initialState, mainContentMode } }}>
       <CssBaseline />
       <main>
         <Component {...pageProps} />

@@ -9,5 +9,5 @@ const landscapeSettingsDict = landscapeSettingsList.reduce((dict, landscapeSetti
 }, {})
 
 export const findLandscapeSettings = (url) => {
-  return landscapeSettingsDict[url]
+  return landscapeSettingsDict[url === 'card-mode' ? 'landscape' : url]
 }

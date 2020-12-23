@@ -14,7 +14,7 @@ const sortOptions = options.map(function(x) {
 import settings from '../utils/settings.js';
 import { findLandscapeSettings } from './landscapeSettings';
 
-export function filtersToUrl({filters, grouping, sortField, selectedItemId, zoom, mainContentMode = 'card', cardMode = 'card', isFullscreen}) {
+export function filtersToUrl({filters, grouping, sortField, selectedItemId, zoom, mainContentMode = 'card-mode', cardMode = 'card', isFullscreen}) {
   // TODO: put back
   // const prefix = window.prefix;
   const prefix = ''
@@ -35,7 +35,7 @@ export function filtersToUrl({filters, grouping, sortField, selectedItemId, zoom
   }
   const filtersPart = qs.stringify(params, {encode: false}) + (isEmbed() ? '&embed=yes':'');
 
-  return `/${prefix}` + filtersPart;
+  return `/${mainContentMode}?` + filtersPart;
 }
 export function parseUrl(url) {
   // TODO: put back
@@ -126,7 +126,7 @@ function addMainContentModeToParams({mainContentMode, cardMode, params}) {
 }
 
 function addZoomToParams({zoom, mainContentMode, params}) {
-  if (zoom && zoom !== initialState.zoom && mainContentMode !== 'card') {
+  if (zoom && zoom !== initialState.zoom && mainContentMode !== 'card-mode') {
     params['zoom'] = zoom * 100;
   }
 }

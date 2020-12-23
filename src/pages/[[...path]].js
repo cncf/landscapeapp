@@ -8,6 +8,7 @@ import settings from '../utils/settings'
 import EntriesContext from '../contexts/EntriesContext'
 import { projects } from '../../tools/loadData'
 import Head from 'next/head'
+import { landscapeSettingsList } from '../utils/landscapeSettings'
 
 const defaultTitle =  settings.global.meta.title;
 
@@ -50,6 +51,20 @@ const HomePage = ({ entries }) => {
 export async function getStaticProps(context) {
   return {
     props: { entries: projects }
+  }
+}
+
+export async function getStaticPaths() {
+  const urls = [
+    ...landscapeSettingsList.map(({ url }) => url),
+    'card-mode'
+  ]
+
+  return {
+    paths: urls.map(url => {
+      return { params: { path: url === 'landscape' ? [] : [url] } }
+    }),
+    fallback: false
   }
 }
 

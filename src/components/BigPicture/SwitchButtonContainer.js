@@ -6,7 +6,7 @@ import _ from 'lodash';
 import { useContext } from 'react'
 import RootContext from '../../contexts/RootContext'
 
-const mainCard = [{shortTitle: 'Card', title: 'Card Mode', mode: 'card', tabIndex: 0}];
+const mainCard = [{shortTitle: 'Card', title: 'Card Mode', mode: 'card-mode', tabIndex: 0}];
 
 const landscapes = _.map(settings.big_picture, function(section) {
   return {

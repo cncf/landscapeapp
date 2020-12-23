@@ -76,7 +76,7 @@ const HomePage = ({hasSelectedItem, filtersVisible, hideFilters, showFilters, on
   const { mainContentMode, zoom } = params
   const landscapeSettings = findLandscapeSettings(mainContentMode)
   const groupedItems = getGroupedItemsForBigPicture(params, entries, landscapeSettings)
-  const isBigPicture = mainContentMode !== 'card';
+  const isBigPicture = mainContentMode !== 'card-mode';
 
   if (isBrowser()) {
     document.title = title;

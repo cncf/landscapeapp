@@ -14,7 +14,7 @@ const landscape = fields.landscape.values;
 
 export const getFilteredItems = createSelector(
   [
-    (params) => params.data,
+    (_, entries) => entries,
     (params) => params.filters,
     (params) => params.mainContentMode
   ],
@@ -23,7 +23,7 @@ export const getFilteredItems = createSelector(
     var filterByLicense = filterFn({field: 'license', filters});
     var filterByOrganization = filterFn({field: 'organization', filters});
     var filterByHeadquarters = filterFn({field: 'headquarters', filters});
-    var filterByLandscape = mainContentMode === 'card' ? filterFn({field: 'landscape', filters}) : (x) => true;
+    var filterByLandscape = mainContentMode === 'card-mode' ? filterFn({field: 'landscape', filters}) : _ => true;
     var filterByBestPractices = filterFn({field: 'bestPracticeBadgeId', filters});
     var filterByEnduser = filterFn({field: 'enduser', filters});
     var filterByParent = filterFn({field: 'parents', filters});
@@ -174,7 +174,7 @@ export const getGroupedItemsForBigPicture = function(params, entries, landscapeS
   if (!landscapeSettings) {
     landscapeSettings = findLandscapeSettings(params.mainContentMode);
   }
-  if (params.mainContentMode === 'card') {
+  if (params.mainContentMode === 'card-mode') {
     return [];
   } else if (landscapeSettings.url === 'landscape') {
     return getGroupedItemsForMainLandscape(params, entries, landscapeSettings);
@@ -198,12 +198,12 @@ const getGroupedItemsForMainLandscape = createSelector(
       return {
         key: stringOrSpecial(category.label),
         header: category.label,
-        href: filtersToUrl({filters: newFilters, grouping: 'landscape', sortField, mainContentMode: 'card'}),
+        href: filtersToUrl({filters: newFilters, grouping: 'landscape', sortField, mainContentMode: 'card-mode'}),
         subcategories: landscape.filter( (l) => l.parentId === category.id).map(function(subcategory) {
           const newFilters = {...filters, landscape: subcategory.id };
           return {
             name: subcategory.label,
-            href: filtersToUrl({filters: newFilters, grouping: 'landscape', sortField, mainContentMode: 'card'}),
+            href: filtersToUrl({filters: newFilters, grouping: 'landscape', sortField, mainContentMode: 'card-mode'}),
             items: _.orderBy(items.filter(function(item) {
               return item.landscape ===  subcategory.id
             }), bigPictureSortOrder),

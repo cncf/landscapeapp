@@ -19,9 +19,9 @@ const options = [{
 const GroupingTypeContainer = () => {
   const { params } = useContext(RootContext)
   const { grouping, mainContentMode } = params
-  const isBigPicture = mainContentMode !== 'card'
+  const isBigPicture = mainContentMode !== 'card-mode'
 
-  return <GroupingSelector onChange={changeGrouping} grouping={grouping} isBigPicture={isBigPicture} options={options}/>
+  return <GroupingSelector onChange={changeGrouping} grouping={options} isBigPicture={isBigPicture} value={grouping} />
 }
 
 export default GroupingTypeContainer

@@ -42,7 +42,7 @@ const onChange = function(newValue) {
 
 const SortFieldContainer = () => {
   const { params } = useContext(RootContext)
-  const isBigPicture = params.mainContentMode !== 'card'
+  const isBigPicture = params.mainContentMode !== 'card-mode'
   const value = JSON.stringify({ field: params.sortField, direction: params.sortDirection })
 
   return <SortFieldSelector isBigPicture={isBigPicture} value={value} onChange={onChange} options={options} />

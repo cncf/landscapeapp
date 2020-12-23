@@ -11,7 +11,7 @@ const onChange = function(newValue) {
 const LandscapeSelectorContainer = () => {
   const { params } = useContext(RootContext)
   const { mainContentMode, filters } = params
-  const isBigPicture = mainContentMode !== 'card'
+  const isBigPicture = mainContentMode !== 'card-mode'
   const value = filters.landscape
   const _options = options('landscape')
   return <LandscapeSelector onChange={onChange} isBigPicture={isBigPicture} value={value} options={_options} />
