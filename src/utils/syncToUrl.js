@@ -46,6 +46,7 @@ export function parseUrl(url) {
   // TODO: put back
   // const prefix = window.prefix;
   const prefix = ''
+  // TODO: parse old URL formats. Check Presets container
   const args = qs.parse(url.replace(prefix, ''));
   const newParameters = {
     filters: {
