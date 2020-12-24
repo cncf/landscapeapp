@@ -6,6 +6,9 @@ import getGroupedItems, {getGroupedItemsForBigPicture } from '../utils/itemsCalc
 import selectedItemCalculator from '../utils/selectedItemCalculator';
 import { useContext } from 'react'
 import EntriesContext from '../contexts/EntriesContext'
+import routeToParams from '../utils/routeToParams'
+import paramsToRoute from '../utils/paramsToRoute'
+import { useRouter } from 'next/router'
 
 const getSelectedItem = createSelector(
   [ getGroupedItems,
@@ -24,10 +27,15 @@ const getSelectedItem = createSelector(
 
 const ItemDialogContainer = () => {
   // TODO check selectedItemCalculator to find next/previous item
-  // TODO add closeDialog
   // TODO add changeSelectedItemId
   const { selectedItem } = useContext(EntriesContext)
-  return <ItemDialog itemInfo={selectedItem} />
+  const params = routeToParams()
+  const url = paramsToRoute({ ...params, selectedItem: null })
+  const router = useRouter()
+
+  const closeDialog = _ => router.push(url)
+
+  return <ItemDialog itemInfo={selectedItem} onClose={closeDialog} />
 }
 
 export default ItemDialogContainer

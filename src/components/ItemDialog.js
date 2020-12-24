@@ -4,9 +4,9 @@ import Dialog from '@material-ui/core/Dialog';
 import classNames from 'classnames'
 import _ from 'lodash';
 import ItemDialogContent from './ItemDialogContent';
-import ItemDialogButtonsContainer from './ItemDialogButtonsContainer';
 import fields from '../types/fields';
 import isModalOnly from "../utils/isModalOnly";
+import ItemDialogButtons from './ItemDialogButtons'
 
 let lastItemInfo;
 function getRelationStyle(relation) {
@@ -30,7 +30,7 @@ const ItemDialog = ({onClose, itemInfo}) => {
       <Dialog open={!!itemInfo} onClose={closeDialog} transitionDuration={400}
         classes={{paper:'modal-body'}}
         className={classNames('modal', 'product', {nonoss : recentItemInfo.oss === false})}>
-          { itemInfo && !isModalOnly() && <ItemDialogButtonsContainer/> }
+          { itemInfo && !isModalOnly() && <ItemDialogButtons onClose={onClose} hasSelectedItem={!!itemInfo}/> }
           { (itemInfo || lastItemInfo) && <ItemDialogContent itemInfo={itemInfo || lastItemInfo}/> }
       </Dialog>
   );
