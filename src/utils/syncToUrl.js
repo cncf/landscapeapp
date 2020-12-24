@@ -27,16 +27,21 @@ export function filtersToUrl({filters, grouping, sortField, selectedItemId, zoom
   addSortFieldToParams({sortField: sortField, params: params});
   // addSortDirectionToParams({sortDirection: sortDirection, params: params});
   addSelectedItemIdToParams({selectedItemId: selectedItemId, params: params });
-  addMainContentModeToParams({mainContentMode: mainContentMode, cardMode: cardMode, params: params});
+  // addMainContentModeToParams({mainContentMode: mainContentMode, cardMode: cardMode, params: params});
   addZoomToParams({zoom: zoom, mainContentMode: mainContentMode, params: params});
   addFullscreenToParams({isFullscreen: isFullscreen, params: params});
-  if (_.isEmpty(params)) {
-    return `/${prefix}` + (isEmbed() ? 'embed=yes' : '');
+  if (isEmbed()) {
+    params.embed = 'yes'
   }
-  const filtersPart = qs.stringify(params, {encode: false}) + (isEmbed() ? '&embed=yes':'');
 
-  return `/${mainContentMode}?` + filtersPart;
+  const filtersPart = qs.stringify(params, {encode: false})
+
+  return [
+    `/${mainContentMode === 'landscape' ? '' : mainContentMode}`,
+    filtersPart
+  ].filter(str => str).join('?')
 }
+
 export function parseUrl(url) {
   // TODO: put back
   // const prefix = window.prefix;
