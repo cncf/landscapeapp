@@ -7,9 +7,10 @@ const Ad = () => {
 
   const entries = settings.ads;
   const normalizeUrl = function(url) {
-    if (url.indexOf('/') === 0) {
-      return url.substring(1);
-    }
+    // TODO: fix this
+    // if (url.indexOf('/') === 0) {
+    //   return url.substring(1);
+    // }
     return url;
   }
 

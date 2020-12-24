@@ -8,9 +8,9 @@ const Header = ({ reset }) => {
   return (
     <div className="header_container">
       <div className="header">
-        <span className="landscape-logo"><img onClick={reset} src="./images/left-logo.svg" alt={name}/></span>
+        <span className="landscape-logo"><img onClick={reset} src="/images/left-logo.svg" alt={name}/></span>
         <OutboundLink eventLabel={short_name} to={company_url} className="landscapeapp-logo" title={`${short_name} Home`}>
-          <img src="./images/right-logo.svg" title={`${short_name} Logo`}/>
+          <img src="/images/right-logo.svg" title={`${short_name} Logo`}/>
         </OutboundLink>
 
       </div>

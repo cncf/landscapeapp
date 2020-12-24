@@ -25,7 +25,7 @@ const LargeItem = (({ item, onSelectItem }) => {
     height: largeItemHeight }}
               onClick={ () => onSelectItem(item.id)}
   >
-    <img loading="lazy" src={item.href} style={{
+    <img loading="lazy" src={`/${item.href}`} style={{
       width: `calc(100% - ${2 * padding}px)`,
       height: `calc(100% - ${2 * padding + textHeight}px)`,
       padding: 5,
@@ -50,7 +50,7 @@ const SmallItem = (({ item, onSelectItem }) => {
   }}
               data-href={item.id}
               loading="lazy"
-              src={item.href}
+              src={`/${item.href}`}
               onClick={() => onSelectItem(item.id)}
               alt={item.name}
   />
