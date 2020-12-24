@@ -219,7 +219,7 @@ async function main() {
           .map(node => node && _.find(githubEntries, { url: node.repo_url || node.url }))
           .filter(n => n && node.repo_url !== n.url)
           .sort((a, b) => b.stars - a.stars)
-        const repos = [mainRepo, ...additionalRepos]
+        const repos = [mainRepo, ...additionalRepos].filter( (x) => !!x);
 
         if (repos.length > 1 && !githubEntry.cached) {
           node.github_data.contributors_count = aggregateContributors(repos)
@@ -250,6 +250,7 @@ async function main() {
         const repos = [mainRepo, ...(node.additional_repos || []), ...(dateEntry.repos || [])]
                           .filter(_ => _)
                           .map(node => _.find(startDateEntries, {url: node.repo_url || node.url}))
+                          .filter( (x) => !!x)
 
         if (repos.length > 1 && !dateEntry.cached) {
           node.github_start_commit_data = getRepoWithFirstCommit(repos)
