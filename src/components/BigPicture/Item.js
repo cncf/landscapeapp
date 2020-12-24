@@ -8,8 +8,11 @@ import {
   smallItemHeight,
   smallItemWidth
 } from "../../utils/landscapeCalculations";
+import paramsToRoute from '../../utils/paramsToRoute'
+import routeToParams from '../../utils/routeToParams'
+import { useRouter } from 'next/router'
 
-const LargeItem = (({ item, onSelectItem }) => {
+const LargeItem = (({ item, onClick }) => {
   const relationInfo = fields.relation.values.find(({ id }) => id === item.relation);
   const color = relationInfo.big_picture_color;
   const label = relationInfo.big_picture_label;
@@ -23,7 +26,7 @@ const LargeItem = (({ item, onSelectItem }) => {
     visibility: item.isVisible ? 'visible' : 'hidden',
     width: largeItemWidth,
     height: largeItemHeight }}
-              onClick={ () => onSelectItem(item.id)}
+              onClick={onClick}
   >
     <img loading="lazy" src={`/${item.href}`} style={{
       width: `calc(100% - ${2 * padding}px)`,
@@ -37,7 +40,7 @@ const LargeItem = (({ item, onSelectItem }) => {
   </div>;
 })
 
-const SmallItem = (({ item, onSelectItem }) => {
+const SmallItem = (({ item, onClick }) => {
   const isMember = item.category === settings.global.membership;
   return <img style={{
     cursor: 'pointer',
@@ -51,7 +54,7 @@ const SmallItem = (({ item, onSelectItem }) => {
               data-href={item.id}
               loading="lazy"
               src={`/${item.href}`}
-              onClick={() => onSelectItem(item.id)}
+              onClick={onClick}
               alt={item.name}
   />
 
@@ -60,6 +63,12 @@ const SmallItem = (({ item, onSelectItem }) => {
 export default props => {
   const { isLarge, isVisible, category, oss, categoryAttrs } = props.item
   const isMember = category === settings.global.membership;
+
+  const router = useRouter()
+  const params = routeToParams()
+  const url = paramsToRoute({ ...params, selectedItem: props.item })
+  const onClick = _ => router.push(url)
+  const newProps = { ...props, onClick }
 
   const style = {
     display: 'flex',
@@ -71,7 +80,7 @@ export default props => {
 
   return <Fade timeout={1000} in={isVisible}>
     <div className={isMember || oss || categoryAttrs.isLarge ? 'oss' : 'nonoss'} style={style}>
-      {isLarge ? <LargeItem {...props} isMember={isMember} /> : <SmallItem {...props} />}
+      {isLarge ? <LargeItem {...newProps} isMember={isMember} /> : <SmallItem {...newProps} />}
     </div>
   </Fade>
 }
