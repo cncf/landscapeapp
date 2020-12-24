@@ -4,6 +4,8 @@ import ItemDialog from './ItemDialog';
 import { changeSelectedItemId, closeDialog } from '../reducers/mainReducer';
 import getGroupedItems, {getGroupedItemsForBigPicture } from '../utils/itemsCalculator';
 import selectedItemCalculator from '../utils/selectedItemCalculator';
+import { useContext } from 'react'
+import EntriesContext from '../contexts/EntriesContext'
 
 const getSelectedItem = createSelector(
   [ getGroupedItems,
@@ -19,12 +21,13 @@ const getSelectedItem = createSelector(
     };
   }
 )
-const mapStateToProps = (state) => ({
-  ... getSelectedItem(state)
-});
-const mapDispatchToProps = {
-  onClose: closeDialog,
-  onSelectItem: changeSelectedItemId
-};
 
-export default ItemDialog
+const ItemDialogContainer = () => {
+  // TODO check selectedItemCalculator to find next/previous item
+  // TODO add closeDialog
+  // TODO add changeSelectedItemId
+  const { selectedItem } = useContext(EntriesContext)
+  return <ItemDialog itemInfo={selectedItem} />
+}
+
+export default ItemDialogContainer

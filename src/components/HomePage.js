@@ -70,9 +70,9 @@ function enableScroll(){
   document.body.removeEventListener('touchmove', preventDefault);
 }
 
-const HomePage = ({hasSelectedItem, filtersVisible, hideFilters, showFilters, onClose, title, isFullscreen}) => {
+const HomePage = ({filtersVisible, hideFilters, showFilters, onClose, title, isFullscreen}) => {
   const { params } = useContext(RootContext)
-  const { entries } = useContext(EntriesContext)
+  const { entries, selectedItem } = useContext(EntriesContext)
   const { mainContentMode, zoom } = params
   const landscapeSettings = findLandscapeSettings(mainContentMode)
   const groupedItems = getGroupedItemsForBigPicture(params, entries, landscapeSettings)
@@ -86,7 +86,7 @@ const HomePage = ({hasSelectedItem, filtersVisible, hideFilters, showFilters, on
     document.querySelector('body').classList.add('popup');
   }
 
-  if ((isGoogle() || isModalOnly()) && hasSelectedItem) {
+  if ((isGoogle() || isModalOnly()) && selectedItem) {
     return <ItemDialogContainer />;
   }
 

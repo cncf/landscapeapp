@@ -6,6 +6,7 @@ import '../styles/roboto.css'
 import '../styles/theme.css'
 import '../styles/itemModal.css'
 import settings from '../utils/settings'
+import routeToParams from '../utils/routeToParams'
 
 export const initialState = {
   data: null,
@@ -38,9 +39,7 @@ export const initialState = {
 };
 
 export default function App({ Component, pageProps }) {
-  const router = useRouter()
-  const { path } = router.query
-  const mainContentMode = path ? path[0] : 'landscape'
+  const { mainContentMode, selectedItemId } = routeToParams()
 
   return <>
     <Head>
@@ -49,7 +48,7 @@ export default function App({ Component, pageProps }) {
       {/*<link rel="icon" href="/favicon.png"/>*/}
     </Head>
 
-    <RootContext.Provider value={{ params: { ...initialState, mainContentMode } }}>
+    <RootContext.Provider value={{ params: { ...initialState, mainContentMode, selectedItemId } }}>
       <CssBaseline />
       <main>
         <Component {...pageProps} />

@@ -1,10 +1,11 @@
-import { connect } from 'react-redux';
 import createSelector from '../utils/createSelector';
 import ItemDialogButtons from './ItemDialogButtons';
 
 import { changeSelectedItemId, closeDialog } from '../reducers/mainReducer';
 import getGroupedItems, {getGroupedItemsForBigPicture } from '../utils/itemsCalculator';
 import selectedItemCalculator from '../utils/selectedItemCalculator';
+import { useContext } from 'react'
+import EntriesContext from '../contexts/EntriesContext'
 
 const getSelectedItem = createSelector(
   [ getGroupedItems,
@@ -21,12 +22,14 @@ const getSelectedItem = createSelector(
     };
   }
 )
-const mapStateToProps = (state) => ({
-  ... getSelectedItem(state)
-});
-const mapDispatchToProps = {
-  onClose: closeDialog,
-  onSelectItem: changeSelectedItemId
-};
 
-export default connect(mapStateToProps, mapDispatchToProps)(ItemDialogButtons);
+const ItemDialogButtonsConrainer = () => {
+  const { selectedItem } = useContext(EntriesContext)
+  // TODO add closeDialog
+  // TODO add changeSelectedItemId
+  // TODO add navigation to previous/next
+
+  return <ItemDialogButtons hasSelectedItem={!!selectedItem} />
+}
+
+export default ItemDialogButtonsConrainer
