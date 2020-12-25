@@ -18,7 +18,6 @@ import {
 } from './BigPicture';
 import TweetButton from './TweetButton';
 import MainContentContainer from './MainContentContainer';
-import ItemDialogContainer from './ItemDialogContainer';
 import HeaderContainer from './HeaderContainer';
 import SummaryContainer from './SummaryContainer';
 import ExportCsvContainer from './ExportCsvContainer';
@@ -38,6 +37,7 @@ import { getGroupedItemsForBigPicture } from '../utils/itemsCalculator'
 import RootContext from '../contexts/RootContext'
 import EntriesContext from '../contexts/EntriesContext'
 import ResetFilters from './ResetFilters'
+import ItemDialog from './ItemDialog'
 
 const state = {
   lastScrollPosition: 0
@@ -87,7 +87,7 @@ const HomePage = ({filtersVisible, hideFilters, showFilters, onClose, title, isF
   }
 
   if ((isGoogle() || isModalOnly()) && selectedItem) {
-    return <ItemDialogContainer />;
+    return <ItemDialog />;
   }
 
   if (isBrowser()) {
@@ -166,7 +166,7 @@ const HomePage = ({filtersVisible, hideFilters, showFilters, onClose, title, isF
 
   return (
     <div>
-    <ItemDialogContainer/>
+    {selectedItem && <ItemDialog/>}
     <div className={classNames('app',{'filters-opened' : filtersVisible})}>
       <div />
       <div style={{marginTop: (isIphone && hasSelectedItem) ? -state.lastScrollPosition : 0}} className={classNames({"iphone-scroller": isIphone && hasSelectedItem}, 'main-parent')} >

@@ -1,19 +1,21 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { pure } from 'recompose';
 import Dialog from '@material-ui/core/Dialog';
 import classNames from 'classnames'
 import ItemDialogContent from './ItemDialogContent';
 import isModalOnly from "../utils/isModalOnly";
 import ItemDialogButtons from './ItemDialogButtons'
+import EntriesContext from '../contexts/EntriesContext'
 
-const ItemDialog = ({onClose, itemInfo}) => {
-  const closeDialog = isModalOnly() ? _ => _ : onClose
+const ItemDialog = _ => {
+  const { selectedItem, navigate } = useContext(EntriesContext)
+  const closeDialog = isModalOnly() ? _ => _ : navigate
   return (
-      <Dialog open={!!itemInfo} onClose={closeDialog} transitionDuration={400}
+      <Dialog open={!!selectedItem} onClose={closeDialog} transitionDuration={400}
         classes={{paper:'modal-body'}}
-        className={classNames('modal', 'product', {nonoss : itemInfo.oss === false})}>
-          { !isModalOnly() && <ItemDialogButtons onClose={onClose} /> }
-          { <ItemDialogContent itemInfo={itemInfo}/> }
+        className={classNames('modal', 'product', {nonoss : selectedItem.oss === false})}>
+          { !isModalOnly() && <ItemDialogButtons /> }
+          { <ItemDialogContent itemInfo={selectedItem}/> }
       </Dialog>
   );
 }
