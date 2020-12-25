@@ -240,27 +240,6 @@ export function makeZoomReset() {
   }
 }
 
-export function makeFullscreenEnabled() {
-  return function(dispatch, getState) {
-    dispatch(enableFullscreen());
-
-    const state = getState().main;
-    const url = filtersToUrl(state);
-    dispatch(push(url));
-  }
-}
-
-export function makeFullscreenDisabled() {
-  return function(dispatch, getState) {
-    dispatch(disableFullscreen());
-
-    const state = getState().main;
-    const url = filtersToUrl(state);
-    dispatch(push(url));
-  }
-}
-
-
 function markInitialUrlAsHandled() {
   return {
     type: 'Main/MarkInitialUrlAsHandled'
@@ -283,18 +262,6 @@ function zoomReset() {
   return {
     type: 'Main/ZoomReset'
   };
-}
-
-export function enableFullscreen() {
-  return {
-    type: 'Main/EnableFullscreen'
-  }
-}
-
-export function disableFullscreen() {
-  return {
-    type: 'Main/DisableFullscreen'
-  }
 }
 
 export function showFilters() {
@@ -420,13 +387,6 @@ function setMainContentModeHandler(state, action) {
   return {...state, mainContentMode: action.value };
 }
 
-function enableFullscreenHandler(state) {
-  return {...state, isFullscreen: true};
-}
-function disableFullscreenHandler(state) {
-  return {...state, isFullscreen: false};
-}
-
 function reducer(state = initialState, action) {
   switch(action.type) {
     case 'Main/SetData':
@@ -457,10 +417,6 @@ function reducer(state = initialState, action) {
       return zoomOutHandler(state, action);
     case 'Main/ZoomReset':
       return zoomResetHandler(state, action);
-    case 'Main/EnableFullscreen':
-      return enableFullscreenHandler(state, action);
-    case 'Main/DisableFullscreen':
-      return disableFullscreenHandler(state, action);
     case 'Main/MarkInitialUrlAsHandled':
       return markInitialUrlAsHandledHandler(state, action);
 

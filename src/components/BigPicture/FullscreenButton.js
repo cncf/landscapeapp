@@ -4,19 +4,26 @@ import { pure } from 'recompose';
 import FullscreenExitIcon from '@material-ui/icons/FullscreenExit';
 import FullscreenIcon from '@material-ui/icons/Fullscreen';
 
-import React from 'react';
+import React, { useContext } from 'react';
+import RootContext from '../../contexts/RootContext'
+import EntriesContext from '../../contexts/EntriesContext'
 
-const FullscreenButton = function({isVisible, isFullscreen, enableFullscreen, disableFullscreen}) {
-  if (!isVisible) {
+const FullscreenButton = _ => {
+  const { params } = useContext(RootContext)
+  const { navigate } = useContext(EntriesContext)
+  const isBigPicture = params.mainContentMode !== 'card-mode'
+  const { isFullscreen } = params
+
+  if (!isBigPicture) {
     return null;
   }
   return <div className="fullscreen-button">
         { isFullscreen ?
-        <IconButton onClick={disableFullscreen} title="Exit fullscreen">
+        <IconButton onClick={_ => navigate({ isFullscreen: false })} title="Exit fullscreen">
           <FullscreenExitIcon />
         </IconButton>
           :
-        <IconButton onClick={enableFullscreen} title="Enter fullscreen">
+        <IconButton onClick={_ => navigate({ isFullscreen: true })} title="Enter fullscreen">
           <FullscreenIcon />
         </IconButton>
         }

@@ -15,13 +15,16 @@ const decodeSelectedItemId = path => path && path.length >= 2 ? path[path.length
 
 const decodeZoom = ({ zoom }) => zoom ? Math.trunc(+zoom) / 100 : 1
 
+const decodeFullscreen = ({ fullscreen }) => fullscreen === 'yes' || fullscreen === 'true'
+
 const routeToParams = params => {
   const { path, query } = params || getRouterParams()
 
   return {
     mainContentMode: decodeMainContentMode(path),
     selectedItemId: decodeSelectedItemId(path),
-    zoom: decodeZoom(query)
+    zoom: decodeZoom(query),
+    isFullscreen: decodeFullscreen(query)
   }
 }
 

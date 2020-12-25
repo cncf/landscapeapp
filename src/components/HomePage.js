@@ -13,7 +13,6 @@ import AutoSizer from './CustomAutoSizer';
 import OutboundLink from './OutboundLink';
 import {
   SwitchButtonContainer,
-  FullscreenButtonContainer
 } from './BigPicture';
 import TweetButton from './TweetButton';
 import MainContentContainer from './MainContentContainer';
@@ -38,6 +37,7 @@ import ResetFilters from './ResetFilters'
 import ItemDialog from './ItemDialog'
 import ZoomButtons from './BigPicture/ZoomButtons'
 import Summary from './Summary'
+import FullscreenButton from './BigPicture/FullscreenButton'
 
 const state = {
   lastScrollPosition: 0
@@ -70,10 +70,10 @@ function enableScroll(){
   document.body.removeEventListener('touchmove', preventDefault);
 }
 
-const HomePage = ({filtersVisible, hideFilters, showFilters, onClose, title, isFullscreen}) => {
+const HomePage = ({filtersVisible, hideFilters, showFilters, title}) => {
   const { params } = useContext(RootContext)
   const { entries, selectedItem } = useContext(EntriesContext)
-  const { mainContentMode, zoom } = params
+  const { mainContentMode, zoom, isFullscreen } = params
   const landscapeSettings = findLandscapeSettings(mainContentMode)
   const groupedItems = getGroupedItemsForBigPicture(params, entries, landscapeSettings)
   const isBigPicture = mainContentMode !== 'card-mode';
@@ -200,7 +200,7 @@ const HomePage = ({filtersVisible, hideFilters, showFilters, onClose, title, isF
             <SwitchButtonContainer />
             <div className="right-buttons">
               <ZoomButtons/>
-              <FullscreenButtonContainer/>
+              <FullscreenButton/>
               <TweetButton cls="tweet-button-main"/>
             </div>
             { isBigPicture &&

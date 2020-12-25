@@ -1,6 +1,8 @@
 import { stringifyUrl } from 'query-string'
 
-const encodeZoom = ({ zoom }) => !zoom || zoom === 1 ? {} : { zoom: zoom * 100 }
+const encodeZoom = zoom => !zoom || zoom === 1 ? {} : { zoom: zoom * 100 }
+
+const encodeFullscreen = isFullscreen => isFullscreen ? { fullscreen: 'yes' } : null
 
 const paramsToRoute = (params = {}) => {
   const { mainContentMode, selectedItemId, ...rest } = params
@@ -12,7 +14,8 @@ const paramsToRoute = (params = {}) => {
     .join('/')
 
   const query = {
-    ...encodeZoom(rest)
+    ...encodeZoom(rest.zoom),
+    ...encodeFullscreen(rest.isFullscreen)
   }
 
   // TODO: check if we can do shallow routing
