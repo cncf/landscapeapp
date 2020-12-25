@@ -58,7 +58,7 @@ const SmallItem = (({ item, onClick }) => {
 
 })
 
-export default props => {
+const Item = props => {
   const { isLarge, isVisible, category, oss, categoryAttrs } = props.item
   const isMember = category === settings.global.membership;
   const { navigate } = useContext(EntriesContext)
@@ -79,3 +79,5 @@ export default props => {
     </div>
   </Fade>
 }
+
+export default Item
