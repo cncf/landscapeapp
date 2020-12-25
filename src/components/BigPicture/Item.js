@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useContext } from "react";
 import Fade from "@material-ui/core/Fade";
 import settings from '../../utils/settings.js'
 import fields from "../../types/fields";
@@ -8,9 +8,7 @@ import {
   smallItemHeight,
   smallItemWidth
 } from "../../utils/landscapeCalculations";
-import paramsToRoute from '../../utils/paramsToRoute'
-import routeToParams from '../../utils/routeToParams'
-import { useRouter } from 'next/router'
+import EntriesContext from '../../contexts/EntriesContext'
 
 const LargeItem = (({ item, onClick }) => {
   const relationInfo = fields.relation.values.find(({ id }) => id === item.relation);
@@ -63,11 +61,8 @@ const SmallItem = (({ item, onClick }) => {
 export default props => {
   const { isLarge, isVisible, category, oss, categoryAttrs } = props.item
   const isMember = category === settings.global.membership;
-
-  const router = useRouter()
-  const params = routeToParams()
-  const url = paramsToRoute({ ...params, selectedItem: props.item })
-  const onClick = _ => router.push(url)
+  const { navigate } = useContext(EntriesContext)
+  const onClick = _ => navigate({ selectedItemId: props.item.id })
   const newProps = { ...props, onClick }
 
   const style = {

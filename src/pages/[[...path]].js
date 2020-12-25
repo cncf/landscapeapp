@@ -11,6 +11,8 @@ import Head from 'next/head'
 import { landscapeSettingsList } from '../utils/landscapeSettings'
 import { initialState } from './_app'
 import routeToParams from '../utils/routeToParams'
+import paramsToRoute from '../utils/paramsToRoute'
+import { useRouter } from 'next/router'
 
 const defaultTitle =  settings.global.meta.title;
 
@@ -42,7 +44,15 @@ const mapDispatchToProps = {
 };
 
 const HomePage = ({ entries, selectedItem }) => {
-  return <EntriesContext.Provider value={{entries, selectedItem}}>
+  const params = routeToParams()
+  const router = useRouter()
+
+  const navigate = ({selectedItemId} = {}) => {
+    const url = paramsToRoute({ ...params, selectedItemId })
+    router.push(url)
+  }
+
+  return <EntriesContext.Provider value={{entries, selectedItem, navigate}}>
     <Head>
       <title>{defaultTitle}</title>
     </Head>

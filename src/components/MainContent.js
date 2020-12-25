@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import StarIcon from '@material-ui/icons/Star';
 import millify from 'millify'
 import classNames from 'classnames'
@@ -9,6 +9,8 @@ import isEmbed from '../utils/isEmbed';
 import currentDevice from '../utils/currentDevice'
 import Delay from './DelayRender';
 import fields from '../types/fields';
+import isBrowser from '../utils/isBrowser'
+import EntriesContext from '../contexts/EntriesContext'
 
 let oldItems = null;
 const maxAnimatedElements = 100;
@@ -41,7 +43,7 @@ const DefaultCard = (({item, handler, itemRef, ...props}) => {
             <div className={classNames('mosaic', {nonoss : item.oss === false})} style={getRelationStyle(item.relation)}
               onClick={() => handler(item.id)} >
               <div className="logo_wrapper">
-                <img src={item.href} className='logo' max-height='100%' max-width='100%' alt={item.name} />
+                <img src={`/${item.href}`} className='logo' max-height='100%' max-width='100%' alt={item.name} />
               </div>
               <div className="mosaic-info">
                 <div className="mosaic-title">
@@ -69,7 +71,7 @@ const FlatCard = function({item, handler, itemRef, ...props}) {
   return (
             <div ref={itemRef} className="mosaic-wrap" key={item.id} {...props}>
               <div className="mosaic" onClick={() => handler(item.id)} >
-                <img src={item.href} className='logo' alt={item.name} />
+                <img src={`/${item.href}`} className='logo' alt={item.name} />
                 <div className="separator"/>
                 <h5>{item.flatName}</h5>
               </div>
@@ -81,7 +83,7 @@ const BorderlessCard = function({item, handler, itemRef, ...props}) {
   return (
             <div ref={itemRef} className="mosaic-wrap" key={item.id} {...props}>
               <div className="mosaic" onClick={() => handler(item.id)} >
-                <img src={item.href} className='logo' alt={item.name} />
+                <img src={`/${item.href}`} className='logo' alt={item.name} />
               </div>
             </div>
   );
@@ -110,9 +112,14 @@ const Header = (({groupedItem, itemRef, ...props}) => {
 
 
 const MainContent = ({groupedItems, cardMode, onSelectItem, onOpenItemInNewTab}) => {
-  const handler = function(itemId) {
-    const isSpecialMode = ( currentDevice.mobile() || window.innerWidth < 768 ) && isEmbed();
-    isSpecialMode ? onOpenItemInNewTab(itemId) : onSelectItem(itemId);
+  const handler = itemId => {
+    const { navigate } = useContext(EntriesContext)
+    // TODO: this is preventing from opening the modal
+    // TODO: add isSpecialMode
+    // const isSpecialMode = (isBrowser() && (currentDevice.mobile() || window.innerWidth < 768)) && isEmbed();
+    // isSpecialMode ? onOpenItemInNewTab(itemId) : onSelectItem(itemId);
+
+    navigate({ selectedItem: itemId })
   };
 
   const newItemsAndHeaderIds = _.flatten(_.map(groupedItems, function(x) {
