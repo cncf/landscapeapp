@@ -9,12 +9,12 @@ import EntriesContext from '../contexts/EntriesContext'
 
 const ItemDialog = _ => {
   const { selectedItem, navigate } = useContext(EntriesContext)
-  const closeDialog = isModalOnly() ? _ => _ : navigate
+  const closeDialog = _ => isModalOnly() ? _ : navigate({ selectedItemId: null })
   return (
       <Dialog open={!!selectedItem} onClose={closeDialog} transitionDuration={400}
         classes={{paper:'modal-body'}}
         className={classNames('modal', 'product', {nonoss : selectedItem.oss === false})}>
-          { !isModalOnly() && <ItemDialogButtons /> }
+          { !isModalOnly() && <ItemDialogButtons closeDialog={closeDialog} /> }
           { <ItemDialogContent itemInfo={selectedItem}/> }
       </Dialog>
   );

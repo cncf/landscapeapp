@@ -6,14 +6,14 @@ import KeyHandler from 'react-key-handler';
 import EntriesContext from '../contexts/EntriesContext'
 
 
-const ItemDialogButtons = _ => {
+const ItemDialogButtons = ({ closeDialog }) => {
   const { navigate, nextItemId, previousItemId } = useContext(EntriesContext)
   const onSelectItem = selectedItemId => navigate({ selectedItemId })
   return (
     <div className='modal-buttons'>
           { nextItemId && <KeyHandler keyValue="ArrowRight" onKeyHandle={() => onSelectItem(nextItemId)} /> }
           { previousItemId && <KeyHandler keyValue="ArrowLeft" onKeyHandle={() => onSelectItem(previousItemId)} /> }
-          <a className="modal-close" onClick={navigate}>×</a>
+          <a className="modal-close" onClick={closeDialog}>×</a>
           <span className="modal-prev" disabled={!previousItemId} onClick={(e) => {e.stopPropagation(); onSelectItem(previousItemId)}}>
             <ChevronLeftIcon style={{ fontSize:'1.2em'}} />
           </span>
