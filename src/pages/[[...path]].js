@@ -54,8 +54,25 @@ export async function getStaticProps({ params }) {
   const { mainContentMode, selectedItemId } = routeToParams(params)
   const selectedItem = selectedItemId ? projects.find(item => item.id === selectedItemId) : null
 
+  const entries = projects.map(project => {
+    const keys = [
+      'name', 'stars', 'organization', 'path', 'landscape', 'category', 'oss', 'href', 'id',
+      'flatName', 'member', 'relation', 'project', 'isSubsidiaryProject', 'amount', 'amountKind'
+    ]
+
+    const entry = keys.reduce((hash, key) => {
+      const value = project[key]
+      return {
+        ...hash,
+        ...(value || value === false ? { [key]: project[key] } : {})
+      }
+    }, {})
+
+    return entry
+  })
+
   return {
-    props: { entries: projects, selectedItem }
+    props: { entries, selectedItem }
   }
 }
 
