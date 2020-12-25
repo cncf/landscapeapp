@@ -1,10 +1,10 @@
 import SwitchButton from './SwitchButton';
 import { changeMainContentMode } from '../../reducers/mainReducer.js';
-import { filtersToUrl } from '../../utils/syncToUrl';
 import settings from '../../utils/settings.js'
 import _ from 'lodash';
 import { useContext } from 'react'
 import RootContext from '../../contexts/RootContext'
+import paramsToRoute from '../../utils/paramsToRoute'
 
 const mainCard = [{shortTitle: 'Card', title: 'Card Mode', mode: 'card-mode', tabIndex: 0}];
 
@@ -21,8 +21,8 @@ const _cards = _.orderBy(mainCard.concat(landscapes), 'tabIndex').map( item => _
 
 const SwitchButtonContainer = () => {
   const { params } = useContext(RootContext)
-  const { mainContentMode, filters, grouping, sortField } = params
-  const cards = _cards.map(card => ({ ...card, url: filtersToUrl({filters, grouping, sortField, mainContentMode: card.mode})}))
+  const { mainContentMode } = params
+  const cards = _cards.map(card => ({ ...card, url: paramsToRoute({ ...params, mainContentMode: card.mode })}))
 
   return <SwitchButton changeMainContentMode={changeMainContentMode} mainContentMode={mainContentMode} cards={cards}/>
 }
