@@ -7,14 +7,19 @@ if (!process.env.PROJECT_PATH) {
   process.env.PROJECT_PATH = path.resolve('../..');
   console.info('Using: ', process.env.PROJECT_PATH);
 }
-const settingsPath = path.resolve(process.env.PROJECT_PATH, 'settings.yml')
+
+const projectPath = process.env.PROJECT_PATH
+const settingsPath = path.resolve(projectPath, 'settings.yml')
 const settings = JSON.stringify(safeLoad(readFileSync(settingsPath)))
 
-const lookupsPath =  path.resolve(process.env.PROJECT_PATH, 'lookup.json')
+const lookupsPath =  path.resolve(projectPath, 'lookup.json')
 const lookups = readFileSync(lookupsPath, 'utf-8')
 
 const lastUpdated = new Date().toISOString().substring(0, 19).replace('T', ' ') + 'Z'
 
+const processedLandscape =  safeLoad(readFileSync(path.resolve(projectPath, 'processed_landscape.yml')));
+const tweets = (processedLandscape.twitter_options || {}).count || 0
+
 module.exports = {
-  env: { settings, lookups, lastUpdated }
+  env: { settings, lookups, lastUpdated, tweets }
 }
