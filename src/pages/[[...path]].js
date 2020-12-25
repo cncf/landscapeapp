@@ -8,11 +8,13 @@ import settings from '../utils/settings'
 import EntriesContext from '../contexts/EntriesContext'
 import { projects } from '../../tools/loadData'
 import Head from 'next/head'
-import { landscapeSettingsList } from '../utils/landscapeSettings'
+import { findLandscapeSettings, landscapeSettingsList } from '../utils/landscapeSettings'
 import { initialState } from './_app'
 import routeToParams from '../utils/routeToParams'
 import paramsToRoute from '../utils/paramsToRoute'
 import { useRouter } from 'next/router'
+import { useContext } from 'react'
+import RootContext from '../contexts/RootContext'
 
 const defaultTitle =  settings.global.meta.title;
 
@@ -44,15 +46,23 @@ const mapDispatchToProps = {
 };
 
 const HomePage = ({ entries, selectedItem }) => {
-  const params = routeToParams()
-  const router = useRouter()
+  const { params } = useContext(RootContext)
+  const landscapeSettings = findLandscapeSettings(params.mainContentMode)
+  const isBigPicture = params.mainContentMode !== 'card-mode'
+  const groupedItems = getGroupedItems(params, entries)
+  const groupedItemsForBigPicture = getGroupedItemsForBigPicture(params, entries, landscapeSettings)
+  const selectedItemId = selectedItem && selectedItem.id
+  const { nextItemId, previousItemId } = selectedItemCalculator(groupedItems, groupedItemsForBigPicture, selectedItemId, isBigPicture)
 
+  // TODO: having currentParams and params is confusing
+  const currentParams = routeToParams()
+  const router = useRouter()
   const navigate = ({selectedItemId} = {}) => {
-    const url = paramsToRoute({ ...params, selectedItemId })
+    const url = paramsToRoute({ ...currentParams, selectedItemId })
     router.push(url)
   }
 
-  return <EntriesContext.Provider value={{entries, selectedItem, navigate}}>
+  return <EntriesContext.Provider value={{entries, selectedItem, navigate, groupedItems, nextItemId, previousItemId }}>
     <Head>
       <title>{defaultTitle}</title>
     </Head>

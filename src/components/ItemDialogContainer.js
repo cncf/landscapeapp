@@ -27,7 +27,7 @@ const ItemDialogContainer = () => {
   // TODO add changeSelectedItemId
   const { selectedItem, navigate } = useContext(EntriesContext)
 
-  return <ItemDialog itemInfo={selectedItem} onClose={navigate} />
+  return selectedItem && <ItemDialog itemInfo={selectedItem} onClose={navigate} />
 }
 
 export default ItemDialogContainer

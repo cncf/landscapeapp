@@ -1,5 +1,5 @@
 import MainContent from './MainContent';
-import { openSelectedItemIdInNewTab, changeSelectedItemId} from '../reducers/mainReducer';
+import { openSelectedItemIdInNewTab} from '../reducers/mainReducer';
 import getGroupedItems from '../utils/itemsCalculator';
 import { useContext } from 'react'
 import RootContext from '../contexts/RootContext'
@@ -11,7 +11,6 @@ const MainContentContainer = () => {
   const { cardMode } = params
   const groupedItems = getGroupedItems(params, entries)
 
-  // TODO: pass changeSelectedItemId
   // TODO: pass openSelectedItemIdInNewTab
 
   return <MainContent cardMode={cardMode} groupedItems={groupedItems} />
