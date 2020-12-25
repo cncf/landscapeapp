@@ -258,8 +258,8 @@ const getGroupedItemsForAdditionalLandscape = createSelector([
   }
 );
 
-export function getItemsForExport(params) {
-  return _.flatten(getGroupedItems(params).map((x) => x.items));
+export function getItemsForExport(params, entries) {
+  return _.flatten(getGroupedItems(params, entries).map((x) => x.items));
 }
 
 export default getGroupedItems;

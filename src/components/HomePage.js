@@ -18,7 +18,6 @@ import {
 import TweetButton from './TweetButton';
 import MainContentContainer from './MainContentContainer';
 import HeaderContainer from './HeaderContainer';
-import SummaryContainer from './SummaryContainer';
 import ExportCsvContainer from './ExportCsvContainer';
 import Footer from './Footer';
 import EmbeddedFooter from './EmbeddedFooter';
@@ -38,6 +37,7 @@ import EntriesContext from '../contexts/EntriesContext'
 import ResetFilters from './ResetFilters'
 import ItemDialog from './ItemDialog'
 import ZoomButtons from './BigPicture/ZoomButtons'
+import Summary from './Summary'
 
 const state = {
   lastScrollPosition: 0
@@ -194,7 +194,7 @@ const HomePage = ({filtersVisible, hideFilters, showFilters, onClose, title, isF
             Please <OutboundLink to={`https://github.com/${settings.global.repo}`}>open</OutboundLink> a pull request to
             correct any issues. Greyed logos are not open source. Last Updated: {process.env.lastUpdated}
           </div> }
-          { !isEmbed() && <SummaryContainer /> }
+          { !isEmbed() && <Summary /> }
 
           <div className="cards-section">
             <SwitchButtonContainer />
