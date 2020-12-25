@@ -57,8 +57,8 @@ const HomePage = ({ entries, selectedItem }) => {
   // TODO: having currentParams and params is confusing
   const currentParams = routeToParams()
   const router = useRouter()
-  const navigate = ({selectedItemId} = {}) => {
-    const url = paramsToRoute({ ...currentParams, selectedItemId })
+  const navigate = (newParams = {}) => {
+    const url = paramsToRoute({ ...currentParams, ...newParams })
     router.push(url)
   }
 
@@ -71,7 +71,7 @@ const HomePage = ({ entries, selectedItem }) => {
 }
 
 export async function getStaticProps({ params }) {
-  const { mainContentMode, selectedItemId } = routeToParams(params)
+  const { mainContentMode, selectedItemId } = routeToParams({ ...params, query: {} })
   const selectedItem = selectedItemId ? projects.find(item => item.id === selectedItemId) : null
 
   const entries = projects.map(project => {

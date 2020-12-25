@@ -420,24 +420,6 @@ function setMainContentModeHandler(state, action) {
   return {...state, mainContentMode: action.value };
 }
 
-function zoomInHandler(state) {
-  const zoom = state.zoom || 1.0;
-  const index = zoomLevels.indexOf(zoom);
-  const newZoom = zoomLevels[index + 1] || zoomLevels.slice(-1)[0];
-  return {...state, zoom: newZoom };
-}
-
-function zoomOutHandler(state ) {
-  const zoom = state.zoom || 1.0;
-  const index = zoomLevels.indexOf(zoom);
-  const newZoom = zoomLevels[index - 1] || zoomLevels[0];
-  return {...state, zoom: newZoom };
-}
-
-function zoomResetHandler(state) {
-  return {...state, zoom: 1.0 };
-}
-
 function enableFullscreenHandler(state) {
   return {...state, isFullscreen: true};
 }

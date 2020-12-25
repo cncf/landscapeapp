@@ -39,7 +39,7 @@ export const initialState = {
 };
 
 export default function App({ Component, pageProps }) {
-  const { mainContentMode, selectedItemId } = routeToParams()
+  const params = routeToParams()
 
   return <>
     <Head>
@@ -48,7 +48,7 @@ export default function App({ Component, pageProps }) {
       {/*<link rel="icon" href="/favicon.png"/>*/}
     </Head>
 
-    <RootContext.Provider value={{ params: { ...initialState, mainContentMode, selectedItemId } }}>
+    <RootContext.Provider value={{ params: { ...initialState, ...params } }}>
       <CssBaseline />
       <main>
         <Component {...pageProps} />

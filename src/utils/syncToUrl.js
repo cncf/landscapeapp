@@ -28,7 +28,6 @@ export function filtersToUrl({filters, grouping, sortField, selectedItemId, zoom
   // addSortDirectionToParams({sortDirection: sortDirection, params: params});
   addSelectedItemIdToParams({selectedItemId: selectedItemId, params: params });
   // addMainContentModeToParams({mainContentMode: mainContentMode, cardMode: cardMode, params: params});
-  addZoomToParams({zoom: zoom, mainContentMode: mainContentMode, params: params});
   addFullscreenToParams({isFullscreen: isFullscreen, params: params});
   if (isEmbed()) {
     params.embed = 'yes'
@@ -72,7 +71,6 @@ export function parseUrl(url) {
   }
   setSelectedItemIdFromParams({newParameters, params: args });
   setMainContentModeFromParams({newParameters, params: args });
-  setZoomFromParams({newParameters, params: args });
   setFullscreenFromParams({newParameters, params: args});
   return newParameters;
 }
@@ -128,12 +126,6 @@ function addMainContentModeToParams({mainContentMode, cardMode, params}) {
     } else {
       params['format'] = cardMode + '-mode';
     }
-  }
-}
-
-function addZoomToParams({zoom, mainContentMode, params}) {
-  if (zoom && zoom !== initialState.zoom && mainContentMode !== 'card-mode') {
-    params['zoom'] = zoom * 100;
   }
 }
 
@@ -218,14 +210,6 @@ function setMainContentModeFromParams({ newParameters, params}) {
   } else if (format.split('-mode')[0]) {
     newParameters.mainContentMode = 'card';
     newParameters.cardMode = format.split('-mode')[0];
-  }
-}
-
-function setZoomFromParams({ newParameters, params}) {
-  const zoom = params.zoom;
-  if (zoom) {
-    const zoomAsValue = Math.trunc(+params.zoom) / 100;
-    newParameters.zoom = zoomAsValue;
   }
 }
 

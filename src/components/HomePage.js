@@ -13,7 +13,6 @@ import AutoSizer from './CustomAutoSizer';
 import OutboundLink from './OutboundLink';
 import {
   SwitchButtonContainer,
-  ZoomButtonsContainer,
   FullscreenButtonContainer
 } from './BigPicture';
 import TweetButton from './TweetButton';
@@ -38,6 +37,7 @@ import RootContext from '../contexts/RootContext'
 import EntriesContext from '../contexts/EntriesContext'
 import ResetFilters from './ResetFilters'
 import ItemDialog from './ItemDialog'
+import ZoomButtons from './BigPicture/ZoomButtons'
 
 const state = {
   lastScrollPosition: 0
@@ -199,7 +199,7 @@ const HomePage = ({filtersVisible, hideFilters, showFilters, onClose, title, isF
           <div className="cards-section">
             <SwitchButtonContainer />
             <div className="right-buttons">
-              <ZoomButtonsContainer/>
+              <ZoomButtons/>
               <FullscreenButtonContainer/>
               <TweetButton cls="tweet-button-main"/>
             </div>
