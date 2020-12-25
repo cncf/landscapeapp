@@ -22,7 +22,7 @@ const Divider = (({ color }) => {
   return <div style={{ width, marginTop, height, borderLeft: `${width}px solid ${color}` }}/>
 })
 
-const HorizontalCategory = (({ header, subcategories, width, height, top, left, color, href, onSelectItem, fitWidth }) => {
+const HorizontalCategory = (({ header, subcategories, width, height, top, left, color, href, fitWidth }) => {
   const subcategoriesWithCalculations = calculateHorizontalCategory({ height, width, subcategories, fitWidth })
 
   return (
@@ -103,7 +103,7 @@ const HorizontalCategory = (({ header, subcategories, width, height, top, left, 
                 </div>
                 <div style={{...style, ...extraStyle}}>
                   {
-                    allItems.map(item => <Item item={item} onSelectItem={onSelectItem} key={item.name}/>)
+                    allItems.map(item => <Item item={item} key={item.name}/>)
                   }
                 </div>
               </div>

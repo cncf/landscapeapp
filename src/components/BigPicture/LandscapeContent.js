@@ -14,7 +14,7 @@ const extractKeys = (obj, keys) => {
   return _.mapKeys(attributes, (value, key) => _.camelCase(key))
 }
 
-const LandscapeContent = ({groupedItems, onSelectItem, zoom, landscapeSettings, padding = 10 }) => {
+const LandscapeContent = ({groupedItems, zoom, landscapeSettings, padding = 10 }) => {
   const { navigate } = useContext(EntriesContext)
   const switchToLandscape = mainContentMode => navigate({ mainContentMode })
   const elements = landscapeSettings.elements.map(element => {
@@ -38,7 +38,7 @@ const LandscapeContent = ({groupedItems, onSelectItem, zoom, landscapeSettings, 
     })
 
     const Component = element.type === 'HorizontalCategory' ? HorizontalCategory : VerticalCategory
-    return <Component {...category} subcategories={subcategories} {...attributes} onSelectItem={onSelectItem}/>
+    return <Component {...category} subcategories={subcategories} {...attributes} />
   });
 
   const { width, height } = calculateSize(landscapeSettings)
