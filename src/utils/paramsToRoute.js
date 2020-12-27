@@ -21,7 +21,7 @@ const encodeField = (name, value) => {
     return valueInfo.url
   });
 
-  return urlValues.join(',')
+  return urlValues ? urlValues : null
 }
 
 const encodeZoom = zoom => zoom && zoom !== 1 ? zoom * 100 : null
@@ -51,7 +51,9 @@ const paramsToRoute = (params = {}) => {
 
   // TODO: check if we can do shallow routing
   // TODO: see why forward slash is appended on empty route
-  return stringifyUrl({ url: path ? `/${path}` : '', query })
+  // TODO: check if it's possible to not encode comma
+  return stringifyUrl({ url: path ? `/${path}` : '', query },
+    { arrayFormat: 'comma', skipNull: true, skipEmptyString: true })
 }
 
 export default paramsToRoute
