@@ -2,10 +2,17 @@ import { stringifyUrl } from 'query-string'
 import fields from '../types/fields'
 import { isArray } from 'lodash'
 
+const compact = obj => {
+  return Object.keys(obj).reduce((result, key) => {
+    const value = obj[key]
+    return { ...result, ...(value ? { [key]: value } : {})}
+  }, {})
+}
+
 const encodeField = (name, value) => {
   const field = fields[name]
   if (!value || value.length === 0) {
-    return {};
+    return null;
   }
 
   const processedValues = field.processValuesBeforeSaving(isArray ? value : [value])
@@ -14,12 +21,12 @@ const encodeField = (name, value) => {
     return valueInfo.url
   });
 
-  return urlValues.length > 0 ? { [field.url]: urlValues.join(',') } : null
+  return urlValues.join(',')
 }
 
-const encodeZoom = zoom => !zoom || zoom === 1 ? {} : { zoom: zoom * 100 }
+const encodeZoom = zoom => zoom && zoom !== 1 ? zoom * 100 : null
 
-const encodeFullscreen = isFullscreen => isFullscreen ? { fullscreen: 'yes' } : null
+const encodeFullscreen = isFullscreen => isFullscreen ? 'yes' : null
 
 const paramsToRoute = (params = {}) => {
   const { mainContentMode, selectedItemId, ...rest } = params
@@ -32,15 +39,15 @@ const paramsToRoute = (params = {}) => {
 
   const filterParams = rest.filters || {}
 
-  const filters = {
-    ...encodeField('organization', filterParams.organization)
-  }
+  const filters = compact({
+    organization: encodeField('organization', filterParams.organization)
+  })
 
-  const query = {
-    ...encodeZoom(rest.zoom),
-    ...encodeFullscreen(rest.isFullscreen),
+  const query = compact({
+    zoom: encodeZoom(rest.zoom),
+    fullscreen: encodeFullscreen(rest.isFullscreen),
     ...filters
-  }
+  })
 
   // TODO: check if we can do shallow routing
   // TODO: see why forward slash is appended on empty route
