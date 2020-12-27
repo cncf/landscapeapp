@@ -48,6 +48,7 @@ export default function App({ Component, pageProps }) {
       {/*<link rel="icon" href="/favicon.png"/>*/}
     </Head>
 
+    // TODO: not sure why we need initial state
     <RootContext.Provider value={{ params: { ...initialState, ...params } }}>
       <CssBaseline />
       <main>
