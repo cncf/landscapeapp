@@ -67,7 +67,7 @@ export async function getStaticProps({ params }) {
     const keys = [
       'name', 'stars', 'organization', 'path', 'landscape', 'category', 'oss', 'href', 'id',
       'flatName', 'member', 'relation', 'project', 'isSubsidiaryProject', 'amount', 'amountKind',
-      'headquarters'
+      'headquarters', 'license'
     ]
 
     const entry = keys.reduce((hash, key) => {
