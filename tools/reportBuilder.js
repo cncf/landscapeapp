@@ -11,7 +11,7 @@ const run = function(x) {
   return (require('child_process').execSync(x).toString());
 }
 export default function generateReport({logs, name, messages, status, startTime, endTime}) {
-  const startTimeFormatted = new Date(startTime).toISOString().substring(0, 21);
+  const startTimeFormatted = new Date(startTime).toISOString().substring(0, 16);
   require('fs').writeFileSync('/tmp/logfile.txt', logs);
   const formattedLogs = run('cat /tmp/logfile.txt | aha --no-header');
 

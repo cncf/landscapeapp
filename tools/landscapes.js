@@ -1,6 +1,5 @@
 import { report } from './reportToSlack';
 import generateReport from './reportBuilder';
-import { getMessages } from './reporter';
 
 const landscapesInfo = require('js-yaml').safeLoad(require('fs').readFileSync('landscapes.yml'));
 
@@ -103,15 +102,16 @@ async function main() {
       }
     })();
 
+    const messages = JSON.parse(require('fs').readFileSync('/tmp/landscape.json', 'utf-8'));
     const htmlReport = generateReport({
       logs: logs.join(''),
-      messages: getMessages(),
+      messages: messages,
       name: settings.global.short_name || landscape.name,
       status: returnCode === 0,
       endTime: new Date().getTime(),
       startTime: startTime
     });
-    const reportTime = new Date(startTime).toISOString().substring(0, 20).replace(':','_');
+    const reportTime = new Date(startTime).toISOString().substring(0, 16).replace(':','_').replace(':','_');
 
     const fileName = `${landscape.name}-${reportTime}.html`;
     const fullPath = `/var/www/html/${fileName}`;
@@ -122,7 +122,7 @@ async function main() {
 
     console.info({slackChannel: maskSecrets(slackChannel || '')});
 
-    const hookArgs = { returnCode, reportUrl, messages: getMessages(), icon_url, name }
+    const hookArgs = { returnCode, reportUrl, messages: messages, icon_url, name }
 
     if (slackChannel) {
       await report({ ...hookArgs, slackChannel });
