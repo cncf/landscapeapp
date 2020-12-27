@@ -5,16 +5,14 @@ import Promise from 'bluebird'
 import traverse from 'traverse'
 import { landscape, saveLandscape } from './landscape'
 import { updateProcessedLandscape } from './processedLandscape'
+import errorsReporter from './reporter';
 
-const fatal = _ => colors.red(_)
-const warning = _ => colors.yellow(_)
-const redirect = _ => colors.magenta(_)
+const { addError } = errorsReporter('link');
 
-try {
-  unlinkSync('/tmp/links.json');
-} catch(ex) {
+const errorColor = _ => colors.red(_)
+const warningColor = _ => colors.yellow(_)
+const redirectColor = _ => colors.magenta(_)
 
-}
 
 const getUrls = () => {
   return traverse(landscape).reduce((acc, node) => {
@@ -88,7 +86,7 @@ const fixRedirects = (source, redirects) => {
   })
 }
 
-// To minimize getting rate limitted by Github we want to 
+// To minimize getting rate limitted by Github we want to
 // limit how many requests we perform every minute.
 const addDelays = urls => {
   // 80 reqs/min for Github URL
@@ -98,41 +96,31 @@ const addDelays = urls => {
   // 20 reqs/s for rest of URLs
   const nonGithubUrls = urls.filter(u => u.indexOf('github.com') === -1)
     .map((url, idx) => ({ url, delay: Math.floor(idx / 20) * 1000 }))
-  
+
   return [...githubUrls, ...nonGithubUrls]
 }
 
 const main = async () => {
   const urls = addDelays([...getUrls()])
-  const errors = []
   const redirects = {}
-  const warnings = []
   await Promise.map(urls, async ({ url, delay }) => {
     await new Promise(resolve => setTimeout(resolve, delay))
     const { status, success, effectiveUrl } = await checkUrl(url);
     if (success && normalizeUrl(url) !== normalizeUrl(effectiveUrl)) {
       redirects[url] = normalizeUrl(effectiveUrl, true)
-      process.stdout.write(redirect('R')) 
+      process.stdout.write(redirectColor('R'))
     } else if (success) {
-      process.stdout.write('.') 
+      process.stdout.write('.')
     } else if (status === '403') {
-      warnings.push(url)
-      process.stdout.write(warning('W'))
+      addError(`can not verify URL ${url}`);
+      process.stdout.write(warningColor('W'))
     } else {
-      errors.push(url)
-      process.stdout.write(fatal('F'))
+      addError(`invalid URL ${url}`);
+      process.stdout.write(errorColor('E'))
     }
   })
-  console.info('');
-  const messages = [
-    ...errors.map(url => `ERROR: invalid URL ${url}`),
-    ...warnings.map(url => `WARNING: could not verify ${url}`),
-  ].join("\n")
-  const result = { numberOfErrors: errors.length, messages }
-  console.log(messages)
   saveLandscape(fixRedirects(landscape, redirects))
   updateProcessedLandscape(processedLandscape => fixRedirects(processedLandscape, redirects))
-  writeFileSync('/tmp/links.json', JSON.stringify(result, null, 4));
 }
 
 main();

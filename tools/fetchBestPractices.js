@@ -1,17 +1,18 @@
-import { setFatalError } from './fatalErrors';
 import colors from 'colors';
 import rp from 'request-promise';
 import retry from './retry';
 import rpRetry from './rpRetry';
 import Promise from 'bluebird';
 import _ from 'lodash';
-import { addWarning } from './reporter';
+import errorsReporter from './reporter';
 import { settings, projectPath } from './settings';
 import path from 'path';
 import makeReporter from './progressReporter';
-const debug = require('debug')('bestPractices');
 
-const error = colors.red;
+const { addError } = errorsReporter('bestpractices');
+const debug = require('debug')('bestpractices');
+
+const errorColor = colors.red;
 const cacheMiss = colors.green;
 
 
@@ -42,7 +43,6 @@ async function fetchEntriesNoRetry() {
       json: true,
       url: `https://bestpractices.coreinfrastructure.org/en/projects.json?page=${number}`
     });
-    console.info('Fetching page #', number);
     return result.map(x => ({
       id: x.id,
       repo_url: x.repo_url,
@@ -102,15 +102,14 @@ export async function fetchBestPracticeEntriesWithFullScan({cache, preferCache})
       });
     } catch (ex) {
       debug(`Full scan: Fetch failed for ${item.repo_url}, attempt to use a cached entry`);
-      addWarning('bestPractices');
-      reporter.write(error("E"));
-      errors.push(error(`Cannot fetch: ${item.repo_url} `, ex.message.substring(0, 200)));
+      reporter.write(errorColor("E"));
+      errors.push(errorColor(`Cannot fetch: ${item.repo_url} `, ex.message.substring(0, 200)));
       return cachedEntry || null;
     }
   });
   reporter.summary();
-  _.each(errors, function(error) {
-    console.info('error: ', error);
+  _.each(errors, function(e) {
+    addError(e);
   });
   return result;
 }
@@ -125,7 +124,6 @@ export async function fetchBestPracticeEntriesWithIndividualUrls({cache, preferC
     }
     const cachedEntry = _.find(cache, {repo_url: item.repo_url});
     if (cachedEntry && preferCache) {
-      debug(`Individual scan: Cache found for ${item.repo_url}`);
       reporter.write('.');
       return cachedEntry;
     }
@@ -141,7 +139,7 @@ export async function fetchBestPracticeEntriesWithIndividualUrls({cache, preferC
     } catch (ex) {
       debug(`Individual scan: Fetch failed for ${item.repo_url}, attempt to use a cached entry`);
       reporter.write(error("E"));
-      errors.push(error(`Cannot fetch: ${item.repo_url} `, ex.message.substring(0, 200)));
+      error(`Cannot fetch: ${item.repo_url} `, ex.message.substring(0, 200));
       return cachedEntry || null;
     }
   });

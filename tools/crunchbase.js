@@ -1,9 +1,8 @@
-import { setFatalError } from './fatalErrors';
 import colors from 'colors';
 import Promise from 'bluebird'
 import _ from 'lodash';
 import ensureHttps from './ensureHttps';
-import { addError, addWarning } from './reporter';
+import errorsReporter  from './reporter';
 import { projectPath } from './settings';
 import path from 'path';
 import makeReporter from './progressReporter';
@@ -12,6 +11,8 @@ const fatal = (x) => colors.red(colors.inverse(x));
 const cacheMiss = colors.green;
 const debug = require('debug')('cb');
 import { CrunchbaseClient, YahooFinanceClient } from './apiClients';
+
+const { addError, addFatal } = errorsReporter('crunchbase');
 
 const EXCHANGE_SUFFIXES = {
   'ams': 'AS', // Amsterdam
@@ -217,6 +218,7 @@ export async function fetchCrunchbaseEntries({cache, preferCache}) {
   // console.info(_.find(organizations, {name: 'foreman'}));
   const reporter = makeReporter();
   const errors = [];
+  const fatalErrors = [];
   const organizations = await getCrunchbaseOrganizationsList();
   const result = await Promise.map(organizations,async function(c) {
     const cachedEntry = _.find(cache, {url: c.crunchbase});
@@ -232,10 +234,7 @@ export async function fetchCrunchbaseEntries({cache, preferCache}) {
     try {
       const result = await fetchData(c.name);
       if (result === 'no address') {
-        addError('crunchbase');
-        debug(`no headquarter addresses for ${c.name} at ${c.crunchbase}`);
-        setFatalError(`no headquarter addresses for ${c.name} at ${c.crunchbase}`);
-        errors.push(fatal(`no headquarter addresses for ${c.name} at ${c.crunchbase}`));
+        fatalErrors.push(fatal(`no headquarter addresses for ${c.name} at ${c.crunchbase}`));
         reporter.write(fatal("F"));
         return null;
       }
@@ -245,10 +244,7 @@ export async function fetchCrunchbaseEntries({cache, preferCache}) {
         ...result
       };
       if (_.isEmpty(entry.city)) {
-        addError('crunchbase');
-        debug(`empty city on ${c.name}`);
-        setFatalError(`No city for a crunchbase entry for ${c.name} at ${c.crunchbase} `);
-        errors.push(fatal(`No city for a crunchbase entry for ${c.name} at ${c.crunchbase} `));
+        fatalErrors.push(fatal(`No city for a crunchbase entry for ${c.name} at ${c.crunchbase} `));
         reporter.write(fatal("F"));
         return null;
       }
@@ -268,17 +264,12 @@ export async function fetchCrunchbaseEntries({cache, preferCache}) {
       // console.info(entry);
     } catch (ex) {
       if (cachedEntry) {
-        addWarning('crunchbase');
-        debug(`normal request failed, so returning a cached entry for ${c.name} ${ex.message.substring(0, 200)}`);
         errors.push(error(`Using cached entry, because can not fetch: ${c.name} ` +  ex.message.substring(0, 200)));
         reporter.write(error("E"));
         return cachedEntry;
       } else {
         // console.info(c.name);
-        addError('crunchbase');
-        debug(`normal request failed, and no cached entry for ${c.name}`);
-        setFatalError(`No cached entry, and can not fetch: ${c.name}. ` + ex.message.substring(0, 200));
-        errors.push(fatal(`No cached entry, and can not fetch: ${c.name}. ` +  ex.message.substring(0, 200)));
+        fatalErrors.push(fatal(`No cached entry, and can not fetch: ${c.name}. ` +  ex.message.substring(0, 200)));
         reporter.write(fatal("F"));
         return null;
       }
@@ -286,6 +277,7 @@ export async function fetchCrunchbaseEntries({cache, preferCache}) {
   }, {concurrency: 5})
 
   reporter.summary();
-  _.each(errors, (x) => console.info(x));
+  _.each(errors, (x) => addError(x));
+  _.each(fatalErrors, (x) => addFatal(x));
   return result;
 }

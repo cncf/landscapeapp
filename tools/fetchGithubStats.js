@@ -1,9 +1,8 @@
-import { setFatalError } from './fatalErrors';
 import colors from 'colors';
 const Promise = require('bluebird');
 import _ from 'lodash';
 import { parse } from 'querystring'
-import { addError, addWarning } from './reporter';
+import errorsReporter from './reporter';
 import makeReporter from './progressReporter';
 const debug = require('debug')('github');
 import shortRepoName from '../src/utils/shortRepoName';
@@ -11,6 +10,7 @@ import getRepositoryInfo , { getLanguages, getWeeklyContributions}  from './getR
 import { cacheKey, fetchGithubOrgs, getRepos } from './repos'
 import { GithubClient} from './apiClients'
 
+const { addError, addFatal } = errorsReporter('github');
 import { getRepoLatestDate, getReleaseDate } from './githubDates';
 
 const githubColors = JSON.parse(require('fs').readFileSync('tools/githubColors.json', 'utf-8'));
@@ -53,6 +53,7 @@ export async function fetchGithubEntries({cache, preferCache}) {
   const repos = [...getRepos(), ...githubOrgs.filter(org => !org.cached).map(org => org.repos).flat()]
   debug(cache);
   const errors = [];
+  const fatalErrors = [];
   const reporter = makeReporter();
   const result = await Promise.map(repos, async function(repo) {
     const cachedEntry = cache[cacheKey(repo.url, repo.branch)]
@@ -123,20 +124,18 @@ export async function fetchGithubEntries({cache, preferCache}) {
     } catch (ex) {
       debug(`Fetch failed for ${repo.url}, attempt to use a cached entry`);
       if (cachedEntry) {
-        addWarning('github');
         reporter.write(error('E'));
         errors.push(error(`Using cached entry, and ${repo.url} has issues with stats fetching: ${ex.message.substring(0, 100)}`));
         return cachedEntry;
       } else {
-        addError('github');
         reporter.write(fatal('F'));
-        errors.push(fatal(`No cached entry, and ${repo.url} has issues with stats fetching: ${ex.message.substring(0, 100)}`));
-        setFatalError(`No cached entry, and ${repo.url} has issues with stats fetching: ${ex.message.substring(0, 100)}`);
+        fatalErrors.push(fatal(`No cached entry, and ${repo.url} has issues with stats fetching: ${ex.message.substring(0, 100)}`));
         return null;
       }
     }
   }, {concurrency: 10});
   reporter.summary();
-  _.each(errors, (x) => console.info(x));
+  _.each(errors, (x) => addError(x));
+  _.each(fatalErrors, (x) => addFatal(x));
   return [...result, ...githubOrgs]
 }

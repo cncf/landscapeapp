@@ -1,15 +1,14 @@
-import { setFatalError } from './fatalErrors';
 import colors from 'colors';
 import Promise from 'bluebird';
 import _ from 'lodash';
 import path from 'path';
 import { projectPath } from './settings';
-import { addError, addWarning } from './reporter';
 import actualTwitter from './actualTwitter';
+import errorsReporter from './reporter';
 const debug = require('debug')('twitter');
 import makeReporter from './progressReporter';
 import { TwitterClient} from './apiClients';
-
+const { addError, addFatal } = errorsReporter('twitter');
 const error = colors.red;
 const fatal = (x) => colors.red(colors.inverse(x));
 const cacheMiss = colors.green;
@@ -79,6 +78,7 @@ async function readDate(url) {
 export async function fetchTwitterEntries({cache, preferCache, crunchbaseEntries}) {
   const items = (await getLandscapeItems(crunchbaseEntries));
   const errors = [];
+  const fatalErrors = [];
   const reporter = makeReporter();
   const result = await Promise.map(items, async function(item) {
     const cachedEntry = _.find(cache, {url: item.twitter});
@@ -98,9 +98,8 @@ export async function fetchTwitterEntries({cache, preferCache, crunchbaseEntries
           url: url
         };
       } else {
-        setFatalError(`Empty twitter for ${item.name}: ${url}`);
         reporter.write(fatal("F"));
-        errors.push(fatal(`Empty twitter for ${item.name}: ${url}`));
+        fatalErrors.push(fatal(`Empty twitter for ${item.name}: ${url}`));
         return {
           latest_tweet_date: date,
           url: url
@@ -109,20 +108,18 @@ export async function fetchTwitterEntries({cache, preferCache, crunchbaseEntries
     } catch(ex) {
       debug(`Cannot fetch twitter at ${url} ${ex.message}`);
       if (cachedEntry) {
-        addWarning('twitter');
         reporter.write(error("E"));
         errors.push(error(`Using cached entry, because ${item.name} has issues with twitter: ${url}, ${(ex.message || ex).substring(0, 100)}`));
         return cachedEntry;
       } else {
-        addError('twitter');
-        setFatalError(`No cached entry, and ${item.name} has issues with twitter: ${url}, ${(ex.message || ex).substring(0, 100)}`);
         reporter.write(fatal("F"));
-        errors.push(fatal(`No cached entry, and ${item.name} has issues with twitter: ${url}, ${(ex.message || ex).substring(0, 100)}`));
+        fatalErrors.push(fatal(`No cached entry, and ${item.name} has issues with twitter: ${url}, ${(ex.message || ex).substring(0, 100)}`));
         return null;
       }
     }
   }, {concurrency: 5});
   reporter.summary();
-  _.each(errors, (x) => console.info(x));
+  _.each(fatalErrors, (x) => addFatal(x));
+  _.each(errors, (x) => addError(x));
   return result;
 }

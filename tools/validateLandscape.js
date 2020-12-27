@@ -158,7 +158,6 @@ async function main() {
 
   errors.forEach(function(error) {
     setFatalError(error);
-    console.info('FATAL: ', error);
   });
   if (errors.length > 0) {
     await reportFatalErrors();
@@ -169,7 +168,6 @@ async function main() {
   }
 }
 main().catch(async function(ex) {
-  console.info(ex.message);
   setFatalError(ex.message);
   await reportFatalErrors();
   process.exit(1);
