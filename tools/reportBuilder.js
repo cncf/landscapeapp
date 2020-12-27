@@ -16,7 +16,7 @@ export default function generateReport({logs, name, messages, status, startTime,
   const formattedLogs = run('cat /tmp/logfile.txt | aha --no-header');
 
   const renderMessage = function(message) {
-    return `<div style="${message.type === 'fatal' ? 'red' : ''}"><pre>${message.text}<pre></div>`;
+    return `<div style="color:${message.type === 'fatal' ? 'red' : 'inherit'}"><pre>${message.text}<pre></div>`;
   }
 
   const categories = ['general', 'image', 'github', 'crunchbase', 'yahoo', 'bestpractices', 'link', 'twitter'];

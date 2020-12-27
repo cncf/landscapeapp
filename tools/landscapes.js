@@ -1,4 +1,6 @@
 import { report } from './reportToSlack';
+import generateReport from './reportBuilder';
+import { getMessages } from './reporter';
 
 const landscapesInfo = require('js-yaml').safeLoad(require('fs').readFileSync('landscapes.yml'));
 
