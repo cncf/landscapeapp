@@ -70,6 +70,16 @@ const decodeZoom = ({ zoom }) => zoom ? Math.trunc(+zoom) / 100 : 1
 
 const decodeFullscreen = ({ fullscreen }) => fullscreen === 'yes' || fullscreen === 'true'
 
+const decodeGrouping = grouping => {
+  if (grouping === 'no' || !grouping) {
+    return grouping
+  }
+
+  const field = Object.values(fields).find(({ url }) => url.toLowerCase() === grouping.toLowerCase())
+
+  return field ? field.id : null
+}
+
 const routeToParams = params => {
   const { path, query } = params || getRouterParams()
 
@@ -90,6 +100,7 @@ const routeToParams = params => {
     selectedItemId: decodeSelectedItemId(path),
     zoom: decodeZoom(query),
     isFullscreen: decodeFullscreen(query),
+    grouping: decodeGrouping(query.grouping),
     filters
   }
 }

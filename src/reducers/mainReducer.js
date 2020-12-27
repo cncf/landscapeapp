@@ -75,15 +75,6 @@ export function changeMainContentMode(mode) {
   }
 }
 
-export function changeGrouping(value) {
-  return function(dispatch, getState) {
-    dispatch(setGrouping(value));
-
-    const state = getState().main;
-    const url = filtersToUrl(state);
-    dispatch(push(url));
-  }
-}
 export function changeSortField(value) {
   return function(dispatch, getState) {
     dispatch(setSortField(value));
@@ -295,12 +286,7 @@ function setFilter(name, value) {
     value: value
   };
 }
-function setGrouping(value) {
-  return {
-    type: 'Main/SetGrouping',
-    value: value
-  };
-}
+
 function setSortField(value) {
   return {
     type: 'Main/SetSortField',
@@ -345,9 +331,6 @@ function setDataHandler(state, action) {
 function setFilterHandler(state, action) {
   return { ...state, filters: {...state.filters, [action.name] : action.value } };
 }
-function setGroupingHandler(state, action) {
-  return {...state, grouping: action.value };
-}
 function setSortFieldHandler(state, action) {
   return {...state, sortField: action.value };
 }
@@ -363,7 +346,6 @@ function setParametersHandler(state, action) {
 
   return {...state,
     filters: _.assign({}, initialState.filters, action.value.filters),
-    grouping: action.value.grouping || initialState.grouping,
     sortField: action.value.sortField || initialState.sortField,
     sortDirection: action.value.sortDirection || initialState.sortDirection,
     selectedItemId: action.value.selectedItemId || initialState.selectedItemId,
@@ -393,8 +375,6 @@ function reducer(state = initialState, action) {
       return setDataHandler(state, action);
     case 'Main/SetFilter':
       return setFilterHandler(state, action);
-    case 'Main/SetGrouping':
-      return setGroupingHandler(state, action);
     case 'Main/SetSortField':
       return setSortFieldHandler(state, action);
     case 'Main/SetSortDirection':

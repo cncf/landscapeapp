@@ -26,6 +26,8 @@ const encodeZoom = zoom => zoom && zoom !== 1 ? zoom * 100 : null
 
 const encodeFullscreen = isFullscreen => isFullscreen ? 'yes' : null
 
+const encodeGrouping = grouping => grouping === 'no' ? 'no' : fields[grouping].url
+
 const paramsToRoute = (params = {}) => {
   const { mainContentMode, selectedItemId, ...rest } = params
   const path = [
@@ -50,6 +52,7 @@ const paramsToRoute = (params = {}) => {
   const query = compact({
     zoom: encodeZoom(rest.zoom),
     fullscreen: encodeFullscreen(rest.isFullscreen),
+    grouping: encodeGrouping(rest.grouping),
     ...filters
   })
 
