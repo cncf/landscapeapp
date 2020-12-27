@@ -81,13 +81,7 @@ const decodeZoom = ({ zoom }) => zoom ? Math.trunc(+zoom) / 100 : 1
 
 const decodeFullscreen = ({ fullscreen }) => fullscreen === 'yes' || fullscreen === 'true'
 
-const decodeGrouping = grouping => {
-  if (grouping === 'no') {
-    return grouping
-  }
-
-  return getField(grouping)
-}
+const decodeGrouping = grouping => grouping === 'no' ? grouping : getField(grouping)
 
 const decodeSort = sort => {
   const sortField = getField(sort) || 'name'
