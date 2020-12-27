@@ -102,7 +102,12 @@ async function main() {
       }
     })();
 
-    const messages = JSON.parse(require('fs').readFileSync('/tmp/landscape.json', 'utf-8'));
+    let messages = [];
+    try {
+      messages = JSON.parse(require('fs').readFileSync('/tmp/landscape.json', 'utf-8'));
+    } catch(ex) {
+
+    }
     const htmlReport = generateReport({
       logs: logs.join(''),
       messages: messages,
