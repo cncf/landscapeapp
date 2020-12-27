@@ -20,8 +20,7 @@ export async function report({ returnCode, reportUrl, messages, slackChannel, ic
       Warnings: ${errorsCount}
     `,
     username: `${name} Landscape Update`,
-    icon_url,
-    attachments
+    icon_url
   };
 
   const result = await rp({
