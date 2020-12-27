@@ -115,7 +115,7 @@ async function main() {
 
     const fileName = `${landscape.name}-${reportTime}.html`;
     const fullPath = `/var/www/html/${fileName}`;
-    const latestPath = `var/www/html/${landscape.name}.html`;
+    const latestPath = `/var/www/html/${landscape.name}.html`;
     const reportUrl = `http://${landscapesInfo.ip}/${fileName}`;
     require('fs').writeFileSync(fullPath, htmlReport);
     require('fs').writeFileSync(latestPath, htmlReport);
