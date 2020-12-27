@@ -54,68 +54,6 @@ export function loadMainData() {
   }
 }
 
-export function changeFilter(name, value) {
-  return function(dispatch, getState) {
-    dispatch(setFilter(name, value));
-
-    // effect - set an url
-    const state = getState().main;
-    const url = filtersToUrl(state);
-    dispatch(push(url));
-  }
-}
-
-export function changeMainContentMode(mode) {
-  return function(dispatch, getState) {
-    dispatch(setMainContentMode(mode));
-    // effect - set an url
-    const state = getState().main;
-    const url = filtersToUrl(state);
-    dispatch(push(url));
-  }
-}
-
-export function changeSortField(value) {
-  return function(dispatch, getState) {
-    dispatch(setSortField(value));
-
-    const state = getState().main;
-    const url = filtersToUrl(state);
-    dispatch(push(url));
-  }
-}
-export function changeSortDirection(value) {
-  return function(dispatch, getState) {
-    dispatch(setSortDirection(value));
-
-    const state = getState().main;
-    const url = filtersToUrl(state);
-    dispatch(push(url));
-  }
-}
-
-export function changeSortFieldAndDirection(value) {
-  return function(dispatch, getState) {
-    dispatch(setSortField(value.field));
-    dispatch(setSortDirection(value.direction));
-
-    const state = getState().main;
-    const url = filtersToUrl(state);
-    dispatch(push(url));
-  }
-}
-
-export function changeSelectedItemId(value) {
-  return function(dispatch, getState) {
-    dispatch(setSelectedItemId(value));
-
-    const state = getState().main;
-    const url = filtersToUrl(state);
-    dispatch(push(url));
-
-  }
-}
-
 export function openSelectedItemIdInNewTab(value) {
   return function(dispatch, getState) {
     const state = {
@@ -193,65 +131,9 @@ export function resetParameters() {
   }
 }
 
-export function resetFilters() {
-  return function(dispatch, getState) {
-    dispatch(setParameters({...getState().main, filters: initialState.filters, grouping: initialState.grouping, sortField: initialState.sortField}));
-    dispatch(push(filtersToUrl(getState().main)));
-    setTimeout(() => bus.emit('scrollToTop'), 1);
-  }
-}
-
-export function makeZoomIn() {
-  return function(dispatch, getState) {
-    dispatch(zoomIn());
-
-    const state = getState().main;
-    const url = filtersToUrl(state);
-    dispatch(push(url));
-  }
-}
-
-export function makeZoomOut() {
-  return function(dispatch, getState) {
-    dispatch(zoomOut());
-
-    const state = getState().main;
-    const url = filtersToUrl(state);
-    dispatch(push(url));
-  }
-}
-
-export function makeZoomReset() {
-  return function(dispatch, getState) {
-    dispatch(zoomReset());
-
-    const state = getState().main;
-    const url = filtersToUrl(state);
-    dispatch(push(url));
-  }
-}
-
 function markInitialUrlAsHandled() {
   return {
     type: 'Main/MarkInitialUrlAsHandled'
-  };
-}
-
-function zoomIn() {
-  return {
-    type: 'Main/ZoomIn'
-  };
-}
-
-function zoomOut() {
-  return {
-    type: 'Main/ZoomOut'
-  };
-}
-
-function zoomReset() {
-  return {
-    type: 'Main/ZoomReset'
   };
 }
 
@@ -279,27 +161,6 @@ function setReady(value) {
   };
 }
 
-function setFilter(name, value) {
-  return {
-    type: 'Main/SetFilter',
-    name: name,
-    value: value
-  };
-}
-
-function setSortField(value) {
-  return {
-    type: 'Main/SetSortField',
-    value: value
-  };
-}
-function setSortDirection(value) {
-  return {
-    type: 'Main/SetSortDirection',
-    value: value
-  };
-}
-
 function setParameters(value) {
   return {
     type: 'Main/SetParameters',
@@ -314,13 +175,6 @@ function setSelectedItemId(value) {
   }
 }
 
-function setMainContentMode(value) {
-  return {
-    type: 'Main/SetMainContentMode',
-    value: value
-  }
-}
-
 function markInitialUrlAsHandledHandler(state) {
   return { ...state, initialUrlHandled: true };
 }
@@ -328,18 +182,7 @@ function markInitialUrlAsHandledHandler(state) {
 function setDataHandler(state, action) {
   return { ...state, data: action.data };
 }
-function setFilterHandler(state, action) {
-  return { ...state, filters: {...state.filters, [action.name] : action.value } };
-}
-function setSortFieldHandler(state, action) {
-  return {...state, sortField: action.value };
-}
-function setSortDirectionHandler(state, action) {
-  return {...state, sortDirection: action.value };
-}
-function setSelectedItemIdHandler(state, action) {
-  return {...state, selectedItemId: action.value };
-}
+
 function setParametersHandler(state, action) {
 
 
@@ -365,38 +208,18 @@ function hideFiltersHandler(state) {
   return {...state, filtersVisible: false};
 }
 
-function setMainContentModeHandler(state, action) {
-  return {...state, mainContentMode: action.value };
-}
-
 function reducer(state = initialState, action) {
   switch(action.type) {
     case 'Main/SetData':
       return setDataHandler(state, action);
     case 'Main/SetFilter':
-      return setFilterHandler(state, action);
-    case 'Main/SetSortField':
-      return setSortFieldHandler(state, action);
-    case 'Main/SetSortDirection':
-      return setSortDirectionHandler(state, action);
-    case 'Main/SetParameters':
       return setParametersHandler(state, action);
-    case 'Main/SetSelectedItemId':
-      return setSelectedItemIdHandler(state, action);
     case 'Main/SetReady':
       return setReadyHandler(state, action);
     case 'Main/ShowFilters':
       return showFiltersHandler(state, action);
     case 'Main/HideFilters':
       return hideFiltersHandler(state, action);
-    case 'Main/SetMainContentMode':
-      return setMainContentModeHandler(state, action);
-    case 'Main/ZoomIn':
-      return zoomInHandler(state, action);
-    case 'Main/ZoomOut':
-      return zoomOutHandler(state, action);
-    case 'Main/ZoomReset':
-      return zoomResetHandler(state, action);
     case 'Main/MarkInitialUrlAsHandled':
       return markInitialUrlAsHandledHandler(state, action);
 
