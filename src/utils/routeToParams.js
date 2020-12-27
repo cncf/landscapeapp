@@ -34,22 +34,21 @@ const defaultParams = {
   isFullscreen: false
 };
 
-function decodeField(name, value) {
-  const field = fields[name]
+function decodeField(field, value) {
   if (!field || !value) {
     return;
   }
 
   const parts = (value === 'true' ? 'yes' : value).split(',');
-  const values = parts.map(function(part) {
-    return _.find(field.values, function(x) {
-      const v = x.url.toLowerCase();
+  const values = parts.map(part => {
+    return field.values.find(option => {
+      const v = option.url.toLowerCase();
       const p = part.toLowerCase();
       return v === p || decodeURIComponent(v) === p || qs.parse(decodeURIComponent(v)) === p;
     });
-  }).filter(function(x) { return !!x}).map(function(x) {
-    return x.id;
-  });
+  }).filter(_ => _)
+    .map(({ id }) => id)
+
   const processedValues = field.processValuesBeforeLoading(values);
   const parsedValue = field.isArray ? processedValues : processedValues[0];
   return _.isUndefined(value) ? null : parsedValue
@@ -71,14 +70,18 @@ const decodeZoom = ({ zoom }) => zoom ? Math.trunc(+zoom) / 100 : 1
 
 const decodeFullscreen = ({ fullscreen }) => fullscreen === 'yes' || fullscreen === 'true'
 
-const decodeOrganization = organization => organization ? decodeField('organization', organization) : []
-
 const routeToParams = params => {
   const { path, query } = params || getRouterParams()
 
+  const fieldFilters = Object.entries(fields).reduce((result, [key, field]) => {
+    const param = field.url || field.id
+    const value = query[param]
+    return { ...result, [key]: decodeField(field, value) || defaultParams.filters[key] }
+  }, {})
+
   const filters = {
     ...defaultParams.filters,
-    organization: decodeOrganization(query.organization)
+    ...fieldFilters
   }
 
   return {

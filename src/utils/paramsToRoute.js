@@ -3,14 +3,12 @@ import fields from '../types/fields'
 import { isArray } from 'lodash'
 
 const compact = obj => {
-  return Object.keys(obj).reduce((result, key) => {
-    const value = obj[key]
+  return Object.entries(obj).reduce((result, [key, value]) => {
     return { ...result, ...(value ? { [key]: value } : {})}
   }, {})
 }
 
-const encodeField = (name, value) => {
-  const field = fields[name]
+const encodeField = (field, value) => {
   if (!value || value.length === 0) {
     return null;
   }
@@ -39,8 +37,14 @@ const paramsToRoute = (params = {}) => {
 
   const filterParams = rest.filters || {}
 
+  const fieldFilters = Object.entries(fields).reduce((result, [key, field]) => {
+    const value = filterParams[key]
+    const param = field.url || field.id
+    return { ...result, [param]: encodeField(field, value) }
+  }, {})
+
   const filters = compact({
-    organization: encodeField('organization', filterParams.organization)
+    ...fieldFilters
   })
 
   const query = compact({
