@@ -44,7 +44,8 @@ const HomePage = ({ entries, selectedItem }) => {
   const currentParams = routeToParams()
   const router = useRouter()
   const navigate = (newParams = {}) => {
-    const url = paramsToRoute({ ...currentParams, ...newParams })
+    const filters = { ...(currentParams.filters || {}), ...(newParams.filters || {}) }
+    const url = paramsToRoute({ ...currentParams, ...newParams, filters })
     router.push(url)
   }
 
