@@ -3,6 +3,7 @@ import qs, { parseUrl } from 'query-string'
 import settings from './settings'
 import fields from '../types/fields'
 import _ from 'lodash'
+import { options } from '../components/SortFieldContainer'
 
 const defaultParams = {
   data: null,
@@ -54,6 +55,16 @@ function decodeField(field, value) {
   return _.isUndefined(value) ? null : parsedValue
 }
 
+const getField = urlValue => {
+  if (!urlValue) {
+    return
+  }
+
+  const field = Object.values(fields).find(({ url }) => url.toLowerCase() === urlValue.toLowerCase())
+
+  return field ? field.id : null
+}
+
 const getRouterParams = _ => {
   const router = useRouter()
   const { path } = router.query
@@ -71,13 +82,19 @@ const decodeZoom = ({ zoom }) => zoom ? Math.trunc(+zoom) / 100 : 1
 const decodeFullscreen = ({ fullscreen }) => fullscreen === 'yes' || fullscreen === 'true'
 
 const decodeGrouping = grouping => {
-  if (grouping === 'no' || !grouping) {
+  if (grouping === 'no') {
     return grouping
   }
 
-  const field = Object.values(fields).find(({ url }) => url.toLowerCase() === grouping.toLowerCase())
+  return getField(grouping)
+}
 
-  return field ? field.id : null
+const decodeSort = sort => {
+  const sortField = getField(sort) || 'name'
+  const option = options.find(option => option.id === sortField)
+  const sortDirection = option ? option.direction : 'asc'
+
+  return { sortField, sortDirection}
 }
 
 const routeToParams = params => {
@@ -101,6 +118,7 @@ const routeToParams = params => {
     zoom: decodeZoom(query),
     isFullscreen: decodeFullscreen(query),
     grouping: decodeGrouping(query.grouping),
+    ...decodeSort(query.sort),
     filters
   }
 }

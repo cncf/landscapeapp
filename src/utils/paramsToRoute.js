@@ -53,6 +53,7 @@ const paramsToRoute = (params = {}) => {
     zoom: encodeZoom(rest.zoom),
     fullscreen: encodeFullscreen(rest.isFullscreen),
     grouping: encodeGrouping(rest.grouping),
+    sort: rest.sortField,
     ...filters
   })
 
