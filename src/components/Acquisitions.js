@@ -29,6 +29,7 @@ import millify from 'millify'
 import OutboundLink from './OutboundLink'
 import { filtersToUrl } from '../utils/syncToUrl'
 
+// TODO: convert to next
 export default ({ acquisitions, members, acquirers, acquirees }) => {
   const linkToOrg = (name) => {
     if (!members.has(name)) {
