@@ -8,14 +8,14 @@ import ProjectFilterContainer from './ProjectFilterContainer';
 import LicenseFilterContainer from './LicenseFilterContainer';
 import OrganizationFilterContainer from './OrganizationFilterContainer';
 import HeadquartersFilterContainer from './HeadquartersFilterContainer';
-import LandscapeFilterContainer from './LandscapeFilterContainer';
 import fields from '../types/fields';
+import CategoryFilter from './CategoryFilter'
 const Filters = () => {
   return <div>
       <FormGroup row>
         <FormControl component="fieldset">
           <FormLabel component="legend">{fields.landscape.label}</FormLabel>
-          <LandscapeFilterContainer/>
+          <CategoryFilter/>
         </FormControl>
       </FormGroup>
 
