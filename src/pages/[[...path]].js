@@ -74,7 +74,14 @@ export async function getStaticProps({ params }) {
       }
     }, {})
 
-    return entry
+    const languages = ((project.github_data || {}).languages || []).map(({ name }) => ({ name }))
+    const parents = (project.crunchbaseData || {}).parents || []
+
+    return {
+      ...entry,
+      github_data: { languages },
+      crunchbaseData: { parents }
+    }
   })
 
   return {
