@@ -112,7 +112,7 @@ export async function fetchImageEntries({cache, preferCache}) {
       var ext='.' + extWithQuery.split('?')[0];
       var outputExt = '';
       if (['.jpg', '.png', '.gif'].indexOf(ext) !== -1 ) {
-        fatalErrors.push(fatal(`${item.name}: Only svg logos are supported`));
+        fatalErrors.push(`${item.name}: Only svg logos are supported`);
         return null;
       }
 
@@ -149,11 +149,11 @@ export async function fetchImageEntries({cache, preferCache}) {
       const message = ex.message || ex || 'Unknown error';
       if (cachedEntry && imageExist(cachedEntry)) {
         reporter.write(error('E'));
-        errors.push(error(`Using cached entry, because ${item.name} has issues with logo: ${url}, ${message}`));
+        errors.push(`Using cached entry, because ${item.name} has issues with logo: ${url}, ${message}`);
         return cachedEntry;
       } else {
         reporter.write(fatal('F'));
-        fatalErrors.push(fatal(`No cached entry, and ${item.name} has issues with logo: ${url}, ${message}`));
+        fatalErrors.push(`No cached entry, and ${item.name} has issues with logo: ${url}, ${message}`);
         return null;
       }
     }

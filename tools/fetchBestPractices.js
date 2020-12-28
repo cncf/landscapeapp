@@ -103,7 +103,7 @@ export async function fetchBestPracticeEntriesWithFullScan({cache, preferCache})
     } catch (ex) {
       debug(`Full scan: Fetch failed for ${item.repo_url}, attempt to use a cached entry`);
       reporter.write(errorColor("E"));
-      errors.push(errorColor(`Cannot fetch: ${item.repo_url} `, ex.message.substring(0, 200)));
+      errors.push(`Cannot fetch: ${item.repo_url} `, ex.message.substring(0, 200));
       return cachedEntry || null;
     }
   });
@@ -138,8 +138,8 @@ export async function fetchBestPracticeEntriesWithIndividualUrls({cache, preferC
       });
     } catch (ex) {
       debug(`Individual scan: Fetch failed for ${item.repo_url}, attempt to use a cached entry`);
-      reporter.write(error("E"));
-      error(`Cannot fetch: ${item.repo_url} `, ex.message.substring(0, 200));
+      reporter.write(errorColor("E"));
+      errors.push(`Cannot fetch: ${item.repo_url} `, ex.message.substring(0, 200));
       return cachedEntry || null;
     }
   });

@@ -125,11 +125,11 @@ export async function fetchGithubEntries({cache, preferCache}) {
       debug(`Fetch failed for ${repo.url}, attempt to use a cached entry`);
       if (cachedEntry) {
         reporter.write(error('E'));
-        errors.push(error(`Using cached entry, and ${repo.url} has issues with stats fetching: ${ex.message.substring(0, 100)}`));
+        errors.push(`Using cached entry, and ${repo.url} has issues with stats fetching: ${ex.message.substring(0, 100)}`);
         return cachedEntry;
       } else {
         reporter.write(fatal('F'));
-        fatalErrors.push(fatal(`No cached entry, and ${repo.url} has issues with stats fetching: ${ex.message.substring(0, 100)}`));
+        fatalErrors.push(`No cached entry, and ${repo.url} has issues with stats fetching: ${ex.message.substring(0, 100)}`);
         return null;
       }
     }

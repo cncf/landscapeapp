@@ -99,7 +99,7 @@ export async function fetchTwitterEntries({cache, preferCache, crunchbaseEntries
         };
       } else {
         reporter.write(fatal("F"));
-        fatalErrors.push(fatal(`Empty twitter for ${item.name}: ${url}`));
+        fatalErrors.push(`Empty twitter for ${item.name}: ${url}`);
         return {
           latest_tweet_date: date,
           url: url
@@ -109,11 +109,11 @@ export async function fetchTwitterEntries({cache, preferCache, crunchbaseEntries
       debug(`Cannot fetch twitter at ${url} ${ex.message}`);
       if (cachedEntry) {
         reporter.write(error("E"));
-        errors.push(error(`Using cached entry, because ${item.name} has issues with twitter: ${url}, ${(ex.message || ex).substring(0, 100)}`));
+        errors.push(`Using cached entry, because ${item.name} has issues with twitter: ${url}, ${(ex.message || ex).substring(0, 100)}`);
         return cachedEntry;
       } else {
         reporter.write(fatal("F"));
-        fatalErrors.push(fatal(`No cached entry, and ${item.name} has issues with twitter: ${url}, ${(ex.message || ex).substring(0, 100)}`));
+        fatalErrors.push(`No cached entry, and ${item.name} has issues with twitter: ${url}, ${(ex.message || ex).substring(0, 100)}`);
         return null;
       }
     }

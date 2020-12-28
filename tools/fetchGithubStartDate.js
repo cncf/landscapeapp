@@ -48,7 +48,7 @@ export async function fetchStartDateEntries({cache, preferCache}) {
         return cachedEntry;
       } else {
         reporter.write(fatal('F'));
-        fatalErrors.push(fatal(`No cached entry, and ${repo.url} has issues with start date fetching:, ${ex.message.substring(0, 200)}`));
+        fatalErrors.push(`No cached entry, and ${repo.url} has issues with start date fetching:, ${ex.message.substring(0, 200)}`);
         return null;
       }
     }

@@ -1,3 +1,7 @@
+import colors from 'colors';
+const error = colors.red;
+const fatal = (x) => colors.red(colors.inverse(x));
+
 let messages = [];
 export function getMessages() {
   return messages;
@@ -9,10 +13,11 @@ try {
 
 }
 
+
 export default function build(category) {
   return {
     addError: function(msg) {
-      console.info(`ERROR: ${msg}`);
+      console.info(error(`ERROR: ${msg}`));
       messages.push({
         type: 'error',
         text: msg,
@@ -21,7 +26,7 @@ export default function build(category) {
       save();
     },
     addFatal: function(msg) {
-      console.info(`FATAL: ${msg}`);
+      console.info(fatal(`FATAL: ${msg}`));
       messages.push({
         type: 'fatal',
         text: msg,

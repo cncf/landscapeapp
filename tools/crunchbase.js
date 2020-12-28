@@ -234,7 +234,7 @@ export async function fetchCrunchbaseEntries({cache, preferCache}) {
     try {
       const result = await fetchData(c.name);
       if (result === 'no address') {
-        fatalErrors.push(fatal(`no headquarter addresses for ${c.name} at ${c.crunchbase}`));
+        fatalErrors.push(`no headquarter addresses for ${c.name} at ${c.crunchbase}`);
         reporter.write(fatal("F"));
         return null;
       }
@@ -244,7 +244,7 @@ export async function fetchCrunchbaseEntries({cache, preferCache}) {
         ...result
       };
       if (_.isEmpty(entry.city)) {
-        fatalErrors.push(fatal(`No city for a crunchbase entry for ${c.name} at ${c.crunchbase} `));
+        fatalErrors.push(`No city for a crunchbase entry for ${c.name} at ${c.crunchbase} `);
         reporter.write(fatal("F"));
         return null;
       }
@@ -264,12 +264,12 @@ export async function fetchCrunchbaseEntries({cache, preferCache}) {
       // console.info(entry);
     } catch (ex) {
       if (cachedEntry) {
-        errors.push(error(`Using cached entry, because can not fetch: ${c.name} ` +  ex.message.substring(0, 200)));
+        errors.push(`Using cached entry, because can not fetch: ${c.name} ` +  ex.message.substring(0, 200));
         reporter.write(error("E"));
         return cachedEntry;
       } else {
         // console.info(c.name);
-        fatalErrors.push(fatal(`No cached entry, and can not fetch: ${c.name}. ` +  ex.message.substring(0, 200)));
+        fatalErrors.push(`No cached entry, and can not fetch: ${c.name}. ` +  ex.message.substring(0, 200));
         reporter.write(fatal("F"));
         return null;
       }
