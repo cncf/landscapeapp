@@ -22,7 +22,6 @@ export const initialState = {
     landscape: [],
     bestPracticeBadgeId: null,
     enduser: null,
-    googlebot: null,
     onlyModal: false,
     language: undefined, // null means no language
     parents: [],
