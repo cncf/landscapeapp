@@ -49,7 +49,7 @@ function decodeField(field, value) {
 
   const processedValues = field.processValuesBeforeLoading(values);
   const parsedValue = field.isArray ? processedValues : processedValues[0];
-  return _.isUndefined(value) ? null : parsedValue
+  return parsedValue
 }
 
 const getField = urlValue => {
@@ -94,7 +94,8 @@ const routeToParams = params => {
   const fieldFilters = Object.entries(fields).reduce((result, [key, field]) => {
     const param = field.url || field.id
     const value = query[param]
-    return { ...result, [key]: decodeField(field, value) || defaultParams.filters[key] }
+    const parsedValue = decodeField(field, value)
+    return { ...result, [key]: parsedValue || parsedValue === false ? parsedValue : defaultParams.filters[key] }
   }, {})
 
   const filters = {

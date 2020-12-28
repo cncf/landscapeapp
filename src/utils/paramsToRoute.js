@@ -9,11 +9,11 @@ const compact = obj => {
 }
 
 const encodeField = (field, value) => {
-  if (!value || value.length === 0) {
+  if (value === null || value === undefined || isArray(value) && value.length === 0) {
     return null;
   }
 
-  const processedValues = field.processValuesBeforeSaving(isArray ? value : [value])
+  const processedValues = field.processValuesBeforeSaving(isArray(value) ? value : [value])
   const urlValues = processedValues.map(v => {
     const valueInfo = field.values.find(({ id }) => id === v)
     return valueInfo.url
