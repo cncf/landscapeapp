@@ -1,10 +1,13 @@
 import _ from 'lodash';
-let fatalErrors = [];
+import errorsReporter, { getMessages } from './reporter';
+const { addFatal } = errorsReporter('general');
+
 export function hasFatalErrors() {
-  return fatalErrors.length > 0;
+  return getMessages().filter( (x) => x.type === 'fatal') > 0;
 }
+
 export function setFatalError(errorText) {
-  fatalErrors.push(errorText);
+  addFatal(errorText);
 }
 
 export async function reportFatalErrors() {
@@ -16,6 +19,8 @@ export async function reportFatalErrors() {
     console.info(`Can not report fatal errors, REPOSITORY_URL not provided`);
     return;
   }
+
+  const fatalErrors = getMessages().filter( (x) => x.type === 'fatal').map( (x) => x.text);
 
   const message = `Build failed because of:\n` + fatalErrors.join('\n');
   const repo = process.env.REPOSITORY_URL.split('/').slice(-2).join('/').split(':').slice(-1)[0];

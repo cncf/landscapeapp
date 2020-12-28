@@ -1,5 +1,4 @@
 import './suppressAnnoyingWarnings';
-import { setFatalError } from './fatalErrors';
 import colors from 'colors';
 import rp from './rpRetry';
 import Promise from 'bluebird';
@@ -8,11 +7,12 @@ import fs from 'fs';
 import path from 'path';
 import _ from 'lodash';
 import { settings, projectPath } from './settings';
+import errorsReporter from './reporter';
 import makeReporter from './progressReporter';
-import { addError, addWarning } from './reporter';
 import autoCropSvg from 'svg-autocrop';
 import retry from "./retry";
 const debug = require('debug')('images');
+const { addFatal, addError } = errorsReporter('image');
 
 const error = colors.red;
 const fatal = (x) => colors.red(colors.inverse(x));
@@ -82,6 +82,7 @@ function getItemHash(item) {
 export async function fetchImageEntries({cache, preferCache}) {
   const items = await getLandscapeItems();
   const errors = [];
+  const fatalErrors = [];
   const reporter = makeReporter();
   const result = await Promise.map(items, async function(item) {
     let cachedEntry;
@@ -111,8 +112,7 @@ export async function fetchImageEntries({cache, preferCache}) {
       var ext='.' + extWithQuery.split('?')[0];
       var outputExt = '';
       if (['.jpg', '.png', '.gif'].indexOf(ext) !== -1 ) {
-        setFatalError(`${item.name}: Only svg logos are supported`);
-        errors.push(fatal(`${item.name}: Only svg logos are supported`));
+        fatalErrors.push(`${item.name}: Only svg logos are supported`);
         return null;
       }
 
@@ -148,23 +148,19 @@ export async function fetchImageEntries({cache, preferCache}) {
       debug(`Cannot fetch ${url}`);
       const message = ex.message || ex || 'Unknown error';
       if (cachedEntry && imageExist(cachedEntry)) {
-        addWarning('image');
         reporter.write(error('E'));
-        errors.push(error(`Using cached entry, because ${item.name} has issues with logo: ${url}, ${message}`));
+        errors.push(`Using cached entry, because ${item.name} has issues with logo: ${url}, ${message}`);
         return cachedEntry;
       } else {
-        addError('image');
-        setFatalError(`No cached entry, and ${item.name} has issues with logo: ${url}, ${message}`);
         reporter.write(fatal('F'));
-        errors.push(fatal(`No cached entry, and ${item.name} has issues with logo: ${url}, ${message}`));
+        fatalErrors.push(`No cached entry, and ${item.name} has issues with logo: ${url}, ${message}`);
         return null;
       }
     }
   }, {concurrency: 1 });
   reporter.summary();
-  _.each(errors, function(error) {
-    console.info('error: ', error);
-  });
+  _.each(errors, function(error) { addError(error) });
+  _.each(fatalErrors, function(error) { addFatal(error) });
   return {
     imageEntries: result,
     imageErrors: errors

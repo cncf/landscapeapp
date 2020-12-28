@@ -1,5 +1,6 @@
 import checkVersion from './checkVersion';
-import { hasFatalErrors, reportFatalErrors, setFatalError } from './fatalErrors';
+import { hasFatalErrors, reportFatalErrors } from './fatalErrors';
+import errorsReporter from './reporter';
 import process from 'process';
 import path from 'path';
 import { projectPath, settings } from './settings';
@@ -21,11 +22,12 @@ import { updateProcessedLandscape } from "./processedLandscape";
 const { landscape } = require('./landscape')
 const traverse = require('traverse');
 const _ = require('lodash');
+const { addFatal } = errorsReporter('crunchbase');
 
 var useCrunchbaseCache = true;
 var useImagesCache = !process.env.IGNORE_IMAGES_CACHE;
-var useGithubCache=true;
-var useGithubStartDatesCache=true;
+var useGithubCache = true;
+var useGithubStartDatesCache = true;
 var useTwitterCache = true;
 var useBestPracticesCache = true;
 var key = require('process').env.LEVEL || 'easy';
@@ -191,16 +193,14 @@ async function main() {
       if (node.organization) {
         node.crunchbase_data = { ...node.organization, parents: [] }
         if (node.crunchbase) {
-          console.info(`FATAL: the project does not use a crunchbase, but a crunchbase "${node.crunchbase}" is present for an item "${node.name}"`);
-          setFatalError(`the project does not use a crunchbase, but a crunchbase ${node.crunchbase} is present for a ${node.name}`);
+          addFatal(`the project does not use a crunchbase, but a crunchbase ${node.crunchbase} is present for a ${node.name}`);
         }
       } else if (node.unnamed_organization) {
         node.crunchbase = settings.global.self;
         node.crunchbase_data = _.clone({ ...settings.anonymous_organization, parents: [] });
       } else {
         if (settings.global.skip_crunchbase) {
-          console.info(`FATAL: organization field is not provided for a ${node.name}. Crunchbase fetching is disabled for this project`);
-          setFatalError(`organization field is not provided for a ${node.name}. Crunchbase fetching is disabled for this project`);
+          addFatal(`organization field is not provided for a ${node.name}. Crunchbase fetching is disabled for this project`);
         } else {
           var crunchbaseInfo = _.clone(_.find(crunchbaseEntries, {url: node.crunchbase}));
           if (crunchbaseInfo) {

@@ -1,6 +1,9 @@
 import Promise from 'bluebird';
-import { setFatalError, reportFatalErrors, hasFatalErrors } from './fatalErrors';
+import { reportFatalErrors, hasFatalErrors } from './fatalErrors';
 import { projectPath, settings } from './settings';
+import errorsReporter from './reporter';
+const { addFatal } = errorsReporter('general');
+
 console.info('processed', projectPath);
 const source = require('js-yaml').safeLoad(require('fs').readFileSync(`${projectPath}/processed_landscape.yml`));
 const traverse = require('traverse');
@@ -13,15 +16,13 @@ import formatCity from '../src/utils/formatCity';
 import pack from '../src/utils/packArray';
 
 async function failOnSingleError(text) {
-  console.info(`FATAL: ${text}`);
-  setFatalError(text);
+  addFatal(text);
   await reportFatalErrors();
   process.exit(1);
 }
 
 async function failOnMultipleErrors(text) {
-  console.info(`FATAL: ${text}`);
-  setFatalError(text);
+  addFatal(text);
 }
 
 function sortFn(x) {
@@ -683,7 +684,7 @@ async function main () {
 }
 main().catch(async function(ex) {
   console.info(ex);
-  setFatalError(ex.message);
+  addFatal(ex.message);
   await reportFatalErrors();
   process.exit(1);
 });

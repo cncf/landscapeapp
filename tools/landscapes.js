@@ -1,4 +1,5 @@
 import { report } from './reportToSlack';
+import generateReport from './reportBuilder';
 
 const landscapesInfo = require('js-yaml').safeLoad(require('fs').readFileSync('landscapes.yml'));
 
@@ -45,6 +46,8 @@ async function main() {
   git push origin HEAD
   `;
 
+    const startTime = new Date().getTime();
+
     function runIt() {
       return new Promise(function(resolve) {
         let logs = [];
@@ -85,10 +88,10 @@ async function main() {
 
 
     require('fs').writeFileSync(`${process.env.HOME}/${landscape.name}.log`, logs.join(''));
+    const settings = require('js-yaml').safeLoad(require('fs').readFileSync('/repo/settings.yml'));
 
     const { slackChannel, icon_url, name } = (function() {
       try {
-        const settings = require('js-yaml').safeLoad(require('fs').readFileSync('/repo/settings.yml'));
         const slackChannel = settings.global.slack_channel;
         const icon_url = `${settings.global.website}/favicon.png`
         const name = settings.global.short_name
@@ -98,9 +101,33 @@ async function main() {
         return '';
       }
     })();
+
+    let messages = [];
+    try {
+      messages = JSON.parse(require('fs').readFileSync('/tmp/landscape.json', 'utf-8'));
+    } catch(ex) {
+
+    }
+    const htmlReport = generateReport({
+      logs: logs.join(''),
+      messages: messages,
+      name: settings.global.short_name || landscape.name,
+      status: returnCode === 0,
+      endTime: new Date().getTime(),
+      startTime: startTime
+    });
+    const reportTime = new Date(startTime).toISOString().substring(0, 16).replace(':','_').replace(':','_');
+
+    const fileName = `${landscape.name}-${reportTime}.html`;
+    const fullPath = `/var/www/html/${fileName}`;
+    const latestPath = `/var/www/html/${landscape.name}.html`;
+    const reportUrl = `http://${landscapesInfo.ip}/${fileName}`;
+    require('fs').writeFileSync(fullPath, htmlReport);
+    require('fs').writeFileSync(latestPath, htmlReport);
+
     console.info({slackChannel: maskSecrets(slackChannel || '')});
 
-    const hookArgs = { returnCode, logs, icon_url, name }
+    const hookArgs = { returnCode, reportUrl, messages: messages, icon_url, name }
 
     if (slackChannel) {
       await report({ ...hookArgs, slackChannel });

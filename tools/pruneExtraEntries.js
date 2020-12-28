@@ -2,6 +2,8 @@ import _ from 'lodash';
 import { landscape, saveLandscape } from "./landscape";
 import { processedLandscape } from "./processedLandscape";
 import { YahooFinanceClient } from "./apiClients";
+import errorsReporter from './reporter';
+const { addFatal } = errorsReporter('general');
 
 function find({source, categoryName, subcategoryName, itemName}) {
   let result = null;
@@ -24,7 +26,7 @@ const cleanupFile = async () => {
       _.each(subcategory.items, function(item) {
         const processed = find({source: processedLandscape, categoryName: category.name, subcategoryName: subcategory.name, itemName: item.name});
         if (!processed) {
-          console.info(`FATAL: entry ${item.name} at ${category.name}/${subcategory.name} not found in the processed_landscape.yml`);
+          addFatal(`FATAL: entry ${item.name} at ${category.name}/${subcategory.name} not found in the processed_landscape.yml`);
           process.exit(1);
         }
         const fn = function(s) {
