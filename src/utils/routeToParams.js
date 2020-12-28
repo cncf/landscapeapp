@@ -48,8 +48,8 @@ function decodeField(field, value) {
     .map(({ id }) => id)
 
   const processedValues = field.processValuesBeforeLoading(values);
-  const parsedValue = field.isArray ? processedValues : processedValues[0];
-  return parsedValue
+
+  return field.isArray ? processedValues : processedValues[0]
 }
 
 const getField = urlValue => {
