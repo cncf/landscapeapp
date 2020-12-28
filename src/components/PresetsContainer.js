@@ -18,6 +18,8 @@ const findPreset = ({ filters, grouping, sortField }) => {
     const url = normalizeUrl(preset.url);
     const parts = parseUrl(url);
     const importantParts = _.pick(parts, ['filters', 'grouping', 'sortField']);
+
+    // TODO: convert old style URLs to new style
     const currentOptions = _.pick(parseUrl(normalizeUrl(filtersToUrl({
       filters: filters,
       grouping: grouping,

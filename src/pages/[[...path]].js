@@ -60,6 +60,7 @@ export async function getStaticProps({ params }) {
   const selectedItem = selectedItemId ? projects.find(item => item.id === selectedItemId) : null
 
   const entries = projects.map(project => {
+    // TODO: need to much data to render the landscape. See if we can reduce amount of data
     const keys = [
       'name', 'stars', 'organization', 'path', 'landscape', 'category', 'oss', 'href', 'id',
       'flatName', 'member', 'relation', 'project', 'isSubsidiaryProject', 'amount', 'amountKind',
