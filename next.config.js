@@ -20,6 +20,8 @@ const lastUpdated = new Date().toISOString().substring(0, 19).replace('T', ' ') 
 const processedLandscape =  safeLoad(readFileSync(path.resolve(projectPath, 'processed_landscape.yml')));
 const tweets = (processedLandscape.twitter_options || {}).count || 0
 
+const GA = process.env.GA
+
 module.exports = {
-  env: { settings, lookups, lastUpdated, tweets }
+  env: { settings, lookups, lastUpdated, tweets, GA }
 }
