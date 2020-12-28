@@ -30,7 +30,6 @@ const defaultParams = {
   selectedItemId: null,
   mainContentMode: settings.big_picture.main.url, // also landscape or serverless for a big picture
   cardMode: 'card', // one of card, logo, flat, borderless
-  filtersVisible: false,
   zoom: 1,
   isFullscreen: false
 };

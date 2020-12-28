@@ -41,7 +41,6 @@ export const initialState = {
   selectedItemId: null,
   mainContentMode: settings.big_picture.main.url, // also landscape or serverless for a big picture
   cardMode: 'card', // one of card, logo, flat, borderless
-  filtersVisible: false,
   zoom: 1,
   isFullscreen: false
 };
@@ -130,16 +129,6 @@ function markInitialUrlAsHandled() {
   };
 }
 
-export function showFilters() {
-  return {
-    type: 'Main/ShowFilters'
-  };
-}
-export function hideFilters() {
-  return {
-    type: 'Main/HideFilters'
-  };
-}
 
 function setData(data) {
   return {
@@ -194,12 +183,6 @@ function setParametersHandler(state, action) {
 function setReadyHandler(state, action) {
   return { ...state, ready: action.value };
 }
-function showFiltersHandler(state) {
-  return {...state, filtersVisible: true};
-}
-function hideFiltersHandler(state) {
-  return {...state, filtersVisible: false};
-}
 
 function reducer(state = initialState, action) {
   switch(action.type) {
@@ -207,10 +190,6 @@ function reducer(state = initialState, action) {
       return setDataHandler(state, action);
     case 'Main/SetReady':
       return setReadyHandler(state, action);
-    case 'Main/ShowFilters':
-      return showFiltersHandler(state, action);
-    case 'Main/HideFilters':
-      return hideFiltersHandler(state, action);
     case 'Main/MarkInitialUrlAsHandled':
       return markInitialUrlAsHandledHandler(state, action);
 

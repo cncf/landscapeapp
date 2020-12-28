@@ -1,6 +1,5 @@
 import HomePageComponent from '../components/HomePage';
-import {showFilters, hideFilters, closeDialog } from '../reducers/mainReducer';
-import isEmbed from '../utils/isEmbed';
+import {closeDialog } from '../reducers/mainReducer';
 import getGroupedItems, { getFilteredItems, getGroupedItemsForBigPicture } from '../utils/itemsCalculator';
 import selectedItemCalculator from '../utils/selectedItemCalculator';
 import settings from '../utils/settings'
@@ -19,15 +18,12 @@ const defaultTitle =  settings.global.meta.title;
 
 const mapStateToProps = (state) => ({
   ready: state.main.ready,
-  filtersVisible: state.main.filtersVisible && !isEmbed(),
   isFullscreen: state.main.isFullscreen && state.main.mainContentMode !== 'card',
   mainContentMode: state.main.mainContentMode,
   hasSelectedItem: !!state.main.selectedItemId,
   title: getTitle(state)
 });
 const mapDispatchToProps = {
-  showFilters: showFilters,
-  hideFilters: hideFilters,
   onClose: closeDialog
 };
 

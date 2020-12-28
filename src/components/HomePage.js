@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React, { useContext, useState } from 'react';
 import { pure } from 'recompose';
 import IconButton from '@material-ui/core/IconButton';
 import CloseIcon from '@material-ui/icons/Close';
@@ -70,13 +70,16 @@ function enableScroll(){
   document.body.removeEventListener('touchmove', preventDefault);
 }
 
-const HomePage = ({filtersVisible, hideFilters, showFilters, title}) => {
+const HomePage = ({title}) => {
   const { params } = useContext(RootContext)
   const { entries, selectedItem } = useContext(EntriesContext)
   const { mainContentMode, zoom, isFullscreen } = params
   const landscapeSettings = findLandscapeSettings(mainContentMode)
   const groupedItems = getGroupedItemsForBigPicture(params, entries, landscapeSettings)
   const isBigPicture = mainContentMode !== 'card-mode';
+  const [sidebarVisible, setSidebarVisible] = useState(false)
+  const showSidebar = _ => setSidebarVisible(true)
+  const hideSidebar = _ => setSidebarVisible(false)
 
   if (isBrowser()) {
     document.title = title;
@@ -167,14 +170,14 @@ const HomePage = ({filtersVisible, hideFilters, showFilters, title}) => {
   return (
     <div>
     {selectedItem && <ItemDialog/>}
-    <div className={classNames('app',{'filters-opened' : filtersVisible})}>
+    <div className={classNames('app',{'filters-opened' : sidebarVisible})}>
       <div />
       <div style={{marginTop: (isIphone && hasSelectedItem) ? -state.lastScrollPosition : 0}} className={classNames({"iphone-scroller": isIphone && hasSelectedItem}, 'main-parent')} >
         { !isEmbed() && !isFullscreen && <Header /> }
-        { !isEmbed() && !isFullscreen && <IconButton className="sidebar-show" title="Show sidebar" onClick={showFilters}><MenuIcon /></IconButton> }
+        { !isEmbed() && !isFullscreen && <IconButton className="sidebar-show" title="Show sidebar" onClick={showSidebar}><MenuIcon /></IconButton> }
         { !isEmbed() && !isFullscreen && <div className="sidebar">
           <div className="sidebar-scroll">
-            <IconButton className="sidebar-collapse" title="Hide sidebar" onClick={hideFilters}><CloseIcon /></IconButton>
+            <IconButton className="sidebar-collapse" title="Hide sidebar" onClick={hideSidebar}><CloseIcon /></IconButton>
             <ResetFilters />
             <Grouping/>
             <Sorting/>
@@ -186,7 +189,7 @@ const HomePage = ({filtersVisible, hideFilters, showFilters, title}) => {
         </div>
         }
 
-        <div className="app-overlay" onClick={hideFilters}></div>
+        <div className="app-overlay" onClick={hideSidebar}></div>
 
         <div className={classNames('main', {'embed': isEmbed()})}>
           { !isEmbed() && <div className="disclaimer">
