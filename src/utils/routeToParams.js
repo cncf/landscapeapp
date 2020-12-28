@@ -2,7 +2,6 @@ import { useRouter } from 'next/router'
 import qs, { parseUrl } from 'query-string'
 import settings from './settings'
 import fields from '../types/fields'
-import _ from 'lodash'
 import { options } from '../components/SortFieldContainer'
 
 const defaultParams = {
@@ -13,7 +12,6 @@ const defaultParams = {
     relation: [],
     stars: null,
     license: [],
-    marketCap: null,
     organization: [],
     headquarters: [],
     landscape: [],
