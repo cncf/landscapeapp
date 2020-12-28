@@ -202,11 +202,6 @@ const fields = {
     },
     values: [{id: true, label: 'Yes', url: 'yes'}, {id: false, label: 'No', url: 'no'}]
   },
-  onlyModal: {
-    id: 'only-modal',
-    url: 'only-modal',
-    values: [{ id: true, url: 'yes' }, { id: false, url: 'no' }]
-  },
   parents: {
     id: 'parent',
     url: 'parent',
