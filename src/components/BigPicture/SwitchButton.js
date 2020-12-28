@@ -1,12 +1,14 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { pure, withProps, toClass } from 'recompose';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 import InternalLink from '../InternalLink';
-import isEmbed from '../../utils/isEmbed';
+import RootContext from '../../contexts/RootContext'
 
 const SwitchButton = function({mainContentMode, changeMainContentMode, cards}) {
-  if (isEmbed()) {
+  const { params } = useContext(RootContext)
+
+  if (params.isEmbed) {
     return null;
   }
   return [

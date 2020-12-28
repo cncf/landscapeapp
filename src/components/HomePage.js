@@ -25,7 +25,6 @@ import bus from '../reducers/bus';
 import settings from '../utils/settings.js'
 import isModalOnly from "../utils/isModalOnly";
 import currentDevice from '../utils/currentDevice'
-import isEmbed from '../utils/isEmbed'
 import isBrowser from '../utils/isBrowser'
 import LandscapeContent from './BigPicture/LandscapeContent'
 import { findLandscapeSettings } from '../utils/landscapeSettings'
@@ -73,7 +72,7 @@ function enableScroll(){
 const HomePage = _ => {
   const { params } = useContext(RootContext)
   const { entries, selectedItem } = useContext(EntriesContext)
-  const { mainContentMode, zoom, isFullscreen } = params
+  const { mainContentMode, zoom, isFullscreen, isEmbed } = params
   const landscapeSettings = findLandscapeSettings(mainContentMode)
   const groupedItems = getGroupedItemsForBigPicture(params, entries, landscapeSettings)
   const isBigPicture = mainContentMode !== 'card-mode';
@@ -120,7 +119,7 @@ const HomePage = _ => {
     }
   }
 
-  if (isEmbed()) {
+  if (isBrowser() && isEmbed) {
     if (window.parentIFrame) {
       if (hasSelectedItem) {
         window.parentIFrame.sendMessage({type: 'showModal'})
@@ -169,9 +168,9 @@ const HomePage = _ => {
     <div className={classNames('app',{'filters-opened' : sidebarVisible})}>
       <div />
       <div style={{marginTop: (isIphone && hasSelectedItem) ? -state.lastScrollPosition : 0}} className={classNames({"iphone-scroller": isIphone && hasSelectedItem}, 'main-parent')} >
-        { !isEmbed() && !isFullscreen && <Header /> }
-        { !isEmbed() && !isFullscreen && <IconButton className="sidebar-show" title="Show sidebar" onClick={showSidebar}><MenuIcon /></IconButton> }
-        { !isEmbed() && !isFullscreen && <div className="sidebar">
+        { !isEmbed && !isFullscreen && <Header /> }
+        { !isEmbed && !isFullscreen && <IconButton className="sidebar-show" title="Show sidebar" onClick={showSidebar}><MenuIcon /></IconButton> }
+        { !isEmbed && !isFullscreen && <div className="sidebar">
           <div className="sidebar-scroll">
             <IconButton className="sidebar-collapse" title="Hide sidebar" onClick={hideSidebar}><CloseIcon /></IconButton>
             <ResetFilters />
@@ -187,13 +186,13 @@ const HomePage = _ => {
 
         <div className="app-overlay" onClick={hideSidebar}></div>
 
-        <div className={classNames('main', {'embed': isEmbed()})}>
-          { !isEmbed() && <div className="disclaimer">
+        <div className={classNames('main', {'embed': isEmbed})}>
+          { !isEmbed && <div className="disclaimer">
             <span  dangerouslySetInnerHTML={{__html: settings.home.header}} />
             Please <OutboundLink to={`https://github.com/${settings.global.repo}`}>open</OutboundLink> a pull request to
             correct any issues. Greyed logos are not open source. Last Updated: {process.env.lastUpdated}
           </div> }
-          { !isEmbed() && <Summary /> }
+          { !isEmbed && <Summary /> }
 
           <div className="cards-section">
             <SwitchButtonContainer />
@@ -213,8 +212,8 @@ const HomePage = _ => {
             }
             { !isBigPicture && <MainContentContainer/> }
           </div>
-          { !isEmbed() && !isBigPicture && <Footer/> }
-          { isEmbed() && <EmbeddedFooter/> }
+          { !isEmbed && !isBigPicture && <Footer/> }
+          { isEmbed && <EmbeddedFooter/> }
         </div>
       </div>
     </div>

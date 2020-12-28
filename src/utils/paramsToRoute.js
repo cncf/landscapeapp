@@ -30,6 +30,8 @@ const encodeGrouping = grouping => grouping === 'no' ? 'no' : fields[grouping].u
 
 const encodeCardStyle = style => style !== 'card' ? style : null
 
+const encodeEmbed = isEmbed => isEmbed ? 'yes' : null
+
 const paramsToRoute = (params = {}) => {
   const { mainContentMode, selectedItemId, ...rest } = params
   const path = [
@@ -57,6 +59,7 @@ const paramsToRoute = (params = {}) => {
     grouping: encodeGrouping(rest.grouping),
     sort: rest.sortField,
     style: encodeCardStyle(rest.cardStyle),
+    embed: encodeEmbed(rest.isEmbed),
     ...filters
   })
 

@@ -5,7 +5,6 @@ import classNames from 'classnames'
 import ListSubheader from '@material-ui/core/ListSubheader';
 import _ from 'lodash';
 import InternalLink from './InternalLink';
-import isEmbed from '../utils/isEmbed';
 import currentDevice from '../utils/currentDevice'
 import Delay from './DelayRender';
 import fields from '../types/fields';

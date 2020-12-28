@@ -3,7 +3,6 @@ import _ from 'lodash';
 import qs from 'query-string';
 import fields from '../types/fields';
 import { options } from '../components/SortFieldContainer';
-import isEmbed from './isEmbed';
 
 import settings from '../utils/settings.js';
 import { findLandscapeSettings } from './landscapeSettings';
@@ -14,10 +13,6 @@ export function filtersToUrl({filters, grouping, sortField, selectedItemId, zoom
   const prefix = ''
   const params = {};
   var fieldNames = _.keys(fields);
-
-  if (isEmbed()) {
-    params.embed = 'yes'
-  }
 
   const filtersPart = qs.stringify(params, {encode: false})
 

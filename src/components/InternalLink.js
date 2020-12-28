@@ -1,11 +1,12 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import Link from 'next/link'
-import isEmbed from '../utils/isEmbed';
 import isGoogle from '../utils/isGoogle';
 import isModalOnly from '../utils/isModalOnly';
+import RootContext from '../contexts/RootContext'
 
 const InternalLink = ({to, children, onClick, className, ...other}) => {
-  if (isEmbed() || isGoogle() || isModalOnly() || !to) {
+  const { params } = useContext(RootContext)
+  if (params.isEmbed || isGoogle() || isModalOnly() || !to) {
     return <span className={`${className}`} {...other}>{children}</span>;
   } else {
     return <Link href={to}>

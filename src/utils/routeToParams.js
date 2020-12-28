@@ -79,6 +79,8 @@ const decodeGrouping = grouping => grouping === 'no' ? grouping : getField(group
 
 const decodeCardStyle = style => style || 'card'
 
+const decodeEmbed = embed => embed === 'yes' || embed === 'true'
+
 const decodeSort = sort => {
   const sortField = getField(sort) || 'name'
   const option = options.find(option => option.id === sortField)
@@ -110,6 +112,7 @@ const routeToParams = params => {
     isFullscreen: decodeFullscreen(query),
     grouping: decodeGrouping(query.grouping),
     cardStyle: decodeCardStyle(query.style),
+    isEmbed: decodeEmbed(query.embed),
     ...decodeSort(query.sort),
     filters
   }

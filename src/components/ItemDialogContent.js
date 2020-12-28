@@ -1,4 +1,4 @@
-import React, { Fragment, useState } from 'react';
+import React, { Fragment, useContext, useState } from 'react';
 import SvgIcon from '@material-ui/core/SvgIcon';
 import StarIcon from '@material-ui/icons/Star';
 import KeyHandler from 'react-key-handler';
@@ -13,7 +13,6 @@ import InternalLink from './InternalLink';
 import fields from '../types/fields';
 import isGoogle from '../utils/isGoogle';
 import isModalOnly from '../utils/isModalOnly';
-import isEmbed from '../utils/isEmbed';
 import settings from '../utils/settings.js';
 import TweetButton from './TweetButton';
 import currentDevice from '../utils/currentDevice'
@@ -24,6 +23,7 @@ import useWindowSize from "@rooks/use-window-size"
 import classNames from 'classnames'
 import CreateWidthMeasurer from 'measure-text-width';
 import isBrowser from '../utils/isBrowser'
+import RootContext from '../contexts/RootContext'
 
 const measureWidth = () => isBrowser() && CreateWidthMeasurer(window).setFont('0.6rem Roboto');
 
@@ -155,7 +155,8 @@ const badgeTag = function(itemInfo) {
 }
 
 const chart = function(itemInfo) {
-  if (isEmbed() || !itemInfo.github_data || !itemInfo.github_data.languages) {
+  const { params } = useContext(RootContext)
+  if (params.isEmbed || !itemInfo.github_data || !itemInfo.github_data.languages) {
     return null;
   }
   const callbacks = defaults.global.tooltips.callbacks;
@@ -244,7 +245,8 @@ const chart = function(itemInfo) {
 
 const participation = function(itemInfo) {
   const { innerWidth } = useWindowSize();
-  if (isEmbed() || !itemInfo.github_data || !itemInfo.github_data.contributions) {
+  const { params } = useContext(RootContext)
+  if (params.isEmbed || !itemInfo.github_data || !itemInfo.github_data.contributions) {
     return null;
   }
   let lastMonth = null;
