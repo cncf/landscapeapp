@@ -123,13 +123,6 @@ export function changeParameters(value) {
     }
   }
 }
-export function resetParameters() {
-  return function(dispatch) {
-    dispatch(setParameters({...initialState, zoom: 1}));
-    dispatch(push('/' + window.prefix));
-    setTimeout(() => bus.emit('scrollToTop'), 1);
-  }
-}
 
 function markInitialUrlAsHandled() {
   return {
@@ -212,8 +205,6 @@ function reducer(state = initialState, action) {
   switch(action.type) {
     case 'Main/SetData':
       return setDataHandler(state, action);
-    case 'Main/SetFilter':
-      return setParametersHandler(state, action);
     case 'Main/SetReady':
       return setReadyHandler(state, action);
     case 'Main/ShowFilters':

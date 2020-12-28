@@ -16,7 +16,6 @@ import {
 } from './BigPicture';
 import TweetButton from './TweetButton';
 import MainContentContainer from './MainContentContainer';
-import HeaderContainer from './HeaderContainer';
 import ExportCsvContainer from './ExportCsvContainer';
 import Footer from './Footer';
 import EmbeddedFooter from './EmbeddedFooter';
@@ -38,6 +37,7 @@ import ItemDialog from './ItemDialog'
 import ZoomButtons from './BigPicture/ZoomButtons'
 import Summary from './Summary'
 import FullscreenButton from './BigPicture/FullscreenButton'
+import Header from './Header'
 
 const state = {
   lastScrollPosition: 0
@@ -170,7 +170,7 @@ const HomePage = ({filtersVisible, hideFilters, showFilters, title}) => {
     <div className={classNames('app',{'filters-opened' : filtersVisible})}>
       <div />
       <div style={{marginTop: (isIphone && hasSelectedItem) ? -state.lastScrollPosition : 0}} className={classNames({"iphone-scroller": isIphone && hasSelectedItem}, 'main-parent')} >
-        { !isEmbed() && !isFullscreen && <HeaderContainer/> }
+        { !isEmbed() && !isFullscreen && <Header /> }
         { !isEmbed() && !isFullscreen && <IconButton className="sidebar-show" title="Show sidebar" onClick={showFilters}><MenuIcon /></IconButton> }
         { !isEmbed() && !isFullscreen && <div className="sidebar">
           <div className="sidebar-scroll">
