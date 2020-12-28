@@ -67,9 +67,11 @@ const getRouterParams = _ => {
   return { path, query }
 }
 
-const decodeMainContentMode = path => path && path[0] !== 'items' ? path[0] : 'landscape'
+const decodeReallyFullscreen = path => path && path[path.length - 1] === 'fullscreen'
 
-const decodeSelectedItemId = path => path && path.length >= 2 ? path[path.length - 1] : null
+const decodeMainContentMode = path => path && path[0] !== 'items' && path[0] !== 'fullscreen' ? path[0] : 'landscape'
+
+const decodeSelectedItemId = path => path && path.length >= 2 && path[path.length - 1] !== 'fullscreen' ? path[path.length - 1] : null
 
 const decodeZoom = ({ zoom }) => zoom ? Math.trunc(+zoom) / 100 : 1
 
@@ -108,6 +110,8 @@ const routeToParams = params => {
     defaultParams,
     mainContentMode: decodeMainContentMode(path),
     selectedItemId: decodeSelectedItemId(path),
+    // TODO: come up with better naming
+    isReallyFullscreen: decodeReallyFullscreen(path),
     zoom: decodeZoom(query),
     isFullscreen: decodeFullscreen(query),
     grouping: decodeGrouping(query.grouping),

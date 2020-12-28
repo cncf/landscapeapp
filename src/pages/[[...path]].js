@@ -13,6 +13,7 @@ import paramsToRoute from '../utils/paramsToRoute'
 import { useRouter } from 'next/router'
 import { useContext } from 'react'
 import RootContext from '../contexts/RootContext'
+import FullscreenLandscape from '../components/BigPicture/FullscreenLandscape'
 
 const defaultTitle =  settings.global.meta.title;
 
@@ -51,7 +52,7 @@ const HomePage = ({ entries, selectedItem }) => {
     <Head>
       <title>{title}</title>
     </Head>
-    <HomePageComponent />
+    { params.isReallyFullscreen ? <FullscreenLandscape /> : <HomePageComponent />}
   </EntriesContext.Provider>
 }
 
@@ -97,8 +98,15 @@ export async function getStaticPaths() {
 
     const basePaths = mainContentMode === 'landscape' ? [[], ['card-mode']] : [[mainContentMode]]
 
+    // TODO: for now fullscreen landscapes are /fullscreen, /serverless/fullscreen, members/fullscreen
+    // Not sure if this is the best way.
+    // Also serverless/fullscreen is broken, probably because fullscreen is interpreted as selected item
+    const fullScreenPath = [mainContentMode === 'landscape' ? null : mainContentMode, 'fullscreen']
+      .filter(_ => _)
+
     return [
       ...basePaths,
+      fullScreenPath,
       ...basePaths.flatMap(path => {
         return items.map(item => [path[0], 'items', item.id].filter(_ => _))
       })

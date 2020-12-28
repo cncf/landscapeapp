@@ -1,13 +1,24 @@
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { pure } from 'recompose';
 import LandscapeContent from './LandscapeContent';
 import { calculateSize, outerPadding, headerHeight } from "../../utils/landscapeCalculations";
 import currentDevice from '../../utils/currentDevice'
+import { getGroupedItemsForBigPicture } from '../../utils/itemsCalculator'
+import RootContext from '../../contexts/RootContext'
+import EntriesContext from '../../contexts/EntriesContext'
+import { findLandscapeSettings } from '../../utils/landscapeSettings'
+import isBrowser from '../../utils/isBrowser'
 
 const calculateZoom = (width, height, zoomedIn) => {
   const boxHeight = height + headerHeight + 2 * outerPadding
   const boxWidth = width + 2 * outerPadding
-  const isFirefox = navigator.userAgent.indexOf('Firefox') > -1
+
+  // TODO: this is not being executed after it renders client side
+  if (!isBrowser()) {
+    return { zoom: 1, wrapperHeight: boxHeight, wrapperWidth: boxWidth }
+  }
+
+  const isFirefox = isBrowser() && navigator.userAgent.indexOf('Firefox') > -1
 
   const aspectRatio = innerWidth / innerHeight
   const adjustedWidth = outerWidth
@@ -27,11 +38,12 @@ const calculateZoom = (width, height, zoomedIn) => {
   return { zoom: Math.min(baseZoom * (zoomedIn ? 3 : 1), 3), wrapperWidth, wrapperHeight }
 }
 
-const Fullscreen = ({ready, groupedItems, landscapeSettings, version}) => {
-  if (ready !== true) {
-    return <div></div>
-  }
-
+const Fullscreen = ({version}) => {
+  const { params } = useContext(RootContext)
+  const { entries } = useContext(EntriesContext)
+  const { mainContentMode } = params
+  const landscapeSettings = findLandscapeSettings(mainContentMode)
+  const groupedItems = getGroupedItemsForBigPicture(params, entries, landscapeSettings)
   const [_, setWindowSize] = useState(1)
   const [zoomedIn, setZoomedIn] = useState(false)
   const [zoomedAt, setZoomedAt] = useState({})
@@ -129,4 +141,4 @@ const Fullscreen = ({ready, groupedItems, landscapeSettings, version}) => {
   );
 };
 
-export default pure(Fullscreen);
+export default Fullscreen
