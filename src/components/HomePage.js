@@ -70,7 +70,7 @@ function enableScroll(){
   document.body.removeEventListener('touchmove', preventDefault);
 }
 
-const HomePage = ({title}) => {
+const HomePage = _ => {
   const { params } = useContext(RootContext)
   const { entries, selectedItem } = useContext(EntriesContext)
   const { mainContentMode, zoom, isFullscreen } = params
@@ -80,10 +80,6 @@ const HomePage = ({title}) => {
   const [sidebarVisible, setSidebarVisible] = useState(false)
   const showSidebar = _ => setSidebarVisible(true)
   const hideSidebar = _ => setSidebarVisible(false)
-
-  if (isBrowser()) {
-    document.title = title;
-  }
 
   if (isModalOnly()) {
     document.querySelector('body').classList.add('popup');
