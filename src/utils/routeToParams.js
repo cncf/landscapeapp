@@ -25,7 +25,6 @@ const defaultParams = {
   sortDirection: 'asc',
   selectedItemId: null,
   mainContentMode: settings.big_picture.main.url, // also landscape or serverless for a big picture
-  cardMode: 'card', // one of card, logo, flat, borderless
   zoom: 1,
   isFullscreen: false
 };
@@ -78,6 +77,8 @@ const decodeFullscreen = ({ fullscreen }) => fullscreen === 'yes' || fullscreen 
 
 const decodeGrouping = grouping => grouping === 'no' ? grouping : getField(grouping) || 'relation'
 
+const decodeCardStyle = style => style || 'card'
+
 const decodeSort = sort => {
   const sortField = getField(sort) || 'name'
   const option = options.find(option => option.id === sortField)
@@ -108,6 +109,7 @@ const routeToParams = params => {
     zoom: decodeZoom(query),
     isFullscreen: decodeFullscreen(query),
     grouping: decodeGrouping(query.grouping),
+    cardStyle: decodeCardStyle(query.style),
     ...decodeSort(query.sort),
     filters
   }

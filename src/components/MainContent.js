@@ -11,6 +11,7 @@ import Delay from './DelayRender';
 import fields from '../types/fields';
 import isBrowser from '../utils/isBrowser'
 import EntriesContext from '../contexts/EntriesContext'
+import RootContext from '../contexts/RootContext'
 
 let oldItems = null;
 const maxAnimatedElements = 100;
@@ -27,10 +28,12 @@ function getRelationStyle(relation) {
   }
 }
 
-const Card = (({cardMode, item, handler, itemRef, ...props}) => {
-  if (cardMode === 'flat') {
+const Card = (({item, handler, itemRef, ...props}) => {
+  const { params } = useContext(RootContext)
+  const { cardStyle } = params
+  if (cardStyle === 'flat') {
     return FlatCard({item, handler, itemRef, ...props});
-  } else if (cardMode === 'borderless') {
+  } else if (cardStyle === 'borderless') {
     return BorderlessCard({item, handler, itemRef, ...props});
   } else {
     return DefaultCard({item, handler, itemRef, ...props});
@@ -111,7 +114,9 @@ const Header = (({groupedItem, itemRef, ...props}) => {
 
 
 
-const MainContent = ({groupedItems, cardMode, onSelectItem, onOpenItemInNewTab}) => {
+const MainContent = ({groupedItems}) => {
+  const { params } = useContext(RootContext)
+  const { cardStyle } = params
   const handler = itemId => {
     const { navigate } = useContext(EntriesContext)
     // TODO: this is preventing from opening the modal
@@ -141,7 +146,7 @@ const MainContent = ({groupedItems, cardMode, onSelectItem, onOpenItemInNewTab})
         })()
       ].concat(_.map(groupedItem.items, function(item) {
         if (newItemsAndHeaderIds.indexOf(item.id) >= maxAnimatedElements) {
-          return <Card cardMode={cardMode} key={Math.random()} item={item} handler={handler} />;
+          return <Card cardStyle={cardStyle} key={Math.random()} item={item} handler={handler} />;
         }
         return [];
       }));
@@ -359,13 +364,13 @@ const MainContent = ({groupedItems, cardMode, onSelectItem, onOpenItemInNewTab})
 
         if (kind === 'new' || kind === 'up') {
           return (
-              <Card cardMode={cardMode} key={Math.random()} itemRef={captureFadeIn(item.id)} item={item} handler={handler} />
+              <Card key={Math.random()} itemRef={captureFadeIn(item.id)} item={item} handler={handler} />
           );
         }
         if (kind === 'move') {
           return [
-            <Card cardMode={cardMode} itemRef={captureNew(item.id)} item={item} handler={handler} key={Math.random()} />,
-            <Card cardMode={cardMode} itemRef={captureNewCopy(item.id)} item={item} handler={handler} key={Math.random()} style={{position: 'absolute'}}/>
+            <Card itemRef={captureNew(item.id)} item={item} handler={handler} key={Math.random()} />,
+            <Card itemRef={captureNewCopy(item.id)} item={item} handler={handler} key={Math.random()} style={{position: 'absolute'}}/>
           ];
         }
       }));
@@ -401,11 +406,11 @@ const MainContent = ({groupedItems, cardMode, onSelectItem, onOpenItemInNewTab})
         const kind = index === -1 ? 'old' : index < maxAnimatedElements ? 'move' : 'down';
         if (kind === 'old' || kind === 'down') {
           return (
-              <Card cardMode={cardMode} key={Math.random()} itemRef={captureFadeOut(item.id)} item={item} handler={handler} />
+              <Card key={Math.random()} itemRef={captureFadeOut(item.id)} item={item} handler={handler} />
           );
         }
         if (kind === 'move') {
-          return <Card cardMode={cardMode} key={Math.random()} itemRef={captureOld(item.id)} item={item} handler={handler} />;
+          return <Card key={Math.random()} itemRef={captureOld(item.id)} item={item} handler={handler} />;
         }
       }));
     });
@@ -433,7 +438,7 @@ const MainContent = ({groupedItems, cardMode, onSelectItem, onOpenItemInNewTab})
   }
 
   return (
-      <div className={classNames('column-content', {[cardMode + '-mode']: true})}>
+      <div className={classNames('column-content', {[cardStyle + '-mode']: true})}>
         { _.flatten(itemsAndHeaders) }
         { delayedRemainingContent }
         <div ref={autoHide} className="old-column-content" key={Math.random()}>

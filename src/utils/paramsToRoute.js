@@ -28,6 +28,8 @@ const encodeFullscreen = isFullscreen => isFullscreen ? 'yes' : null
 
 const encodeGrouping = grouping => grouping === 'no' ? 'no' : fields[grouping].url
 
+const encodeCardStyle = style => style !== 'card' ? style : null
+
 const paramsToRoute = (params = {}) => {
   const { mainContentMode, selectedItemId, ...rest } = params
   const path = [
@@ -54,6 +56,7 @@ const paramsToRoute = (params = {}) => {
     fullscreen: encodeFullscreen(rest.isFullscreen),
     grouping: encodeGrouping(rest.grouping),
     sort: rest.sortField,
+    style: encodeCardStyle(rest.cardStyle),
     ...filters
   })
 
