@@ -5,7 +5,7 @@ import HorizontalCategory from './HorizontalCategory'
 import VerticalCategory from './VerticalCategory'
 import LandscapeInfo from './LandscapeInfo';
 import OtherLandscapeLink from './OtherLandscapeLink';
-import { calculateSize } from "../../utils/landscapeCalculations";
+import { calculateSize } from '../../shared/landscapeCalculations'
 import EntriesContext from '../../contexts/EntriesContext'
 
 const extractKeys = (obj, keys) => {

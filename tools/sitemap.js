@@ -1,15 +1,20 @@
 import { getLandscapeCategories } from '../src/utils/sharedItemsCalculator';
-import fields from '../src/types/fields';
 import { SitemapStream } from 'sitemap';
 import { projectPath, settings } from './settings';
 import path from 'path';
 const items = JSON.parse(require('fs').readFileSync(path.resolve(projectPath, 'data.json')));
 import _ from 'lodash';
-import { landscapeSettingsList } from "../src/utils/landscapeSettings";
+import lookups from './resolve-lookup'
+import unpack from '../src/utils/unpackArray'
+
+// TODO: DRY
+const landscapeSettingsList = Object.values(settings.big_picture)
+  .sort((a, b) => a.tab_index - b.tab_index)
 
 async function main() {
   const bigPictureElements = {};
-  const landscape = fields.landscape.values;
+// TODO: DRY
+  const landscape = unpack(lookups.landscape)
   landscapeSettingsList.forEach((landscapeSettings) => {
     const categories = getLandscapeCategories({landscapeSettings, landscape});
     bigPictureElements[landscapeSettings.url] = {

@@ -1,8 +1,7 @@
 import Promise from 'bluebird';
-import { projectPath } from './settings';
+import { projectPath, settings } from './settings';
 import { resolve } from 'path';
-import { landscapeSettingsList } from "../src/utils/landscapeSettings";
-import { calculateSize, outerPadding, headerHeight } from "../src/utils/landscapeCalculations";
+import { calculateSize, outerPadding, headerHeight } from "../src/shared/landscapeCalculations";
 
 const getLastCommitSha = function() {
   return require('child_process').execSync(`cd '${projectPath}' && git log -n 1 --format=format:%h`).toString('utf-8').trim();
@@ -25,7 +24,7 @@ async function main() {
   }
   const puppeteer = require('puppeteer');
 
-
+  const landscapeSettingsList = Object.values(settings.big_picture)
 
   const sizes = landscapeSettingsList.reduce((acc, landscapeSettings) => {
     const { width, height } = calculateSize(landscapeSettings)

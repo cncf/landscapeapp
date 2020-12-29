@@ -1,7 +1,7 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { pure } from 'recompose';
 import LandscapeContent from './LandscapeContent';
-import { calculateSize, outerPadding, headerHeight } from "../../utils/landscapeCalculations";
+import { calculateSize, outerPadding, headerHeight } from '../../shared/landscapeCalculations'
 import currentDevice from '../../utils/currentDevice'
 import { getGroupedItemsForBigPicture } from '../../utils/itemsCalculator'
 import RootContext from '../../contexts/RootContext'
