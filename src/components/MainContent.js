@@ -146,7 +146,7 @@ const MainContent = ({groupedItems}) => {
         })()
       ].concat(_.map(groupedItem.items, function(item) {
         if (newItemsAndHeaderIds.indexOf(item.id) >= maxAnimatedElements) {
-          return <Card cardStyle={cardStyle} key={Math.random()} item={item} handler={handler} />;
+          return <Card key={Math.random()} item={item} handler={handler} />;
         }
         return [];
       }));
