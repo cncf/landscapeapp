@@ -1,35 +1,14 @@
-import { Component } from 'react';
+import { useEffect, useState } from 'react'
 
-export default class DelayRender extends Component {
-  constructor() {
-    super();
-    this.state = { ready: true };
-  }
+const DelayRender = ({ delay = 1000, content }) => {
+  const [ready, setReady] = useState(false)
 
-  componentWillMount() {
-    const delay = this.props.delay || 1000;
-    const d = parseInt(delay, 10);
-    if (d && d > 0) {
-      this.setState({ ready: false });
-      this.timeout = setTimeout(() => {
-        this.setState({ ready: true });
-      }, delay);
-    } else {
-      this.setState({ ready: true });
-    }
-  }
+  useEffect(_ => {
+    const timeout = setTimeout(_ => setReady(true), delay)
+    return _ => clearTimeout(timeout)
+  }, [])
 
-  componentWillUnmount() {
-    if (this.timeout) {
-      clearTimeout(this.timeout);
-    }
-  }
-
-  render() {
-    if (this.state.ready) {
-      const content = this.props.content();
-      return content;
-    }
-    return null;
-  }
+  return ready ? content() : null
 }
+
+export default DelayRender

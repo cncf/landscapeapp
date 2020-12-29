@@ -6,7 +6,7 @@ import ListSubheader from '@material-ui/core/ListSubheader';
 import _ from 'lodash';
 import InternalLink from './InternalLink';
 import currentDevice from '../utils/currentDevice'
-import Delay from './DelayRender';
+import DelayRender from './DelayRender';
 import fields from '../types/fields';
 import isBrowser from '../utils/isBrowser'
 import EntriesContext from '../contexts/EntriesContext'
@@ -154,7 +154,7 @@ const MainContent = ({groupedItems}) => {
     return  _.flatten(result);
   }
 
-  const delayedRemainingContent = <Delay key={Math.random()} delay={timeout * 2} content={ () => (<RemainingContent />) } />;
+  const delayedRemainingContent = <DelayRender key={Math.random()} delay={timeout * 2} content={ () => (<RemainingContent />) } />;
   let storage = {};
 
   function runAnimationWhenReady() {
