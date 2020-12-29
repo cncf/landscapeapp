@@ -60,34 +60,39 @@ export async function getStaticProps({ params }) {
   const { mainContentMode, selectedItemId } = routeToParams({ ...params, query: {} })
   const selectedItem = selectedItemId ? projects.find(item => item.id === selectedItemId) : null
 
-  const entries = projects.map(project => {
-    // TODO: need to much data to render the landscape. See if we can reduce amount of data
-    const keys = [
-      'name', 'stars', 'organization', 'path', 'landscape', 'category', 'oss', 'href', 'id',
-      'flatName', 'member', 'relation', 'project', 'isSubsidiaryProject', 'amount', 'amountKind',
-      'headquarters', 'license', 'bestPracticeBadgeId', 'enduser'
-    ]
+  // TODO: navigating directly to an item URL will show an empy landscape in the background.
+  if (selectedItemId) {
+    return { props: { selectedItem, entries: [] } }
+  } else {
+    const entries = projects.map(project => {
+      // TODO: need to much data to render the landscape. See if we can reduce amount of data
+      const keys = [
+        'name', 'stars', 'organization', 'path', 'landscape', 'category', 'oss', 'href', 'id',
+        'flatName', 'member', 'relation', 'project', 'isSubsidiaryProject', 'amount', 'amountKind',
+        'headquarters', 'license', 'bestPracticeBadgeId', 'enduser'
+      ]
 
-    const entry = keys.reduce((hash, key) => {
-      const value = project[key]
+      const entry = keys.reduce((hash, key) => {
+        const value = project[key]
+        return {
+          ...hash,
+          ...(value || value === false ? { [key]: project[key] } : {})
+        }
+      }, {})
+
+      const languages = ((project.github_data || {}).languages || []).map(({ name }) => ({ name }))
+      const parents = (project.crunchbaseData || {}).parents || []
+
       return {
-        ...hash,
-        ...(value || value === false ? { [key]: project[key] } : {})
+        ...entry,
+        github_data: { languages },
+        crunchbaseData: { parents }
       }
-    }, {})
-
-    const languages = ((project.github_data || {}).languages || []).map(({ name }) => ({ name }))
-    const parents = (project.crunchbaseData || {}).parents || []
+    })
 
     return {
-      ...entry,
-      github_data: { languages },
-      crunchbaseData: { parents }
+      props: { entries }
     }
-  })
-
-  return {
-    props: { entries, selectedItem }
   }
 }
 
@@ -108,6 +113,7 @@ export async function getStaticPaths() {
       ...basePaths,
       fullScreenPath,
       ...basePaths.flatMap(path => {
+        // TODO: item URLs should just be /item/foo and have the landscape passed in the query string.
         return items.map(item => [path[0], 'items', item.id].filter(_ => _))
       })
     ]

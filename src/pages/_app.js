@@ -10,7 +10,7 @@ import routeToParams from '../utils/routeToParams'
 import ReactGA from 'react-ga';
 import iframeResizerContentWindow from 'iframe-resizer/js/iframeResizer.contentWindow';
 import isBrowser from '../utils/isBrowser'
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 
 // TODO: old index.js had the require below
 // require('favicon.png'); // Tell webpack to load favicon.png
@@ -44,6 +44,9 @@ export const initialState = {
 export default function App({ Component, pageProps }) {
   const params = routeToParams()
   const router = useRouter()
+  const pageEntries = pageProps.entries && pageProps.entries.length > 0 ? pageProps.entries : []
+  const [savedEntries, _] = useState(pageEntries)
+  const entries = pageEntries.length > 0 ? pageEntries : savedEntries
 
   const description = `${settings.global.meta.description}. Updated: ${process.env.lastUpdated}`
   const favicon = `${settings.global.website}/favicon.png`
@@ -121,7 +124,7 @@ export default function App({ Component, pageProps }) {
     <RootContext.Provider value={{ params: { ...initialState, ...params } }}>
       <CssBaseline />
       <main>
-        <Component {...pageProps} />
+        <Component {...{...pageProps, entries}} />
       </main>
     </RootContext.Provider>
   </>
