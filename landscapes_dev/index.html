@@ -106,6 +106,7 @@
   </script>
 
   <script>
+    let reportsIp = null;
     const fetchFile = async path => await (await fetch(`https://raw.githubusercontent.com/${path}`)).text()
 
     const tableEl = document.querySelector("tbody")
@@ -114,7 +115,7 @@
     const linkTo = (url, title) => `<a target="_blank" href="${url}">${title}</a>`
     const imageLinkTo = (url, src, alt) => linkTo(url, `<img src="${src}" alt="${alt}" />`)
 
-    const fetchLandscapeInfo = ({ repo }) => {
+    const fetchLandscapeInfo = ({ repo, name }) => {
       const rowEl = document.createElement("tr")
       const dateTimeFormat = new Intl.DateTimeFormat('en', { month: 'short', day: '2-digit', hour: '2-digit', minute:'2-digit', hour12: false })
       tableEl.append(rowEl)
@@ -176,13 +177,18 @@
           numTweetsEl.innerHTML = (twitter_options ? twitter_options.count : 0).toString()
 
           updatedEl.innerHTML = `<div class="${className}">
-              ${updated_at ? dateTimeFormat.format(updatedAt) : 'UNKNOWN'}
+            <div> ${updated_at ? dateTimeFormat.format(updatedAt) : 'UNKNOWN' } </div>
+            <a href="http://${reportsIp}/${name}.html">VIEW DAILY AUTOUPDATE LOGS</a>
           </div>`
         })
     }
 
     fetchFile("cncf/landscapeapp/master/landscapes.yml")
-      .then(data => jsyaml.load(data).landscapes.forEach(landscape => fetchLandscapeInfo(landscape)))
+          .then(function(data) {
+            const content = jsyaml.load(data);
+            reportsIp = content.ip;
+            content.landscapes.forEach(landscape => fetchLandscapeInfo(landscape));
+          })
   </script>
 </body>
 </html>
