@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { pure } from 'recompose';
 import IconButton from '@material-ui/core/IconButton';
 import CloseIcon from '@material-ui/icons/Close';
@@ -38,10 +38,6 @@ import Summary from './Summary'
 import FullscreenButton from './BigPicture/FullscreenButton'
 import Header from './Header'
 
-const state = {
-  lastScrollPosition: 0
-};
-
 bus.on('scrollToTop', function() {
   (document.scrollingElement || document.body).scrollTop = 0;
 });
@@ -79,6 +75,7 @@ const HomePage = _ => {
   const [sidebarVisible, setSidebarVisible] = useState(false)
   const showSidebar = _ => setSidebarVisible(true)
   const hideSidebar = _ => setSidebarVisible(false)
+  const [lastScrollPosition, setLastScrollPosition] = useState(0)
 
   if (isModalOnly()) {
     document.querySelector('body').classList.add('popup');
@@ -88,7 +85,7 @@ const HomePage = _ => {
     return <ItemDialog />;
   }
 
-  if (isBrowser()) {
+  useEffect(_ => {
     if (isBigPicture) {
       document.querySelector('html').classList.add('big-picture');
     } else {
@@ -100,65 +97,65 @@ const HomePage = _ => {
     } else {
       document.querySelector('html').classList.remove('fullscreen');
     }
-  }
 
-  if (isBrowser() && currentDevice.ios()) {
-    if (hasSelectedItem) {
-      if (!document.querySelector('.iphone-scroller')) {
-        state.lastScrollPosition = (document.scrollingElement || document.body).scrollTop;
-      }
-      document.querySelector('html').classList.add('has-selected-item');
-      (document.scrollingElement || document.body).scrollTop = 0;
-      disableScroll();
-    } else {
-      document.querySelector('html').classList.remove('has-selected-item');
-      if (document.querySelector('.iphone-scroller')) {
-        (document.scrollingElement || document.body).scrollTop = state.lastScrollPosition;
-      }
-      enableScroll();
-    }
-  }
-
-  if (isBrowser() && isEmbed) {
-    if (window.parentIFrame) {
-      if (hasSelectedItem) {
-        window.parentIFrame.sendMessage({type: 'showModal'})
+    if (currentDevice.ios()) {
+      if (selectedItem) {
+        if (!document.querySelector('.iphone-scroller')) {
+          setLastScrollPosition((document.scrollingElement || document.body).scrollTop)
+        }
+        document.querySelector('html').classList.add('has-selected-item');
+        (document.scrollingElement || document.body).scrollTop = 0;
+        disableScroll();
       } else {
-        window.parentIFrame.sendMessage({type: 'hideModal'})
-      }
-      if (hasSelectedItem) {
-        window.parentIFrame.getPageInfo(function(info) {
-          var offset = info.scrollTop - info.offsetTop;
-          var height = info.iframeHeight - info.clientHeight;
-          var maxHeight = info.clientHeight * 0.9;
-          if (maxHeight > 480) {
-            maxHeight = 480;
-          }
-          var t = function(x1, y1, x2, y2, x3) {
-            if (x3 < x1 - 50) {
-              x3 = x1 - 50;
-            }
-            if (x3 > x2 + 50) {
-              x3 = x2 + 50;
-            }
-            return y1 + (x3 - x1) / (x2 - x1) * (y2 - y1);
-          }
-          var top = t(0, -height, height, height, offset);
-          if (top < 0 && info.iframeHeight <= 600) {
-            top = 10;
-          }
-          setTimeout(function() {
-            const modal = document.querySelector('.modal-body');
-            if (modal) {
-              modal.style.top = top + 'px';
-              modal.style.maxHeight = maxHeight + 'px';
-            }
-          }, 10);
-        });
+        document.querySelector('html').classList.remove('has-selected-item');
+        if (document.querySelector('.iphone-scroller')) {
+          (document.scrollingElement || document.body).scrollTop = lastScrollPosition;
+        }
+        enableScroll();
       }
     }
-    document.querySelector('body').classList.add('embed');
-  }
+
+    if (isEmbed) {
+      if (window.parentIFrame) {
+        if (selectedItem) {
+          window.parentIFrame.sendMessage({type: 'showModal'})
+        } else {
+          window.parentIFrame.sendMessage({type: 'hideModal'})
+        }
+        if (selectedItem) {
+          window.parentIFrame.getPageInfo(function(info) {
+            var offset = info.scrollTop - info.offsetTop;
+            var height = info.iframeHeight - info.clientHeight;
+            var maxHeight = info.clientHeight * 0.9;
+            if (maxHeight > 480) {
+              maxHeight = 480;
+            }
+            var t = function(x1, y1, x2, y2, x3) {
+              if (x3 < x1 - 50) {
+                x3 = x1 - 50;
+              }
+              if (x3 > x2 + 50) {
+                x3 = x2 + 50;
+              }
+              return y1 + (x3 - x1) / (x2 - x1) * (y2 - y1);
+            }
+            var top = t(0, -height, height, height, offset);
+            if (top < 0 && info.iframeHeight <= 600) {
+              top = 10;
+            }
+            setTimeout(function() {
+              const modal = document.querySelector('.modal-body');
+              if (modal) {
+                modal.style.top = top + 'px';
+                modal.style.maxHeight = maxHeight + 'px';
+              }
+            }, 10);
+          });
+        }
+      }
+      document.querySelector('body').classList.add('embed');
+    }
+  }, [])
 
   const isIphone = isBrowser() && currentDevice.ios()
 
@@ -166,25 +163,25 @@ const HomePage = _ => {
     <div>
     {selectedItem && <ItemDialog/>}
     <div className={classNames('app',{'filters-opened' : sidebarVisible})}>
-      <div />
-      <div style={{marginTop: (isIphone && hasSelectedItem) ? -state.lastScrollPosition : 0}} className={classNames({"iphone-scroller": isIphone && hasSelectedItem}, 'main-parent')} >
-        { !isEmbed && !isFullscreen && <Header /> }
-        { !isEmbed && !isFullscreen && <IconButton className="sidebar-show" title="Show sidebar" onClick={showSidebar}><MenuIcon /></IconButton> }
-        { !isEmbed && !isFullscreen && <div className="sidebar">
-          <div className="sidebar-scroll">
-            <IconButton className="sidebar-collapse" title="Hide sidebar" onClick={hideSidebar}><CloseIcon /></IconButton>
-            <ResetFilters />
-            <Grouping/>
-            <Sorting/>
-            <Filters />
-            <PresetsContainer />
-            <ExportCsvContainer />
-            <Ad />
+      <div style={{marginTop: isIphone && selectedItem ? -lastScrollPosition : 0}} className={classNames({"iphone-scroller": isIphone && selectedItem}, 'main-parent')} >
+        { !isEmbed && !isFullscreen && <>
+          <Header />
+          <IconButton className="sidebar-show" title="Show sidebar" onClick={showSidebar}><MenuIcon /></IconButton>
+          <div className="sidebar">
+            <div className="sidebar-scroll">
+              <IconButton className="sidebar-collapse" title="Hide sidebar" onClick={hideSidebar}><CloseIcon /></IconButton>
+              <ResetFilters />
+              <Grouping/>
+              <Sorting/>
+              <Filters />
+              <PresetsContainer />
+              <ExportCsvContainer />
+              <Ad />
+            </div>
           </div>
-        </div>
-        }
+        </>}
 
-        <div className="app-overlay" onClick={hideSidebar}></div>
+        {sidebarVisible && <div className="app-overlay" onClick={hideSidebar}></div>}
 
         <div className={classNames('main', {'embed': isEmbed})}>
           { !isEmbed && <div className="disclaimer">
