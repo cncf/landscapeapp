@@ -116,14 +116,15 @@ const Header = (({groupedItem, itemRef, ...props}) => {
 const MainContent = ({groupedItems}) => {
   const { params } = useContext(RootContext)
   const { cardStyle } = params
+  const { navigate } = useContext(EntriesContext)
+
   const handler = itemId => {
-    const { navigate } = useContext(EntriesContext)
     // TODO: this is preventing from opening the modal
     // TODO: add isSpecialMode
     // const isSpecialMode = (isBrowser() && (currentDevice.mobile() || window.innerWidth < 768)) && isEmbed();
     // isSpecialMode ? onOpenItemInNewTab(itemId) : onSelectItem(itemId);
 
-    navigate({ selectedItem: itemId })
+    navigate({ selectedItemId: itemId })
   };
 
   const newItemsAndHeaderIds = _.flatten(_.map(groupedItems, function(x) {
