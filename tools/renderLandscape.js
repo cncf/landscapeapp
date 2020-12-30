@@ -65,11 +65,10 @@ async function main() {
       console.info(`visiting ${fullUrl}`);
       await page.goto(fullUrl, { waitUntil: 'networkidle0'});
       const imagesPath = [projectPath, 'dist', process.env.PROJECT_NAME, 'images'].filter(_ => _)
-      // TODO: re-enable this after we're able to deploy previews
-      // await page.screenshot({ path: resolve(...imagesPath, fileName), fullPage: false });
+      await page.screenshot({ path: resolve(...imagesPath, fileName), fullPage: false });
       if (pdfFileName) {
         await page.emulateMediaType('screen');
-        // await page.pdf({path: resolve(...imagesPath, pdfFileName), width, height, printBackground: true, pageRanges: '1' });
+        await page.pdf({path: resolve(...imagesPath, pdfFileName), width, height, printBackground: true, pageRanges: '1' });
       }
     }
   });
