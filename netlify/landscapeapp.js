@@ -241,11 +241,17 @@ EOSSH
     landscape.done = true;
     console.info(`Remaining : ${landscapesInfo.landscapes.filter( (x) => !x.done).map( (x) => x.name).join(',')}`);
 
+    await runRemoteWithoutErrors(`ls -al /root/builds/${outputFolder}/dist`)
+    await runRemoteWithoutErrors(`ls -al /root/builds/${outputFolder}/dist/${landscape.name}`)
+
     await runLocal(
       `
       rsync -az -e "ssh -i /tmp/buildbot  -o StrictHostKeyChecking=no " ${remote}:/root/builds/${outputFolder}/dist/${landscape.name} dist/${landscape.name}
       `
     );
+
+    await runLocalWithoutErrors(`ls -al dist/${landscape.name}`)
+
     await runRemote(
       `
       rm -rf /root/builds/${outputFolder}
