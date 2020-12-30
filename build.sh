@@ -7,7 +7,7 @@ git remote -v
 # git remote add origin https://github.com/$1
 git checkout origin/$3
 cd ..
-export PROJECT_PATH=$2
+export PROJECT_PATH=$PWD/$2
 PROJECT_NAME=$2 yarn build
 # rm -rf ./$2
 # echo "/$2/* /$2/index.html 200" >> dist/_redirects
