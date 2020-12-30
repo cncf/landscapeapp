@@ -66,7 +66,7 @@ const paramsToRoute = (params = {}) => {
   // TODO: check if we can do shallow routing
   // TODO: see why forward slash is appended on empty route
   // TODO: check if it's possible to not encode comma
-  return stringifyUrl({ url: path ? `/${path}` : '', query },
+  return stringifyUrl({ url: `/${path}`, query },
     { arrayFormat: 'comma', skipNull: true, skipEmptyString: true })
 }
 
