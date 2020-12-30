@@ -22,6 +22,8 @@ const encodeField = (field, value) => {
   return urlValues ? urlValues : null
 }
 
+const encodeTab = (mainContentMode, selectedItemId) => selectedItemId && mainContentMode !== 'landscape' ? mainContentMode : null
+
 const encodeZoom = zoom => zoom && zoom !== 1 ? zoom * 100 : null
 
 const encodeFullscreen = isFullscreen => isFullscreen ? 'yes' : null
@@ -35,7 +37,7 @@ const encodeEmbed = isEmbed => isEmbed ? 'yes' : null
 const paramsToRoute = (params = {}) => {
   const { mainContentMode, selectedItemId, ...rest } = params
   const path = [
-    mainContentMode === 'landscape' ? null : mainContentMode,
+    selectedItemId || mainContentMode === 'landscape' ? null : mainContentMode,
     selectedItemId ? 'items' : null,
     selectedItemId ? selectedItemId : null,
   ].filter(_ => _)
@@ -54,6 +56,7 @@ const paramsToRoute = (params = {}) => {
   })
 
   const query = compact({
+    tab: encodeTab(mainContentMode, selectedItemId),
     zoom: encodeZoom(rest.zoom),
     fullscreen: encodeFullscreen(rest.isFullscreen),
     grouping: encodeGrouping(rest.grouping),

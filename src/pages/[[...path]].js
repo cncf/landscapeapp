@@ -98,9 +98,7 @@ export async function getStaticProps({ params }) {
 
 export async function getStaticPaths() {
   const landscapeUrls = landscapeSettingsList.map(({ url }) => url)
-  const paths = landscapeUrls.flatMap(mainContentMode => {
-    const items = getFilteredItems({ ...initialState, mainContentMode }, projects)
-
+  const landscapePaths = landscapeUrls.flatMap(mainContentMode => {
     const basePaths = mainContentMode === 'landscape' ? [[], ['card-mode']] : [[mainContentMode]]
 
     // TODO: for now fullscreen landscapes are /fullscreen, /serverless/fullscreen, members/fullscreen
@@ -111,13 +109,13 @@ export async function getStaticPaths() {
 
     return [
       ...basePaths,
-      fullScreenPath,
-      ...basePaths.flatMap(path => {
-        // TODO: item URLs should just be /item/foo and have the landscape passed in the query string.
-        return items.map(item => [path[0], 'items', item.id].filter(_ => _))
-      })
+      fullScreenPath
     ]
   })
+
+  const itemPaths = projects.map(item => ['items', item.id])
+
+  const paths = [...landscapePaths, ...itemPaths]
 
   return {
     paths: paths.map(path => {
