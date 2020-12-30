@@ -60,8 +60,8 @@ async function main() {
       const page = await browser.newPage();
       await page.setViewport({ width, height, deviceScaleFactor })
 
-      // TODO: this is the wrong path
-      const fullUrl = `${appUrl}/${url}?version=${version}&scale=false&pdf`
+      const baseUrl = [appUrl, url === 'landscape' ? null : url, 'fullscreen'].filter(_ => _).join('/')
+      const fullUrl = `${baseUrl}?version=${version}&scale=false&pdf`
       console.info(`visiting ${fullUrl}`);
       await page.goto(fullUrl, { waitUntil: 'networkidle0'});
       const imagesPath = [projectPath, 'dist', process.env.PROJECT_NAME, 'images'].filter(_ => _)
