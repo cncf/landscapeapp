@@ -247,8 +247,6 @@ EOSSH
       `
     );
 
-    await runLocalWithoutErrors(`ls -al dist/${landscape.name}`)
-
     await runRemote(
       `
       rm -rf /root/builds/${outputFolder}
