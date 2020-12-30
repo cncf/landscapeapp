@@ -243,7 +243,7 @@ EOSSH
 
     await runLocal(
       `
-      rsync -az -e "ssh -i /tmp/buildbot  -o StrictHostKeyChecking=no " ${remote}:/root/builds/${outputFolder}/dist/ dist/${landscape.name}
+      rsync -az -e "ssh -i /tmp/buildbot  -o StrictHostKeyChecking=no " ${remote}:/root/builds/${outputFolder}/dist/${landscape.name} dist/${landscape.name}
       `
     );
     await runRemote(
@@ -263,17 +263,12 @@ EOSSH
       process.exit(1);
     }
   }
-  const redirects = results.map((result) => `
-    /${result.landscape.name}/ /${result.landscape.name}/prerender.html 200!
-    /${result.landscape.name} /${result.landscape.name}/prerender.html 200!
-    /${result.landscape.name}/* /${result.landscape.name}/index.html 200
-  `).join('\n');
+
   const index = generateIndex(results)
   const robots = `
     User-agent: *
     Disallow: /
   `;
-  require('fs').writeFileSync('dist/_redirects', redirects);
   require('fs').writeFileSync('dist/index.html', index);
   require('fs').writeFileSync('dist/robots.html', robots);
   require('fs').copyFileSync(path.resolve(__dirname, '..', '_headers'), 'dist/_headers')

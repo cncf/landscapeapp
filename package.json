@@ -31,7 +31,7 @@
     "check-landscape": "babel-node tools/checkLandscape",
     "render-landscape": "babel-node tools/renderLandscape",
     "funding": "babel-node tools/fundingForMasterBranch",
-    "copy-dist": "cp -r _headers _redirects \"$PROJECT_PATH\"/data.json out && yarn copy-iframe-resizer && ([ -z \"${PROJECT_NAME:-}\" ] || mkdir \"$PROJECT_PATH\"/dist ) && mv out \"$PROJECT_PATH\"/dist/${PROJECT_NAME:-}",
+    "copy-dist": "cp -r _headers \"$PROJECT_PATH\"/data.json out && yarn copy-iframe-resizer && ([ -z \"${PROJECT_NAME:-}\" ] || mkdir \"$PROJECT_PATH\"/dist ) && mv out \"$PROJECT_PATH\"/dist/${PROJECT_NAME:-}",
     "copy-iframe-resizer": "cp node_modules/iframe-resizer/js/iframeResizer.min.js out/iframeResizer.js && babel-node tools/copyIframeResizer.js",
     "copy-landscape": "rm -rf \"$PROJECT_PATH\"/public && mkdir -p \"$PROJECT_PATH\"/public && cp -r \"$PROJECT_PATH\"/images \"$PROJECT_PATH\"/cached_logos \"$PROJECT_PATH\"/public && mv \"$PROJECT_PATH\"/public/cached_logos \"$PROJECT_PATH\"/public/logos",
     "setup-robots": "babel-node tools/sitemap && babel-node tools/addRobots",
