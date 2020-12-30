@@ -7,10 +7,8 @@ import { options } from '../components/SortFieldContainer';
 import settings from '../utils/settings.js';
 import { findLandscapeSettings } from './landscapeSettings';
 
+// TODO: remove
 export function filtersToUrl({filters, grouping, sortField, selectedItemId, zoom, mainContentMode = 'card-mode', cardMode = 'card', isFullscreen}) {
-  // TODO: put back
-  // const prefix = window.prefix;
-  const prefix = ''
   const params = {};
   var fieldNames = _.keys(fields);
 
@@ -23,11 +21,7 @@ export function filtersToUrl({filters, grouping, sortField, selectedItemId, zoom
 }
 
 export function parseUrl(url) {
-  // TODO: put back
-  // const prefix = window.prefix;
-  const prefix = ''
   // TODO: parse old URL formats. Check Presets container
-  const args = qs.parse(url.replace(prefix, ''));
   const newParameters = {
     filters: {
 

@@ -2,6 +2,7 @@ import React from 'react';
 import { pure } from 'recompose';
 import _ from 'lodash';
 import isBrowser from '../../utils/isBrowser'
+import assetPath from '../../utils/assetPath'
 
 const LandscapeInfo = ({width, height, top, left, childrenInfo}) => {
   const children = childrenInfo.map(function(info) {
@@ -54,7 +55,7 @@ const LandscapeInfo = ({width, height, top, left, childrenInfo}) => {
       }}>{info.title}</div>
     }
     if (info.type === 'image') {
-      return <img src={`/images/${info.image}`} style={{...positionProps}} key={info.image} alt={info.title || info.image} />
+      return <img src={assetPath(`/images/${info.image}`)} style={{...positionProps}} key={info.image} alt={info.title || info.image} />
     }
   });
 

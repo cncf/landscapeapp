@@ -22,6 +22,9 @@ const tweets = (processedLandscape.twitter_options || {}).count || 0
 
 const GA = process.env.GA
 
+const basePath = process.env.PROJECT_NAME ? `/${process.env.PROJECT_NAME}` : ''
+
 module.exports = {
-  env: { settings, lookups, lastUpdated, tweets, GA }
+  env: { settings, lookups, lastUpdated, tweets, GA, basePath },
+  basePath
 }

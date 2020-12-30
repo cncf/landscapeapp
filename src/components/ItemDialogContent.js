@@ -24,6 +24,7 @@ import classNames from 'classnames'
 import CreateWidthMeasurer from 'measure-text-width';
 import isBrowser from '../utils/isBrowser'
 import RootContext from '../contexts/RootContext'
+import assetPath from '../utils/assetPath'
 
 const measureWidth = () => isBrowser() && CreateWidthMeasurer(window).setFont('0.6rem Roboto');
 
@@ -129,7 +130,6 @@ const licenseTag = function({relation, license, hideLicense}) {
   const { label } = _.find(fields.license.values, {id: license});
   const url = filtersToUrl({grouping: 'license', filters:{license: license}});
   const width = measureWidth(label);
-  console.info({width: width});
   return linkTag(label, { name: "License", url, color: "purple", multiline: width > 90 });
 }
 const badgeTag = function(itemInfo) {
@@ -463,7 +463,7 @@ const ItemDialogContent = ({ itemInfo }) => {
 
   const productLogoAndTags = <Fragment>
             <div className="product-logo" style={getRelationStyle(itemInfo.relation)}>
-              <img src={`/${itemInfo.href}`} className='product-logo-img' alt={itemInfo.name}/>
+              <img src={assetPath(itemInfo.href)} className='product-logo-img' alt={itemInfo.name}/>
             </div>
             <div className="product-tags">
               <div className="product-badges" style = {{width: Math.min(300, innerWidth - 110)}} >
@@ -484,7 +484,7 @@ const ItemDialogContent = ({ itemInfo }) => {
 
   const productLogoAndTagsAndCharts = <Fragment>
             <div className="product-logo" style={getRelationStyle(itemInfo.relation)}>
-              <img src={`/${itemInfo.href}`} className='product-logo-img'/>
+              <img src={assetPath(itemInfo.href)} className='product-logo-img'/>
             </div>
             <div className="product-tags">
               <div className="product-badges" style = {{width: 300}} >

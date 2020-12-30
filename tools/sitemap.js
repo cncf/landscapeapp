@@ -36,7 +36,7 @@ async function main() {
     hostname: settings.global.website,
     cacheTime: 600 * 1000,
   });
-  const fileName = path.resolve(projectPath, 'dist/sitemap.xml');
+  const fileName = 'out/sitemap.xml'
   const writeStream = require('fs').createWriteStream(fileName);
   stream.pipe(writeStream);
 

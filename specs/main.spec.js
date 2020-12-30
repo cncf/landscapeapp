@@ -11,7 +11,8 @@ const landscapeSettingsList = Object.values(settings.big_picture)
 
 const devicesMap = puppeteer.devices;
 const port = process.env.PORT || '4000';
-const appUrl = `http://localhost:${port}`;
+const basePath = process.env.PROJECT_NAME ? `/${process.env.PROJECT_NAME}` : ''
+const appUrl = `http://localhost:${port}${basePath}`
 const width = 1920;
 const height = 1080;
 
@@ -96,10 +97,10 @@ function mainTest() {
         await expect(page).toHaveElement(`//*[contains(text(), 'You are viewing ')]`);
       });
       test(`A proper card is present`, async function() {
-        await expect(page).toHaveElement(`.mosaic img[src='/logos/${settings.test.logo}']`);
+        await expect(page).toHaveElement(`.mosaic img[src='${basePath}/logos/${settings.test.logo}']`);
       });
       test(`If I click on a card, I see a modal dialog`, async function() {
-        await page.click(`.mosaic img[src='/logos/${settings.test.logo}']`);
+        await page.click(`.mosaic img[src='${basePath}/logos/${settings.test.logo}']`);
         await page.waitForSelector(".modal-content");
       });
       close();

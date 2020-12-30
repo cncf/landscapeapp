@@ -18,4 +18,4 @@ Disallow: /
   `
 ;
 
-require('fs').writeFileSync(path.resolve(projectPath, 'dist/robots.txt'), content);
+require('fs').writeFileSync('out/robots.txt', content);

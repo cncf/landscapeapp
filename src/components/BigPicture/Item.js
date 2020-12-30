@@ -9,6 +9,7 @@ import {
   smallItemWidth
 } from "../../utils/landscapeCalculations";
 import EntriesContext from '../../contexts/EntriesContext'
+import assetPath from '../../utils/assetPath'
 
 const LargeItem = (({ item, onClick }) => {
   const relationInfo = fields.relation.values.find(({ id }) => id === item.relation);
@@ -26,7 +27,7 @@ const LargeItem = (({ item, onClick }) => {
     height: largeItemHeight }}
               onClick={onClick}
   >
-    <img loading="lazy" src={`/${item.href}`} style={{
+    <img loading="lazy" src={assetPath(item.href)} style={{
       width: `calc(100% - ${2 * padding}px)`,
       height: `calc(100% - ${2 * padding + textHeight}px)`,
       padding: 5,
@@ -51,7 +52,7 @@ const SmallItem = (({ item, onClick }) => {
   }}
               data-href={item.id}
               loading="lazy"
-              src={`/${item.href}`}
+              src={assetPath(item.href)}
               onClick={onClick}
               alt={item.name}
   />

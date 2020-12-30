@@ -3,10 +3,15 @@ import { projectPath, settings } from './settings';
 import { resolve } from 'path';
 import { calculateSize, outerPadding, headerHeight } from "../src/shared/landscapeCalculations";
 
+// TODO: DRY
+const port = process.env.PORT || '4000';
+const basePath = process.env.PROJECT_NAME ? `/${process.env.PROJECT_NAME}` : ''
+const appUrl = `http://localhost:${port}${basePath}`
+
 const getLastCommitSha = function() {
   return require('child_process').execSync(`cd '${projectPath}' && git log -n 1 --format=format:%h`).toString('utf-8').trim();
 }
-const port = process.env.PORT || '4000';
+
 async function main() {
   const sha = await getLastCommitSha();
   const time = new Date().toISOString().slice(0, 19) + 'Z';
@@ -55,13 +60,15 @@ async function main() {
       const page = await browser.newPage();
       await page.setViewport({ width, height, deviceScaleFactor })
 
-      const fullUrl = `http://localhost:${port}/${url}?version=${version}&scale=false&pdf`
+      // TODO: this is the wrong path
+      const fullUrl = `${appUrl}/${url}?version=${version}&scale=false&pdf`
       console.info(`visiting ${fullUrl}`);
       await page.goto(fullUrl, { waitUntil: 'networkidle0'});
-      await page.screenshot({ path: resolve(projectPath, 'dist', 'images', fileName), fullPage: false });
+      const imagesPath = [projectPath, 'dist', process.env.PROJECT_NAME, 'images'].filter(_ => _)
+      await page.screenshot({ path: resolve(...imagesPath, fileName), fullPage: false });
       if (pdfFileName) {
         await page.emulateMediaType('screen');
-        await page.pdf({path: resolve(projectPath, 'dist', 'images', pdfFileName), width, height, printBackground: true, pageRanges: '1' });
+        await page.pdf({path: resolve(...imagesPath, pdfFileName), width, height, printBackground: true, pageRanges: '1' });
       }
     }
   });

@@ -15,8 +15,11 @@ app.use(serveStatic(distPath, { redirect: false, cacheControl: false }));
 app.use((req, res, next) => {
   const urlPath = req.url.split('?')[0]
   const filePath = `${projectPath}/dist${urlPath}.html`
+  const indexPath = `${projectPath}/dist${urlPath}/index.html`
   if (existsSync(filePath)) {
     res.end(readFileSync(filePath, 'utf-8'))
+  } else  if(existsSync(indexPath)) {
+    res.end(readFileSync(indexPath, 'utf-8'))
   } else {
     next()
   }
