@@ -246,7 +246,7 @@ EOSSH
 
     await runLocal(
       `
-      rsync -az -e "ssh -i /tmp/buildbot  -o StrictHostKeyChecking=no " ${remote}:/root/builds/${outputFolder}/dist/${landscape.name} dist/${landscape.name}
+      rsync -az -e "ssh -i /tmp/buildbot  -o StrictHostKeyChecking=no " ${remote}:/root/builds/${outputFolder}/dist/${landscape.name}/ dist/${landscape.name}
       `
     );
 
