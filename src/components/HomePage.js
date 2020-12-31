@@ -81,7 +81,7 @@ const HomePage = _ => {
     document.querySelector('body').classList.add('popup');
   }
 
-  if ((isGoogle() || isModalOnly()) && selectedItem) {
+  if ((isGoogle() || isModalOnly() || !isBrowser()) && selectedItem) {
     return <ItemDialog />;
   }
 

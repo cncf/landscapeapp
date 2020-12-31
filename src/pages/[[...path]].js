@@ -115,14 +115,9 @@ export async function getStaticPaths() {
 
   const itemPaths = projects.map(item => ['items', item.id])
 
-  const paths = [...landscapePaths, ...itemPaths]
+  const paths = [...landscapePaths, ...itemPaths].map(path => ({ params: { path } }))
 
-  return {
-    paths: paths.map(path => {
-      return { params: { path } }
-    }),
-    fallback: false
-  }
+  return { paths, fallback: false }
 }
 
 export default HomePage
