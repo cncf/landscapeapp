@@ -28,7 +28,7 @@ function getRelationStyle(relation) {
   }
 }
 
-const Card = (({item, handler, itemRef, ...props}) => {
+const Card = ({item, handler, itemRef, ...props}) => {
   const { params } = useContext(RootContext)
   const { cardStyle } = params
   if (cardStyle === 'flat') {
@@ -38,9 +38,9 @@ const Card = (({item, handler, itemRef, ...props}) => {
   } else {
     return DefaultCard({item, handler, itemRef, ...props});
   }
-});
+}
 
-const DefaultCard = (({item, handler, itemRef, ...props}) => {
+const DefaultCard = ({item, handler, itemRef, ...props}) => {
   return (
             <div ref={itemRef} className="mosaic-wrap" key={item.id} {...props}>
             <div className={classNames('mosaic', {nonoss : item.oss === false})} style={getRelationStyle(item.relation)}
@@ -68,7 +68,7 @@ const DefaultCard = (({item, handler, itemRef, ...props}) => {
             </div>
           </div>
   );
-});
+}
 
 const FlatCard = function({item, handler, itemRef, ...props}) {
   return (
@@ -92,7 +92,7 @@ const BorderlessCard = function({item, handler, itemRef, ...props}) {
   );
 }
 
-const Header = (({groupedItem, itemRef, ...props}) => {
+const Header = ({groupedItem, itemRef, ...props}) => {
   return (
           <div ref={itemRef} className="sh_wrapper" key={"subheader:" + groupedItem.header} {...props}>
             <ListSubheader component="div" style={{fontSize: 24, paddingLeft: 16 }}>
@@ -100,7 +100,7 @@ const Header = (({groupedItem, itemRef, ...props}) => {
               <span className="items-count"> ({groupedItem.items.length})</span></ListSubheader>
           </div>
   );
-})
+}
 
 /*
  That is quite a complex component. It draws headers and cards, and also animates the difference

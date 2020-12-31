@@ -14,15 +14,15 @@ import {
   subcategoryTitleHeight
 } from "../../utils/landscapeCalculations";
 
-const Divider = (({ color }) => {
+const Divider = ({ color }) => {
   const width = dividerWidth
   const marginTop = 2 * subcategoryMargin
   const height = `calc(100% - ${2 * marginTop}px)`
 
   return <div style={{ width, marginTop, height, borderLeft: `${width}px solid ${color}` }}/>
-})
+}
 
-const HorizontalCategory = (({ header, subcategories, width, height, top, left, color, href, fitWidth }) => {
+const HorizontalCategory = ({ header, subcategories, width, height, top, left, color, href, fitWidth }) => {
   const subcategoriesWithCalculations = calculateHorizontalCategory({ height, width, subcategories, fitWidth })
 
   return (
@@ -114,6 +114,6 @@ const HorizontalCategory = (({ header, subcategories, width, height, top, left, 
         </div>
       </div>
     </div>);
-});
+}
 
 export default HorizontalCategory
