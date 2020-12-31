@@ -26,5 +26,23 @@ const basePath = process.env.PROJECT_NAME ? `/${process.env.PROJECT_NAME}` : ''
 
 module.exports = {
   env: { settings, lookups, lastUpdated, tweets, GA, basePath },
-  basePath
+  basePath,
+  webpack: (config, options) => {
+    config.module.rules.push(      {
+      test: /\.jsx?$/,
+      exclude: /node_modules\/(?!(interactive-landscape)\/).*/,
+      use: [{
+        loader: 'babel-loader',
+        options: {
+          babelrc: false,
+          presets: ['@babel/preset-env', 'next/babel'],
+          plugins: [
+            "@babel/plugin-proposal-class-properties"
+          ]
+        }
+      }]
+    })
+
+    return config
+  },
 }

@@ -1,4 +1,8 @@
 {
       "ignore": [".yarn", ".pnp.js"],
-      "presets": [ "next/babel", ["babel-preset-latest-node", {target: "current"}] ]
+      "presets": [
+        "next/babel",
+        ["babel-preset-latest-node", {"target": "current"}],
+        ["@babel/preset-env", {"modules": false, "targets": '>1%'}]
+      ]
 }
