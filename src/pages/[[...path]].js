@@ -1,13 +1,11 @@
 import HomePageComponent from '../components/HomePage';
-import {closeDialog } from '../reducers/mainReducer';
-import getGroupedItems, { getFilteredItems, getGroupedItemsForBigPicture } from '../utils/itemsCalculator';
+import getGroupedItems, { getGroupedItemsForBigPicture } from '../utils/itemsCalculator';
 import selectedItemCalculator from '../utils/selectedItemCalculator';
 import settings from '../utils/settings'
 import EntriesContext from '../contexts/EntriesContext'
 import { projects } from '../../tools/loadData'
 import Head from 'next/head'
 import { findLandscapeSettings, landscapeSettingsList } from '../utils/landscapeSettings'
-import { initialState } from './_app'
 import routeToParams from '../utils/routeToParams'
 import paramsToRoute from '../utils/paramsToRoute'
 import { useRouter } from 'next/router'
@@ -16,17 +14,6 @@ import RootContext from '../contexts/RootContext'
 import FullscreenLandscape from '../components/BigPicture/FullscreenLandscape'
 
 const defaultTitle =  settings.global.meta.title;
-
-const mapStateToProps = (state) => ({
-  ready: state.main.ready,
-  isFullscreen: state.main.isFullscreen && state.main.mainContentMode !== 'card',
-  mainContentMode: state.main.mainContentMode,
-  hasSelectedItem: !!state.main.selectedItemId,
-  title: getTitle(state)
-});
-const mapDispatchToProps = {
-  onClose: closeDialog
-};
 
 const HomePage = ({ entries, selectedItem }) => {
   const { params } = useContext(RootContext)
