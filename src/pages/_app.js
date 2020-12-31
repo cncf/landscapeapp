@@ -121,6 +121,7 @@ export default function App({ Component, pageProps }) {
     </Head>
 
     {/* TODO: not sure why we need initial state */}
+    {/* TODO: add spinner */}
     <RootContext.Provider value={{ params: { ...initialState, ...params } }}>
       <CssBaseline />
       <main>
