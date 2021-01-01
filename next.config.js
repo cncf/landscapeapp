@@ -46,18 +46,11 @@ module.exports = withBundleAnalyzer({
       }]
     })
 
-    // config.resolve.alias = {
-    //   ...config.resolve.alias,
-    //   'lodash.clonedeep': 'lodash/cloneDeep.js',
-    //   'lodash.set': 'lodash/set.js',
-    //   'lodash.get': 'lodash/get.js',
-    //   'current-device': 'current-device/es',
-    //   'react-redux': 'react-redux/es',
-    //   'react-router-redux': 'react-router-redux/es',
-    //   'redux-thunk': 'redux-thunk/es',
-    //   'reselect': 'reselect/es',
-    // }
+    config.externals = [
+      ...config.externals,
+      { moment: 'moment' }
+    ]
 
     return config
   },
-}
+})
