@@ -68,6 +68,7 @@ const HomePage = _ => {
   const { entries, selectedItem } = useContext(EntriesContext)
   const { mainContentMode, zoom, isFullscreen, isEmbed } = params
   const landscapeSettings = findLandscapeSettings(mainContentMode)
+  // TODO: this is already done in [[...path]]
   const groupedItems = getGroupedItemsForBigPicture(params, entries, landscapeSettings)
   const isBigPicture = mainContentMode !== 'card-mode';
   const [sidebarVisible, setSidebarVisible] = useState(false)
