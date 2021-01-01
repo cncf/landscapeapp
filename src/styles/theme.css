@@ -18,13 +18,6 @@ html {-webkit-text-size-adjust: 100%;}
   overflow: scroll;
 }
 
-html.react-snap {
-  overflow-y: hidden;
-  .right-buttons {
-    visibility: hidden;
-  }
-}
-
 body.popup {background-color:transparent !important; }
 body.popup .MuiBackdrop-root { display: none }
 

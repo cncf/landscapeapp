@@ -1,5 +1,4 @@
 import MainContent from './MainContent';
-import { openSelectedItemIdInNewTab} from '../reducers/mainReducer';
 import getGroupedItems from '../utils/itemsCalculator';
 import { useContext } from 'react'
 import RootContext from '../contexts/RootContext'

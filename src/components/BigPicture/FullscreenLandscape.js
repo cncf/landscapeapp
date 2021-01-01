@@ -38,6 +38,7 @@ const calculateZoom = (width, height, zoomedIn) => {
   return { zoom: Math.min(baseZoom * (zoomedIn ? 3 : 1), 3), wrapperWidth, wrapperHeight }
 }
 
+// TODO: check version is set correctly (version: qs.parse(location.search).version)
 const Fullscreen = ({version}) => {
   const { params } = useContext(RootContext)
   const { entries } = useContext(EntriesContext)

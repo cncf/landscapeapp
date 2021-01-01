@@ -1,11 +1,6 @@
-import { initialState } from '../reducers/mainReducer';
 import _ from 'lodash';
 import qs from 'query-string';
 import fields from '../types/fields';
-import { options } from '../components/SortFieldContainer';
-
-import settings from '../utils/settings.js';
-import { findLandscapeSettings } from './landscapeSettings';
 
 // TODO: remove
 export function filtersToUrl({filters, grouping, sortField, selectedItemId, zoom, mainContentMode = 'card-mode', cardMode = 'card', isFullscreen}) {

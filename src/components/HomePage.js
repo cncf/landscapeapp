@@ -11,12 +11,8 @@ import PresetsContainer from './PresetsContainer';
 import Ad from './Ad';
 import AutoSizer from './CustomAutoSizer';
 import OutboundLink from './OutboundLink';
-import {
-  SwitchButtonContainer,
-} from './BigPicture';
 import TweetButton from './TweetButton';
 import MainContentContainer from './MainContentContainer';
-import ExportCsvContainer from './ExportCsvContainer';
 import Footer from './Footer';
 import EmbeddedFooter from './EmbeddedFooter';
 
@@ -37,6 +33,8 @@ import ZoomButtons from './BigPicture/ZoomButtons'
 import Summary from './Summary'
 import FullscreenButton from './BigPicture/FullscreenButton'
 import Header from './Header'
+import SwitchButton from './BigPicture/SwitchButton'
+import ExportCsv from './ExportCsv'
 
 bus.on('scrollToTop', function() {
   (document.scrollingElement || document.body).scrollTop = 0;
@@ -175,7 +173,7 @@ const HomePage = _ => {
               <Sorting/>
               <Filters />
               <PresetsContainer />
-              <ExportCsvContainer />
+              <ExportCsv />
               <Ad />
             </div>
           </div>
@@ -192,7 +190,7 @@ const HomePage = _ => {
           { !isEmbed && <Summary /> }
 
           <div className="cards-section">
-            <SwitchButtonContainer />
+            <SwitchButton />
             <div className="right-buttons">
               <ZoomButtons/>
               <FullscreenButton/>

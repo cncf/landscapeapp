@@ -1,12 +1,11 @@
 import React from "react";
-import ReactDOM from "react-dom";
-import { withRouter } from "react-router";
 import queryString from 'query-string';
 import { landscapeSettingsList } from "../utils/landscapeSettings";
 
 const additionalLandscapes = landscapeSettingsList.slice(1).map(({ url }) => url);
 const allowedFormats = ["card-mode", ...additionalLandscapes];
 
+// TODO: check this
 const isCanonical = (pathname) => {
   const params = queryString.parse(pathname.split("/").pop());
   const paramsCount = Object.keys(params).length;
