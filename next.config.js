@@ -1,6 +1,9 @@
 const path = require('path')
 const { readFileSync } = require('fs')
 const { safeLoad } = require('js-yaml')
+const bundleAnalyzerPlugin = require('@next/bundle-analyzer')
+
+const withBundleAnalyzer = bundleAnalyzerPlugin({ enabled: !!process.env.ANALYZE })
 
 if (!process.env.PROJECT_PATH) {
   console.info('NOTE: the PROJECT_PATH env variable is not set. Please point it to the cncf, lfai or other landscape repo');
@@ -24,7 +27,7 @@ const GA = process.env.GA
 
 const basePath = process.env.PROJECT_NAME ? `/${process.env.PROJECT_NAME}` : ''
 
-module.exports = {
+module.exports = withBundleAnalyzer({
   env: { settings, lookups, lastUpdated, tweets, GA, basePath },
   basePath,
   webpack: (config, options) => {
