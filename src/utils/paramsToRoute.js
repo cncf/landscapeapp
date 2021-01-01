@@ -28,7 +28,7 @@ const encodeZoom = zoom => zoom && zoom !== 1 ? zoom * 100 : null
 
 const encodeFullscreen = isFullscreen => isFullscreen ? 'yes' : null
 
-const encodeGrouping = grouping => grouping === 'no' ? 'no' : fields[grouping].url
+const encodeGrouping = grouping => !grouping || grouping === 'no' ? grouping : fields[grouping].url
 
 const encodeCardStyle = style => style !== 'card' ? style : null
 

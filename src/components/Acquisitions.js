@@ -27,15 +27,24 @@ import { DatePicker, MuiPickersUtilsProvider } from '@material-ui/pickers'
 import DateFnsUtils from '@date-io/date-fns'
 import millify from 'millify'
 import OutboundLink from './OutboundLink'
-import { filtersToUrl } from '../utils/syncToUrl'
+import { sortBy, uniq } from 'lodash'
+import paramsToRoute from '../utils/paramsToRoute'
 
-// TODO: convert to next
-export default ({ acquisitions, members, acquirers, acquirees }) => {
-  const linkToOrg = (name) => {
-    if (!members.has(name)) {
-      return name
+const makeOptions = (arr) => sortBy(uniq(arr), name => name.toLowerCase())
+
+const Acquistions = ({ ...props }) => {
+  const acquisitions = props.acquisitions.map(data => ({ ...data, date: new Date(data.date) }))
+    .sort((a, b) => b.date - a.date)
+  const members = new Set(props.members)
+  const acquirers = makeOptions(acquisitions.map(a => a.acquirer))
+  const acquirees = makeOptions(acquisitions.map(a => a.acquiree).filter(a => a))
+
+  const linkToOrg = organization => {
+    if (!members.has(organization)) {
+      return organization
     }
-    return <OutboundLink to={filtersToUrl({mainContentMode: 'landscape', filters: { organization: name}})}>{name}</OutboundLink>
+    const url = paramsToRoute({ mainContentMode: 'landscape', filters: { organization }})
+    return <OutboundLink to={url}>{organization}</OutboundLink>
   }
 
   const rowKey = ({ acquirer, acquiree, date }) => {
@@ -250,3 +259,5 @@ export default ({ acquisitions, members, acquirers, acquirees }) => {
     </Paper>
   </Container>
 }
+
+export default Acquistions
