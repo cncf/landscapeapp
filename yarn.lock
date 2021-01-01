@@ -4095,6 +4095,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"anchorme@npm:^2.1.2":
+  version: 2.1.2
+  resolution: "anchorme@npm:2.1.2"
+  checksum: dd49c6e01d4a1898afcb486d59a23a5cc781af2e336c125f6ed541c17d5917a0a7a41909a3eaf3d59415a60b076de659837c69727527ff2dbb9b911bbf0c9b61
+  languageName: node
+  linkType: hard
+
 "ansi-colors@npm:^3.0.0, ansi-colors@npm:^3.2.1":
   version: 3.2.4
   resolution: "ansi-colors@npm:3.2.4"
@@ -9288,6 +9295,7 @@ fsevents@^1.2.7:
     "@material-ui/lab": 4.0.0-alpha.56
     "@material-ui/pickers": 3.2.10
     "@rooks/use-window-size": 3.6.0
+    anchorme: ^2.1.2
     autoprefixer: ^9.8.6
     axe-puppeteer: 1.1.0
     babel-eslint: 10.1.0

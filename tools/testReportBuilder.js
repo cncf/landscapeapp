@@ -8,7 +8,7 @@ const input = {
   `,
   name: 'lfph',
   messages: [
-    { category: 'general', type: 'error', text: 'ERROR: it just went really wring' },
+    { category: 'general', type: 'error', text: 'ERROR: it just went really wring https://cubernetes.io' },
     { category: 'image', type: 'fatal', text: 'FATAL! we failed' },
     { category: 'image', type: 'error', text: 'ERROR! something really went wrong here and again and again and again'},
   ],

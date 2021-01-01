@@ -7,6 +7,7 @@
 // messages are stored in /tmp/landscape.json
 // links results are stored in /tmp/links.json
 
+import anchorme from 'anchorme';
 const run = function(x) {
   return (require('child_process').execSync(x).toString());
 }
@@ -26,7 +27,7 @@ export default function generateReport({logs, name, messages, status, startTime,
   }
 
 
-  return `
+  return anchorme(`
   <h1> Daily autoupdate report on ${name} from ${startTimeFormatted} </h1>
   <h1 style="color: ${status ? 'green' : 'red' }">${status ? 'Success' : 'Failure'}</h1>
 
@@ -47,5 +48,5 @@ export default function generateReport({logs, name, messages, status, startTime,
   <pre>
 ${formattedLogs}
   </pre>
-  `;
+  `);
 }

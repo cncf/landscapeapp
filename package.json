@@ -83,6 +83,7 @@
     "@material-ui/lab": "4.0.0-alpha.56",
     "@material-ui/pickers": "3.2.10",
     "@rooks/use-window-size": "3.6.0",
+    "anchorme": "^2.1.2",
     "autoprefixer": "^9.8.6",
     "axe-puppeteer": "1.1.0",
     "babel-eslint": "10.1.0",
