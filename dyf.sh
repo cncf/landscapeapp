@@ -1,0 +1,1 @@
+docker run -it --user root --rm -v $(pwd)/../landscapeapp:/landscapeapp -v $(pwd):/repo -w /usr/app netlify/build:xenial /bin/bash -c '. /opt/buildhome/.nvm/install.sh; . /root/.nvm/nvm.sh; cd /landscapeapp; nvm install `cat .nvmrc`; nvm use `cat .nvmrc`; npm install -g yarn; yarn; PROJECT_PATH=/repo yarn open'
