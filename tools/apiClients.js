@@ -108,7 +108,7 @@ export const GithubClient = ApiClient({
       'User-agent': 'CNCF'
     },
   },
-  keys: env.GITHUB_KEY.split(',').map( (x) => x.trim()),
+  keys: (env.GITHUB_KEY || '').split(',').map( (x) => x.trim()),
   applyKey: (options, key) => options.headers.Authorization = `token ${key}`
 });
 
