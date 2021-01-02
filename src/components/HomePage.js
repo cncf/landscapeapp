@@ -18,7 +18,7 @@ import EmbeddedFooter from './EmbeddedFooter';
 
 import isGoogle from '../utils/isGoogle';
 import bus from '../reducers/bus';
-import settings from 'project/settings.yml';
+import settings from 'project/settings.yml'
 import isModalOnly from "../utils/isModalOnly";
 import currentDevice from '../utils/currentDevice'
 import isBrowser from '../utils/isBrowser'

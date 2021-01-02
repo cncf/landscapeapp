@@ -1,5 +1,5 @@
 // locate zoom buttons
-import settings from 'project/settings.yml';
+import settings from 'project/settings.yml'
 import qs from 'query-string';
 
 import React from 'react';

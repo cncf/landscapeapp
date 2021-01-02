@@ -1,6 +1,5 @@
 import settings from 'project/settings.yml'
-import fields from '../types/fields'
-import shared from '../shared/landscapeCalculations'
+import fields from "../types/fields";
 
 export const itemMargin = 3
 export const smallItemWidth = 34
@@ -12,6 +11,8 @@ export const subcategoryTitleHeight = 20
 export const dividerWidth = 2
 export const categoryBorder = 1
 export const categoryTitleHeight = 30
+export const outerPadding = 20
+export const headerHeight = 40
 
 // Check if item is large
 const isLargeFn = ({ relation, category, member, categoryAttrs }) => {
@@ -35,6 +36,14 @@ const computeItems = subcategories => {
 
     return { ...subcategory, allItems, itemsCount, largeItemsCount }
   })
+}
+
+// Calculate width and height of a given landscape
+export const calculateSize = landscapeSettings => {
+  return {
+    width: Math.max(...landscapeSettings.elements.map(({ left, width }) => left + width)),
+    height: Math.max(...landscapeSettings.elements.map(({ top, height }) => top + height))
+  }
 }
 
 // Calculate each subcategory width and the disposition of its items, assuming fixed padding for each item.

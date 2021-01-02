@@ -1,7 +1,7 @@
 import Promise from 'bluebird';
 import { projectPath, settings } from './settings';
 import { resolve } from 'path';
-import { calculateSize, outerPadding, headerHeight } from "../src/shared/landscapeCalculations";
+import { calculateSize, outerPadding, headerHeight } from "../src/utils/landscapeCalculations";
 
 // TODO: DRY
 const port = process.env.PORT || '4000';
