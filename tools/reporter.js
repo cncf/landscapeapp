@@ -9,6 +9,9 @@ export function getMessages() {
 
 try {
   messages = JSON.parse(require('fs').readFileSync('/tmp/landscape.json', 'utf-8'));
+  if (!messages.length) {
+    messages = [];
+  }
 } catch(ex) {
 
 }
