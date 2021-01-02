@@ -5,18 +5,7 @@ const bundleAnalyzerPlugin = require('@next/bundle-analyzer')
 
 const withBundleAnalyzer = bundleAnalyzerPlugin({ enabled: !!process.env.ANALYZE })
 
-if (!process.env.PROJECT_PATH) {
-  console.info('NOTE: the PROJECT_PATH env variable is not set. Please point it to the cncf, lfai or other landscape repo');
-  process.env.PROJECT_PATH = path.resolve('../..');
-  console.info('Using: ', process.env.PROJECT_PATH);
-}
-
 const projectPath = process.env.PROJECT_PATH
-const settingsPath = path.resolve(projectPath, 'settings.yml')
-const settings = JSON.stringify(safeLoad(readFileSync(settingsPath)))
-
-const lookupsPath =  path.resolve(projectPath, 'lookup.json')
-const lookups = readFileSync(lookupsPath, 'utf-8')
 
 const lastUpdated = new Date().toISOString().substring(0, 19).replace('T', ' ') + 'Z'
 
@@ -28,23 +17,26 @@ const GA = process.env.GA
 const basePath = process.env.PROJECT_NAME ? `/${process.env.PROJECT_NAME}` : ''
 
 module.exports = withBundleAnalyzer({
-  env: { settings, lookups, lastUpdated, tweets, GA, basePath },
+  env: { lastUpdated, tweets, GA, basePath },
   basePath,
   webpack: (config, options) => {
-    config.module.rules.push(      {
-      test: /\.jsx?$/,
-      exclude: /node_modules\/(?!(interactive-landscape)\/).*/,
-      use: [{
-        loader: 'babel-loader',
-        options: {
-          babelrc: false,
-          presets: ['@babel/preset-env', 'next/babel'],
-          plugins: [
-            "@babel/plugin-proposal-class-properties"
-          ]
-        }
-      }]
-    })
+    config.module.rules = [
+      ...config.module.rules,
+      {
+        test: /\.jsx?$/,
+        exclude: /node_modules\/(?!(interactive-landscape)\/).*/,
+        use: [{
+          loader: 'babel-loader',
+          options: {
+            babelrc: false,
+            presets: ['@babel/preset-env', 'next/babel'],
+            plugins: [
+              "@babel/plugin-proposal-class-properties"
+            ]
+          }
+        }]
+      }
+    ]
 
     config.externals = [
       ...config.externals,

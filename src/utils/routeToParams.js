@@ -1,6 +1,6 @@
 import { useRouter } from 'next/router'
 import qs, { parseUrl } from 'query-string'
-import settings from './settings'
+import settings from 'project/settings.yml'
 import fields from '../types/fields'
 import { options } from '../components/SortFieldContainer'
 

@@ -1,5 +1,5 @@
 import Presets from './Presets';
-import settings from '../utils/settings.js';
+import settings from 'project/settings.yml';
 import { parseUrl, filtersToUrl } from '../utils/syncToUrl';
 import _ from 'lodash';
 import { useContext } from 'react'

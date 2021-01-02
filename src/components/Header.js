@@ -1,7 +1,7 @@
 import React from 'react';
 import { pure } from 'recompose';
 import OutboundLink from './OutboundLink';
-import settings from '../utils/settings.js';
+import settings from 'project/settings.yml';
 import Link from 'next/link'
 import assetPath from '../utils/assetPath'
 

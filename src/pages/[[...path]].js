@@ -1,7 +1,7 @@
 import HomePageComponent from '../components/HomePage';
 import getGroupedItems, { getGroupedItemsForBigPicture } from '../utils/itemsCalculator';
 import selectedItemCalculator from '../utils/selectedItemCalculator';
-import settings from '../utils/settings'
+import settings from 'project/settings.yml';
 import EntriesContext from '../contexts/EntriesContext'
 import { projects } from '../../tools/loadData'
 import Head from 'next/head'

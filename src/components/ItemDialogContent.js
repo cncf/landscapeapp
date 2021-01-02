@@ -13,7 +13,7 @@ import InternalLink from './InternalLink';
 import fields from '../types/fields';
 import isGoogle from '../utils/isGoogle';
 import isModalOnly from '../utils/isModalOnly';
-import settings from '../utils/settings.js';
+import settings from 'project/settings.yml';
 import TweetButton from './TweetButton';
 import currentDevice from '../utils/currentDevice'
 import TwitterTimeline from "./TwitterTimeline";

@@ -6,7 +6,7 @@ import InternalLink from '../InternalLink';
 import RootContext from '../../contexts/RootContext'
 import EntriesContext from '../../contexts/EntriesContext'
 import _ from 'lodash'
-import settings from '../../utils/settings'
+import settings from 'project/settings.yml';
 import paramsToRoute from '../../utils/paramsToRoute'
 
 const mainCard = [{shortTitle: 'Card', title: 'Card Mode', mode: 'card-mode', tabIndex: 0}]

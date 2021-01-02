@@ -5,7 +5,7 @@ import RootContext from '../contexts/RootContext'
 import '../styles/roboto.css'
 import '../styles/theme.css'
 import '../styles/itemModal.css'
-import settings from '../utils/settings'
+import settings from 'project/settings.yml'
 import routeToParams from '../utils/routeToParams'
 import ReactGA from 'react-ga';
 import iframeResizerContentWindow from 'iframe-resizer/js/iframeResizer.contentWindow';

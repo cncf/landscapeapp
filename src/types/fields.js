@@ -10,9 +10,9 @@
 //     sortOrder(element index by default): sort order when grouping
 //     match: function
 import _ from 'lodash';
-import lookups from '../utils/lookups.js';
+import lookups from 'project/lookup.json';
 import unpack from '../utils/unpackArray';
-import settings from '../utils/settings.js';
+import settings from 'project/settings.yml';
 import isParent from '../utils/isParent';
 
 const relationField = (function() {

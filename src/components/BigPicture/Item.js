@@ -1,6 +1,6 @@
 import { useContext } from 'react'
 import Fade from "@material-ui/core/Fade";
-import settings from '../../utils/settings.js'
+import settings from 'project/settings.yml';
 import fields from "../../types/fields";
 import {
   largeItemHeight,

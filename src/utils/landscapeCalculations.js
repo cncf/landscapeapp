@@ -1,4 +1,4 @@
-import settings from '../utils/settings.js'
+import settings from 'project/settings.yml'
 import fields from '../types/fields'
 import shared from '../shared/landscapeCalculations'
 

@@ -1,5 +1,5 @@
 import { useContext } from 'react'
-import settings from '../utils/settings.js'
+import settings from 'project/settings.yml';
 import SortFieldSelector from './SortFieldSelector'
 import RootContext from '../contexts/RootContext'
 import EntriesContext from '../contexts/EntriesContext'

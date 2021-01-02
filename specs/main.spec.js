@@ -1,13 +1,9 @@
-
 import puppeteer from "puppeteer";
 require('expect-puppeteer');
 import { paramCase } from 'change-case';
 import { settings } from '../tools/settings';
 import { projects } from '../tools/loadData';
-
-// TODO: DRY
-const landscapeSettingsList = Object.values(settings.big_picture)
-  .sort((a, b) => a.tab_index - b.tab_index);
+import { landscapeSettingsList } from "../src/utils/landscapeSettings";
 
 const devicesMap = puppeteer.devices;
 const port = process.env.PORT || '4000';
