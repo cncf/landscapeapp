@@ -3,6 +3,7 @@ import { pure } from 'recompose'
 import InternalLink from './InternalLink'
 
 const Presets = ({presets, activePreset}) => {
+  // TODO: convert old style URLs to new style
   const normalizeUrl = function(url) {
     if (url.indexOf('/') === 0) {
       return url.substring(1);

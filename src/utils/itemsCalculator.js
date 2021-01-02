@@ -5,10 +5,10 @@ import groupingLabel from '../utils/groupingLabel';
 import groupingOrder from '../utils/groupingOrder';
 import formatAmount from '../utils/formatAmount';
 import formatNumber from 'format-number';
-import { filtersToUrl } from '../utils/syncToUrl';
 import stringOrSpecial from '../utils/stringOrSpecial';
 import { getLandscapeCategories } from './sharedItemsCalculator';
 import { findLandscapeSettings } from "./landscapeSettings";
+import paramsToRoute from './paramsToRoute'
 
 const landscape = fields.landscape.values;
 
@@ -148,7 +148,7 @@ const getGroupedItems = createSelector(
         key: properKey,
         header: groupingLabel(grouping, properKey),
         items: value,
-        href: filtersToUrl({filters: newFilters, grouping, sortField})
+        href: paramsToRoute({filters: newFilters, grouping, sortField})
       }
     }), (group) => groupingOrder(grouping)(group.key));
   }
@@ -198,12 +198,12 @@ const getGroupedItemsForMainLandscape = createSelector(
       return {
         key: stringOrSpecial(category.label),
         header: category.label,
-        href: filtersToUrl({filters: newFilters, grouping: 'landscape', sortField, mainContentMode: 'card-mode'}),
+        href: paramsToRoute({filters: newFilters, grouping: 'landscape', sortField, mainContentMode: 'card-mode'}),
         subcategories: landscape.filter( (l) => l.parentId === category.id).map(function(subcategory) {
           const newFilters = {...filters, landscape: subcategory.id };
           return {
             name: subcategory.label,
-            href: filtersToUrl({filters: newFilters, grouping: 'landscape', sortField, mainContentMode: 'card-mode'}),
+            href: paramsToRoute({filters: newFilters, grouping: 'landscape', sortField, mainContentMode: 'card-mode'}),
             items: _.orderBy(items.filter(function(item) {
               return item.landscape ===  subcategory.id
             }), bigPictureSortOrder),
@@ -242,7 +242,7 @@ const getGroupedItemsForAdditionalLandscape = createSelector([
       return {
         key: stringOrSpecial(subcategory.label),
         header: subcategory.label,
-        href: filtersToUrl({filters: newFilters, grouping: 'landscape', sortField, mainContentMode: 'card'}),
+        href: paramsToRoute({filters: newFilters, grouping: 'landscape', sortField, mainContentMode: 'card'}),
         subcategories: [
           {
             name: '',

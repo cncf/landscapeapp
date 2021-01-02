@@ -6,7 +6,6 @@ import _ from 'lodash';
 import OutboundLink from './OutboundLink';
 import millify from 'millify';
 import relativeDate from 'relative-date';
-import { filtersToUrl } from '../utils/syncToUrl';
 import formatNumber from '../utils/formatNumber';
 import isParent from '../utils/isParent';
 import InternalLink from './InternalLink';
@@ -23,11 +22,13 @@ import useWindowSize from "@rooks/use-window-size"
 import classNames from 'classnames'
 import CreateWidthMeasurer from 'measure-text-width';
 import isBrowser from '../utils/isBrowser'
-import RootContext from '../contexts/RootContext'
 import assetPath from '../utils/assetPath'
+import paramsToRoute from '../utils/paramsToRoute'
+import RootContext from '../contexts/RootContext'
 
 const measureWidth = () => isBrowser() && CreateWidthMeasurer(window).setFont('0.6rem Roboto');
 
+const closeUrl = params => paramsToRoute({ mainContentMode: 'card-mode', selectedItemId: null, ...params })
 
 let productScrollEl = null;
 const formatDate = function(x) {
@@ -81,7 +82,8 @@ const parentTag = (project) => {
   if (membership) {
     const { label, name, crunchbase_and_children } = membership;
     const slug = crunchbase_and_children.split("/").pop();
-    return linkTag(label, {name, url: filtersToUrl({filters: {parents: slug}, grouping: 'organization'})});
+    const url = closeUrl({ grouping: 'organization', filters: {parents: slug}})
+    return linkTag(label, {name, url});
   }
 }
 
@@ -92,12 +94,13 @@ const projectTag = function({relation, isSubsidiaryProject, project, ...item}) {
   const { prefix, tag } = _.find(fields.relation.values, {id: project}) || {};
 
   if (prefix && tag) {
-    return linkTag(tag, {name: prefix, url: filtersToUrl({filters:{relation: project}})})
+    const url = closeUrl({ filters: { relation: project }})
+    return linkTag(tag, {name: prefix, url })
   }
 
   if (isSubsidiaryProject) {
-    const url = filtersToUrl({filters: {format: 'card-mode', relation: 'member', organization: item.organization}});
-    return linkTag("Subsidiary Project", { name: settings.global.short_name, url: url });
+    const url = closeUrl({ mainContentMode: 'card-mode', filters: { relation: 'member', organization: item.organization }})
+    return linkTag("Subsidiary Project", { name: settings.global.short_name, url });
   }
   return null;
 };
@@ -110,14 +113,15 @@ const memberTag = function({relation, member, enduser}) {
     if (!label) {
       return null;
     }
-    return linkTag(label, {name: name, url: filtersToUrl({filters: {relation: relation}})});
+    const url = closeUrl({ filters: { relation }})
+    return linkTag(label, {name: name, url });
   }
   return null;
 }
 
 const openSourceTag = function(oss) {
   if (oss) {
-    const url = filtersToUrl({grouping: 'license', filters: {license: 'Open Source'}});
+    const url = closeUrl({ grouping: 'license', filters: {license: 'Open Source'}})
     return linkTag("Open Source Software", { url, color: "orange" });
   }
 };
@@ -126,9 +130,8 @@ const licenseTag = function({relation, license, hideLicense}) {
   if (relation === 'company' || hideLicense) {
     return null;
   }
-
   const { label } = _.find(fields.license.values, {id: license});
-  const url = filtersToUrl({grouping: 'license', filters:{license: license}});
+  const url = closeUrl({ grouping: 'license', filters: { license }});
   const width = measureWidth(label);
   return linkTag(label, { name: "License", url, color: "purple", multiline: width > 90 });
 }
@@ -209,20 +212,12 @@ const chart = function(itemInfo) {
   const total = _.sumBy(languages, 'value');
 
   function getLegendText(language) {
-    const millify = require('millify').default;
-    const total = _.sumBy(languages, 'value');
     return `${language.name} ${percents(language.value)}`;
   }
 
-  function getPopupText(language) {
-    const millify = require('millify').default;
-    return `${language.name} ${millify(language.value, {precision: 1})}`;
-  }
-
-
   const legend = <div style={{position: 'absolute', width: 170, left: 0, top: 0, marginTop: -5, marginBottom: 5, fontSize: '0.8em'  }}>
     {languages.map(function(language) {
-      const url = language.name === 'Other' ? null : filtersToUrl({grouping: 'no', filters: {language: language.name }});
+      const url = language.name === 'Other' ? null : closeUrl({ grouping: 'no', filters: {language: language.name }});
       return <div style = {{
         position: 'relative',
         marginTop: 2,
@@ -341,16 +336,16 @@ const ItemDialogContent = ({ itemInfo }) => {
   }
   const { innerWidth, innerHeight } = useWindowSize();
 
-  const linkToOrganization = filtersToUrl({grouping: 'organization', filters: {organization: itemInfo.organization}});
+  const linkToOrganization = closeUrl({ grouping: 'organization', filters: {organization: itemInfo.organization}});
   const itemCategory = function(path) {
     var separator = <span className="product-category-separator" key="product-category-separator">•</span>;
     var subcategory = _.find(fields.landscape.values,{id: path});
     var category = _.find(fields.landscape.values, {id: subcategory.parentId});
     var categoryMarkup = (
-      <InternalLink key="category" to={filtersToUrl({grouping: 'landscape', filters: {landscape: category.id}})}>{category.label}</InternalLink>
+      <InternalLink key="category" to={closeUrl({ grouping: 'landscape', filters: {landscape: category.id}})}>{category.label}</InternalLink>
     )
     var subcategoryMarkup = (
-      <InternalLink key="subcategory" to={filtersToUrl({grouping: 'landscape', filters: {landscape: path}})}>{subcategory.label}</InternalLink>
+      <InternalLink key="subcategory" to={closeUrl({ grouping: 'landscape', filters: {landscape: path}})}>{subcategory.label}</InternalLink>
     )
     return (<span>{[categoryMarkup, separator, subcategoryMarkup]}</span>);
   }
@@ -396,7 +391,7 @@ const ItemDialogContent = ({ itemInfo }) => {
   const headquartersElement =  itemInfo.headquarters && itemInfo.headquarters !== 'N/A' && (
     <div className="product-property row">
       <div className="product-property-name col col-40">Headquarters</div>
-      <div className="product-property-value tight-col col-60"><InternalLink to={filtersToUrl({grouping: 'headquarters', filters:{headquarters:itemInfo.headquarters}})}>{itemInfo.headquarters}</InternalLink></div>
+      <div className="product-property-value tight-col col-60"><InternalLink to={closeUrl({ grouping: 'headquarters', filters:{headquarters:itemInfo.headquarters}})}>{itemInfo.headquarters}</InternalLink></div>
     </div>
   );
   const amountElement = !settings.global.hide_funding_and_market_cap && Number.isInteger(itemInfo.amount) && (
