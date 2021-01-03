@@ -35,7 +35,7 @@ export default function generateReport({logs, name, messages, status, startTime,
     if (messagesByCategories[category].length > 0) {
       return `
         <h2>${category}</h2>
-        <div>
+        <div id="${category}">
            ${messagesByCategories[category].map(renderMessage).join('')}
         </div>
       `;
@@ -48,5 +48,6 @@ export default function generateReport({logs, name, messages, status, startTime,
   <pre>
 ${formattedLogs}
   </pre>
+  <script>${require('fs').readFileSync(__dirname + './reportBuilderScript.js', 'utf-8')}</script>
   `);
 }
