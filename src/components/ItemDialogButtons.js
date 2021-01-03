@@ -4,7 +4,7 @@ import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
 import ChevronRightIcon from '@material-ui/icons/ChevronRight';
 import KeyHandler from 'react-key-handler';
 
-import '../styles/itemModal.scss';
+import '../styles/itemModal.css';
 
 const ItemDialogButtons = ({hasSelectedItem, onClose, previousItemId, nextItemId, onSelectItem }) => {
   if (!hasSelectedItem) {

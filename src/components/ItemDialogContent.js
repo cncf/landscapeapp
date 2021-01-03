@@ -10,7 +10,7 @@ import { filtersToUrl } from '../utils/syncToUrl';
 import formatNumber from '../utils/formatNumber';
 import isParent from '../utils/isParent';
 import InternalLink from './InternalLink';
-import '../styles/itemModal.scss';
+import '../styles/itemModal.css';
 import fields from '../types/fields';
 import isGoogle from '../utils/isGoogle';
 import isModalOnly from '../utils/isModalOnly';

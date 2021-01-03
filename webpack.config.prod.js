@@ -216,7 +216,7 @@ export default {
         ]
       },
       {
-        test: /(\.css|\.scss|\.sass)$/,
+        test: /(\.css)$/,
         use: [
           MiniCssExtractPlugin.loader,
           {
@@ -227,18 +227,6 @@ export default {
           }, {
             loader: 'postcss-loader',
             options: {
-              plugins: () => [
-                require('cssnano'),
-                require('autoprefixer'),
-              ],
-              sourceMap: true
-            }
-          }, {
-            loader: 'sass-loader',
-            options: {
-              sassOptions: {
-                includePaths: [path.resolve(__dirname, 'src', 'scss')]
-              },
               sourceMap: true
             }
           }

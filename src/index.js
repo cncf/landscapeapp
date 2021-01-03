@@ -10,7 +10,7 @@ import configureStore, { history } from './store/configureStore';
 import Root from './components/Root';
 import {loadMainData} from './reducers/mainReducer.js';
 import { loadData } from './reducers/api.js';
-import './styles/theme.scss';
+import './styles/theme.css';
 import ReactGA from 'react-ga';
 import isDesktop from './utils/isDesktop';
 import iframeResizerContentWindow from 'iframe-resizer/js/iframeResizer.contentWindow';
