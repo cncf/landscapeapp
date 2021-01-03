@@ -6,6 +6,7 @@ import { getGroupedItemsForBigPicture } from '../../utils/itemsCalculator'
 import RootContext from '../../contexts/RootContext'
 import EntriesContext from '../../contexts/EntriesContext'
 import { findLandscapeSettings } from '../../utils/landscapeSettings'
+import { useRouter } from 'next/router'
 
 const _calculateZoom = (boxWidth, boxHeight, zoomedIn) => {
   const isFirefox = navigator.userAgent.indexOf('Firefox') > -1
@@ -28,10 +29,11 @@ const _calculateZoom = (boxWidth, boxHeight, zoomedIn) => {
   return { zoom: Math.min(baseZoom * (zoomedIn ? 3 : 1), 3), wrapperWidth, wrapperHeight }
 }
 
-// TODO: check version is set correctly (version: qs.parse(location.search).version)
-const Fullscreen = ({version}) => {
+const Fullscreen = _ => {
   const { params } = useContext(RootContext)
   const { entries } = useContext(EntriesContext)
+  const { query } = useRouter()
+  const { version } = query
   const { mainContentMode } = params
   const landscapeSettings = findLandscapeSettings(mainContentMode)
   const groupedItems = getGroupedItemsForBigPicture(params, entries, landscapeSettings)
