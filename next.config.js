@@ -20,23 +20,8 @@ module.exports = withBundleAnalyzer({
   env: { lastUpdated, tweets, GA, basePath },
   basePath,
   webpack: (config, options) => {
-    config.module.rules = [
-      ...config.module.rules,
-      {
-        test: /\.jsx?$/,
-        exclude: /node_modules\/(?!(interactive-landscape)\/).*/,
-        use: [{
-          loader: 'babel-loader',
-          options: {
-            babelrc: false,
-            presets: ['@babel/preset-env', 'next/babel'],
-            plugins: [
-              "@babel/plugin-proposal-class-properties"
-            ]
-          }
-        }]
-      }
-    ]
+    // CAREFUL before adding more presets, next/babel already includes some
+    // see https://nextjs.org/docs/advanced-features/customizing-babel-config
 
     config.externals = [
       ...config.externals,
