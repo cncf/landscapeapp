@@ -48,6 +48,7 @@ export default function generateReport({logs, name, messages, status, startTime,
   <pre>
 ${formattedLogs}
   </pre>
-  <script>${require('fs').readFileSync(__dirname + './reportBuilderScript.js', 'utf-8')}</script>
-  `);
+  `) + `
+  <script>${require('fs').readFileSync(__dirname + '/reportBuilderScript.js', 'utf-8')}</script>
+  `;
 }

@@ -9,6 +9,8 @@ const input = {
   name: 'lfph',
   messages: [
     { category: 'general', type: 'error', text: 'ERROR: it just went really wring https://cubernetes.io' },
+    { category: 'link', type: 'error', text: 'ERROR: failed link just went really wring https://cubernetes.io' },
+    { category: 'link', type: 'error', text: 'ERROR: failed link just went really wring https://cubernetes.io2' },
     { category: 'image', type: 'fatal', text: 'FATAL! we failed' },
     { category: 'image', type: 'error', text: 'ERROR! something really went wrong here and again and again and again'},
   ],
