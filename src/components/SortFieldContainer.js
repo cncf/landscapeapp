@@ -1,7 +1,6 @@
 import { useContext } from 'react'
 import settings from 'project/settings.yml';
 import SortFieldSelector from './SortFieldSelector'
-import RootContext from '../contexts/RootContext'
 import EntriesContext from '../contexts/EntriesContext'
 
 // TODO: move this somewhere else
@@ -41,8 +40,7 @@ export const options = [{
 }].filter(field => !field.disabled)
 
 const SortFieldContainer = () => {
-  const { params } = useContext(RootContext)
-  const { navigate } = useContext(EntriesContext)
+  const { navigate, params } = useContext(EntriesContext)
   const isBigPicture = params.mainContentMode !== 'card-mode'
   const value = params.sortField
 

@@ -25,7 +25,6 @@ import isBrowser from '../utils/isBrowser'
 import LandscapeContent from './BigPicture/LandscapeContent'
 import { findLandscapeSettings } from '../utils/landscapeSettings'
 import { getGroupedItemsForBigPicture } from '../utils/itemsCalculator'
-import RootContext from '../contexts/RootContext'
 import EntriesContext from '../contexts/EntriesContext'
 import ResetFilters from './ResetFilters'
 import ItemDialog from './ItemDialog'
@@ -64,8 +63,7 @@ function enableScroll(){
 }
 
 const HomePage = _ => {
-  const { params } = useContext(RootContext)
-  const { entries, selectedItem } = useContext(EntriesContext)
+  const { entries, selectedItem, params } = useContext(EntriesContext)
   const { mainContentMode, zoom, isFullscreen, isEmbed } = params
   const landscapeSettings = findLandscapeSettings(mainContentMode)
   // TODO: this is already done in [[...path]]

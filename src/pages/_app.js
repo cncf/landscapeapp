@@ -1,12 +1,10 @@
-import { useRouter } from 'next/router'
 import CssBaseline from '@material-ui/core/CssBaseline'
 import Head from 'next/head'
-import RootContext from '../contexts/RootContext'
+import EntriesContext from '../contexts/EntriesContext'
 import '../styles/roboto.css'
-import '../styles/theme.css'
-import '../styles/itemModal.css'
-import settings from 'project/settings.yml'
-import routeToParams from '../utils/routeToParams'
+import '../styles/theme.scss'
+import '../styles/itemModal.scss'
+import settings from 'project/settings.yml';
 import ReactGA from 'react-ga';
 import iframeResizerContentWindow from 'iframe-resizer/js/iframeResizer.contentWindow';
 import isBrowser from '../utils/isBrowser'
@@ -15,35 +13,7 @@ import { useEffect, useState } from 'react'
 // TODO: old index.js had the require below
 // require('favicon.png'); // Tell webpack to load favicon.png
 
-export const initialState = {
-  data: null,
-  ready: false,
-  initialUrlHandled: false,
-  filters: {
-    relation: [],
-    stars: null,
-    license: [],
-    marketCap: null,
-    organization: [],
-    headquarters: [],
-    landscape: [],
-    bestPracticeBadgeId: null,
-    enduser: null,
-    language: undefined, // null means no language
-    parents: [],
-  },
-  grouping: 'relation',
-  sortField: 'name',
-  sortDirection: 'asc',
-  selectedItemId: null,
-  mainContentMode: settings.big_picture.main.url, // also landscape or serverless for a big picture
-  zoom: 1,
-  isFullscreen: false
-};
-
 export default function App({ Component, pageProps }) {
-  const params = routeToParams()
-  const router = useRouter()
   const pageEntries = pageProps.entries && pageProps.entries.length > 0 ? pageProps.entries : []
   const [savedEntries, _] = useState(pageEntries)
   const entries = pageEntries.length > 0 ? pageEntries : savedEntries
@@ -120,13 +90,10 @@ export default function App({ Component, pageProps }) {
       <link rel="icon" href={favicon} />
     </Head>
 
-    {/* TODO: not sure why we need initial state */}
     {/* TODO: add spinner */}
-    <RootContext.Provider value={{ params: { ...initialState, ...params } }}>
-      <CssBaseline />
-      <main>
-        <Component {...{...pageProps, entries}} />
-      </main>
-    </RootContext.Provider>
+    <CssBaseline />
+    <main>
+      <Component {...{...pageProps, entries}} />
+    </main>
   </>
 }

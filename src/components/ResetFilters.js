@@ -1,12 +1,12 @@
 import React, { useContext } from 'react';
 import { pure } from 'recompose';
 import ResetIcon from '@material-ui/icons/SettingsBackupRestore';
-import RootContext from '../contexts/RootContext'
+import EntriesContext from '../contexts/EntriesContext'
 import paramsToRoute from '../utils/paramsToRoute'
 import { useRouter } from 'next/router'
 
 const ResetFilters = _ => {
-  const { params } = useContext(RootContext)
+  const { params } = useContext(EntriesContext)
   const router = useRouter()
 
   // TODO: clean up with validate

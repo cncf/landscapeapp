@@ -9,14 +9,12 @@ import { findLandscapeSettings, landscapeSettingsList } from '../utils/landscape
 import routeToParams from '../utils/routeToParams'
 import paramsToRoute from '../utils/paramsToRoute'
 import { useRouter } from 'next/router'
-import { useContext } from 'react'
-import RootContext from '../contexts/RootContext'
 import FullscreenLandscape from '../components/BigPicture/FullscreenLandscape'
 
 const defaultTitle =  settings.global.meta.title;
 
 const HomePage = ({ entries, selectedItem }) => {
-  const { params } = useContext(RootContext)
+  const params = routeToParams()
   const landscapeSettings = findLandscapeSettings(params.mainContentMode)
   const isBigPicture = params.mainContentMode !== 'card-mode'
   const groupedItems = getGroupedItems(params, entries)
@@ -24,18 +22,16 @@ const HomePage = ({ entries, selectedItem }) => {
   const selectedItemId = selectedItem && selectedItem.id
   const { nextItemId, previousItemId } = selectedItemCalculator(groupedItems, groupedItemsForBigPicture, selectedItemId, isBigPicture)
 
-  // TODO: having currentParams and params is confusing
-  const currentParams = routeToParams()
   const router = useRouter()
   const navigate = (newParams = {}) => {
-    const filters = { ...(currentParams.filters || {}), ...(newParams.filters || {}) }
-    const url = paramsToRoute({ ...currentParams, ...newParams, filters })
+    const filters = { ...(params.filters || {}), ...(newParams.filters || {}) }
+    const url = paramsToRoute({ ...params, ...newParams, filters })
     router.push(url)
   }
 
   const title = selectedItem ? `${selectedItem.name} - ${defaultTitle}` : defaultTitle
 
-  return <EntriesContext.Provider value={{entries, selectedItem, navigate, groupedItems, nextItemId, previousItemId }}>
+  return <EntriesContext.Provider value={{entries, selectedItem, navigate, groupedItems, nextItemId, previousItemId, params }}>
     <Head>
       <title>{title}</title>
     </Head>

@@ -24,7 +24,7 @@ import CreateWidthMeasurer from 'measure-text-width';
 import isBrowser from '../utils/isBrowser'
 import assetPath from '../utils/assetPath'
 import paramsToRoute from '../utils/paramsToRoute'
-import RootContext from '../contexts/RootContext'
+import EntriesContext from '../contexts/EntriesContext'
 
 const measureWidth = () => isBrowser() && CreateWidthMeasurer(window).setFont('0.6rem Roboto');
 
@@ -158,7 +158,7 @@ const badgeTag = function(itemInfo) {
 }
 
 const chart = function(itemInfo) {
-  const { params } = useContext(RootContext)
+  const { params } = useContext(EntriesContext)
   if (params.isEmbed || !itemInfo.github_data || !itemInfo.github_data.languages) {
     return null;
   }
@@ -240,7 +240,7 @@ const chart = function(itemInfo) {
 
 const participation = function(itemInfo) {
   const { innerWidth } = useWindowSize();
-  const { params } = useContext(RootContext)
+  const { params } = useContext(EntriesContext)
   if (params.isEmbed || !itemInfo.github_data || !itemInfo.github_data.contributions) {
     return null;
   }

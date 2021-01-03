@@ -10,7 +10,6 @@ import DelayRender from './DelayRender';
 import fields from '../types/fields';
 import isBrowser from '../utils/isBrowser'
 import EntriesContext from '../contexts/EntriesContext'
-import RootContext from '../contexts/RootContext'
 import assetPath from '../utils/assetPath'
 
 let oldItems = null;
@@ -29,7 +28,7 @@ function getRelationStyle(relation) {
 }
 
 const Card = ({item, handler, itemRef, ...props}) => {
-  const { params } = useContext(RootContext)
+  const { params } = useContext(EntriesContext)
   const { cardStyle } = params
   if (cardStyle === 'flat') {
     return FlatCard({item, handler, itemRef, ...props});
@@ -115,9 +114,8 @@ const Header = ({groupedItem, itemRef, ...props}) => {
 
 
 const MainContent = ({groupedItems}) => {
-  const { params } = useContext(RootContext)
+  const { navigate, params } = useContext(EntriesContext)
   const { cardStyle } = params
-  const { navigate } = useContext(EntriesContext)
 
   const handler = itemId => {
     // TODO: this is preventing from opening the modal

@@ -1,7 +1,7 @@
 import Presets from './Presets';
 import settings from 'project/settings.yml';
 import { useContext } from 'react'
-import RootContext from '../contexts/RootContext'
+import EntriesContext from '../contexts/EntriesContext'
 
 const normalizeUrl = function(url) {
   if (url.indexOf('/') === 0) {
@@ -16,7 +16,7 @@ const findPreset = ({ filters, grouping, sortField }) => {
 }
 
 const PresetsContainer = () => {
-  const { params } = useContext(RootContext)
+  const { params } = useContext(EntriesContext)
   // TODO: find active preset
   const activePreset = findPreset(params)
   return <Presets presets={presets} activePreset={activePreset} />

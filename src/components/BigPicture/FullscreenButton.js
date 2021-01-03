@@ -5,12 +5,10 @@ import FullscreenExitIcon from '@material-ui/icons/FullscreenExit';
 import FullscreenIcon from '@material-ui/icons/Fullscreen';
 
 import React, { useContext } from 'react';
-import RootContext from '../../contexts/RootContext'
 import EntriesContext from '../../contexts/EntriesContext'
 
 const FullscreenButton = _ => {
-  const { params } = useContext(RootContext)
-  const { navigate } = useContext(EntriesContext)
+  const { navigate, params } = useContext(EntriesContext)
   const isBigPicture = params.mainContentMode !== 'card-mode'
   const { isFullscreen } = params
 

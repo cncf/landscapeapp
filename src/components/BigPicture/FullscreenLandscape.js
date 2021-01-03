@@ -3,7 +3,6 @@ import LandscapeContent from './LandscapeContent';
 import { calculateSize, outerPadding, headerHeight } from "../../utils/landscapeCalculations";
 import currentDevice from '../../utils/currentDevice'
 import { getGroupedItemsForBigPicture } from '../../utils/itemsCalculator'
-import RootContext from '../../contexts/RootContext'
 import EntriesContext from '../../contexts/EntriesContext'
 import { findLandscapeSettings } from '../../utils/landscapeSettings'
 import { useRouter } from 'next/router'
@@ -30,8 +29,7 @@ const _calculateZoom = (boxWidth, boxHeight, zoomedIn) => {
 }
 
 const Fullscreen = _ => {
-  const { params } = useContext(RootContext)
-  const { entries } = useContext(EntriesContext)
+  const { entries, params } = useContext(EntriesContext)
   const { query } = useRouter()
   const { version } = query
   const { mainContentMode } = params

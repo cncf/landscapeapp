@@ -1,12 +1,10 @@
 import MainContent from './MainContent';
 import getGroupedItems from '../utils/itemsCalculator';
 import { useContext } from 'react'
-import RootContext from '../contexts/RootContext'
 import EntriesContext from '../contexts/EntriesContext'
 
 const MainContentContainer = () => {
-  const { params } = useContext(RootContext)
-  const { entries } = useContext(EntriesContext)
+  const { entries, params } = useContext(EntriesContext)
   const { cardMode } = params
   const groupedItems = getGroupedItems(params, entries)
 
