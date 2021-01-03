@@ -1,5 +1,5 @@
 import _ from 'lodash';
-export default function(groupedItems,groupedItemsForBigPicture, selectedItemId, isBigPicture) {
+export default function selectedItemCalculator(groupedItems,groupedItemsForBigPicture, selectedItemId, isBigPicture) {
     const calcItems = function() {
       if (!isBigPicture) {
         return _.flatten(_.map(groupedItems, 'items'));
