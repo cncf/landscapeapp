@@ -6,18 +6,9 @@ import { getGroupedItemsForBigPicture } from '../../utils/itemsCalculator'
 import RootContext from '../../contexts/RootContext'
 import EntriesContext from '../../contexts/EntriesContext'
 import { findLandscapeSettings } from '../../utils/landscapeSettings'
-import isBrowser from '../../utils/isBrowser'
 
-const calculateZoom = (width, height, zoomedIn) => {
-  const boxHeight = height + headerHeight + 2 * outerPadding
-  const boxWidth = width + 2 * outerPadding
-
-  // TODO: this is not being executed after it renders client side
-  if (!isBrowser()) {
-    return { zoom: 1, wrapperHeight: boxHeight, wrapperWidth: boxWidth }
-  }
-
-  const isFirefox = isBrowser() && navigator.userAgent.indexOf('Firefox') > -1
+const _calculateZoom = (boxWidth, boxHeight, zoomedIn) => {
+  const isFirefox = navigator.userAgent.indexOf('Firefox') > -1
 
   const aspectRatio = innerWidth / innerHeight
   const adjustedWidth = outerWidth
@@ -44,26 +35,38 @@ const Fullscreen = ({version}) => {
   const { mainContentMode } = params
   const landscapeSettings = findLandscapeSettings(mainContentMode)
   const groupedItems = getGroupedItemsForBigPicture(params, entries, landscapeSettings)
-  const [_, setWindowSize] = useState(1)
-  const [zoomedIn, setZoomedIn] = useState(false)
-  const [zoomedAt, setZoomedAt] = useState({})
-  const onZoom = (e) => {
-    setZoomedAt({ x: e.pageX / zoom, y: e.pageY / zoom })
-    setZoomedIn(!zoomedIn)
+
+  const { width, height } = calculateSize(landscapeSettings)
+  const boxHeight = height + headerHeight + 2 * outerPadding
+  const boxWidth = width + 2 * outerPadding
+  const [zoomState, setZoomState] = useState({
+    zoom: 1,
+    wrapperHeight: boxHeight,
+    wrapperWidth: boxWidth,
+    zoomedIn: false,
+    zoomedAt: {}
+  })
+  const { zoom, wrapperHeight, wrapperWidth, zoomedIn, zoomedAt } = zoomState
+
+  const calculateZoom = (zoomedIn = false, zoomedAt = {}) => {
+    const zoomAttrs = _calculateZoom(boxWidth, boxHeight, zoomedIn)
+    setZoomState({ zoomedIn, zoomedAt, ...zoomAttrs })
+  }
+
+  const onZoom = e => {
+    const zoomedAt = { x: e.pageX / zoom, y: e.pageY / zoom }
+    calculateZoom(!zoomedIn, zoomedAt)
   }
 
   useEffect(() => {
-    const calculateWindowSize = () => setWindowSize(`${innerWidth}x${innerHeight}`)
-    window.addEventListener("resize", calculateWindowSize)
-    return () => window.removeEventListener("resize", calculateWindowSize)
+    calculateZoom()
+    window.addEventListener("resize", calculateZoom)
+    return () => window.removeEventListener("resize", calculateZoom)
   }, [true]);
 
   useEffect(() => {
     zoomedIn ? window.scrollTo((zoomedAt.x * zoom - innerWidth / 2), (zoomedAt.y * zoom - innerHeight / 2)) : null
   }, [zoomedAt, zoomedIn])
-
-  const { width, height } = calculateSize(landscapeSettings)
-  const { zoom, wrapperWidth, wrapperHeight } = calculateZoom(width, height, zoomedIn)
 
   return (
       <div className="gradient-bg" style={{
