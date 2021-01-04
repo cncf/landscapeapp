@@ -8,7 +8,6 @@ import InternalLink from './InternalLink';
 import currentDevice from '../utils/currentDevice'
 import DelayRender from './DelayRender';
 import fields from '../types/fields';
-import isBrowser from '../utils/isBrowser'
 import EntriesContext from '../contexts/EntriesContext'
 import assetPath from '../utils/assetPath'
 

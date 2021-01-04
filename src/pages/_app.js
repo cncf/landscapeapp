@@ -6,13 +6,14 @@ import '../styles/itemModal.scss'
 import settings from 'project/settings.yml';
 import ReactGA from 'react-ga';
 import iframeResizerContentWindow from 'iframe-resizer/js/iframeResizer.contentWindow';
-import isBrowser from '../utils/isBrowser'
 import { useEffect, useState } from 'react'
+import { useRouter } from 'next/router'
 
 // TODO: old index.js had the require below
 // require('favicon.png'); // Tell webpack to load favicon.png
 
 export default function App({ Component, pageProps }) {
+  const router = useRouter()
   const pageEntries = pageProps.entries && pageProps.entries.length > 0 ? pageProps.entries : []
   const [savedEntries, _] = useState(pageEntries)
   const entries = pageEntries.length > 0 ? pageEntries : savedEntries
@@ -20,12 +21,13 @@ export default function App({ Component, pageProps }) {
   const description = `${settings.global.meta.description}. Updated: ${process.env.lastUpdated}`
   const favicon = `${settings.global.website}/favicon.png`
 
-  if (isBrowser()) {
+  useEffect(() => {
     ReactGA.initialize(process.env.GA)
-    // TODO: track page view, probably use next.js router routeChangeComplete
-    // ReactGA.pageview(window.location.pathname + window.location.search)
-    // history.listen(location => ReactGA.pageview(location.pathname + window.location.search))
-  }
+    ReactGA.pageview(router.asPath)
+    const handleRouteChange = url => ReactGA.pageview(url)
+    router.events.on('routeChangeComplete', handleRouteChange)
+    return _ => router.events.off('routeChangeComplete', handleRouteChange)
+  }, [])
 
   useEffect(() => {
     // Remove the server-side injected CSS.

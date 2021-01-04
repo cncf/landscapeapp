@@ -77,13 +77,9 @@ const decodeSelectedItemId = path => path && path[0] === 'items' ? path[1] : nul
 
 const decodeZoom = ({ zoom }) => zoom ? Math.trunc(+zoom) / 100 : 1
 
-const decodeFullscreen = ({ fullscreen }) => fullscreen === 'yes' || fullscreen === 'true'
-
 const decodeGrouping = grouping => grouping === 'no' ? grouping : getField(grouping) || 'relation'
 
 const decodeCardStyle = style => style || 'card'
-
-const decodeEmbed = embed => embed === 'yes' || embed === 'true'
 
 const decodeSort = sort => {
   const sortField = getField(sort) || 'name'
@@ -92,6 +88,8 @@ const decodeSort = sort => {
 
   return { sortField, sortDirection}
 }
+
+const decodeBoolean = value => value === 'yes' || value === 'true'
 
 const routeToParams = params => {
   const { path, query } = params || getRouterParams()
@@ -115,10 +113,11 @@ const routeToParams = params => {
     // TODO: come up with better naming
     isReallyFullscreen: decodeReallyFullscreen(path),
     zoom: decodeZoom(query),
-    isFullscreen: decodeFullscreen(query),
+    isFullscreen: decodeBoolean(query.fullscreen),
     grouping: decodeGrouping(query.grouping),
     cardStyle: decodeCardStyle(query.style),
-    isEmbed: decodeEmbed(query.embed),
+    isEmbed: decodeBoolean(query.embed),
+    onlyModal: decodeBoolean(query['only-modal']),
     ...decodeSort(query.sort),
     filters
   }

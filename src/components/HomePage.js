@@ -19,7 +19,6 @@ import EmbeddedFooter from './EmbeddedFooter';
 import isGoogle from '../utils/isGoogle';
 import bus from '../reducers/bus';
 import settings from 'project/settings.yml'
-import isModalOnly from "../utils/isModalOnly";
 import currentDevice from '../utils/currentDevice'
 import isBrowser from '../utils/isBrowser'
 import LandscapeContent from './BigPicture/LandscapeContent'
@@ -62,18 +61,18 @@ function enableScroll(){
 
 const HomePage = _ => {
   const { selectedItem, params } = useContext(EntriesContext)
-  const { mainContentMode, zoom, isFullscreen, isEmbed } = params
+  const { mainContentMode, zoom, isFullscreen, isEmbed, onlyModal } = params
   const isBigPicture = mainContentMode !== 'card-mode';
   const [sidebarVisible, setSidebarVisible] = useState(false)
   const showSidebar = _ => setSidebarVisible(true)
   const hideSidebar = _ => setSidebarVisible(false)
   const [lastScrollPosition, setLastScrollPosition] = useState(0)
 
-  if (isModalOnly()) {
+  if (onlyModal) {
     document.querySelector('body').classList.add('popup');
   }
 
-  if ((isGoogle() || isModalOnly() || !isBrowser()) && selectedItem) {
+  if ((isGoogle() || onlyModal || !isBrowser()) && selectedItem) {
     return <ItemDialog />;
   }
 
@@ -149,7 +148,7 @@ const HomePage = _ => {
     }
   }, [])
 
-  const isIphone = isBrowser() && currentDevice.ios()
+  const isIphone = currentDevice.ios()
 
   return (
     <div>

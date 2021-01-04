@@ -1,4 +1,4 @@
-import React, { Fragment, useContext, useState } from 'react';
+import React, { Fragment, useContext, useEffect, useState } from 'react';
 import SvgIcon from '@material-ui/core/SvgIcon';
 import StarIcon from '@material-ui/icons/Star';
 import KeyHandler from 'react-key-handler';
@@ -11,7 +11,6 @@ import isParent from '../utils/isParent';
 import InternalLink from './InternalLink';
 import fields from '../types/fields';
 import isGoogle from '../utils/isGoogle';
-import isModalOnly from '../utils/isModalOnly';
 import settings from 'project/settings.yml';
 import TweetButton from './TweetButton';
 import currentDevice from '../utils/currentDevice'
@@ -21,12 +20,9 @@ import 'chartjs-adapter-date-fns';
 import useWindowSize from "@rooks/use-window-size"
 import classNames from 'classnames'
 import CreateWidthMeasurer from 'measure-text-width';
-import isBrowser from '../utils/isBrowser'
 import assetPath from '../utils/assetPath'
 import paramsToRoute from '../utils/paramsToRoute'
 import EntriesContext from '../contexts/EntriesContext'
-
-const measureWidth = () => isBrowser() && CreateWidthMeasurer(window).setFont('0.6rem Roboto');
 
 const closeUrl = params => paramsToRoute({ mainContentMode: 'card-mode', selectedItemId: null, ...params })
 
@@ -130,9 +126,16 @@ const licenseTag = function({relation, license, hideLicense}) {
   if (relation === 'company' || hideLicense) {
     return null;
   }
+
   const { label } = _.find(fields.license.values, {id: license});
+  const [width, setWidth] = useState(0)
+
+  useEffect(() => {
+    const width = CreateWidthMeasurer(window).setFont('0.6rem Roboto');
+    setWidth(width)
+  }, [label])
+
   const url = closeUrl({ grouping: 'license', filters: { license }});
-  const width = measureWidth(label);
   return linkTag(label, { name: "License", url, color: "purple", multiline: width > 90 });
 }
 const badgeTag = function(itemInfo) {
@@ -327,6 +330,8 @@ function handleDown() {
 
 let timeoutId;
 const ItemDialogContent = ({ itemInfo }) => {
+  const { params } = useContext(EntriesContext)
+  const { onlyModal } = params
   const setIsLandscape = useState(currentDevice.landscape())[1]
   const [showAllRepos, setShowAllRepos] = useState(false)
   if (!timeoutId) {
@@ -499,7 +504,7 @@ const ItemDialogContent = ({ itemInfo }) => {
 
   const productInfo = <Fragment>
               <div className="product-main">
-                { (isGoogle() || isModalOnly()) ?
+                { (isGoogle() || onlyModal) ?
                   <React.Fragment>
                     <div className="product-name">{itemInfo.name}</div>
                     <div className="product-description">{itemInfo.description}</div>
