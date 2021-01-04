@@ -38,18 +38,13 @@ export default function App({ Component, pageProps }) {
     }
   }, []);
 
-  // TODO: check if the code below is necessary
   useEffect(() => {
-    document.addEventListener("DOMContentLoaded", function() {
-      const el = document.querySelector('.landscape-wrapper');
-      if (el) {
-        var height = el.parentElement.clientHeight + window.innerHeight -
-          document.body.offsetHeight;
-        el.style.height = height + "px";
-      } else {
-        console.info('No el to adjust');
-      }
-    })
+    const el = document.querySelector('.landscape-wrapper');
+    if (el) {
+      var height = el.parentElement.clientHeight + window.innerHeight -
+        document.body.offsetHeight;
+      el.style.height = height + "px";
+    }
   }, [])
 
 
