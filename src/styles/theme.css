@@ -119,7 +119,6 @@ a {text-decoration: none; transition: all 0.5s; color: $blue;
       height: 70px;
       z-index: 2;
       cursor: pointer;
-      background: #f4f4f4;
       img {
         width: 127px;
         @media (max-width: 400px) { width: 115px; }
