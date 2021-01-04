@@ -12,6 +12,10 @@ import paramsToRoute from './paramsToRoute'
 
 const landscape = fields.landscape.values;
 
+const groupAndSort = (items, sortCriteria) => {
+  return _.groupBy(_.orderBy(items, sortCriteria), 'landscape')
+}
+
 export const getFilteredItems = createSelector(
   [
     (_, entries) => entries,
@@ -193,6 +197,9 @@ const getGroupedItemsForMainLandscape = createSelector(
   ],
   function(items, allItems, grouping, filters, sortField, landscapeSettings) {
     const categories = getLandscapeCategories({landscapeSettings, landscape });
+    const itemsMap = groupAndSort(items, bigPictureSortOrder)
+    const allItemsMap = groupAndSort(allItems, bigPictureSortOrder)
+
     return categories.map(function(category) {
       const newFilters = {...filters, landscape: category.id };
       return {
@@ -204,12 +211,8 @@ const getGroupedItemsForMainLandscape = createSelector(
           return {
             name: subcategory.label,
             href: paramsToRoute({filters: newFilters, grouping: 'landscape', sortField, mainContentMode: 'card-mode'}),
-            items: _.orderBy(items.filter(function(item) {
-              return item.landscape ===  subcategory.id
-            }), bigPictureSortOrder),
-            allItems: _.orderBy(allItems.filter(function(item) {
-              return item.landscape ===  subcategory.id
-            }), bigPictureSortOrder)
+            items: itemsMap[subcategory.id],
+            allItems: allItemsMap[subcategory.id]
           };
         })
       };
@@ -229,13 +232,8 @@ const getGroupedItemsForAdditionalLandscape = createSelector([
     const category = getLandscapeCategories({landscapeSettings, landscape})[0];
     const subcategories = landscape.filter(({ parentId }) => parentId === category.id);
 
-    const itemsFrom = function(subcategoryId) {
-      return _.orderBy(items.filter((item) => item.landscape ===  subcategoryId), bigPictureSortOrder)
-    };
-
-    const allItemsFrom = function(subcategoryId) {
-      return _.orderBy(allItems.filter((item) => item.landscape ===  subcategoryId), bigPictureSortOrder)
-    };
+    const itemsMap = groupAndSort(items, bigPictureSortOrder)
+    const allItemsMap = groupAndSort(allItems, bigPictureSortOrder)
 
     const result = subcategories.map(function(subcategory) {
       const newFilters = {...filters, landscape: subcategory.id };
@@ -247,8 +245,8 @@ const getGroupedItemsForAdditionalLandscape = createSelector([
           {
             name: '',
             href: '',
-            items: itemsFrom(subcategory.id),
-            allItems: allItemsFrom(subcategory.id)
+            items: itemsMap[subcategory.id],
+            allItems: allItemsMap[subcategory.id]
           }
         ]
       };
