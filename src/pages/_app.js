@@ -1,6 +1,5 @@
 import CssBaseline from '@material-ui/core/CssBaseline'
 import Head from 'next/head'
-import EntriesContext from '../contexts/EntriesContext'
 import '../styles/roboto.css'
 import '../styles/theme.scss'
 import '../styles/itemModal.scss'
@@ -27,6 +26,15 @@ export default function App({ Component, pageProps }) {
     // ReactGA.pageview(window.location.pathname + window.location.search)
     // history.listen(location => ReactGA.pageview(location.pathname + window.location.search))
   }
+
+  useEffect(() => {
+    // Remove the server-side injected CSS.
+    // See https://github.com/mui-org/material-ui/tree/master/examples/nextjs
+    const jssStyles = document.querySelector('#jss-server-side');
+    if (jssStyles) {
+      jssStyles.parentElement.removeChild(jssStyles);
+    }
+  }, []);
 
   // TODO: check if the code below is necessary
   useEffect(() => {
