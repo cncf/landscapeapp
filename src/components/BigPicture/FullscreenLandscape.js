@@ -1,24 +1,22 @@
 import React, { useContext, useEffect, useState } from 'react';
 import LandscapeContent from './LandscapeContent';
-import { calculateSize, outerPadding, headerHeight } from "../../utils/landscapeCalculations";
 import currentDevice from '../../utils/currentDevice'
-import { getGroupedItemsForBigPicture } from '../../utils/itemsCalculator'
-import EntriesContext from '../../contexts/EntriesContext'
-import { findLandscapeSettings } from '../../utils/landscapeSettings'
 import { useRouter } from 'next/router'
+import EntriesContext from '../../contexts/EntriesContext'
+import { headerHeight} from '../../utils/landscapeCalculations'
 
-const _calculateZoom = (boxWidth, boxHeight, zoomedIn) => {
+const _calculateZoom = (fullscreenWidth, fullscreenHeight, zoomedIn) => {
   const isFirefox = navigator.userAgent.indexOf('Firefox') > -1
 
   const aspectRatio = innerWidth / innerHeight
   const adjustedWidth = outerWidth
   const adjustedHeight = adjustedWidth / aspectRatio
-  let baseZoom = Math.min(adjustedHeight / boxHeight, adjustedWidth / boxWidth, 2).toPrecision(4)
+  let baseZoom = Math.min(adjustedHeight / fullscreenHeight, adjustedWidth / fullscreenWidth, 2).toPrecision(4)
   let wrapperWidth, wrapperHeight
 
   if (baseZoom <= 0.95 || !currentDevice.desktop() || isFirefox || location.search.indexOf('scale=false') > -1) {
-    wrapperWidth = Math.max(boxWidth, innerWidth)
-    wrapperHeight = Math.max(boxHeight, innerHeight)
+    wrapperWidth = Math.max(fullscreenWidth, innerWidth)
+    wrapperHeight = Math.max(fullscreenHeight, innerHeight)
     baseZoom = 1
   } else {
     wrapperWidth = adjustedWidth / baseZoom
@@ -29,27 +27,20 @@ const _calculateZoom = (boxWidth, boxHeight, zoomedIn) => {
 }
 
 const Fullscreen = _ => {
-  const { entries, params } = useContext(EntriesContext)
-  const { query } = useRouter()
-  const { version } = query
-  const { mainContentMode } = params
-  const landscapeSettings = findLandscapeSettings(mainContentMode)
-  const groupedItems = getGroupedItemsForBigPicture(params, entries, landscapeSettings)
+  const { version } = useRouter()
+  const { fullscreenWidth, fullscreenHeight, landscapeSettings } = useContext(EntriesContext)
 
-  const { width, height } = calculateSize(landscapeSettings)
-  const boxHeight = height + headerHeight + 2 * outerPadding
-  const boxWidth = width + 2 * outerPadding
   const [zoomState, setZoomState] = useState({
     zoom: 1,
-    wrapperHeight: boxHeight,
-    wrapperWidth: boxWidth,
+    wrapperHeight: fullscreenHeight,
+    wrapperWidth: fullscreenWidth,
     zoomedIn: false,
     zoomedAt: {}
   })
   const { zoom, wrapperHeight, wrapperWidth, zoomedIn, zoomedAt } = zoomState
 
   const calculateZoom = (zoomedIn = false, zoomedAt = {}) => {
-    const zoomAttrs = _calculateZoom(boxWidth, boxHeight, zoomedIn)
+    const zoomAttrs = _calculateZoom(fullscreenWidth, fullscreenHeight, zoomedIn)
     setZoomState({ zoomedIn, zoomedAt, ...zoomAttrs })
   }
 
@@ -97,7 +88,7 @@ const Fullscreen = _ => {
               zIndex: 100000
             }}>
           </div>
-          <LandscapeContent groupedItems={groupedItems} landscapeSettings={landscapeSettings} padding={0} />
+          <LandscapeContent padding={0} />
           <div style={{
             position: 'absolute',
             top: 10,

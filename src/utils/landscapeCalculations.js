@@ -40,10 +40,12 @@ const computeItems = subcategories => {
 
 // Calculate width and height of a given landscape
 export const calculateSize = landscapeSettings => {
-  return {
-    width: Math.max(...landscapeSettings.elements.map(({ left, width }) => left + width)),
-    height: Math.max(...landscapeSettings.elements.map(({ top, height }) => top + height))
-  }
+  const width = Math.max(...landscapeSettings.elements.map(({ left, width }) => left + width))
+  const height = Math.max(...landscapeSettings.elements.map(({ top, height }) => top + height))
+  const fullscreenWidth = width + 2 * outerPadding
+  const fullscreenHeight = height + headerHeight + 2 * outerPadding
+
+  return { width, height, fullscreenWidth, fullscreenHeight }
 }
 
 // Calculate each subcategory width and the disposition of its items, assuming fixed padding for each item.

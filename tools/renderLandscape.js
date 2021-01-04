@@ -1,7 +1,7 @@
 import Promise from 'bluebird';
 import { projectPath, settings } from './settings';
 import { resolve } from 'path';
-import { calculateSize, outerPadding, headerHeight } from "../src/utils/landscapeCalculations";
+import { calculateSize } from "../src/utils/landscapeCalculations";
 
 // TODO: DRY
 const port = process.env.PORT || '4000';
@@ -32,8 +32,8 @@ async function main() {
   const landscapeSettingsList = Object.values(settings.big_picture)
 
   const sizes = landscapeSettingsList.reduce((acc, landscapeSettings) => {
-    const { width, height } = calculateSize(landscapeSettings)
-    const size = { width: width + 2 * outerPadding, height: height + headerHeight + 2 * outerPadding }
+    const { fullscreenWidth, fullscreenHeight } = calculateSize(landscapeSettings)
+    const size = { width: fullscreenWidth, height: fullscreenHeight }
 
     return { ...acc, [landscapeSettings.url]: size }
   }, {})

@@ -5,7 +5,6 @@ import HorizontalCategory from './HorizontalCategory'
 import VerticalCategory from './VerticalCategory'
 import LandscapeInfo from './LandscapeInfo';
 import OtherLandscapeLink from './OtherLandscapeLink';
-import { calculateSize } from "../../utils/landscapeCalculations";
 import EntriesContext from '../../contexts/EntriesContext'
 
 const extractKeys = (obj, keys) => {
@@ -14,8 +13,8 @@ const extractKeys = (obj, keys) => {
   return _.mapKeys(attributes, (value, key) => _.camelCase(key))
 }
 
-const LandscapeContent = ({groupedItems, zoom, landscapeSettings, padding = 10 }) => {
-  const { navigate } = useContext(EntriesContext)
+const LandscapeContent = ({zoom, padding = 10 }) => {
+  const { navigate, groupedItemsForBigPicture, landscapeSettings, width, height } = useContext(EntriesContext)
   const switchToLandscape = mainContentMode => navigate({ mainContentMode })
   const elements = landscapeSettings.elements.map(element => {
     if (element.type === 'LandscapeLink') {
@@ -30,7 +29,7 @@ const LandscapeContent = ({groupedItems, zoom, landscapeSettings, padding = 10 }
       />
     }
 
-    const category = groupedItems.find(c => c.key === element.category) || {}
+    const category = groupedItemsForBigPicture.find(c => c.key === element.category) || {}
     const attributes = extractKeys(element, ['width', 'height', 'top', 'left', 'color', 'fit_width', 'is_large'])
     const subcategories = category.subcategories.map(subcategory => {
       const allItems = subcategory.allItems.map(item => ({ ...item, categoryAttrs: attributes }))
@@ -40,8 +39,6 @@ const LandscapeContent = ({groupedItems, zoom, landscapeSettings, padding = 10 }
     const Component = element.type === 'HorizontalCategory' ? HorizontalCategory : VerticalCategory
     return <Component {...category} subcategories={subcategories} {...attributes} />
   });
-
-  const { width, height } = calculateSize(landscapeSettings)
 
   const style = {
     padding,

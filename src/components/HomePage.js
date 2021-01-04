@@ -23,8 +23,6 @@ import isModalOnly from "../utils/isModalOnly";
 import currentDevice from '../utils/currentDevice'
 import isBrowser from '../utils/isBrowser'
 import LandscapeContent from './BigPicture/LandscapeContent'
-import { findLandscapeSettings } from '../utils/landscapeSettings'
-import { getGroupedItemsForBigPicture } from '../utils/itemsCalculator'
 import EntriesContext from '../contexts/EntriesContext'
 import ResetFilters from './ResetFilters'
 import ItemDialog from './ItemDialog'
@@ -63,11 +61,8 @@ function enableScroll(){
 }
 
 const HomePage = _ => {
-  const { entries, selectedItem, params } = useContext(EntriesContext)
+  const { selectedItem, params } = useContext(EntriesContext)
   const { mainContentMode, zoom, isFullscreen, isEmbed } = params
-  const landscapeSettings = findLandscapeSettings(mainContentMode)
-  // TODO: this is already done in [[...path]]
-  const groupedItems = getGroupedItemsForBigPicture(params, entries, landscapeSettings)
   const isBigPicture = mainContentMode !== 'card-mode';
   const [sidebarVisible, setSidebarVisible] = useState(false)
   const showSidebar = _ => setSidebarVisible(true)
@@ -199,7 +194,7 @@ const HomePage = _ => {
             <AutoSizer>
               {({ height }) => (
                 <div className="landscape-wrapper" style={{height: height}}>
-                  <LandscapeContent zoom={zoom} groupedItems={groupedItems} landscapeSettings={landscapeSettings} />
+                  <LandscapeContent zoom={zoom} />
                 </div>
               )}
             </AutoSizer>
