@@ -10,8 +10,6 @@ import { useEffect, useState } from 'react'
 import { useRouter } from 'next/router'
 import currentDevice from '../utils/currentDevice'
 
-// TODO: old index.js had the require below
-// require('favicon.png'); // Tell webpack to load favicon.png
 
 export default function App({ Component, pageProps }) {
   const router = useRouter()
