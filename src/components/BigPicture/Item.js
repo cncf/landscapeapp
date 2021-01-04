@@ -12,7 +12,7 @@ import EntriesContext from '../../contexts/EntriesContext'
 import assetPath from '../../utils/assetPath'
 
 const LargeItem = ({ item, onClick }) => {
-  const relationInfo = fields.relation.values.find(({ id }) => id === item.relation);
+  const relationInfo = fields.relation.valuesMap[item.relation]
   const color = relationInfo.big_picture_color;
   const label = relationInfo.big_picture_label;
   const textHeight = label ? 10 : 0

@@ -43,7 +43,7 @@ const formatTwitter = function(x) {
 }
 
 function getRelationStyle(relation) {
-  const relationInfo = _.find(fields.relation.values, {id: relation});
+  const relationInfo = fields.relation.valuesMap[relation]
   if (relationInfo && relationInfo.color) {
     return {
       border: '4px solid ' + relationInfo.color
@@ -91,7 +91,7 @@ const projectTag = function({relation, isSubsidiaryProject, project, ...item}) {
   if (relation === false) {
     return null;
   }
-  const { prefix, tag } = _.find(fields.relation.values, {id: project}) || {};
+  const { prefix, tag } = fields.relation.valuesMap[project] || {};
 
   if (prefix && tag) {
     const url = closeUrl({ filters: { relation: project }})

@@ -156,7 +156,7 @@ const getGroupedItems = createSelector(
 
 const bigPictureSortOrder = [
   function orderByProjectKind(item) {
-    const result = _.find(fields.relation.values, {id: item.project});
+    const result = fields.relation.valuesMap[item.project]
     if (!result) {
       return 99;
     }

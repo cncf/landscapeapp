@@ -17,7 +17,7 @@ const maxAnimatedElements = 100;
 const timeout = 1000;
 
 function getRelationStyle(relation) {
-  const relationInfo = _.find(fields.relation.values, {id: relation});
+  const relationInfo = fields.relation.valuesMap[relation]
   if (relationInfo && relationInfo.color) {
     return {
       border: '4px solid ' + relationInfo.color

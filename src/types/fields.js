@@ -255,6 +255,8 @@ _.each(fields, function(field, key) {
       groupingSortOrder: index
     });
   });
+
+  field.valuesMap = _.keyBy(field.values, 'id')
 });
 export default fields;
 
