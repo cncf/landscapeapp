@@ -9,7 +9,8 @@ const InternalLink = ({to, children, onClick, className, ...other}) => {
   if (params.isEmbed || isGoogle() || isModalOnly() || !to) {
     return <span className={`${className}`} {...other}>{children}</span>;
   } else {
-    return <Link href={to}>
+    // TODO: re-enable pre-fetching without double fetching the same URL (/card-mode?foo, /card-mode?bar)
+    return <Link href={to} prefetch={false}>
       <a className={`${className} nav-link`} {...other}>{children}</a>
     </Link>
   }
