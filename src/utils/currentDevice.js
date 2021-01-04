@@ -1,13 +1,11 @@
-import dynamic from 'next/dynamic'
+import isBrowser from './isBrowser'
 
-// TODO: fix this
-// const currentDevice = dynamic(_ => import('current-device'), { ssr: false })
-
-const currentDevice = {
+const mockCurrentDevice = {
   ios: () => false,
   desktop: () => true,
   landscape: () => true
 }
 
+const currentDevice = isBrowser() ? require('current-device').default : mockCurrentDevice
 export default currentDevice
 
