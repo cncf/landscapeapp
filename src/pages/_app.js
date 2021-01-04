@@ -8,6 +8,7 @@ import ReactGA from 'react-ga';
 import iframeResizerContentWindow from 'iframe-resizer/js/iframeResizer.contentWindow';
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/router'
+import currentDevice from '../utils/currentDevice'
 
 // TODO: old index.js had the require below
 // require('favicon.png'); // Tell webpack to load favicon.png
@@ -47,22 +48,23 @@ export default function App({ Component, pageProps }) {
     }
   }, [])
 
+  useEffect(() => {
+    if (!currentDevice.desktop()) {
+      window.addEventListener("orientationchange", updateOrientation);
+      setInterval(updateOrientation, 1000);
+    }
 
-  // TODO: check if the code below is necessary
-  //   // Event listener to determine change (horizontal/portrait)
-  //   if (!currentDevice.desktop()) {
-  //     window.addEventListener("orientationchange", updateOrientation);
-  //     setInterval(updateOrientation, 1000);
-  //   }
-  //   function updateOrientation() {
-  //     if (window.matchMedia("(orientation: portrait)").matches) {
-  //       document.querySelector('html').classList.remove('landscape');
-  //       document.querySelector('html').classList.add('portrait');
-  //     } else {
-  //       document.querySelector('html').classList.remove('portrait');
-  //       document.querySelector('html').classList.add('landscape');
-  //     }
-  //   }
+    function updateOrientation() {
+      if (window.matchMedia("(orientation: portrait)").matches) {
+        document.querySelector('html').classList.remove('landscape');
+        document.querySelector('html').classList.add('portrait');
+      } else {
+        document.querySelector('html').classList.remove('portrait');
+        document.querySelector('html').classList.add('landscape');
+      }
+    }
+  }, [])
+
 
   return <>
     <Head>
