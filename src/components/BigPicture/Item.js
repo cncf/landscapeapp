@@ -1,5 +1,4 @@
 import { useContext } from 'react'
-import Fade from "@material-ui/core/Fade";
 import settings from 'project/settings.yml'
 import fields from "../../types/fields";
 import {
@@ -80,21 +79,19 @@ const Item = props => {
   const onClick = _ => navigate({ selectedItemId: props.item.id })
   const newProps = { ...props, onClick }
 
-  return <Fade timeout={1000} in={isVisible}>
-    <div className={isMember || oss || categoryAttrs.isLarge ? 'oss' : 'nonoss'}>
-      <style jsx>{`
-        div {
-          display: flex;
-          justify-content: center;
-          align-items: center;
-          grid-column-end: span ${isLarge ? 2 : 1};
-          grid-row-end: span ${isLarge ? 2 : 1};
-        }
-      `}</style>
+  return <div className={isMember || oss || categoryAttrs.isLarge ? 'oss' : 'nonoss'}>
+    <style jsx>{`
+      div {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        grid-column-end: span ${isLarge ? 2 : 1};
+        grid-row-end: span ${isLarge ? 2 : 1};
+      }
+    `}</style>
 
-      {isLarge ? <LargeItem {...newProps} isMember={isMember} /> : <SmallItem {...newProps} />}
-    </div>
-  </Fade>
+    {isLarge ? <LargeItem {...newProps} isMember={isMember} /> : <SmallItem {...newProps} />}
+  </div>
 }
 
 export default Item
