@@ -11,11 +11,20 @@ import paramsToRoute from '../utils/paramsToRoute'
 import { useRouter } from 'next/router'
 import FullscreenLandscape from '../components/BigPicture/FullscreenLandscape'
 import { calculateSize } from '../utils/landscapeCalculations'
+import { useEffect, useState } from 'react'
 
 const defaultTitle =  settings.global.meta.title;
 
 const HomePage = ({ entries, selectedItem }) => {
-  const params = routeToParams()
+  // TODO: during pre-render there are no query parameters
+  // So when the browser renders the page we should pretend there are no query parameters either.
+  // Otherwise we will run into issues.
+  // We set ready to true in a hook and after that we can use the query parameters
+  const [ready, setReady] = useState(false)
+  const router = useRouter()
+  const { path } = router.query
+  const params = routeToParams(ready ? null : { path, query: {} })
+
   const landscapeSettings = findLandscapeSettings(params.mainContentMode)
   const isBigPicture = params.mainContentMode !== 'card-mode'
   const groupedItems = getGroupedItems(params, entries)
@@ -24,7 +33,6 @@ const HomePage = ({ entries, selectedItem }) => {
   const { nextItemId, previousItemId } = selectedItemCalculator(groupedItems, groupedItemsForBigPicture, selectedItemId, isBigPicture)
   const size = calculateSize(landscapeSettings)
 
-  const router = useRouter()
   const navigate = (newParams = {}) => {
     const filters = { ...(params.filters || {}), ...(newParams.filters || {}) }
     const url = paramsToRoute({ ...params, ...newParams, filters })
@@ -32,6 +40,10 @@ const HomePage = ({ entries, selectedItem }) => {
   }
 
   const title = selectedItem ? `${selectedItem.name} - ${defaultTitle}` : defaultTitle
+
+  useEffect(() => {
+    setReady(true)
+  }, [])
 
   const baseProps = {
     entries,
