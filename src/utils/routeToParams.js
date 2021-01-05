@@ -1,5 +1,5 @@
 import { useRouter } from 'next/router'
-import qs, { parseUrl } from 'query-string'
+import qs  from 'query-string'
 import settings from 'project/settings.yml'
 import fields from '../types/fields'
 import { options } from '../components/SortFieldContainer'
@@ -59,21 +59,11 @@ const getField = urlValue => {
   return field ? field.id : null
 }
 
-const getRouterParams = _ => {
-  const router = useRouter()
-  const { path } = router.query
-  const { query } = parseUrl(router.asPath)
-
-  return { path, query }
-}
-
 const decodeReallyFullscreen = path => path && path[path.length - 1] === 'fullscreen'
 
-const decodeMainContentMode = (path, tab) => {
-  return path && path[0] !== 'items' && path[0] !== 'fullscreen' ? path[0] : tab || 'landscape'
+const decodeMainContentMode = path => {
+  return path && path[0] !== 'fullscreen' ? path[0] : 'landscape'
 }
-
-const decodeSelectedItemId = path => path && path[0] === 'items' ? path[1] : null
 
 const decodeZoom = ({ zoom }) => zoom ? Math.trunc(+zoom) / 100 : 1
 
@@ -91,8 +81,10 @@ const decodeSort = sort => {
 
 const decodeBoolean = value => value === 'yes' || value === 'true'
 
-const routeToParams = params => {
-  const { path, query } = params || getRouterParams()
+const routeToParams = ({ skipQuery = false}) => {
+  const router = useRouter()
+  const { path, ...rest } = router.query
+  const query = skipQuery ? {} : rest
 
   const fieldFilters = Object.entries(fields).reduce((result, [key, field]) => {
     const param = field.url || field.id
@@ -108,8 +100,8 @@ const routeToParams = params => {
 
   return {
     defaultParams,
-    mainContentMode: decodeMainContentMode(path, query.tab),
-    selectedItemId: decodeSelectedItemId(path),
+    mainContentMode: decodeMainContentMode(path),
+    selectedItemId: query.selected,
     // TODO: come up with better naming
     isReallyFullscreen: decodeReallyFullscreen(path),
     zoom: decodeZoom(query),

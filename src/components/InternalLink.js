@@ -9,7 +9,7 @@ const InternalLink = ({to, children, onClick, className, ...other}) => {
     return <span className={`${className}`} {...other}>{children}</span>;
   } else {
     // TODO: re-enable pre-fetching without double fetching the same URL (/card-mode?foo, /card-mode?bar)
-    return <Link href={to} prefetch={false}>
+    return <Link href={to} prefetch={false} shallow={true}>
       <a className={`${className} nav-link`} {...other}>{children}</a>
     </Link>
   }

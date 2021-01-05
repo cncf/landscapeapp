@@ -23,6 +23,7 @@ import CreateWidthMeasurer from 'measure-text-width';
 import assetPath from '../utils/assetPath'
 import paramsToRoute from '../utils/paramsToRoute'
 import EntriesContext from '../contexts/EntriesContext'
+import Head from 'next/head'
 
 const closeUrl = params => paramsToRoute({ mainContentMode: 'card-mode', selectedItemId: null, ...params })
 
@@ -616,6 +617,10 @@ const ItemDialogContent = ({ itemInfo }) => {
 
   return (
         <div className={classNames("modal-content", {'scroll-all-content': scrollAllContent})} >
+          <Head>
+            <title>{`${itemInfo.name} - ${settings.global.meta.title}`}</title>
+          </Head>
+
             <KeyHandler keyEventName="keydown" keyValue="ArrowUp" onKeyHandle={handleUp} />
             <KeyHandler keyEventName="keydown" keyValue="ArrowDown" onKeyHandle={handleDown} />
 

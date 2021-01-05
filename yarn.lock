@@ -6925,6 +6925,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"dequal@npm:2.0.2":
+  version: 2.0.2
+  resolution: "dequal@npm:2.0.2"
+  checksum: 3b5b019a873da282a25512c632c077e5e8e2a019e71c5b6968836443b861e44176ee3934facfecdc14994d553c1ff4a6c7232278d6aef87baf65e2413d41760c
+  languageName: node
+  linkType: hard
+
 "des.js@npm:^1.0.0":
   version: 1.0.1
   resolution: "des.js@npm:1.0.1"
@@ -9550,6 +9557,7 @@ fsevents@^1.2.7:
     sitemap: ^6.2.0
     style-loader: 1.2.1
     svg-autocrop: ^2.0.34
+    swr: ^0.3.11
     terser-webpack-plugin: 3.0.8
     traverse: 0.6.6
     typeface-roboto: ^0.0.75
@@ -16189,6 +16197,17 @@ resolve@^1.1.7:
   bin:
     svgo: ./bin/svgo
   checksum: e1659738423f625561fa23769d0a010f5ba08e83926ce697491153fa29a8cb2452fa5abb14c1bb489aa186718856f8768d4da870210a79302d47535c57c30d30
+  languageName: node
+  linkType: hard
+
+"swr@npm:^0.3.11":
+  version: 0.3.11
+  resolution: "swr@npm:0.3.11"
+  dependencies:
+    dequal: 2.0.2
+  peerDependencies:
+    react: ^16.11.0 || ^17.0.0
+  checksum: cf7acc992fd8248ae86a6830a972e2309728e1928afbf2ee8863e3eb171a4934d1403252d5c480fdfad5e05d90d879e552ead41d80dc5091efbbce3c2a79b611
   languageName: node
   linkType: hard
 

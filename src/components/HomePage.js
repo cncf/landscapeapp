@@ -60,8 +60,8 @@ function enableScroll(){
 }
 
 const HomePage = _ => {
-  const { selectedItem, params } = useContext(EntriesContext)
-  const { mainContentMode, zoom, isFullscreen, isEmbed, onlyModal } = params
+  const { params } = useContext(EntriesContext)
+  const { mainContentMode, zoom, isFullscreen, isEmbed, onlyModal, selectedItemId } = params
   const isBigPicture = mainContentMode !== 'card-mode';
   const [sidebarVisible, setSidebarVisible] = useState(false)
   const showSidebar = _ => setSidebarVisible(true)
@@ -72,7 +72,7 @@ const HomePage = _ => {
     document.querySelector('body').classList.add('popup');
   }
 
-  if ((isGoogle() || onlyModal || !isBrowser()) && selectedItem) {
+  if ((isGoogle() || onlyModal || !isBrowser()) && selectedItemId) {
     return <ItemDialog />;
   }
 
@@ -90,7 +90,7 @@ const HomePage = _ => {
     }
 
     if (currentDevice.ios()) {
-      if (selectedItem) {
+      if (selectedItemId) {
         if (!document.querySelector('.iphone-scroller')) {
           setLastScrollPosition((document.scrollingElement || document.body).scrollTop)
         }
@@ -108,12 +108,12 @@ const HomePage = _ => {
 
     if (isEmbed) {
       if (window.parentIFrame) {
-        if (selectedItem) {
+        if (selectedItemId) {
           window.parentIFrame.sendMessage({type: 'showModal'})
         } else {
           window.parentIFrame.sendMessage({type: 'hideModal'})
         }
-        if (selectedItem) {
+        if (selectedItemId) {
           window.parentIFrame.getPageInfo(function(info) {
             var offset = info.scrollTop - info.offsetTop;
             var height = info.iframeHeight - info.clientHeight;
@@ -152,9 +152,9 @@ const HomePage = _ => {
 
   return (
     <div>
-    {selectedItem && <ItemDialog/>}
+    {selectedItemId && <ItemDialog/>}
     <div className={classNames('app',{'filters-opened' : sidebarVisible})}>
-      <div style={{marginTop: isIphone && selectedItem ? -lastScrollPosition : 0}} className={classNames({"iphone-scroller": isIphone && selectedItem}, 'main-parent')} >
+      <div style={{marginTop: isIphone && selectedItemId ? -lastScrollPosition : 0}} className={classNames({"iphone-scroller": isIphone && selectedItemId}, 'main-parent')} >
         { !isEmbed && !isFullscreen && <>
           <Header />
           <IconButton className="sidebar-show" title="Show sidebar" onClick={showSidebar}><MenuIcon /></IconButton>
