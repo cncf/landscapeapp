@@ -7,8 +7,9 @@ import CircularProgress from '@material-ui/core/CircularProgress'
 import ItemDialogButtons from './ItemDialogButtons'
 import EntriesContext from '../contexts/EntriesContext'
 import useSWR from 'swr'
+import assetPath from '../utils/assetPath'
 
-const fetchItem = itemId => useSWR(itemId ? `/data/${itemId}.json` : null)
+const fetchItem = itemId => useSWR(itemId ? assetPath(`/data/${itemId}.json`) : null)
 
 const LoadingModal = () =>  <div className="modal-content">
   <style jsx>{`
