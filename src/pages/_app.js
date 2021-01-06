@@ -59,7 +59,6 @@ export default function App({ Component, pageProps }) {
     }
   }, [])
 
-
   return <>
     <Head>
       <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
@@ -87,6 +86,10 @@ export default function App({ Component, pageProps }) {
       <meta name="description" content={ description } />
       <meta name="google-site-verification" content={settings.global.meta.google_site_verification}/>
       <meta name="msvalidate.01" content={settings.global.meta.ms_validate}/>
+
+      {/* This is a hack to hide the page when navigating directly to an item and then show the page and the open modal at the same time */}
+      <style dangerouslySetInnerHTML={{ __html: "html.really-hide-html { display: none; };"}} />
+      <script dangerouslySetInnerHTML={{__html: "location.search.indexOf('selected') >= 0 ? document.documentElement.classList.add('really-hide-html') : null;" }} />
 
       <link rel="icon" href={favicon} />
     </Head>

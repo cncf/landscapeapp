@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React, { useContext, useEffect } from 'react';
 import { pure } from 'recompose';
 import Dialog from '@material-ui/core/Dialog';
 import classNames from 'classnames'
@@ -31,6 +31,14 @@ const ItemDialog = _ => {
   const closeDialog = _ => onlyModal ? _ : navigate({ selectedItemId: null })
   const nonoss = selectedItem && selectedItem.oss === false
   const loading = selectedItemId && !selectedItem
+
+  useEffect(() => {
+    const { classList } = document.documentElement
+    if (selectedItemId && classList.contains('really-hide-html')) {
+      classList.remove('really-hide-html')
+    }
+  }, [])
+
   return (
       <Dialog open={!!selectedItemId} onClose={closeDialog} transitionDuration={400}
         classes={{paper:'modal-body'}}
