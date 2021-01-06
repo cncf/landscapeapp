@@ -94,7 +94,6 @@ export default function App({ Component, pageProps }) {
       <link rel="icon" href={favicon} />
     </Head>
 
-    {/* TODO: add spinner */}
     <CssBaseline />
     <main>
       <Component {...pageProps} />
