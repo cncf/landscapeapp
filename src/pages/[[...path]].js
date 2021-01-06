@@ -91,10 +91,7 @@ export async function getStaticPaths() {
   const landscapePaths = landscapeUrls.flatMap(mainContentMode => {
     const basePaths = mainContentMode === 'landscape' ? [[], ['card-mode']] : [[mainContentMode]]
 
-    // TODO: for now fullscreen landscapes are /fullscreen, /serverless/fullscreen, members/fullscreen
-    // Not sure if this is the best way.
-    // Also serverless/fullscreen is broken, probably because fullscreen is interpreted as selected item
-    const fullScreenPath = [mainContentMode === 'landscape' ? null : mainContentMode, 'fullscreen']
+    const fullScreenPath = ['fullscreen', mainContentMode === 'landscape' ? null : mainContentMode]
       .filter(_ => _)
 
     return [

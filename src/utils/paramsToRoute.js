@@ -22,8 +22,6 @@ const encodeField = (field, value) => {
   return urlValues ? urlValues : null
 }
 
-const encodeTab = (mainContentMode, selectedItemId) => selectedItemId && mainContentMode !== 'landscape' ? mainContentMode : null
-
 const encodeZoom = zoom => zoom && zoom !== 1 ? zoom * 100 : null
 
 const encodeFullscreen = isFullscreen => isFullscreen ? 'yes' : null

@@ -59,10 +59,10 @@ const getField = urlValue => {
   return field ? field.id : null
 }
 
-const decodeReallyFullscreen = path => path && path[path.length - 1] === 'fullscreen'
+const decodeReallyFullscreen = path => path && path[0] === 'fullscreen'
 
 const decodeMainContentMode = path => {
-  return path && path[0] !== 'fullscreen' ? path[0] : 'landscape'
+  return path[0] === 'fullscreen' ? path[1] || 'landscape' : path[0]
 }
 
 const decodeZoom = ({ zoom }) => zoom ? Math.trunc(+zoom) / 100 : 1
