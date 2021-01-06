@@ -67,7 +67,7 @@ export default function App({ Component, pageProps }) {
 
       <title>{settings.global.meta.title}</title>
 
-      <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+      <meta httpEquiv="X-UA-Compatible" content="IE=edge" />
       <meta charSet="utf-8"/>
       <meta property="og:locale" content="en_US"/>
       <meta property="og:type" content="website"/>
