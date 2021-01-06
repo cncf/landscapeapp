@@ -1,5 +1,5 @@
 import HomePageComponent from '../components/HomePage';
-import getGroupedItems, { getGroupedItemsForBigPicture } from '../utils/itemsCalculator';
+import getGroupedItems, { getFilteredItems, getGroupedItemsForBigPicture } from '../utils/itemsCalculator';
 import selectedItemCalculator from '../utils/selectedItemCalculator';
 import settings from 'project/settings.yml';
 import EntriesContext from '../contexts/EntriesContext'
@@ -29,7 +29,7 @@ const HomePage = ({ entries }) => {
   const navigate = (newParams = {}) => {
     const filters = { ...(params.filters || {}), ...(newParams.filters || {}) }
     const url = paramsToRoute({ ...params, ...newParams, filters })
-    router.push(url, undefined, { shallow: true })
+    router.push(url)
   }
 
   const baseProps = {
@@ -52,9 +52,11 @@ const HomePage = ({ entries }) => {
   </EntriesContext.Provider>
 }
 
-export async function getStaticProps({ params }) {
-  // Apparently we're not filtering by mainContentMode. See if using it would improve performance
-  const entries = projects.map(project => {
+export async function getStaticProps(props) {
+  const params = routeToParams(props.params)
+  const items = getGroupedItemsForBigPicture(params, projects)
+    .flatMap(({ subcategories }) => subcategories.flatMap(({ items }) => items))
+  const entries = (items.length > 0 ? items : projects).map(project => {
     const keys = [
       'name', 'stars', 'organization', 'path', 'landscape', 'category', 'oss', 'href', 'id',
       'flatName', 'member', 'relation', 'project', 'isSubsidiaryProject', 'amount', 'amountKind',
