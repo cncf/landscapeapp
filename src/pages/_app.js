@@ -13,10 +13,6 @@ import currentDevice from '../utils/currentDevice'
 
 export default function App({ Component, pageProps }) {
   const router = useRouter()
-  const pageEntries = pageProps.entries && pageProps.entries.length > 0 ? pageProps.entries : []
-  const [savedEntries, _] = useState(pageEntries)
-  const entries = pageEntries.length > 0 ? pageEntries : savedEntries
-
   const description = `${settings.global.meta.description}. Updated: ${process.env.lastUpdated}`
   const favicon = `${settings.global.website}/favicon.png`
 
@@ -98,7 +94,7 @@ export default function App({ Component, pageProps }) {
     {/* TODO: add spinner */}
     <CssBaseline />
     <main>
-      <Component {...{...pageProps, entries}} />
+      <Component {...pageProps} />
     </main>
   </>
 }
