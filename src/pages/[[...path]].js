@@ -1,7 +1,6 @@
 import HomePageComponent from '../components/HomePage';
 import getGroupedItems, { getFilteredItems, getGroupedItemsForBigPicture } from '../utils/itemsCalculator';
 import selectedItemCalculator from '../utils/selectedItemCalculator';
-import settings from 'project/settings.yml';
 import EntriesContext from '../contexts/EntriesContext'
 import { projects } from '../../tools/loadData'
 import Head from 'next/head'
@@ -11,8 +10,6 @@ import paramsToRoute from '../utils/paramsToRoute'
 import FullscreenLandscape from '../components/BigPicture/FullscreenLandscape'
 import { calculateSize } from '../utils/landscapeCalculations'
 import { useRouter } from 'next/router'
-
-const defaultTitle =  settings.global.meta.title;
 
 const HomePage = ({ entries }) => {
   const params = routeToParams()
@@ -45,9 +42,6 @@ const HomePage = ({ entries }) => {
   }
 
   return <EntriesContext.Provider value={baseProps}>
-    <Head>
-      <title>{defaultTitle}</title>
-    </Head>
     { params.isReallyFullscreen ? <FullscreenLandscape /> : <HomePageComponent />}
   </EntriesContext.Provider>
 }
