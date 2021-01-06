@@ -72,10 +72,6 @@ const HomePage = _ => {
     document.querySelector('body').classList.add('popup');
   }
 
-  if ((isGoogle() || onlyModal || !isBrowser()) && selectedItemId) {
-    return <ItemDialog />;
-  }
-
   useEffect(_ => {
     if (isBigPicture) {
       document.querySelector('html').classList.add('big-picture');
@@ -147,6 +143,10 @@ const HomePage = _ => {
       document.querySelector('body').classList.add('embed');
     }
   }, [])
+
+  if ((isGoogle() || onlyModal || !isBrowser()) && selectedItemId) {
+    return <ItemDialog />;
+  }
 
   const isIphone = currentDevice.ios()
 
