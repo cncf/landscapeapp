@@ -10,19 +10,12 @@ import routeToParams from '../utils/routeToParams'
 import paramsToRoute from '../utils/paramsToRoute'
 import FullscreenLandscape from '../components/BigPicture/FullscreenLandscape'
 import { calculateSize } from '../utils/landscapeCalculations'
-import { useEffect, useState } from 'react'
 import { useRouter } from 'next/router'
 
 const defaultTitle =  settings.global.meta.title;
 
 const HomePage = ({ entries }) => {
-  // TODO: during pre-render there are no query parameters
-  // So when the browser renders the page we should pretend there are no query parameters either.
-  // Otherwise we will run into issues.
-  // We set ready to true in a hook and after that we can use the query parameters
-  // TODO: check if this is actually necessary now that we're getting the query params without parsing window.location.search
-  const [ready, setReady] = useState(false)
-  const params = routeToParams({ skipQuery: !ready })
+  const params = routeToParams()
   const router = useRouter()
 
   const landscapeSettings = findLandscapeSettings(params.mainContentMode)
@@ -38,10 +31,6 @@ const HomePage = ({ entries }) => {
     const url = paramsToRoute({ ...params, ...newParams, filters })
     router.push(url, undefined, { shallow: true })
   }
-
-  useEffect(() => {
-    setReady(true)
-  }, [])
 
   const baseProps = {
     entries,

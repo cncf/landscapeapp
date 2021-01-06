@@ -81,10 +81,9 @@ const decodeSort = sort => {
 
 const decodeBoolean = value => value === 'yes' || value === 'true'
 
-const routeToParams = ({ skipQuery = false}) => {
+const routeToParams = _ => {
   const router = useRouter()
-  const { path, ...rest } = router.query
-  const query = skipQuery ? {} : rest
+  const { path, ...query } = router.query
 
   const fieldFilters = Object.entries(fields).reduce((result, [key, field]) => {
     const param = field.url || field.id
