@@ -81,11 +81,10 @@ export async function getStaticProps(props) {
 }
 
 export async function getStaticPaths() {
-  const landscapeUrls = landscapeSettingsList.map(({ url }) => url)
-  const landscapePaths = landscapeUrls.flatMap(mainContentMode => {
-    const basePaths = mainContentMode === 'landscape' ? [[], ['card-mode']] : [[mainContentMode]]
+  const landscapePaths = landscapeSettingsList.flatMap(({ basePath, isMain }) => {
+    const basePaths = isMain ? [[], ['card-mode']] : [[basePath]]
 
-    const fullScreenPath = ['fullscreen', mainContentMode === 'landscape' ? null : mainContentMode]
+    const fullScreenPath = ['fullscreen', basePath]
       .filter(_ => _)
 
     return [

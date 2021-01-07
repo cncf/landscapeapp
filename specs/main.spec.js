@@ -126,9 +126,9 @@ function landscapeTest() {
       close();
     }, 6 * 60 * 1000); //give it up to 1 min to execute
   });
-  landscapeSettingsList.slice(1).forEach(({ name, url }) => {
+  landscapeSettingsList.slice(1).forEach(({ name, basePath }) => {
     test(`I visit ${name} landscape page and have all required elements, elements are clickable`, async () => {
-      const page = await makePage(`${appUrl}/${url}`);
+      const page = await makePage(`${appUrl}/${basePath}`);
       await page.waitForSelector('.big-picture-section');
       await page.click('.big-picture-section img[src]');
       await page.waitForSelector(".modal-content");

@@ -180,7 +180,7 @@ export const getGroupedItemsForBigPicture = function(params, entries, landscapeS
   }
   if (params.mainContentMode === 'card-mode') {
     return [];
-  } else if (landscapeSettings.url === 'landscape') {
+  } else if (landscapeSettings.isMain) {
     return getGroupedItemsForMainLandscape(params, entries, landscapeSettings);
   } else {
     return getGroupedItemsForAdditionalLandscape(params, entries, landscapeSettings)

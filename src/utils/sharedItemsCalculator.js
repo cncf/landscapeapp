@@ -6,7 +6,7 @@
 import _ from 'lodash';
 
 export const getLandscapeCategories = ({ landscape, landscapeSettings }) => {
-  if (landscapeSettings.url === "landscape") {
+  if (landscapeSettings.isMain) {
     return landscape.filter( ({ level }) => level === 1).filter((category) => {
       return _.find(landscapeSettings.elements, (element) => element.category === category.id);
     })

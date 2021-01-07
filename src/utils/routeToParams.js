@@ -62,7 +62,11 @@ const getField = urlValue => {
 const decodeReallyFullscreen = path => path && path[0] === 'fullscreen'
 
 const decodeMainContentMode = path => {
-  return path[0] === 'fullscreen' ? path[1] || 'landscape' : path[0]
+  const defaultContentMode = settings.big_picture.main.url
+  if (!path) {
+    return defaultContentMode
+  }
+  return (path[0] === 'fullscreen' ? path[1] : path[0]) || defaultContentMode
 }
 
 const decodeZoom = ({ zoom }) => zoom ? Math.trunc(+zoom) / 100 : 1
