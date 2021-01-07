@@ -1,4 +1,4 @@
-import React, { useContext, useEffect } from 'react';
+import React, { useContext } from 'react';
 import { pure } from 'recompose';
 import Dialog from '@material-ui/core/Dialog';
 import classNames from 'classnames'
@@ -18,13 +18,6 @@ const ItemDialog = _ => {
   const nonoss = selectedItem && selectedItem.oss === false
   const loading = selectedItemId && !selectedItem
   const itemInfo = selectedItem || entries.find(({ id }) => id === selectedItemId)
-
-  useEffect(() => {
-    const { classList } = document.documentElement
-    if (selectedItemId && classList.contains('really-hide-html')) {
-      classList.remove('really-hide-html')
-    }
-  }, [])
 
   return (
       <Dialog open={!!selectedItemId} onClose={closeDialog} transitionDuration={400}

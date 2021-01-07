@@ -9,12 +9,28 @@ import iframeResizerContentWindow from 'iframe-resizer/js/iframeResizer.contentW
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/router'
 import currentDevice from '../utils/currentDevice'
+import isBrowser from '../utils/isBrowser'
 
 
 export default function App({ Component, pageProps }) {
   const router = useRouter()
   const description = `${settings.global.meta.description}. Updated: ${process.env.lastUpdated}`
   const favicon = `${settings.global.website}/favicon.png`
+  const [ready, setReady] = useState(!isBrowser() || location.search.length === 0)
+
+  useEffect(() => {
+    const showDocument = () => {
+      if (!ready) {
+        setReady(true)
+        const { classList } = document.documentElement
+        classList.contains('really-hide-html') && classList.remove('really-hide-html')
+      }
+    }
+
+    router.events.on('routeChangeComplete', showDocument)
+
+    return () => router.events.off('routeChangeComplete', showDocument)
+  }, [])
 
   useEffect(() => {
     ReactGA.initialize(process.env.GA)
@@ -87,16 +103,16 @@ export default function App({ Component, pageProps }) {
       <meta name="google-site-verification" content={settings.global.meta.google_site_verification}/>
       <meta name="msvalidate.01" content={settings.global.meta.ms_validate}/>
 
-      {/* This is a hack to hide the page when navigating directly to an item and then show the page and the open modal at the same time */}
+      {/* This is a hack to hide the page when the query string is set until the parameters are actually processed */}
       <style dangerouslySetInnerHTML={{ __html: "html.really-hide-html { display: none; };"}} />
-      <script dangerouslySetInnerHTML={{__html: "location.search.indexOf('selected') >= 0 ? document.documentElement.classList.add('really-hide-html') : null;" }} />
+      <script dangerouslySetInnerHTML={{__html: "location.search.length >= 1 ? document.documentElement.classList.add('really-hide-html') : null;" }} />
 
       <link rel="icon" href={favicon} />
     </Head>
 
     <CssBaseline />
     <main>
-      <Component {...pageProps} />
+      { ready ? <Component {...pageProps} /> : null }
     </main>
   </>
 }
