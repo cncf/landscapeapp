@@ -3,7 +3,6 @@ import { pure } from 'recompose';
 import Dialog from '@material-ui/core/Dialog';
 import classNames from 'classnames'
 import ItemDialogContent from './ItemDialogContent';
-import CircularProgress from '@material-ui/core/CircularProgress'
 import ItemDialogButtons from './ItemDialogButtons'
 import EntriesContext from '../contexts/EntriesContext'
 import useSWR from 'swr'
@@ -11,26 +10,14 @@ import assetPath from '../utils/assetPath'
 
 const fetchItem = itemId => useSWR(itemId ? assetPath(`/data/${itemId}.json`) : null)
 
-const LoadingModal = () =>  <div className="modal-content">
-  <style jsx>{`
-    .modal-content {
-      display: flex;
-      height: 100%;
-      align-items: center;
-      justify-content: center;
-    }
-  `}</style>
-  <CircularProgress />
-</div>
-
-
 const ItemDialog = _ => {
-  const { navigate, params } = useContext(EntriesContext)
+  const { navigate, params, entries } = useContext(EntriesContext)
   const { onlyModal, selectedItemId } = params
   const { data: selectedItem } = fetchItem(selectedItemId)
   const closeDialog = _ => onlyModal ? _ : navigate({ selectedItemId: null })
   const nonoss = selectedItem && selectedItem.oss === false
   const loading = selectedItemId && !selectedItem
+  const itemInfo = selectedItem || entries.find(({ id }) => id === selectedItemId)
 
   useEffect(() => {
     const { classList } = document.documentElement
@@ -44,7 +31,7 @@ const ItemDialog = _ => {
         classes={{paper:'modal-body'}}
         className={classNames('modal', 'product', {nonoss})}>
           { !onlyModal && <ItemDialogButtons closeDialog={closeDialog} /> }
-          { loading ? <LoadingModal /> : <ItemDialogContent itemInfo={selectedItem}/> }
+          <ItemDialogContent itemInfo={itemInfo} loading={loading}/>
       </Dialog>
   );
 }

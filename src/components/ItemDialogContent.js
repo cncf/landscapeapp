@@ -330,7 +330,7 @@ function handleDown() {
 }
 
 let timeoutId;
-const ItemDialogContent = ({ itemInfo }) => {
+const ItemDialogContent = ({ itemInfo, loading }) => {
   const { params } = useContext(EntriesContext)
   const { onlyModal } = params
   const setIsLandscape = useState(currentDevice.landscape())[1]
@@ -394,13 +394,13 @@ const ItemDialogContent = ({ itemInfo }) => {
                       </div>
                     ) : null;
 
-  const headquartersElement =  itemInfo.headquarters && itemInfo.headquarters !== 'N/A' && (
+  const headquartersElement = itemInfo.headquarters && itemInfo.headquarters !== 'N/A' && (
     <div className="product-property row">
       <div className="product-property-name col col-40">Headquarters</div>
       <div className="product-property-value tight-col col-60"><InternalLink to={closeUrl({ grouping: 'headquarters', filters:{headquarters:itemInfo.headquarters}})}>{itemInfo.headquarters}</InternalLink></div>
     </div>
   );
-  const amountElement = !settings.global.hide_funding_and_market_cap && Number.isInteger(itemInfo.amount) && (
+  const amountElement = !loading && !settings.global.hide_funding_and_market_cap && Number.isInteger(itemInfo.amount) && (
     <div className="product-property row">
       <div className="product-property-name col col-40">{itemInfo.amountKind === 'funding' ? 'Funding' : 'Market Cap'}</div>
       {  itemInfo.amountKind === 'funding' &&
@@ -520,7 +520,7 @@ const ItemDialogContent = ({ itemInfo }) => {
                   </React.Fragment>
                 }
               </div>
-              <div className="product-properties">
+              { !loading && <div className="product-properties">
                 <div className="product-property row">
                   <div className="product-property-name col col-20">Website</div>
                   <div className="product-property-value col col-80">
@@ -612,7 +612,7 @@ const ItemDialogContent = ({ itemInfo }) => {
                     </div>
                   }
               </div>
-            </div>
+            </div> }
   </Fragment>;
 
   return (
