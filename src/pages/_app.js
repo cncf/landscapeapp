@@ -19,6 +19,13 @@ export default function App({ Component, pageProps }) {
   const [ready, setReady] = useState(!isBrowser() || location.search.length === 0)
 
   useEffect(() => {
+    log("USE EFFECT")
+    const onComplete = _ => log("ON COMPLETE")
+    router.events.on('routeChangeComplete', onComplete)
+    return () => router.events.off('routeChangeComplete', onComplete)
+  }, [])
+
+  useEffect(() => {
     const showDocument = () => {
       if (!ready) {
         setReady(true)
@@ -75,6 +82,12 @@ export default function App({ Component, pageProps }) {
     }
   }, [])
 
+  const logging = `
+    var time = new Date();
+    var log = function (msg) { console.log(msg, (new Date() - time)/ 1000); };
+    window.addEventListener('DOMContentLoaded', function() { log("DOM LOADED") });
+  `
+
   return <>
     <Head>
       <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
@@ -106,6 +119,7 @@ export default function App({ Component, pageProps }) {
       {/* This is a hack to hide the page when the query string is set until the parameters are actually processed */}
       <style dangerouslySetInnerHTML={{ __html: "html.really-hide-html { display: none; };"}} />
       <script dangerouslySetInnerHTML={{__html: "location.search.length >= 1 ? document.documentElement.classList.add('really-hide-html') : null;" }} />
+      <script dangerouslySetInnerHTML={{__html: logging }} />
 
       <link rel="icon" href={favicon} />
     </Head>
