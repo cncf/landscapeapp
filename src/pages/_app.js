@@ -16,6 +16,7 @@ export default function App({ Component, pageProps }) {
   const router = useRouter()
   const description = `${settings.global.meta.description}. Updated: ${process.env.lastUpdated}`
   const favicon = `${settings.global.website}/favicon.png`
+  // TODO: hydration fix
   const [ready, setReady] = useState(!isBrowser() || location.search.length === 0)
 
   useEffect(() => {
@@ -26,17 +27,9 @@ export default function App({ Component, pageProps }) {
   }, [])
 
   useEffect(() => {
-    const showDocument = () => {
-      if (!ready) {
-        setReady(true)
-        const { classList } = document.documentElement
-        classList.contains('really-hide-html') && classList.remove('really-hide-html')
-      }
-    }
-
-    router.events.on('routeChangeComplete', showDocument)
-
-    return () => router.events.off('routeChangeComplete', showDocument)
+    const _setReady = () => setReady(true)
+    router.events.on('routeChangeComplete', _setReady)
+    return () => router.events.off('routeChangeComplete', _setReady)
   }, [])
 
   useEffect(() => {
@@ -116,9 +109,6 @@ export default function App({ Component, pageProps }) {
       <meta name="google-site-verification" content={settings.global.meta.google_site_verification}/>
       <meta name="msvalidate.01" content={settings.global.meta.ms_validate}/>
 
-      {/* This is a hack to hide the page when the query string is set until the parameters are actually processed */}
-      <style dangerouslySetInnerHTML={{ __html: "html.really-hide-html { display: none; };"}} />
-      <script dangerouslySetInnerHTML={{__html: "location.search.length >= 1 ? document.documentElement.classList.add('really-hide-html') : null;" }} />
       <script dangerouslySetInnerHTML={{__html: logging }} />
 
       <link rel="icon" href={favicon} />
@@ -128,5 +118,13 @@ export default function App({ Component, pageProps }) {
     <main>
       { ready ? <Component {...pageProps} /> : null }
     </main>
+
+    {/*
+       TODO: this is a temporary fix to prevent hydration from happening if the query string is set.
+       Hydrating component when query string is set makes loading rendering the page slower,
+       because hydration happens without the query params and after that the page is rendered with the params.
+       See if there's a better way to accomplish the same.
+   */}
+    <script dangerouslySetInnerHTML={{__html: "location.search.length > 0 ? document.querySelector('main').innerHTML = '' : null;" }} />
   </>
 }
