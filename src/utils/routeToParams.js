@@ -1,7 +1,6 @@
-import { useRouter } from 'next/router'
 import qs  from 'query-string'
 import fields from '../types/fields'
-import { options } from '../components/SortFieldContainer'
+import { sortOptions } from '../types/fields'
 
 const defaultParams = {
   data: null,
@@ -65,7 +64,7 @@ const decodeCardStyle = style => style || 'card'
 
 const decodeSort = sort => {
   const sortField = getField(sort) || 'name'
-  const option = options.find(option => option.id === sortField)
+  const option = sortOptions.find(option => option.id === sortField)
   const sortDirection = option ? option.direction : 'asc'
 
   return { sortField, sortDirection}

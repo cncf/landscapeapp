@@ -330,3 +330,39 @@ export function getGroupingValue({item, grouping, filters}) {
   const { id, groupFn } = fields[grouping];
   return groupFn ? groupFn({ item , filters }) : item[id];
 }
+
+export const sortOptions = [{
+  id: 'name',
+  direction: 'asc',
+  label: 'Alphabetical (a to z)',
+}, {
+  id: 'stars',
+  direction: 'desc',
+  label: 'Stars (high to low)',
+}, {
+  id: 'amount',
+  direction: 'desc',
+  label: 'Funding / Market Cap (high to low)',
+  disabled: settings.global.hide_funding_and_market_cap
+}, {
+  id: 'firstCommitDate',
+  direction: 'asc',
+  label: 'Project Started (earlier to later)',
+}, {
+  id: 'latestCommitDate',
+  direction: 'asc',
+  label: 'Latest Commit (earlier to later)',
+}, {
+  id: 'latestTweetDate',
+  direction: 'asc',
+  label: 'Latest Tweet (earlier to later)',
+}, {
+  id: 'contributorsCount',
+  direction: 'desc',
+  label: 'Contributors # (high to low)',
+}, {
+  id: 'commitsThisYear',
+  direction: 'desc',
+  label: 'Commits this year (high to low)',
+}].filter(field => !field.disabled)
+
