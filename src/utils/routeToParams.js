@@ -1,6 +1,5 @@
 import { useRouter } from 'next/router'
 import qs  from 'query-string'
-import settings from 'project/settings.yml'
 import fields from '../types/fields'
 import { options } from '../components/SortFieldContainer'
 
@@ -24,7 +23,6 @@ const defaultParams = {
   sortField: 'name',
   sortDirection: 'asc',
   selectedItemId: null,
-  mainContentMode: settings.big_picture.main.url, // also landscape or serverless for a big picture
   zoom: 1,
   isFullscreen: false
 };
@@ -59,16 +57,6 @@ const getField = urlValue => {
   return field ? field.id : null
 }
 
-const decodeReallyFullscreen = path => path && path[0] === 'fullscreen'
-
-const decodeMainContentMode = path => {
-  const defaultContentMode = settings.big_picture.main.url
-  if (!path) {
-    return defaultContentMode
-  }
-  return (path[0] === 'fullscreen' ? path[1] : path[0]) || defaultContentMode
-}
-
 const decodeZoom = ({ zoom }) => zoom ? Math.trunc(+zoom) / 100 : 1
 
 const decodeGrouping = grouping => grouping === 'no' ? grouping : getField(grouping) || 'relation'
@@ -85,9 +73,7 @@ const decodeSort = sort => {
 
 const decodeBoolean = value => value === 'yes' || value === 'true'
 
-const routeToParams = params => {
-  const { path, ...query } = params || useRouter().query
-
+const routeToParams = ({ mainContentMode, isReallyFullscreen, ...query }) => {
   const fieldFilters = Object.entries(fields).reduce((result, [key, field]) => {
     const param = field.url || field.id
     const value = query[param]
@@ -101,11 +87,10 @@ const routeToParams = params => {
   }
 
   return {
-    defaultParams,
-    mainContentMode: decodeMainContentMode(path),
-    selectedItemId: query.selected,
+    mainContentMode,
     // TODO: come up with better naming
-    isReallyFullscreen: decodeReallyFullscreen(path),
+    isReallyFullscreen,
+    selectedItemId: query.selected,
     zoom: decodeZoom(query),
     isFullscreen: decodeBoolean(query.fullscreen),
     grouping: decodeGrouping(query.grouping),
