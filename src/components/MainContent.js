@@ -108,8 +108,8 @@ const Header = ({groupedItem, ...props}) => {
 
 const MainContent = ({groupedItems}) => {
   const { navigate, params } = useContext(EntriesContext)
-  const { cardStyle } = params
-  const [ready, setReady] = useState(false)
+  const { cardStyle, isEmbed } = params
+  const [ready, setReady] = useState(isEmbed)
 
   useEffect(() => {
     setReady(true)
