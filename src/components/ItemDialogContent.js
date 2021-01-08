@@ -17,7 +17,6 @@ import currentDevice from '../utils/currentDevice'
 import TwitterTimeline from "./TwitterTimeline";
 import {Bar, Pie, defaults} from 'react-chartjs-2';
 import 'chartjs-adapter-date-fns';
-import useWindowSize from "@rooks/use-window-size"
 import classNames from 'classnames'
 import CreateWidthMeasurer from 'measure-text-width';
 import assetPath from '../utils/assetPath'
@@ -124,10 +123,6 @@ const openSourceTag = function(oss) {
 };
 
 const licenseTag = function({relation, license, hideLicense}) {
-  if (relation === 'company' || hideLicense) {
-    return null;
-  }
-
   const { label } = _.find(fields.license.values, {id: license});
   const [width, setWidth] = useState(0)
 
@@ -135,6 +130,10 @@ const licenseTag = function({relation, license, hideLicense}) {
     const width = CreateWidthMeasurer(window).setFont('0.6rem Roboto');
     setWidth(width)
   }, [label])
+
+  if (relation === 'company' || hideLicense) {
+    return null;
+  }
 
   const url = closeUrl({ grouping: 'license', filters: { license }});
   return linkTag(label, { name: "License", url, color: "purple", multiline: width > 90 });
@@ -243,7 +242,7 @@ const chart = function(itemInfo) {
 }
 
 const participation = function(itemInfo) {
-  const { innerWidth } = useWindowSize();
+  const { innerWidth } = window;
   const { params } = useContext(EntriesContext)
   if (params.isEmbed || !itemInfo.github_data || !itemInfo.github_data.contributions) {
     return null;
@@ -340,7 +339,7 @@ const ItemDialogContent = ({ itemInfo, loading }) => {
       setIsLandscape(currentDevice.landscape());
     }, 1000);
   }
-  const { innerWidth, innerHeight } = useWindowSize();
+  const { innerWidth, innerHeight } = window;
 
   const linkToOrganization = closeUrl({ grouping: 'organization', filters: {organization: itemInfo.organization}});
   const itemCategory = function(path) {

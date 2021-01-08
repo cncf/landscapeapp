@@ -3649,15 +3649,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@rooks/use-window-size@npm:3.6.0":
-  version: 3.6.0
-  resolution: "@rooks/use-window-size@npm:3.6.0"
-  peerDependencies:
-    react: ">=16.8.0"
-  checksum: 0f0ca1b434a28116d7d74bf9b32c57cb14ae1188997d778fccbd18721fbf42d93a981277e955b46f0552342f80fa0f116467b9bbf92777e5df2be002bb6e819f
-  languageName: node
-  linkType: hard
-
 "@sinonjs/commons@npm:^1.7.0":
   version: 1.8.0
   resolution: "@sinonjs/commons@npm:1.8.0"
@@ -9468,7 +9459,6 @@ fsevents@^1.2.7:
     "@material-ui/lab": 4.0.0-alpha.56
     "@material-ui/pickers": 3.2.10
     "@next/bundle-analyzer": ^10.0.4
-    "@rooks/use-window-size": 3.6.0
     anchorme: ^2.1.2
     autoprefixer: ^9.8.6
     axe-puppeteer: 1.1.0
