@@ -72,19 +72,19 @@ const HomePage = _ => {
     document.querySelector('body').classList.add('popup');
   }
 
+  useEffect(() => {
+    const { classList } = document.querySelector('html')
+    isBigPicture ? classList.add('big-picture') : classList.remove('big-picture')
+
+  }, [isBigPicture])
+
+  useEffect(() => {
+    const { classList } = document.querySelector('html')
+    isFullscreen ? classList.add('fullscreen') : classList.remove('fullscreen')
+
+  }, [isFullscreen])
+
   useEffect(_ => {
-    if (isBigPicture) {
-      document.querySelector('html').classList.add('big-picture');
-    } else {
-      document.querySelector('html').classList.remove('big-picture');
-    }
-
-    if (isFullscreen) {
-      document.querySelector('html').classList.add('fullscreen');
-    } else {
-      document.querySelector('html').classList.remove('fullscreen');
-    }
-
     if (currentDevice.ios()) {
       if (selectedItemId) {
         if (!document.querySelector('.iphone-scroller')) {
@@ -101,7 +101,9 @@ const HomePage = _ => {
         enableScroll();
       }
     }
+  }, [])
 
+  useEffect(() => {
     if (isEmbed) {
       if (window.parentIFrame) {
         if (selectedItemId) {
@@ -142,7 +144,7 @@ const HomePage = _ => {
       }
       document.querySelector('body').classList.add('embed');
     }
-  }, [])
+  }, [isEmbed])
 
   if ((isGoogle() || onlyModal || !isBrowser()) && selectedItemId) {
     return <ItemDialog />;
