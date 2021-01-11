@@ -1,4 +1,3 @@
-// TODO: this should be dist server?
 import path from 'path';
 import { existsSync, readFileSync } from 'fs'
 import express from 'express'
