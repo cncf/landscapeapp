@@ -12,7 +12,6 @@ import Ad from './Ad';
 import AutoSizer from './CustomAutoSizer';
 import OutboundLink from './OutboundLink';
 import TweetButton from './TweetButton';
-import MainContentContainer from './MainContentContainer';
 import Footer from './Footer';
 import EmbeddedFooter from './EmbeddedFooter';
 
@@ -31,6 +30,7 @@ import FullscreenButton from './BigPicture/FullscreenButton'
 import Header from './Header'
 import SwitchButton from './BigPicture/SwitchButton'
 import ExportCsv from './ExportCsv'
+import MainContent from './MainContent'
 
 bus.on('scrollToTop', function() {
   (document.scrollingElement || document.body).scrollTop = 0;
@@ -200,7 +200,7 @@ const HomePage = _ => {
               )}
             </AutoSizer>
             }
-            { !isBigPicture && <MainContentContainer/> }
+            { !isBigPicture && <MainContent /> }
           </div>
           { !isEmbed && !isBigPicture && <Footer/> }
           { isEmbed && <EmbeddedFooter/> }

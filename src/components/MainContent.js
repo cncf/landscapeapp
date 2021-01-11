@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState, useRef } from 'react';
 import StarIcon from '@material-ui/icons/Star';
 import millify from 'millify'
 import classNames from 'classnames'
@@ -8,6 +8,7 @@ import InternalLink from './InternalLink';
 import fields from '../types/fields';
 import EntriesContext from '../contexts/EntriesContext'
 import assetPath from '../utils/assetPath'
+import { useRouter } from 'next/router'
 
 function getRelationStyle(relation) {
   const relationInfo = fields.relation.valuesMap[relation]
@@ -106,14 +107,35 @@ const Header = ({groupedItem, ...props}) => {
 
 
 
-const MainContent = ({groupedItems}) => {
-  const { navigate, params } = useContext(EntriesContext)
+const MainContent = () => {
+  const { navigate, params, groupedItems } = useContext(EntriesContext)
   const { cardStyle, isEmbed } = params
-  const [ready, setReady] = useState(isEmbed)
+  const loader = useRef(null)
+  const totalItems = groupedItems.reduce((sum, group) => sum + group.items.length, 0)
+  const [maxItems, setMaxItems] = useState(isEmbed ? totalItems : 100)
+  const { asPath } = useRouter()
 
   useEffect(() => {
-    setReady(true)
-  }, [])
+    const options = { root: null, rootMargin: '0px', threshold: 1.0 }
+
+    const callback = (entries, _) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting && maxItems < totalItems) {
+          setMaxItems(maxItems + 100)
+        }
+      })
+    }
+
+    const observer = new IntersectionObserver(callback, options);
+
+    observer.observe(loader.current)
+
+    return () => observer.disconnect()
+  });
+
+  useEffect(() => {
+    setMaxItems(isEmbed ? totalItems : 100)
+  }, [asPath])
 
   const handler = itemId => {
     // TODO: this is preventing from opening the modal
@@ -122,25 +144,18 @@ const MainContent = ({groupedItems}) => {
     // isSpecialMode ? onOpenItemInNewTab(itemId) : onSelectItem(itemId);
 
     navigate({ selectedItemId: itemId })
-  };
+  }
 
   let itemsCount = 0
-  const maxItems = 100
 
   const itemsAndHeaders = groupedItems.flatMap(groupedItem => {
-    if (itemsCount > maxItems && !ready) {
-      return []
-    }
-
-    const items = ready ? groupedItem.items : groupedItem.items.slice(0, maxItems - itemsCount)
+    const items = groupedItem.items.slice(0, maxItems - itemsCount)
 
     itemsCount += items.length
 
-    const cards = items.map(item => {
-      return <Card key={item.id} item={item} handler={handler} />;
-    })
+    const cards = items.map(item => <Card key={item.id} item={item} handler={handler}/>)
     return [
-      <Header key={groupedItem.href} groupedItem={groupedItem} />,
+      items.length > 0 ? <Header key={groupedItem.href} groupedItem={groupedItem} /> : null,
       ...cards
     ]
   });
@@ -148,6 +163,7 @@ const MainContent = ({groupedItems}) => {
   return (
     <div className={classNames('column-content', {[cardStyle + '-mode']: true})}>
       { itemsAndHeaders }
+      <div ref={loader} />
     </div>
   );
 };
