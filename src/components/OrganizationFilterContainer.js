@@ -8,7 +8,6 @@ const OrganizationFilterContainer = () => {
   const value = params.filters.organization
   const _options = options('organization')
   const onChange = organization => navigate({ filters: { organization } })
-  // TODO: check why opening dropdown is so slow
   return <ComboboxMultiSelector onChange={onChange} value={value} options={_options} />
 }
 

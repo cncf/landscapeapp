@@ -62,8 +62,6 @@ const paramsToRoute = (params = {}) => {
     ...filters
   })
 
-  // TODO: see why forward slash is appended on empty route
-  // TODO: check if it's possible to not encode comma
   return stringifyUrl({ url: `/${path}`, query },
     { arrayFormat: 'comma', skipNull: true, skipEmptyString: true })
 }
