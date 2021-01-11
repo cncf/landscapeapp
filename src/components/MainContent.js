@@ -10,6 +10,7 @@ import EntriesContext from '../contexts/EntriesContext'
 import assetPath from '../utils/assetPath'
 import { useRouter } from 'next/router'
 import paramsToRoute from '../utils/paramsToRoute'
+import currentDevice from '../utils/currentDevice'
 
 function getRelationStyle(relation) {
   const relationInfo = fields.relation.valuesMap[relation]
