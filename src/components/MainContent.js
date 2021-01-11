@@ -9,6 +9,7 @@ import fields from '../types/fields';
 import EntriesContext from '../contexts/EntriesContext'
 import assetPath from '../utils/assetPath'
 import { useRouter } from 'next/router'
+import paramsToRoute from '../utils/paramsToRoute'
 
 function getRelationStyle(relation) {
   const relationInfo = fields.relation.valuesMap[relation]
@@ -137,13 +138,13 @@ const MainContent = () => {
     setMaxItems(isEmbed ? totalItems : 100)
   }, [asPath])
 
-  const handler = itemId => {
-    // TODO: this is preventing from opening the modal
-    // TODO: add isSpecialMode
-    // const isSpecialMode = (isBrowser() && (currentDevice.mobile() || window.innerWidth < 768)) && isEmbed();
-    // isSpecialMode ? onOpenItemInNewTab(itemId) : onSelectItem(itemId);
-
-    navigate({ selectedItemId: itemId })
+  const handler = selectedItemId => {
+    if ((currentDevice.mobile() || window.innerWidth < 768) && isEmbed) {
+      const url = paramsToRoute({ ...params, selectedItemId })
+      window.open(url,'_blank')
+    } else {
+      navigate({ selectedItemId })
+    }
   }
 
   let itemsCount = 0
