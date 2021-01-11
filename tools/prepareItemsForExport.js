@@ -1,7 +1,6 @@
 import Parser from 'json2csv/lib/JSON2CSVParser'
-import settings from 'project/settings.yml'
 
-const fields = [{
+const fields = settings => [{
   label: 'id',
   value: 'id'
 }, {
@@ -142,7 +141,8 @@ function formatDate(row, field) {
 }
 
 const prepareItemsForExport = items => {
-  const parser = new Parser({ fields, quote: '' })
+  const settings = require('project/settings.yml')
+  const parser = new Parser({ fields: fields(settings), quote: '' })
 
   return items.map(item => {
     const { fields } = parser.opts
