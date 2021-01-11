@@ -20,13 +20,6 @@ export default function App({ Component, pageProps }) {
   const [ready, setReady] = useState(!isBrowser() || location.search.length === 0)
 
   useEffect(() => {
-    log("USE EFFECT")
-    const onComplete = _ => log("ON COMPLETE")
-    router.events.on('routeChangeComplete', onComplete)
-    return () => router.events.off('routeChangeComplete', onComplete)
-  }, [])
-
-  useEffect(() => {
     const _setReady = () => setReady(true)
     router.events.on('routeChangeComplete', _setReady)
     return () => router.events.off('routeChangeComplete', _setReady)
@@ -75,12 +68,6 @@ export default function App({ Component, pageProps }) {
     }
   }, [])
 
-  const logging = `
-    var time = new Date();
-    var log = function (msg) { console.log(msg, (new Date() - time)/ 1000); };
-    window.addEventListener('DOMContentLoaded', function() { log("DOM LOADED") });
-  `
-
   return <>
     <Head>
       <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
@@ -108,8 +95,6 @@ export default function App({ Component, pageProps }) {
       <meta name="description" content={ description } />
       <meta name="google-site-verification" content={settings.global.meta.google_site_verification}/>
       <meta name="msvalidate.01" content={settings.global.meta.ms_validate}/>
-
-      <script dangerouslySetInnerHTML={{__html: logging }} />
 
       <link rel="icon" href={favicon} />
     </Head>
