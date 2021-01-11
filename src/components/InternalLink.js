@@ -8,7 +8,6 @@ const InternalLink = ({to, children, onClick, className, ...other}) => {
   if (params.isEmbed || isGoogle() || params.onlyModal || !to) {
     return <span className={`${className}`} {...other}>{children}</span>;
   } else {
-    // TODO: re-enable shallow routing if possible
     return <Link href={to} prefetch={false}>
       <a className={`${className} nav-link`} {...other}>{children}</a>
     </Link>
