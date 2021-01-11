@@ -2,11 +2,7 @@ import Promise from 'bluebird';
 import { projectPath, settings } from './settings';
 import { resolve } from 'path';
 import { calculateSize } from "../src/utils/landscapeCalculations";
-
-// TODO: DRY
-const port = process.env.PORT || '4000';
-const basePath = process.env.PROJECT_NAME ? `/${process.env.PROJECT_NAME}` : ''
-const appUrl = `http://localhost:${port}${basePath}`
+import { appUrl } from './distSettings'
 
 const getLastCommitSha = function() {
   return require('child_process').execSync(`cd '${projectPath}' && git log -n 1 --format=format:%h`).toString('utf-8').trim();
@@ -46,7 +42,7 @@ async function main() {
     return { fileName, url, basePath, deviceScaleFactor };
   })
 
-  const full_sizes = landscapeSettingsList.map(({ url }) => {
+  const full_sizes = landscapeSettingsList.map(({ url, basePath }) => {
     const fileName = `${url}.png`;
     const pdfFileName = `${url}.pdf`;
     return { fileName, pdfFileName, url, basePath, deviceScaleFactor: 4 };
