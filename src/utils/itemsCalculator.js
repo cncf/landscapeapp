@@ -211,7 +211,7 @@ const getGroupedItemsForMainLandscape = createSelector(
           return {
             name: subcategory.label,
             href: paramsToRoute({filters: newFilters, grouping: 'landscape', sortField, mainContentMode: 'card-mode'}),
-            items: itemsMap[subcategory.id],
+            items: itemsMap[subcategory.id] || [],
             allItems: allItemsMap[subcategory.id]
           };
         })
@@ -245,7 +245,7 @@ const getGroupedItemsForAdditionalLandscape = createSelector([
           {
             name: '',
             href: '',
-            items: itemsMap[subcategory.id],
+            items: itemsMap[subcategory.id] || [],
             allItems: allItemsMap[subcategory.id]
           }
         ]
