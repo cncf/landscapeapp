@@ -18,7 +18,7 @@ const pause = function(i) {
 console.info('starting', process.cwd());
 run('npm init -y');
 console.info('installing js-yaml', process.cwd());
-run('npm install js-yaml');
+run('npm install js-yaml@4.0.0');
 const yaml = require('js-yaml');
 process.chdir('..');
 console.info('starting real script', process.cwd());
