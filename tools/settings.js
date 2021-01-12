@@ -8,7 +8,7 @@ if (!process.env.PROJECT_PATH) {
 }
 export const projectPath = process.env.PROJECT_PATH;
 const settingsPath = path.resolve(projectPath, 'settings.yml');
-export const settings = require('js-yaml').safeLoad(readFileSync(settingsPath));
+export const settings = require('js-yaml').load(readFileSync(settingsPath));
 
 export const saveSettings = (newSettings) => {
   writeFileSync(settingsPath, dump(newSettings));

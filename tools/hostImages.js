@@ -9,7 +9,7 @@ import { projectPath } from './settings';
 import { extractSavedImageEntries } from './fetchImages';
 import {dump} from './yaml';
 
-const source = require('js-yaml').safeLoad(require('fs').readFileSync(path.resolve(projectPath, 'landscape.yml')));
+const source = require('js-yaml').load(require('fs').readFileSync(path.resolve(projectPath, 'landscape.yml')));
 const traverse = require('traverse');
 
 async function main() {

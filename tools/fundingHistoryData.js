@@ -15,7 +15,7 @@ function getFileFromHistory(days) {
   const content = require('child_process').execSync(`cd '${projectPath}'; git show ${commit}:processed_landscape.yml`, {
     maxBuffer: 100 * 1024 * 1024
   }).toString('utf-8');
-  const source = require('js-yaml').safeLoad(content);
+  const source = require('js-yaml').load(content);
   return source;
 }
 
@@ -30,7 +30,7 @@ function getCommitFromHistory(days) {
 
 function getFileFromFs() {
   const content = require('fs').readFileSync(path.resolve(projectPath, 'processed_landscape.yml'), 'utf-8');
-  const source = require('js-yaml').safeLoad(content);
+  const source = require('js-yaml').load(content);
   return source;
 }
 

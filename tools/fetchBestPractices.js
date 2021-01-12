@@ -17,7 +17,7 @@ const cacheMiss = colors.green;
 
 
 async function getLandscapeItems() {
-  const source = require('js-yaml').safeLoad(require('fs').readFileSync(path.resolve(projectPath, 'landscape.yml')));
+  const source = require('js-yaml').load(require('fs').readFileSync(path.resolve(projectPath, 'landscape.yml')));
   const traverse = require('traverse');
   const tree = traverse(source);
   const items = [];
@@ -157,7 +157,7 @@ export async function extractSavedBestPracticeEntries() {
   const traverse = require('traverse');
   let source = [];
   try {
-    source =  require('js-yaml').safeLoad(require('fs').readFileSync(path.resolve(projectPath, 'processed_landscape.yml')));
+    source =  require('js-yaml').load(require('fs').readFileSync(path.resolve(projectPath, 'processed_landscape.yml')));
   } catch(_ex) {
     console.info('Cannot extract image entries from the processed_landscape.yml');
   }

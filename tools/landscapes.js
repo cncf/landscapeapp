@@ -1,7 +1,7 @@
 import { report } from './reportToSlack';
 import generateReport from './reportBuilder';
 
-const landscapesInfo = require('js-yaml').safeLoad(require('fs').readFileSync('landscapes.yml'));
+const landscapesInfo = require('js-yaml').load(require('fs').readFileSync('landscapes.yml'));
 
 async function main() {
   for (var landscape of landscapesInfo.landscapes) {
@@ -88,7 +88,7 @@ async function main() {
 
 
     require('fs').writeFileSync(`${process.env.HOME}/${landscape.name}.log`, logs.join(''));
-    const settings = require('js-yaml').safeLoad(require('fs').readFileSync('/repo/settings.yml'));
+    const settings = require('js-yaml').load(require('fs').readFileSync('/repo/settings.yml'));
 
     const { slackChannel, icon_url, name } = (function() {
       try {
