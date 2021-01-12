@@ -20,7 +20,7 @@ export async function getStaticProps(context) {
   const queryParams = parse(mapping.split('?')[1])
   const pageParams = { mainContentMode, ...queryParams }
 
-  const params = routeToParams({ mainContentMode })
+  const params = routeToParams(pageParams)
   const props = getPrerenderProps(params)
   return { props: { ...props, pageParams } }
 }
