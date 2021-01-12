@@ -221,7 +221,7 @@ const chart = function(itemInfo) {
   const legend = <div style={{position: 'absolute', width: 170, left: 0, top: 0, marginTop: -5, marginBottom: 5, fontSize: '0.8em'  }}>
     {languages.map(function(language) {
       const url = language.name === 'Other' ? null : closeUrl({ grouping: 'no', filters: {language: language.name }});
-      return <div style = {{
+      return <div key={language.name} style = {{
         position: 'relative',
         marginTop: 2,
         height: 12
@@ -527,7 +527,7 @@ const ItemDialogContent = ({ itemInfo, loading }) => {
                   </div>
                 </div>
                 { itemInfo.repos && itemInfo.repos.map(({ url, stars }, idx) => {
-                  return <div className={`product-property row ${ idx < 3 || showAllRepos ? '' : 'hidden' }`}>
+                  return <div className={`product-property row ${ idx < 3 || showAllRepos ? '' : 'hidden' }`} key={idx}>
                     <div className="product-property-name col col-20">
                       { idx === 0 && (itemInfo.repos.length > 1 ? 'Repositories' : 'Repository') }
                     </div>
