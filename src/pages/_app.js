@@ -12,11 +12,11 @@ import { useRouter } from 'next/router'
 import currentDevice from '../utils/currentDevice'
 import isBrowser from '../utils/isBrowser'
 
-const Notice = ({ onClose, severity, message }) => {
+const Notice = ({ onClose, notice }) => {
   const anchorOrigin = { vertical: 'top', horizontal: 'center' }
   return <Snackbar open={true} autoHideDuration={6000} onClose={_ => onClose(null)} anchorOrigin={anchorOrigin}>
-    <Alert onClose={_ => onClose(null)} severity={severity} variant="filled">
-      {message}
+    <Alert onClose={_ => onClose(null)} severity={notice.severity} variant="filled">
+      {notice.message}
     </Alert>
   </Snackbar>
 }
@@ -27,7 +27,7 @@ export default function App({ Component, pageProps }) {
   const favicon = `${settings.global.website}/favicon.png`
   // TODO: hydration fix
   const [ready, setReady] = useState(!isBrowser() || location.search.length === 0)
-  const [error, setError] = useState('')
+  const [notice, setNotice] = useState(null)
 
   useEffect(() => {
     const _setReady = () => setReady(true)
@@ -111,8 +111,8 @@ export default function App({ Component, pageProps }) {
 
     <CssBaseline />
     <main>
-      { error && <Notice onClose={_ => setError(null)} message={error} severity="error" /> }
-      { ready ? <Component {...pageProps} setError={setError} /> : null }
+      { notice && <Notice onClose={_ => setNotice(null)} notice={notice} /> }
+      { ready ? <Component {...pageProps} setNotice={setNotice} /> : null }
     </main>
 
     {/*
