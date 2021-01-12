@@ -1,15 +1,12 @@
 import { useEffect } from 'react'
 import { useRouter } from 'next/router'
-import { parse, stringify } from 'querystring'
+import convertLegacyUrl from '../utils/convertLegacyUrl'
 
 const checkUrl = () => {
   const pathname = location.pathname.replace(/^\//, '')
   if (pathname.indexOf('=') >= 0) {
     const notice = { message: `URL deprecated: ${window.location.href}`, severity: 'warning' }
-    const { format, ...rest } = parse(pathname)
-    const path = `/${format}`
-    const query = stringify(rest)
-    const redirectUrl = [path, query].filter(_ => _).join('?')
+    const redirectUrl = convertLegacyUrl(pathname)
     return { redirectUrl, notice }
   } else {
     const notice = { message: `URL not found: ${window.location.href}`, severity: 'error' }

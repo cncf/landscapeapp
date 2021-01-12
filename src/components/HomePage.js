@@ -7,7 +7,6 @@ import classNames from 'classnames'
 import Filters from './Filters';
 import Grouping from './Grouping';
 import Sorting from './Sorting';
-import PresetsContainer from './PresetsContainer';
 import Ad from './Ad';
 import AutoSizer from './CustomAutoSizer';
 import OutboundLink from './OutboundLink';
@@ -31,6 +30,7 @@ import Header from './Header'
 import SwitchButton from './BigPicture/SwitchButton'
 import ExportCsv from './ExportCsv'
 import MainContent from './MainContent'
+import Presets from './Presets'
 
 bus.on('scrollToTop', function() {
   (document.scrollingElement || document.body).scrollTop = 0;
@@ -167,7 +167,7 @@ const HomePage = _ => {
               <Grouping/>
               <Sorting/>
               <Filters />
-              <PresetsContainer />
+              <Presets />
               <ExportCsv />
               <Ad />
             </div>
