@@ -1,4 +1,5 @@
-import CssBaseline from '@material-ui/core/CssBaseline'
+import { CssBaseline, Snackbar } from '@material-ui/core'
+import { Alert } from '@material-ui/lab'
 import Head from 'next/head'
 import '../styles/roboto.css'
 import '../styles/theme.scss'
@@ -11,6 +12,14 @@ import { useRouter } from 'next/router'
 import currentDevice from '../utils/currentDevice'
 import isBrowser from '../utils/isBrowser'
 
+const Notice = ({ onClose, severity, message }) => {
+  const anchorOrigin = { vertical: 'top', horizontal: 'center' }
+  return <Snackbar open={true} autoHideDuration={6000} onClose={_ => onClose(null)} anchorOrigin={anchorOrigin}>
+    <Alert onClose={_ => onClose(null)} severity={severity} variant="filled">
+      {message}
+    </Alert>
+  </Snackbar>
+}
 
 export default function App({ Component, pageProps }) {
   const router = useRouter()
@@ -18,6 +27,7 @@ export default function App({ Component, pageProps }) {
   const favicon = `${settings.global.website}/favicon.png`
   // TODO: hydration fix
   const [ready, setReady] = useState(!isBrowser() || location.search.length === 0)
+  const [error, setError] = useState('')
 
   useEffect(() => {
     const _setReady = () => setReady(true)
@@ -101,7 +111,8 @@ export default function App({ Component, pageProps }) {
 
     <CssBaseline />
     <main>
-      { ready ? <Component {...pageProps} /> : null }
+      { error && <Notice onClose={_ => setError(null)} message={error} severity="error" /> }
+      { ready ? <Component {...pageProps} setError={setError} /> : null }
     </main>
 
     {/*
