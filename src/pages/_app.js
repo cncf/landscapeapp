@@ -29,7 +29,6 @@ export default function App({ Component, pageProps }) {
   const [notice, setNotice] = useState(null)
   // TODO: hydration fix
   const ready = !isBrowser() || location.search.length === 0 || (location.search.length > 0 && Object.keys(query).length > 0)
-  console.log('query', query)
 
   useEffect(() => {
     ReactGA.initialize(process.env.GA)
