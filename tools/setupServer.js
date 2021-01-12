@@ -1,6 +1,6 @@
 import ejs from 'ejs';
 const file = require('fs').readFileSync('update_server/setup.bash', 'utf-8');
-const landscapes = require('js-yaml').safeLoad(require('fs').readFileSync('landscapes.yml'));
+const landscapes = require('js-yaml').load(require('fs').readFileSync('landscapes.yml'));
 
 const values = {
   ip: landscapes.ip,

@@ -11,7 +11,7 @@ const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPl
 const PnpWebpackPlugin = require(`pnp-webpack-plugin`);
 import {projectPath, settings} from './tools/settings';
 
-const source =  require('js-yaml').safeLoad(require('fs').readFileSync(require('path').resolve(projectPath, 'processed_landscape.yml')));
+const source =  require('js-yaml').load(require('fs').readFileSync(require('path').resolve(projectPath, 'processed_landscape.yml')));
 const GLOBALS = {
   'process.env.NODE_ENV': JSON.stringify('production'),
   'process.env.GA': require('process').env['GA'],

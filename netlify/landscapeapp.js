@@ -22,7 +22,7 @@ run('npm install js-yaml');
 const yaml = require('js-yaml');
 process.chdir('..');
 console.info('starting real script', process.cwd());
-const landscapesInfo = yaml.safeLoad(require('fs').readFileSync('landscapes.yml'));
+const landscapesInfo = yaml.load(require('fs').readFileSync('landscapes.yml'));
 
 const dockerImage = 'netlify/build:xenial';
 const dockerHome = '/opt/buildhome';

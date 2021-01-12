@@ -5,7 +5,7 @@ import errorsReporter from './reporter';
 const { addFatal } = errorsReporter('general');
 
 console.info('processed', projectPath);
-const source = require('js-yaml').safeLoad(require('fs').readFileSync(`${projectPath}/processed_landscape.yml`));
+const source = require('js-yaml').load(require('fs').readFileSync(`${projectPath}/processed_landscape.yml`));
 const traverse = require('traverse');
 const _ = require('lodash');
 const { emojify } = require('node-emoji')

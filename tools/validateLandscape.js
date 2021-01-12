@@ -6,7 +6,7 @@ import { setFatalError, reportFatalErrors } from './fatalErrors';
 
 async function main() {
 
-  const source = require('js-yaml').safeLoad(require('fs').readFileSync(path.resolve(projectPath,'landscape.yml')));
+  const source = require('js-yaml').load(require('fs').readFileSync(path.resolve(projectPath,'landscape.yml')));
   const traverse = require('traverse');
   const _ = require('lodash');
 
