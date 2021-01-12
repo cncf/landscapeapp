@@ -23,17 +23,13 @@ const Notice = ({ onClose, notice }) => {
 
 export default function App({ Component, pageProps }) {
   const router = useRouter()
+  const { path, ...query } = router.query
   const description = `${settings.global.meta.description}. Updated: ${process.env.lastUpdated}`
   const favicon = `${settings.global.website}/favicon.png`
-  // TODO: hydration fix
-  const [ready, setReady] = useState(!isBrowser() || location.search.length === 0)
   const [notice, setNotice] = useState(null)
-
-  useEffect(() => {
-    const _setReady = () => setReady(true)
-    router.events.on('routeChangeComplete', _setReady)
-    return () => router.events.off('routeChangeComplete', _setReady)
-  }, [])
+  // TODO: hydration fix
+  const ready = !isBrowser() || location.search.length === 0 || (location.search.length > 0 && Object.keys(query).length > 0)
+  console.log('query', query)
 
   useEffect(() => {
     ReactGA.initialize(process.env.GA)
