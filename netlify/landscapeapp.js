@@ -274,6 +274,9 @@ EOSSH
   require('fs').writeFileSync('dist/robots.html', robots);
   require('fs').copyFileSync(path.resolve(__dirname, '..', '_headers'), 'dist/_headers')
 
+  const redirects = landscapesInfo.landscapes.map(({ name }) => `/${name}/* /${name}/404.html 404`).join('\n')
+  require('fs').writeFileSync('dist/_redirects', redirects)
+
   require('fs').writeFileSync("dist/robots.txt", "User-agent: *");
   // comment below when about to test a googlebot rendering
   require('fs').appendFileSync("dist/robots.txt", "Disallow: /");
