@@ -72,7 +72,7 @@ const decodeSort = sort => {
 
 const decodeBoolean = value => value === 'yes' || value === 'true'
 
-const routeToParams = ({ mainContentMode, isReallyFullscreen, ...query }) => {
+const routeToParams = ({ mainContentMode, ...query }) => {
   const fieldFilters = Object.entries(fields).reduce((result, [key, field]) => {
     const param = field.url || field.id
     const value = query[param]
@@ -87,8 +87,6 @@ const routeToParams = ({ mainContentMode, isReallyFullscreen, ...query }) => {
 
   return {
     mainContentMode,
-    // TODO: come up with better naming
-    isReallyFullscreen,
     selectedItemId: query.selected,
     zoom: decodeZoom(query),
     isFullscreen: decodeBoolean(query.fullscreen),
