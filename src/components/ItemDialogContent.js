@@ -21,7 +21,7 @@ import classNames from 'classnames'
 import CreateWidthMeasurer from 'measure-text-width';
 import assetPath from '../utils/assetPath'
 import paramsToRoute from '../utils/paramsToRoute'
-import EntriesContext from '../contexts/EntriesContext'
+import LandscapeContext from '../contexts/LandscapeContext'
 import Head from 'next/head'
 
 const closeUrl = params => paramsToRoute({ mainContentMode: 'card-mode', selectedItemId: null, ...params })
@@ -161,7 +161,7 @@ const badgeTag = function(itemInfo) {
 }
 
 const chart = function(itemInfo) {
-  const { params } = useContext(EntriesContext)
+  const { params } = useContext(LandscapeContext)
   if (params.isEmbed || !itemInfo.github_data || !itemInfo.github_data.languages) {
     return null;
   }
@@ -243,7 +243,7 @@ const chart = function(itemInfo) {
 
 const participation = function(itemInfo) {
   const { innerWidth } = window;
-  const { params } = useContext(EntriesContext)
+  const { params } = useContext(LandscapeContext)
   if (params.isEmbed || !itemInfo.github_data || !itemInfo.github_data.contributions) {
     return null;
   }
@@ -330,7 +330,7 @@ function handleDown() {
 
 let timeoutId;
 const ItemDialogContent = ({ itemInfo, loading }) => {
-  const { params } = useContext(EntriesContext)
+  const { params } = useContext(LandscapeContext)
   const { onlyModal } = params
   const setIsLandscape = useState(currentDevice.landscape())[1]
   const [showAllRepos, setShowAllRepos] = useState(false)

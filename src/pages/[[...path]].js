@@ -1,7 +1,7 @@
 import HomePageComponent from '../components/HomePage';
 import getGroupedItems, { getGroupedItemsForBigPicture } from '../utils/itemsCalculator';
 import selectedItemCalculator from '../utils/selectedItemCalculator';
-import EntriesContext from '../contexts/EntriesContext'
+import LandscapeContext from '../contexts/LandscapeContext'
 import { projects } from '../../tools/loadData'
 import { findLandscapeSettings, landscapeSettingsList } from '../utils/landscapeSettings'
 import routeToParams from '../utils/routeToParams'
@@ -42,9 +42,9 @@ const HomePage = ({ entries, pageParams }) => {
     ...size
   }
 
-  return <EntriesContext.Provider value={baseProps}>
+  return <LandscapeContext.Provider value={baseProps}>
     { params.isReallyFullscreen ? <FullscreenLandscape /> : <HomePageComponent />}
-  </EntriesContext.Provider>
+  </LandscapeContext.Provider>
 }
 
 const decodeMainContentMode = path => {

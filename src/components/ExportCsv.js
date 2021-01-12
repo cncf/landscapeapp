@@ -2,7 +2,7 @@ import SystemUpdateIcon from '@material-ui/icons/SystemUpdate'
 import useSWR from 'swr'
 import assetPath from '../utils/assetPath'
 import { useContext, useEffect, useState } from 'react'
-import EntriesContext from '../contexts/EntriesContext'
+import LandscapeContext from '../contexts/LandscapeContext'
 import Parser from 'json2csv/lib/JSON2CSVParser'
 
 const fetchItems = shouldFetch => useSWR(shouldFetch ? assetPath(`/data/items-export.json`) : null)
@@ -25,7 +25,7 @@ const _downloadCSV = (allItems, selectedItems) => {
 }
 
 const ExportCsv = _ => {
-  const { groupedItems, groupedItemsForBigPicture } = useContext(EntriesContext)
+  const { groupedItems, groupedItemsForBigPicture } = useContext(LandscapeContext)
   const [shouldFetch, setShouldFetch] = useState(false)
   const { data: itemsForExport } = fetchItems(!!shouldFetch)
   const fetched = !!itemsForExport

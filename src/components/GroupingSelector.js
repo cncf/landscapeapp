@@ -4,7 +4,7 @@ import MenuItem from '@material-ui/core/MenuItem';
 import Select from '@material-ui/core/Select';
 import ComboboxSelector from './ComboboxSelector';
 import fields from '../types/fields'
-import EntriesContext from '../contexts/EntriesContext'
+import LandscapeContext from '../contexts/LandscapeContext'
 
 const groupingFields = ['landscape', 'relation', 'license', 'organization', 'headquarters'];
 const options = [{
@@ -14,7 +14,7 @@ const options = [{
 }].concat(groupingFields.map(id => ({ id, label: fields[id].groupingLabel })))
 
 const GroupingSelector = _ => {
-  const { navigate, params } = useContext(EntriesContext)
+  const { navigate, params } = useContext(LandscapeContext)
   const { grouping, mainContentMode } = params
   const isBigPicture = mainContentMode !== 'card-mode'
   const onChange = grouping => navigate({ grouping })

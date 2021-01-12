@@ -4,14 +4,14 @@ import Dialog from '@material-ui/core/Dialog';
 import classNames from 'classnames'
 import ItemDialogContent from './ItemDialogContent';
 import ItemDialogButtons from './ItemDialogButtons'
-import EntriesContext from '../contexts/EntriesContext'
+import LandscapeContext from '../contexts/LandscapeContext'
 import useSWR from 'swr'
 import assetPath from '../utils/assetPath'
 
 const fetchItem = itemId => useSWR(itemId ? assetPath(`/data/${itemId}.json`) : null)
 
 const ItemDialog = _ => {
-  const { navigate, params, entries } = useContext(EntriesContext)
+  const { navigate, params, entries } = useContext(LandscapeContext)
   const { onlyModal, selectedItemId } = params
   const { data: selectedItem } = fetchItem(selectedItemId)
   const closeDialog = _ => onlyModal ? _ : navigate({ selectedItemId: null })

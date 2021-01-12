@@ -2,7 +2,7 @@ import React, { useContext, useEffect, useState } from 'react';
 import LandscapeContent from './LandscapeContent';
 import currentDevice from '../../utils/currentDevice'
 import { useRouter } from 'next/router'
-import EntriesContext from '../../contexts/EntriesContext'
+import LandscapeContext from '../../contexts/LandscapeContext'
 import { headerHeight} from '../../utils/landscapeCalculations'
 
 const _calculateZoom = (fullscreenWidth, fullscreenHeight, zoomedIn) => {
@@ -28,7 +28,7 @@ const _calculateZoom = (fullscreenWidth, fullscreenHeight, zoomedIn) => {
 
 const Fullscreen = _ => {
   const { version } = useRouter()
-  const { fullscreenWidth, fullscreenHeight, landscapeSettings } = useContext(EntriesContext)
+  const { fullscreenWidth, fullscreenHeight, landscapeSettings } = useContext(LandscapeContext)
 
   const [zoomState, setZoomState] = useState({
     zoom: 1,

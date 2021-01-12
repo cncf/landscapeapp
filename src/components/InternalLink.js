@@ -1,10 +1,10 @@
 import React, { useContext } from 'react';
 import Link from 'next/link'
 import isGoogle from '../utils/isGoogle';
-import EntriesContext from '../contexts/EntriesContext'
+import LandscapeContext from '../contexts/LandscapeContext'
 
 const InternalLink = ({to, children, onClick, className, ...other}) => {
-  const { params } = useContext(EntriesContext)
+  const { params } = useContext(LandscapeContext)
   if (params.isEmbed || isGoogle() || params.onlyModal || !to) {
     return <span className={`${className}`} {...other}>{children}</span>;
   } else {

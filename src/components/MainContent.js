@@ -6,7 +6,7 @@ import ListSubheader from '@material-ui/core/ListSubheader';
 import _ from 'lodash';
 import InternalLink from './InternalLink';
 import fields from '../types/fields';
-import EntriesContext from '../contexts/EntriesContext'
+import LandscapeContext from '../contexts/LandscapeContext'
 import assetPath from '../utils/assetPath'
 import { useRouter } from 'next/router'
 import paramsToRoute from '../utils/paramsToRoute'
@@ -24,7 +24,7 @@ function getRelationStyle(relation) {
 }
 
 const Card = ({item, handler, ...props}) => {
-  const { params } = useContext(EntriesContext)
+  const { params } = useContext(LandscapeContext)
   const { cardStyle } = params
   if (cardStyle === 'flat') {
     return FlatCard({item, handler, ...props});
@@ -110,7 +110,7 @@ const Header = ({groupedItem, ...props}) => {
 
 
 const MainContent = () => {
-  const { navigate, params, groupedItems } = useContext(EntriesContext)
+  const { navigate, params, groupedItems } = useContext(LandscapeContext)
   const { cardStyle, isEmbed } = params
   const loader = useRef(null)
   const totalItems = groupedItems.reduce((sum, group) => sum + group.items.length, 0)

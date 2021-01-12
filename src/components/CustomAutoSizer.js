@@ -1,9 +1,9 @@
 import { useContext, useEffect, useRef, useState } from 'react'
-import EntriesContext from '../contexts/EntriesContext'
+import LandscapeContext from '../contexts/LandscapeContext'
 import { isZoomedIn } from '../utils/browserZoom'
 
 const AutoSizer = ({ children }) => {
-  const { params } = useContext(EntriesContext)
+  const { params } = useContext(LandscapeContext)
   const { isFullscreen } = params
   const [height, setHeight] = useState('auto')
   const ref = useRef(null)

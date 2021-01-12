@@ -3,11 +3,11 @@ import { pure } from 'recompose';
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
 import ChevronRightIcon from '@material-ui/icons/ChevronRight';
 import KeyHandler from 'react-key-handler';
-import EntriesContext from '../contexts/EntriesContext'
+import LandscapeContext from '../contexts/LandscapeContext'
 
 
 const ItemDialogButtons = ({ closeDialog }) => {
-  const { navigate, nextItemId, previousItemId } = useContext(EntriesContext)
+  const { navigate, nextItemId, previousItemId } = useContext(LandscapeContext)
   const onSelectItem = selectedItemId => navigate({ selectedItemId })
   return (
     <div className='modal-buttons'>

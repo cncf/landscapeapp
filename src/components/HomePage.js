@@ -20,7 +20,7 @@ import settings from 'project/settings.yml'
 import currentDevice from '../utils/currentDevice'
 import isBrowser from '../utils/isBrowser'
 import LandscapeContent from './BigPicture/LandscapeContent'
-import EntriesContext from '../contexts/EntriesContext'
+import LandscapeContext from '../contexts/LandscapeContext'
 import ResetFilters from './ResetFilters'
 import ItemDialog from './ItemDialog'
 import ZoomButtons from './BigPicture/ZoomButtons'
@@ -60,7 +60,7 @@ function enableScroll(){
 }
 
 const HomePage = _ => {
-  const { params } = useContext(EntriesContext)
+  const { params } = useContext(LandscapeContext)
   const { mainContentMode, zoom, isFullscreen, isEmbed, onlyModal, selectedItemId } = params
   const isBigPicture = mainContentMode !== 'card-mode';
   const [sidebarVisible, setSidebarVisible] = useState(false)

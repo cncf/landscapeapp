@@ -3,7 +3,7 @@ import { pure } from 'recompose';
 import millify from 'millify';
 import formatNumber from '../utils/formatNumber';
 import _ from 'lodash';
-import EntriesContext from '../contexts/EntriesContext'
+import LandscapeContext from '../contexts/LandscapeContext'
 import getSummary from '../utils/summaryCalculator'
 
 const getText = ({summary}) => {
@@ -27,7 +27,7 @@ const getText = ({summary}) => {
 }
 
 const Summary = _ => {
-  const { entries, params } = useContext(EntriesContext)
+  const { entries, params } = useContext(LandscapeContext)
   const summary = getSummary(params, entries)
 
   return <h4 className="summary">{getText({summary})}</h4>;

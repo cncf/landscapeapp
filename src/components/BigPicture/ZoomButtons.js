@@ -7,10 +7,10 @@ import AddCircleIcon from '@material-ui/icons/AddCircle';
 
 import React, { useContext } from 'react';
 import { zoomLevels } from '../../utils/zoom'
-import EntriesContext from '../../contexts/EntriesContext'
+import LandscapeContext from '../../contexts/LandscapeContext'
 
 const ZoomButtons = _ => {
-  const { navigate, params } = useContext(EntriesContext)
+  const { navigate, params } = useContext(LandscapeContext)
   const { zoom } = params
 
   const minZoom = zoomLevels[0]

@@ -7,7 +7,7 @@ import {
   smallItemHeight,
   smallItemWidth
 } from "../../utils/landscapeCalculations";
-import EntriesContext from '../../contexts/EntriesContext'
+import LandscapeContext from '../../contexts/LandscapeContext'
 import assetPath from '../../utils/assetPath'
 
 const LargeItem = ({ item, onClick }) => {
@@ -75,7 +75,7 @@ const SmallItem = ({ item, onClick }) => {
 const Item = props => {
   const { isLarge, isVisible, category, oss, categoryAttrs } = props.item
   const isMember = category === settings.global.membership;
-  const { navigate } = useContext(EntriesContext)
+  const { navigate } = useContext(LandscapeContext)
   const onClick = _ => navigate({ selectedItemId: props.item.id })
   const newProps = { ...props, onClick }
 

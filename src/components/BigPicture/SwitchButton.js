@@ -3,7 +3,7 @@ import { pure, withProps, toClass } from 'recompose';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 import InternalLink from '../InternalLink';
-import EntriesContext from '../../contexts/EntriesContext'
+import LandscapeContext from '../../contexts/LandscapeContext'
 import _ from 'lodash'
 import settings from 'project/settings.yml';
 import paramsToRoute from '../../utils/paramsToRoute'
@@ -22,7 +22,7 @@ const landscapes = _.map(settings.big_picture, function(section) {
 const _cards = _.orderBy(mainCard.concat(landscapes), 'tabIndex').map( item => _.pick(item, ['title', 'mode', 'shortTitle']))
 
 const SwitchButton = _ => {
-  const { navigate, params } = useContext(EntriesContext)
+  const { navigate, params } = useContext(LandscapeContext)
   const { mainContentMode, isEmbed } = params
   const cards = _cards.map(card => ({ ...card, url: paramsToRoute({ ...params, mainContentMode: card.mode })}))
 

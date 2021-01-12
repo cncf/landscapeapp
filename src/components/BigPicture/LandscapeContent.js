@@ -5,7 +5,7 @@ import HorizontalCategory from './HorizontalCategory'
 import VerticalCategory from './VerticalCategory'
 import LandscapeInfo from './LandscapeInfo';
 import OtherLandscapeLink from './OtherLandscapeLink';
-import EntriesContext from '../../contexts/EntriesContext'
+import LandscapeContext from '../../contexts/LandscapeContext'
 
 const extractKeys = (obj, keys) => {
   const attributes = _.pick(obj, keys)
@@ -14,7 +14,7 @@ const extractKeys = (obj, keys) => {
 }
 
 const LandscapeContent = ({zoom, padding = 10 }) => {
-  const { navigate, groupedItemsForBigPicture, landscapeSettings, width, height } = useContext(EntriesContext)
+  const { navigate, groupedItemsForBigPicture, landscapeSettings, width, height } = useContext(LandscapeContext)
   const switchToLandscape = mainContentMode => navigate({ mainContentMode })
   const elements = landscapeSettings.elements.map(element => {
     if (element.type === 'LandscapeLink') {

@@ -3,11 +3,11 @@ import { pure } from 'recompose';
 import MenuItem from '@material-ui/core/MenuItem';
 import Select from '@material-ui/core/Select';
 import TreeSelector from './TreeSelector';
-import EntriesContext from '../contexts/EntriesContext'
+import LandscapeContext from '../contexts/LandscapeContext'
 import { options } from '../types/fields'
 
 const CategoryFilter = _ => {
-  const { navigate, params } = useContext(EntriesContext)
+  const { navigate, params } = useContext(LandscapeContext)
   const { mainContentMode, filters } = params
   const isBigPicture = mainContentMode !== 'card-mode'
   const value = filters.landscape
