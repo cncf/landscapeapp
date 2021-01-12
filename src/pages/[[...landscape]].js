@@ -7,7 +7,7 @@ import settings from 'project/settings.yml'
 
 const defaultContentMode = settings.big_picture.main.url
 
-const ExtraLandscapePage = ({ entries, mainContentMode }) => {
+const LandscapePage = ({ entries, mainContentMode }) => {
   return <LandscapeProvider entries={entries} pageParams={{ mainContentMode }}>
     <HomePageComponent />
   </LandscapeProvider>
@@ -31,4 +31,4 @@ export async function getStaticPaths() {
   return { paths, fallback: false }
 }
 
-export default ExtraLandscapePage
+export default LandscapePage

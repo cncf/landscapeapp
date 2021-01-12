@@ -7,7 +7,7 @@ import settings from 'project/settings.yml'
 
 const defaultContentMode = settings.big_picture.main.url
 
-const ExtraFullscreenPage = ({ entries, mainContentMode }) => {
+const FullscreenPage = ({ entries, mainContentMode }) => {
   return <LandscapeProvider entries={entries} pageParams={{ mainContentMode }}>
     <FullscreenLandscape />
   </LandscapeProvider>
@@ -27,4 +27,4 @@ export async function getStaticPaths() {
   return { paths, fallback: false }
 }
 
-export default ExtraFullscreenPage
+export default FullscreenPage
