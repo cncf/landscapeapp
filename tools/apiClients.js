@@ -23,9 +23,6 @@ const requestWithRetry = async ({ attempts = maxAttempts, retryStatuses, delayFn
 
   let lastEx = null;
   for (var key of keys) {
-    if (lastEx) {
-      console.info(`Retrying request with a different API key!`);
-    }
     applyKey(rest, key);
     try {
       return await requestPromise(rest);
@@ -36,7 +33,9 @@ const requestWithRetry = async ({ attempts = maxAttempts, retryStatuses, delayFn
         `(Status Code: ${statusCode})`,
         `(URI: ${options.uri.split('?')[0]})`
       ].join(' ')
-      console.info(message);
+      if (key === keys[keys.length - 1]) {
+        console.info(message);
+      }
       const rateLimited = retryStatuses.includes(statusCode)
       const dnsError = error && error.code === 'ENOTFOUND' && error.syscall === 'getaddrinfo'
       if (attempts <= 0 || (!rateLimited && !dnsError)) {
