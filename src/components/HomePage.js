@@ -31,6 +31,7 @@ import SwitchButton from './BigPicture/SwitchButton'
 import ExportCsv from './ExportCsv'
 import MainContent from './MainContent'
 import Presets from './Presets'
+import { isZoomedIn } from '../utils/browserZoom'
 
 bus.on('scrollToTop', function() {
   (document.scrollingElement || document.body).scrollTop = 0;
@@ -67,6 +68,7 @@ const HomePage = _ => {
   const showSidebar = _ => setSidebarVisible(true)
   const hideSidebar = _ => setSidebarVisible(false)
   const [lastScrollPosition, setLastScrollPosition] = useState(0)
+  const [isZoomed, setIsZoomed] = useState(false)
 
   if (onlyModal) {
     document.querySelector('body').classList.add('popup');
@@ -75,14 +77,18 @@ const HomePage = _ => {
   useEffect(() => {
     const { classList } = document.querySelector('html')
     isBigPicture ? classList.add('big-picture') : classList.remove('big-picture')
-
   }, [isBigPicture])
 
   useEffect(() => {
     const { classList } = document.querySelector('html')
     isFullscreen ? classList.add('fullscreen') : classList.remove('fullscreen')
-
   }, [isFullscreen])
+
+  useEffect(() => {
+    const checkZoomedIn = () => setIsZoomed(isZoomedIn())
+    window.addEventListener('touchend', checkZoomedIn)
+    return () => window.removeEventListener('touchend', checkZoomedIn)
+  })
 
   useEffect(_ => {
     if (currentDevice.ios()) {
@@ -153,7 +159,7 @@ const HomePage = _ => {
   const isIphone = currentDevice.ios()
 
   return (
-    <div>
+    <div className={isZoomed ? 'zoomed-in' : ''}>
     {selectedItemId && <ItemDialog/>}
     <div className={classNames('app',{'filters-opened' : sidebarVisible})}>
       <div style={{marginTop: isIphone && selectedItemId ? -lastScrollPosition : 0}} className={classNames({"iphone-scroller": isIphone && selectedItemId}, 'main-parent')} >
