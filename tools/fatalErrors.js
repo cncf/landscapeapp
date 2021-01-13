@@ -3,8 +3,6 @@ import errorsReporter, { getMessages } from './reporter';
 const { addFatal } = errorsReporter('general');
 
 export function hasFatalErrors() {
-  // TODO: re-enable. Ask Andrey why this fails
-  return false
   return getMessages().filter( (x) => x.type === 'fatal') > 0;
 }
 
