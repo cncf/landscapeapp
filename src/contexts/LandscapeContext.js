@@ -2,7 +2,7 @@ import { createContext } from 'react'
 import { useRouter } from 'next/router'
 import routeToParams from '../utils/routeToParams'
 import { findLandscapeSettings } from '../utils/landscapeSettings'
-import getGroupedItems, { getGroupedItemsForBigPicture } from '../utils/itemsCalculator'
+import { getGroupedItemsForContentMode } from '../utils/itemsCalculator'
 import selectedItemCalculator from '../utils/selectedItemCalculator'
 import { calculateSize } from '../utils/landscapeCalculations'
 import paramsToRoute from '../utils/paramsToRoute'
@@ -15,10 +15,9 @@ export const LandscapeProvider = ({ entries, pageParams, children }) => {
 
   const landscapeSettings = findLandscapeSettings(params.mainContentMode)
   const isBigPicture = params.mainContentMode !== 'card-mode'
-  const groupedItems = getGroupedItems(params, entries)
-  const groupedItemsForBigPicture = getGroupedItemsForBigPicture(params, entries, landscapeSettings)
+  const groupedItems = getGroupedItemsForContentMode(params, entries, landscapeSettings)
   const selectedItemId = params.selectedItemId
-  const { nextItemId, previousItemId } = selectedItemCalculator(groupedItems, groupedItemsForBigPicture, selectedItemId, isBigPicture)
+  const { nextItemId, previousItemId } = selectedItemCalculator(groupedItems, selectedItemId, isBigPicture)
   const size = calculateSize(landscapeSettings)
 
   const navigate = (newParams = {}) => {
@@ -35,7 +34,6 @@ export const LandscapeProvider = ({ entries, pageParams, children }) => {
     previousItemId,
     params,
     landscapeSettings,
-    groupedItemsForBigPicture,
     ...size
   }
 

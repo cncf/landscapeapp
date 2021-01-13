@@ -4,6 +4,7 @@ import assetPath from '../utils/assetPath'
 import { useContext, useEffect, useState } from 'react'
 import LandscapeContext from '../contexts/LandscapeContext'
 import Parser from 'json2csv/lib/JSON2CSVParser'
+import { flattenItems } from '../utils/itemsCalculator'
 
 const fetchItems = shouldFetch => useSWR(shouldFetch ? assetPath(`/data/items-export.json`) : null)
 
@@ -25,12 +26,11 @@ const _downloadCSV = (allItems, selectedItems) => {
 }
 
 const ExportCsv = _ => {
-  const { groupedItems, groupedItemsForBigPicture } = useContext(LandscapeContext)
+  const { groupedItems } = useContext(LandscapeContext)
   const [shouldFetch, setShouldFetch] = useState(false)
   const { data: itemsForExport } = fetchItems(!!shouldFetch)
   const fetched = !!itemsForExport
-  const selectedItems = (groupedItemsForBigPicture.length > 0 ? groupedItemsForBigPicture : groupedItems)
-    .flatMap(group => group.hasOwnProperty('subcategories') ? group.subcategories.flatMap(({ items }) => items) : group.items)
+  const selectedItems = flattenItems(groupedItems)
     .reduce((acc, item) => ({ ...acc, [item.id]: true }), {})
   const downloadCSV = () => _downloadCSV(itemsForExport, selectedItems)
 

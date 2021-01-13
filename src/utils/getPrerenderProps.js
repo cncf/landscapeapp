@@ -1,19 +1,8 @@
-import getGroupedItems, { getGroupedItemsForBigPicture } from './itemsCalculator'
+import { getGroupedItemsForContentMode, flattenItems } from './itemsCalculator'
 import { projects } from '../../tools/loadData'
 
-const getFilteredItems = (params) => {
-  const items = getGroupedItemsForBigPicture(params, projects)
-    .flatMap(({ subcategories }) => subcategories.flatMap(({ items }) => items))
-
-  if (items.length > 0) {
-    return items
-  }
-
-  return getGroupedItems(params, projects).flatMap(group => group.items)
-}
-
 const getPrerenderProps = params => {
-  const items = getFilteredItems(params)
+  const items = flattenItems(getGroupedItemsForContentMode(params, projects))
   const entries = items.map(project => {
     const keys = [
       'name', 'stars', 'organization', 'path', 'landscape', 'category', 'oss', 'href', 'id',

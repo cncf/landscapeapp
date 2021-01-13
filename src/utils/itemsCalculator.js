@@ -174,12 +174,12 @@ const bigPictureSortOrder = [
   }
 ];
 
-export const getGroupedItemsForBigPicture = function(params, entries, landscapeSettings = null) {
+export const getGroupedItemsForContentMode = function(params, entries, landscapeSettings = null) {
   if (!landscapeSettings) {
     landscapeSettings = findLandscapeSettings(params.mainContentMode);
   }
   if (params.mainContentMode === 'card-mode') {
-    return [];
+    return getGroupedItems(params, entries)
   } else if (landscapeSettings.isMain) {
     return getGroupedItemsForMainLandscape(params, entries, landscapeSettings);
   } else {
@@ -255,6 +255,13 @@ const getGroupedItemsForAdditionalLandscape = createSelector([
     return result;
   }
 );
+
+export const flattenItems = groupedItems => {
+  return groupedItems.flatMap(group => {
+    const { items, subcategories } = group
+    return group.hasOwnProperty('items') ? items : subcategories.flatMap(({ items }) => items)
+  })
+}
 
 export function getItemsForExport(params, entries) {
   return _.flatten(getGroupedItems(params, entries).map((x) => x.items));

@@ -14,7 +14,7 @@ const extractKeys = (obj, keys) => {
 }
 
 const LandscapeContent = ({zoom, padding = 10 }) => {
-  const { navigate, groupedItemsForBigPicture, landscapeSettings, width, height } = useContext(LandscapeContext)
+  const { navigate, groupedItems, landscapeSettings, width, height } = useContext(LandscapeContext)
   const switchToLandscape = mainContentMode => navigate({ mainContentMode })
   const elements = landscapeSettings.elements.map(element => {
     if (element.type === 'LandscapeLink') {
@@ -29,7 +29,7 @@ const LandscapeContent = ({zoom, padding = 10 }) => {
       />
     }
 
-    const category = groupedItemsForBigPicture.find(c => c.key === element.category) || {}
+    const category = groupedItems.find(c => c.key === element.category) || {}
     const attributes = extractKeys(element, ['width', 'height', 'top', 'left', 'color', 'fit_width', 'is_large'])
     const subcategories = category.subcategories.map(subcategory => {
       const allItems = subcategory.allItems.map(item => ({ ...item, categoryAttrs: attributes }))
