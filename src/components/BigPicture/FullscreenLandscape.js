@@ -5,8 +5,7 @@ import { useRouter } from 'next/router'
 import LandscapeContext from '../../contexts/LandscapeContext'
 import { headerHeight} from '../../utils/landscapeCalculations'
 
-const _calculateZoom = (fullscreenWidth, fullscreenHeight, zoomedIn) => {
-  const currentDevice = useCurrentDevice()
+const _calculateZoom = (fullscreenWidth, fullscreenHeight, zoomedIn, currentDevice) => {
   const isFirefox = navigator.userAgent.indexOf('Firefox') > -1
 
   const aspectRatio = innerWidth / innerHeight
@@ -28,8 +27,9 @@ const _calculateZoom = (fullscreenWidth, fullscreenHeight, zoomedIn) => {
 }
 
 const Fullscreen = _ => {
-  const { version } = useRouter()
+  const { version } = useRouter().query
   const { fullscreenWidth, fullscreenHeight, landscapeSettings } = useContext(LandscapeContext)
+  const currentDevice = useCurrentDevice()
 
   const [zoomState, setZoomState] = useState({
     zoom: 1,
@@ -41,7 +41,7 @@ const Fullscreen = _ => {
   const { zoom, wrapperHeight, wrapperWidth, zoomedIn, zoomedAt } = zoomState
 
   const calculateZoom = (zoomedIn = false, zoomedAt = {}) => {
-    const zoomAttrs = _calculateZoom(fullscreenWidth, fullscreenHeight, zoomedIn)
+    const zoomAttrs = _calculateZoom(fullscreenWidth, fullscreenHeight, zoomedIn, currentDevice)
     setZoomState({ zoomedIn, zoomedAt, ...zoomAttrs })
   }
 
@@ -57,7 +57,7 @@ const Fullscreen = _ => {
   }, [true]);
 
   useEffect(() => {
-    zoomedIn ? window.scrollTo((zoomedAt.x * zoom - innerWidth / 2), (zoomedAt.y * zoom - innerHeight / 2)) : null
+    window.scrollTo((zoomedAt.x * zoom - innerWidth / 2), (zoomedAt.y * zoom - innerHeight / 2))
   }, [zoomedAt, zoomedIn])
 
   return (
