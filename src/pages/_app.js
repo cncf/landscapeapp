@@ -58,11 +58,6 @@ export default function App({ Component, pageProps }) {
   }, [])
 
   useEffect(() => {
-    if (!currentDevice.desktop()) {
-      window.addEventListener("orientationchange", updateOrientation);
-      setInterval(updateOrientation, 1000);
-    }
-
     function updateOrientation() {
       if (window.matchMedia("(orientation: portrait)").matches) {
         document.querySelector('html').classList.remove('landscape');
@@ -72,7 +67,12 @@ export default function App({ Component, pageProps }) {
         document.querySelector('html').classList.add('landscape');
       }
     }
-  }, [])
+
+    if (!currentDevice.desktop()) {
+      window.addEventListener('orientationchange', updateOrientation);
+      return () => window.removeEventListener('orientationchange', updateOrientation)
+    }
+  }, [currentDevice])
 
   return <>
     <Head>

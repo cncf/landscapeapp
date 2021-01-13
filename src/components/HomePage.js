@@ -84,22 +84,24 @@ const HomePage = _ => {
     isFullscreen ? classList.add('fullscreen') : classList.remove('fullscreen')
   }, [isFullscreen])
 
-  if (currentDevice.ios()) {
-    if (selectedItemId) {
-      if (!document.querySelector('.iphone-scroller')) {
-        setLastScrollPosition((document.scrollingElement || document.body).scrollTop)
+  useEffect(() => {
+    if (currentDevice.ios()) {
+      if (selectedItemId) {
+        if (!document.querySelector('.iphone-scroller')) {
+          setLastScrollPosition((document.scrollingElement || document.body).scrollTop)
+        }
+        document.querySelector('html').classList.add('has-selected-item');
+        (document.scrollingElement || document.body).scrollTop = 0;
+        disableScroll();
+      } else {
+        document.querySelector('html').classList.remove('has-selected-item');
+        if (document.querySelector('.iphone-scroller')) {
+          (document.scrollingElement || document.body).scrollTop = lastScrollPosition;
+        }
+        enableScroll();
       }
-      document.querySelector('html').classList.add('has-selected-item');
-      (document.scrollingElement || document.body).scrollTop = 0;
-      disableScroll();
-    } else {
-      document.querySelector('html').classList.remove('has-selected-item');
-      if (document.querySelector('.iphone-scroller')) {
-        (document.scrollingElement || document.body).scrollTop = lastScrollPosition;
-      }
-      enableScroll();
     }
-  }
+  }, [currentDevice, selectedItemId])
 
   useEffect(() => {
     if (isEmbed) {
