@@ -8,8 +8,8 @@ module.exports = {
   plugins: [
     ["module-resolver", {
       alias: {
-        "project/settings.yml": path.resolve(__dirname, 'public/settings.json'),
-        "project/lookup.json": `${process.env.PROJECT_PATH}/lookup.json`
+        public: path.resolve(__dirname, 'public'),
+        project: process.env.PROJECT_PATH
       }
     }]
   ]

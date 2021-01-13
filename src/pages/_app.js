@@ -4,7 +4,7 @@ import Head from 'next/head'
 import '../styles/roboto.scss'
 import '../styles/theme.scss'
 import '../styles/itemModal.scss'
-import settings from 'project/settings.yml';
+import settings from 'public/settings.json';
 import ReactGA from 'react-ga';
 import iframeResizerContentWindow from 'iframe-resizer/js/iframeResizer.contentWindow';
 import { useEffect, useState } from 'react'

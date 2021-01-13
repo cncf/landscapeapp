@@ -3,7 +3,7 @@ import HomePageComponent from '../components/HomePage'
 import { parseParams } from '../utils/routing'
 import getPrerenderProps from '../utils/getPrerenderProps'
 import { landscapeSettingsList } from '../utils/landscapeSettings'
-import settings from 'project/settings.yml'
+import settings from 'public/settings.json'
 
 const defaultContentMode = settings.big_picture.main.url
 

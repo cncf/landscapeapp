@@ -1,4 +1,4 @@
-import settings from 'project/settings.yml';
+import settings from 'public/settings.json';
 
 
 export const landscapeSettingsList = Object.values(settings.big_picture)

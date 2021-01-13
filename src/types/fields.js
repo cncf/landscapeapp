@@ -12,7 +12,7 @@
 import _ from 'lodash';
 import lookups from 'project/lookup.json';
 import unpack from '../utils/unpackArray';
-import settings from 'project/settings.yml';
+import settings from 'public/settings.json';
 import isParent from '../utils/isParent';
 
 const relationField = (function() {

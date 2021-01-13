@@ -1,4 +1,4 @@
-import settings from 'project/settings.yml'
+import settings from 'public/settings.json'
 import fields from "../types/fields";
 
 export const itemMargin = 3

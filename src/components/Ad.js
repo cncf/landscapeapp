@@ -1,7 +1,7 @@
 import React from 'react';
 import { pure } from 'recompose';
 import OutboundLink from './OutboundLink';
-import settings from 'project/settings.yml';
+import settings from 'public/settings.json';
 import assetPath from '../utils/assetPath'
 
 const Ad = () => {

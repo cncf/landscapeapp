@@ -141,7 +141,7 @@ function formatDate(row, field) {
 }
 
 const prepareItemsForExport = items => {
-  const settings = require('project/settings.yml')
+  const settings = require('public/settings.json')
   const parser = new Parser({ fields: fields(settings), quote: '' })
 
   return items.map(item => {

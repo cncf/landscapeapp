@@ -4,7 +4,7 @@ import { useRouter } from 'next/router'
 import { pure } from 'recompose'
 import InternalLink from './InternalLink'
 import convertLegacyUrl from '../utils/convertLegacyUrl'
-import settings from 'project/settings.yml'
+import settings from 'public/settings.json'
 
 const queriesMatch = (query, otherQuery) => {
   const params = parse(query)

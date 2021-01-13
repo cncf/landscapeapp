@@ -11,7 +11,7 @@ import isParent from '../utils/isParent';
 import InternalLink from './InternalLink';
 import fields from '../types/fields';
 import isGoogle from '../utils/isGoogle';
-import settings from 'project/settings.yml';
+import settings from 'public/settings.json';
 import TweetButton from './TweetButton';
 import currentDevice from '../utils/currentDevice'
 import TwitterTimeline from "./TwitterTimeline";

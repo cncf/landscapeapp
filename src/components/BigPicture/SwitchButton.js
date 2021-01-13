@@ -5,7 +5,7 @@ import Tab from '@material-ui/core/Tab';
 import InternalLink from '../InternalLink';
 import LandscapeContext from '../../contexts/LandscapeContext'
 import _ from 'lodash'
-import settings from 'project/settings.yml';
+import settings from 'public/settings.json';
 import { stringifyParams } from '../../utils/routing'
 
 const mainCard = [{shortTitle: 'Card', title: 'Card Mode', mode: 'card-mode', tabIndex: 0}]

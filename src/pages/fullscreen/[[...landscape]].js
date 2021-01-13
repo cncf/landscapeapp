@@ -3,7 +3,7 @@ import getPrerenderProps from '../../utils/getPrerenderProps'
 import FullscreenLandscape from '../../components/BigPicture/FullscreenLandscape'
 import { LandscapeProvider } from '../../contexts/LandscapeContext'
 import { landscapeSettingsList } from '../../utils/landscapeSettings'
-import settings from 'project/settings.yml'
+import settings from 'public/settings.json'
 
 const defaultContentMode = settings.big_picture.main.url
 

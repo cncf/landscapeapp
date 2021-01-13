@@ -1,5 +1,5 @@
 import { parse } from 'querystring'
-import settings from 'project/settings.yml'
+import settings from 'public/settings.json'
 import { parseParams } from '../../utils/routing'
 import getPrerenderProps from '../../utils/getPrerenderProps'
 import { LandscapeProvider } from '../../contexts/LandscapeContext'

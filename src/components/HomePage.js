@@ -16,7 +16,7 @@ import EmbeddedFooter from './EmbeddedFooter';
 
 import isGoogle from '../utils/isGoogle';
 import bus from '../reducers/bus';
-import settings from 'project/settings.yml'
+import settings from 'public/settings.json'
 import currentDevice from '../utils/currentDevice'
 import isBrowser from '../utils/isBrowser'
 import LandscapeContent from './BigPicture/LandscapeContent'
