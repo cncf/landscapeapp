@@ -1,7 +1,7 @@
 import { CssBaseline, Snackbar } from '@material-ui/core'
 import { Alert } from '@material-ui/lab'
 import Head from 'next/head'
-import '../styles/roboto.css'
+import '../styles/roboto.scss'
 import '../styles/theme.scss'
 import '../styles/itemModal.scss'
 import settings from 'project/settings.yml';
