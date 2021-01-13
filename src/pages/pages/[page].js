@@ -1,6 +1,6 @@
 import { parse } from 'querystring'
 import settings from 'project/settings.yml'
-import routeToParams from '../../utils/routeToParams'
+import { parseParams } from '../../utils/routing'
 import getPrerenderProps from '../../utils/getPrerenderProps'
 import { LandscapeProvider } from '../../contexts/LandscapeContext'
 import HomePageComponent from '../../components/HomePage'
@@ -20,7 +20,7 @@ export async function getStaticProps(context) {
   const queryParams = parse(mapping.split('?')[1])
   const pageParams = { mainContentMode, ...queryParams }
 
-  const params = routeToParams(pageParams)
+  const params = parseParams(pageParams)
   const props = getPrerenderProps(params)
   return { props: { ...props, pageParams } }
 }

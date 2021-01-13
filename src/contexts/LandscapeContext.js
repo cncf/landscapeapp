@@ -1,17 +1,17 @@
 import { createContext } from 'react'
 import { useRouter } from 'next/router'
-import routeToParams from '../utils/routeToParams'
+import { parseParams } from '../utils/routing'
 import { findLandscapeSettings } from '../utils/landscapeSettings'
 import { getGroupedItemsForContentMode } from '../utils/itemsCalculator'
 import selectedItemCalculator from '../utils/selectedItemCalculator'
 import { calculateSize } from '../utils/landscapeCalculations'
-import paramsToRoute from '../utils/paramsToRoute'
+import { stringifyParams } from '../utils/routing'
 
 const LandscapeContext = createContext()
 
 export const LandscapeProvider = ({ entries, pageParams, children }) => {
   const router = useRouter()
-  const params = routeToParams({ ...pageParams, ...router.query })
+  const params = parseParams({ ...pageParams, ...router.query })
 
   const landscapeSettings = findLandscapeSettings(params.mainContentMode)
   const isBigPicture = params.mainContentMode !== 'card-mode'
@@ -22,7 +22,7 @@ export const LandscapeProvider = ({ entries, pageParams, children }) => {
 
   const navigate = (newParams = {}) => {
     const filters = { ...(params.filters || {}), ...(newParams.filters || {}) }
-    const url = paramsToRoute({ ...params, ...newParams, filters })
+    const url = stringifyParams({ ...params, ...newParams, filters })
     router.push(url)
   }
 

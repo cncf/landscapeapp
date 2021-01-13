@@ -1,6 +1,6 @@
 import { LandscapeProvider } from '../contexts/LandscapeContext'
 import HomePageComponent from '../components/HomePage'
-import routeToParams from '../utils/routeToParams'
+import { parseParams } from '../utils/routing'
 import getPrerenderProps from '../utils/getPrerenderProps'
 import { landscapeSettingsList } from '../utils/landscapeSettings'
 import settings from 'project/settings.yml'
@@ -16,7 +16,7 @@ const LandscapePage = ({ entries, mainContentMode }) => {
 export async function getStaticProps(context) {
   const mainContentMode = (context.params.landscape || [])[0] || defaultContentMode
 
-  const params = routeToParams({ mainContentMode })
+  const params = parseParams({ mainContentMode })
   const props = getPrerenderProps(params)
   return { props: { ...props, mainContentMode } }
 }

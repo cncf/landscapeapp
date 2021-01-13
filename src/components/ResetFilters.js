@@ -2,7 +2,7 @@ import React, { useContext } from 'react';
 import { pure } from 'recompose';
 import ResetIcon from '@material-ui/icons/SettingsBackupRestore';
 import LandscapeContext from '../contexts/LandscapeContext'
-import paramsToRoute from '../utils/paramsToRoute'
+import { stringifyParams } from '../utils/routing'
 import { useRouter } from 'next/router'
 
 const ResetFilters = _ => {
@@ -11,7 +11,7 @@ const ResetFilters = _ => {
 
   // TODO: clean up with validate
   const reset = _ => {
-    const url = paramsToRoute({ ...params, filters: null })
+    const url = stringifyParams({ ...params, filters: null })
     router.push(url)
   }
 

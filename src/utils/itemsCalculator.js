@@ -8,7 +8,7 @@ import formatNumber from 'format-number';
 import stringOrSpecial from '../utils/stringOrSpecial';
 import { getLandscapeCategories } from './sharedItemsCalculator';
 import { findLandscapeSettings } from "./landscapeSettings";
-import paramsToRoute from './paramsToRoute'
+import { stringifyParams } from './routing'
 
 const landscape = fields.landscape.values;
 
@@ -152,7 +152,7 @@ const getGroupedItems = createSelector(
         key: properKey,
         header: groupingLabel(grouping, properKey),
         items: value,
-        href: paramsToRoute({filters: newFilters, grouping, sortField})
+        href: stringifyParams({filters: newFilters, grouping, sortField})
       }
     }), (group) => groupingOrder(grouping)(group.key));
   }
@@ -205,12 +205,12 @@ const getGroupedItemsForMainLandscape = createSelector(
       return {
         key: stringOrSpecial(category.label),
         header: category.label,
-        href: paramsToRoute({filters: newFilters, grouping: 'landscape', sortField, mainContentMode: 'card-mode'}),
+        href: stringifyParams({filters: newFilters, grouping: 'landscape', sortField, mainContentMode: 'card-mode'}),
         subcategories: landscape.filter( (l) => l.parentId === category.id).map(function(subcategory) {
           const newFilters = {...filters, landscape: subcategory.id };
           return {
             name: subcategory.label,
-            href: paramsToRoute({filters: newFilters, grouping: 'landscape', sortField, mainContentMode: 'card-mode'}),
+            href: stringifyParams({filters: newFilters, grouping: 'landscape', sortField, mainContentMode: 'card-mode'}),
             items: itemsMap[subcategory.id] || [],
             allItems: allItemsMap[subcategory.id]
           };
@@ -240,7 +240,7 @@ const getGroupedItemsForAdditionalLandscape = createSelector([
       return {
         key: stringOrSpecial(subcategory.label),
         header: subcategory.label,
-        href: paramsToRoute({filters: newFilters, grouping: 'landscape', sortField, mainContentMode: 'card'}),
+        href: stringifyParams({filters: newFilters, grouping: 'landscape', sortField, mainContentMode: 'card'}),
         subcategories: [
           {
             name: '',

@@ -6,7 +6,7 @@ import InternalLink from '../InternalLink';
 import LandscapeContext from '../../contexts/LandscapeContext'
 import _ from 'lodash'
 import settings from 'project/settings.yml';
-import paramsToRoute from '../../utils/paramsToRoute'
+import { stringifyParams } from '../../utils/routing'
 
 const mainCard = [{shortTitle: 'Card', title: 'Card Mode', mode: 'card-mode', tabIndex: 0}]
 
@@ -24,7 +24,7 @@ const _cards = _.orderBy(mainCard.concat(landscapes), 'tabIndex').map( item => _
 const SwitchButton = _ => {
   const { navigate, params } = useContext(LandscapeContext)
   const { mainContentMode, isEmbed } = params
-  const cards = _cards.map(card => ({ ...card, url: paramsToRoute({ ...params, mainContentMode: card.mode })}))
+  const cards = _cards.map(card => ({ ...card, url: stringifyParams({ ...params, mainContentMode: card.mode })}))
 
   if (isEmbed) {
     return null;

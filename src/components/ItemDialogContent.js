@@ -20,11 +20,11 @@ import 'chartjs-adapter-date-fns';
 import classNames from 'classnames'
 import CreateWidthMeasurer from 'measure-text-width';
 import assetPath from '../utils/assetPath'
-import paramsToRoute from '../utils/paramsToRoute'
+import { stringifyParams } from '../utils/routing'
 import LandscapeContext from '../contexts/LandscapeContext'
 import Head from 'next/head'
 
-const closeUrl = params => paramsToRoute({ mainContentMode: 'card-mode', selectedItemId: null, ...params })
+const closeUrl = params => stringifyParams({ mainContentMode: 'card-mode', selectedItemId: null, ...params })
 
 let productScrollEl = null;
 const formatDate = function(x) {

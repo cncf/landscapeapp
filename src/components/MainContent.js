@@ -9,7 +9,7 @@ import fields from '../types/fields';
 import LandscapeContext from '../contexts/LandscapeContext'
 import assetPath from '../utils/assetPath'
 import { useRouter } from 'next/router'
-import paramsToRoute from '../utils/paramsToRoute'
+import { stringifyParams } from '../utils/routing'
 import currentDevice from '../utils/currentDevice'
 
 function getRelationStyle(relation) {
@@ -141,7 +141,7 @@ const MainContent = () => {
 
   const handler = selectedItemId => {
     if ((currentDevice.mobile() || window.innerWidth < 768) && isEmbed) {
-      const url = paramsToRoute({ ...params, selectedItemId })
+      const url = stringifyParams({ ...params, selectedItemId })
       window.open(url,'_blank')
     } else {
       navigate({ selectedItemId })

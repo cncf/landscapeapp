@@ -28,7 +28,7 @@ import DateFnsUtils from '@date-io/date-fns'
 import millify from 'millify'
 import OutboundLink from './OutboundLink'
 import { sortBy, uniq } from 'lodash'
-import paramsToRoute from '../utils/paramsToRoute'
+import { stringifyParams } from '../utils/routing'
 
 const makeOptions = (arr) => sortBy(uniq(arr), name => name.toLowerCase())
 
@@ -43,7 +43,7 @@ const Acquistions = ({ ...props }) => {
     if (!members.has(organization)) {
       return organization
     }
-    const url = paramsToRoute({ mainContentMode: 'landscape', filters: { organization }})
+    const url = stringifyParams({ mainContentMode: 'landscape', filters: { organization }})
     return <OutboundLink to={url}>{organization}</OutboundLink>
   }
 

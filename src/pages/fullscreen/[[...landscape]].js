@@ -1,4 +1,4 @@
-import routeToParams from '../../utils/routeToParams'
+import { parseParams } from '../../utils/routing'
 import getPrerenderProps from '../../utils/getPrerenderProps'
 import FullscreenLandscape from '../../components/BigPicture/FullscreenLandscape'
 import { LandscapeProvider } from '../../contexts/LandscapeContext'
@@ -15,7 +15,7 @@ const FullscreenPage = ({ entries, mainContentMode }) => {
 
 export async function getStaticProps(context) {
   const mainContentMode = (context.params.landscape || [])[0] || defaultContentMode
-  const params = routeToParams({ mainContentMode })
+  const params = parseParams({ mainContentMode })
   const props = getPrerenderProps(params)
   return { props: { ...props, mainContentMode } }
 }
