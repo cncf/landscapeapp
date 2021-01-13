@@ -215,13 +215,13 @@ const fields = {
     id: 'language',
     url: 'language',
     values: lookups.languages.map( (id) => ({id: decodeURIComponent(id), url: id})).concat({
-      id: null,
+      id: false,
       url: 'no',
       label: 'No information'
     }),
     filterFn:  function(filter, value, record) {
-      if (filter === null) {
-        return record.language === null;
+      if (filter === false) {
+        return !record.github_data || record.github_data.languages.length === 0;
       }
       if (!filter) {
         return true;

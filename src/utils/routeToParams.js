@@ -2,33 +2,10 @@ import qs  from 'query-string'
 import fields from '../types/fields'
 import { sortOptions } from '../types/fields'
 
-const defaultParams = {
-  data: null,
-  ready: false,
-  initialUrlHandled: false,
-  filters: {
-    relation: [],
-    stars: null,
-    license: [],
-    organization: [],
-    headquarters: [],
-    landscape: [],
-    bestPracticeBadgeId: null,
-    enduser: null,
-    language: undefined, // null means no language
-    parents: [],
-  },
-  grouping: 'relation',
-  sortField: 'name',
-  sortDirection: 'asc',
-  selectedItemId: null,
-  zoom: 1,
-  isFullscreen: false
-};
 
 function decodeField(field, value) {
-  if (!field || !value) {
-    return;
+  if (!value) {
+    return field.isArray ? [] : null;
   }
 
   const parts = (value === 'true' ? 'yes' : value).split(',');
@@ -73,17 +50,12 @@ const decodeSort = sort => {
 const decodeBoolean = value => value === 'yes' || value === 'true'
 
 const routeToParams = ({ mainContentMode, ...query }) => {
-  const fieldFilters = Object.entries(fields).reduce((result, [key, field]) => {
+  const filters = Object.entries(fields).reduce((result, [key, field]) => {
     const param = field.url || field.id
     const value = query[param]
     const parsedValue = decodeField(field, value)
-    return { ...result, [key]: parsedValue || parsedValue === false ? parsedValue : defaultParams.filters[key] }
+    return { ...result, [key]: parsedValue }
   }, {})
-
-  const filters = {
-    ...defaultParams.filters,
-    ...fieldFilters
-  }
 
   return {
     mainContentMode,
