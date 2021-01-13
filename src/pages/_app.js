@@ -9,8 +9,8 @@ import ReactGA from 'react-ga';
 import iframeResizerContentWindow from 'iframe-resizer/js/iframeResizer.contentWindow';
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/router'
-import currentDevice from '../utils/currentDevice'
 import isBrowser from '../utils/isBrowser'
+import useCurrentDevice from '../utils/useCurrentDevice'
 
 const Notice = ({ onClose, notice }) => {
   const anchorOrigin = { vertical: 'top', horizontal: 'center' }
@@ -27,6 +27,7 @@ export default function App({ Component, pageProps }) {
   const description = `${settings.global.meta.description}. Updated: ${process.env.lastUpdated}`
   const favicon = `${settings.global.website}/favicon.png`
   const [notice, setNotice] = useState(null)
+  const currentDevice = useCurrentDevice()
   // TODO: hydration fix
   const ready = !isBrowser() || location.search.length === 0 || (location.search.length > 0 && Object.keys(query).length > 0)
 

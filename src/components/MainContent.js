@@ -10,7 +10,7 @@ import LandscapeContext from '../contexts/LandscapeContext'
 import assetPath from '../utils/assetPath'
 import { useRouter } from 'next/router'
 import { stringifyParams } from '../utils/routing'
-import currentDevice from '../utils/currentDevice'
+import useCurrentDevice from '../utils/useCurrentDevice'
 
 function getRelationStyle(relation) {
   const relationInfo = fields.relation.valuesMap[relation]
@@ -116,6 +116,7 @@ const MainContent = () => {
   const totalItems = groupedItems.reduce((sum, group) => sum + group.items.length, 0)
   const [maxItems, setMaxItems] = useState(isEmbed ? totalItems : 100)
   const { asPath } = useRouter()
+  const currentDevice = useCurrentDevice()
 
   useEffect(() => {
     const options = { root: null, rootMargin: '0px', threshold: 1.0 }

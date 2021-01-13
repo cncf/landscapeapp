@@ -13,7 +13,7 @@ import fields from '../types/fields';
 import isGoogle from '../utils/isGoogle';
 import settings from 'public/settings.json';
 import TweetButton from './TweetButton';
-import currentDevice from '../utils/currentDevice'
+import useCurrentDevice from '../utils/useCurrentDevice'
 import TwitterTimeline from "./TwitterTimeline";
 import {Bar, Pie, defaults} from 'react-chartjs-2';
 import 'chartjs-adapter-date-fns';
@@ -332,6 +332,7 @@ let timeoutId;
 const ItemDialogContent = ({ itemInfo, loading }) => {
   const { params } = useContext(LandscapeContext)
   const { onlyModal } = params
+  const currentDevice = useCurrentDevice()
   const setIsLandscape = useState(currentDevice.landscape())[1]
   const [showAllRepos, setShowAllRepos] = useState(false)
   if (!timeoutId) {

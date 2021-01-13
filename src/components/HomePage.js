@@ -17,8 +17,7 @@ import EmbeddedFooter from './EmbeddedFooter';
 import isGoogle from '../utils/isGoogle';
 import bus from '../reducers/bus';
 import settings from 'public/settings.json'
-import currentDevice from '../utils/currentDevice'
-import isBrowser from '../utils/isBrowser'
+import useCurrentDevice from '../utils/useCurrentDevice'
 import LandscapeContent from './BigPicture/LandscapeContent'
 import LandscapeContext from '../contexts/LandscapeContext'
 import ResetFilters from './ResetFilters'
@@ -31,7 +30,7 @@ import SwitchButton from './BigPicture/SwitchButton'
 import ExportCsv from './ExportCsv'
 import MainContent from './MainContent'
 import Presets from './Presets'
-import { isZoomedIn } from '../utils/browserZoom'
+import useBrowserZoom from '../utils/useBrowserZoom'
 
 bus.on('scrollToTop', function() {
   (document.scrollingElement || document.body).scrollTop = 0;
@@ -68,7 +67,8 @@ const HomePage = _ => {
   const showSidebar = _ => setSidebarVisible(true)
   const hideSidebar = _ => setSidebarVisible(false)
   const [lastScrollPosition, setLastScrollPosition] = useState(0)
-  const [isZoomed, setIsZoomed] = useState(false)
+  const isZoomedIn = useBrowserZoom()
+  const currentDevice = useCurrentDevice()
 
   if (onlyModal) {
     document.querySelector('body').classList.add('popup');
@@ -84,30 +84,22 @@ const HomePage = _ => {
     isFullscreen ? classList.add('fullscreen') : classList.remove('fullscreen')
   }, [isFullscreen])
 
-  useEffect(() => {
-    const checkZoomedIn = () => setIsZoomed(isZoomedIn())
-    window.addEventListener('touchend', checkZoomedIn)
-    return () => window.removeEventListener('touchend', checkZoomedIn)
-  })
-
-  useEffect(_ => {
-    if (currentDevice.ios()) {
-      if (selectedItemId) {
-        if (!document.querySelector('.iphone-scroller')) {
-          setLastScrollPosition((document.scrollingElement || document.body).scrollTop)
-        }
-        document.querySelector('html').classList.add('has-selected-item');
-        (document.scrollingElement || document.body).scrollTop = 0;
-        disableScroll();
-      } else {
-        document.querySelector('html').classList.remove('has-selected-item');
-        if (document.querySelector('.iphone-scroller')) {
-          (document.scrollingElement || document.body).scrollTop = lastScrollPosition;
-        }
-        enableScroll();
+  if (currentDevice.ios()) {
+    if (selectedItemId) {
+      if (!document.querySelector('.iphone-scroller')) {
+        setLastScrollPosition((document.scrollingElement || document.body).scrollTop)
       }
+      document.querySelector('html').classList.add('has-selected-item');
+      (document.scrollingElement || document.body).scrollTop = 0;
+      disableScroll();
+    } else {
+      document.querySelector('html').classList.remove('has-selected-item');
+      if (document.querySelector('.iphone-scroller')) {
+        (document.scrollingElement || document.body).scrollTop = lastScrollPosition;
+      }
+      enableScroll();
     }
-  }, [])
+  }
 
   useEffect(() => {
     if (isEmbed) {
@@ -152,14 +144,14 @@ const HomePage = _ => {
     }
   }, [isEmbed])
 
-  if ((isGoogle() || onlyModal || !isBrowser()) && selectedItemId) {
+  if ((isGoogle() || onlyModal) && selectedItemId) {
     return <ItemDialog />;
   }
 
   const isIphone = currentDevice.ios()
 
   return (
-    <div className={isZoomed ? 'zoomed-in' : ''}>
+    <div className={isZoomedIn ? 'zoomed-in' : ''}>
     {selectedItemId && <ItemDialog/>}
     <div className={classNames('app',{'filters-opened' : sidebarVisible})}>
       <div style={{marginTop: isIphone && selectedItemId ? -lastScrollPosition : 0}} className={classNames({"iphone-scroller": isIphone && selectedItemId}, 'main-parent')} >

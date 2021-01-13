@@ -1,48 +1,41 @@
-import React from "react";
-import { Timeline } from 'react-twitter-widgets';
-import currentDevice from '../utils/currentDevice'
+import { useRef } from 'react'
+import { Timeline } from 'react-twitter-widgets'
+import useCurrentDevice from '../utils/useCurrentDevice'
 
-class TwitterTimeline extends React.Component {
-  constructor(props) {
-    super(props);
-    this.timelineRef = null;
+const TwitterTimeline = ({ twitter }) => {
+  const timelineRef = useRef(null)
+  const name = twitter.split('/').pop()
+  const currentDevice = useCurrentDevice()
+
+  // This is a hack to fix overflow issues on Safari iPhone
+  // see https://github.com/cncf/landscapeapp/issues/331
+  if (currentDevice.ios() && navigator.vendor.match(/^apple/i)) {
+    timelineRef.addEventListener("DOMSubtreeModified", (el) => {
+      if (el.target.tagName === "IFRAME") {
+        const head = el.target.contentDocument.head;
+        const newStyle = el.target.contentDocument.createElement("style");
+        const css = [
+          ".TweetAuthor { max-width: 300px; text-overflow: ellipsis; }",
+          ".timeline-Tweet-text a:not(.customisable) { word-break: break-all; }"
+        ];
+        newStyle.innerHTML = css.join(" ");
+        head.appendChild(newStyle);
+      }
+    })
   }
 
-  componentDidMount () {
-    // This is a hack to fix overflow issues on Safari iPhone
-    // see https://github.com/cncf/landscapeapp/issues/331
-    if (currentDevice.ios() && navigator.vendor.match(/^apple/i)) {
-      this.timelineRef.addEventListener("DOMSubtreeModified", (el) => {
-        if (el.target.tagName === "IFRAME") {
-          const head = el.target.contentDocument.head;
-          const newStyle = el.target.contentDocument.createElement("style");
-          const css = [
-            ".TweetAuthor { max-width: 300px; text-overflow: ellipsis; }",
-            ".timeline-Tweet-text a:not(.customisable) { word-break: break-all; }"
-          ];
-          newStyle.innerHTML = css.join(" ");
-          head.appendChild(newStyle);
-        }
-      })
-    }
-  }
-
-  render() {
-    const name =  this.props.twitter.split('/').pop();
-
-    return <div ref={el => this.timelineRef = el}>
-      <Timeline
-        dataSource={{
-          sourceType: 'profile',
-          screenName: name
-        }}
-        options={{
-          username: name,
-          tweetLimit: 3
-        }}
-      />
-    </div>
-  }
+  return <div ref={timelineRef}>
+    <Timeline
+      dataSource={{
+        sourceType: 'profile',
+        screenName: name
+      }}
+      options={{
+        username: name,
+        tweetLimit: 3
+      }}
+    />
+  </div>
 }
 
-export default TwitterTimeline;
+export default TwitterTimeline

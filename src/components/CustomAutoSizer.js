@@ -1,50 +1,27 @@
 import { useContext, useEffect, useRef, useState } from 'react'
 import LandscapeContext from '../contexts/LandscapeContext'
-import { isZoomedIn } from '../utils/browserZoom'
+import useBrowserZoom from '../utils/useBrowserZoom'
 
 const AutoSizer = ({ children }) => {
   const { params } = useContext(LandscapeContext)
   const { isFullscreen } = params
   const [height, setHeight] = useState('auto')
   const ref = useRef(null)
-
-  const checkedZoomedIn = (e) => {
-    const windowHeight = window.innerHeight;
-    onResize()
-
-    for (let i = 1; i < 11; i++) {
-      const timeout = i * 50;
-
-      setTimeout(() => {
-        if (window.innerHeight !== windowHeight) {
-          onResize()
-        }
-      }, timeout)
-    }
-  }
-
-  const onResize = () => {
-    setTimeout(() => {
-      const height = ref.current.clientHeight + window.innerHeight - document.body.offsetHeight
-      const zoomedIn = isZoomedIn()
-      setHeight(zoomedIn ? 'auto' : height)
-    }, 100)
-  };
-
+  const isZoomedIn = useBrowserZoom()
+  const [resizedAt, setResizedAt] = useState(null)
 
   useEffect(() => {
-    window.addEventListener("resize", onResize);
-    window.addEventListener("touchend", checkedZoomedIn);
-
-    return () => {
-      window.removeEventListener("resize", onResize);
-      window.removeEventListener("touchend", checkedZoomedIn);
-    }
+    const onResize = _ => setResizedAt(new Date())
+    window.addEventListener('resize', onResize);
+    return () => window.removeEventListener('resize', onResize)
   }, [])
 
   useEffect(() => {
-    onResize()
-  }, [isFullscreen])
+    setTimeout(() => {
+      const height = ref.current.clientHeight + window.innerHeight - document.body.offsetHeight
+      setHeight(isZoomedIn ? 'auto' : height)
+    }, 1)
+  }, [isFullscreen, isZoomedIn, resizedAt])
 
 
   // Outer div should not force width/height since that may prevent containers from shrinking.
