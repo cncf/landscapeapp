@@ -10,7 +10,7 @@ const settings = safeLoad(readFileSync(settingsPath))
 const items = require(path.resolve(projectPath, 'data.json'))
 
 rmdirSync('public', { recursive: true })
-mkdirSync('public')
+mkdirSync('public', { recursive: true })
 execSync(`cp -r "${projectPath}/images" public`)
 execSync(`cp -r "${projectPath}/cached_logos" public/logos`)
 writeFileSync('./public/settings.json', JSON.stringify(settings))

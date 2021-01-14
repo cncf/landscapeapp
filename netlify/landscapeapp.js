@@ -203,6 +203,9 @@ EOSSH
     const dockerCommand = `
       mkdir -p /root/builds/${outputFolder}
       chmod -R 777 /root/builds/${outputFolder}
+      mkdir -p /tmp/${outputFolder}/public  /tmp/${outputFolder}/out  /tmp/${outputFolder}/.next
+      chmod -R 777 /tmp/${outputFolder}
+
       REPO_PATH=/root/builds/${folder}
       OUTPUT_PATH=/root/builds/${outputFolder}
 
@@ -213,11 +216,12 @@ EOSSH
         -e PARALLEL=TRUE \
         -v /root/builds/${nodeModulesFolder}/nvm:${dockerHome}/.nvm \
         -v /root/builds/${nodeModulesFolder}/yarnGlobal:${dockerHome}/.yarn \
+        -v /tmp/${outputFolder}/public:/opt/repo/public \
+        -v /tmp/${outputFolder}/out:/opt/repo/out \
+        -v /tmp/${outputFolder}/.next:/opt/repo/.next \
         -v /root/builds/${folder}:/opt/repo \
         -v /root/builds/${outputFolder}:/dist \
         ${dockerImage} /bin/bash -lc "${buildCommand}"
-
-
     `;
 
     console.info(`processing ${landscape.name} at ${landscape.repo}`);
