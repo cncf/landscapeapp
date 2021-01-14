@@ -179,7 +179,7 @@
     "sitemap": "^6.3.5",
     "style-loader": "1.2.1",
     "svg-autocrop": "^2.0.37",
-    "terser-webpack-plugin": "3.0.8",
+    "terser-webpack-plugin": "^5.1.1",
     "traverse": "0.6.6",
     "typeface-roboto": "^1.1.13",
     "url-loader": "^4.1.1",
