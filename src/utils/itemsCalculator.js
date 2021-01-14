@@ -212,7 +212,7 @@ const getGroupedItemsForMainLandscape = createSelector(
             name: subcategory.label,
             href: stringifyParams({filters: newFilters, grouping: 'landscape', sortField, mainContentMode: 'card-mode'}),
             items: itemsMap[subcategory.id] || [],
-            allItems: allItemsMap[subcategory.id]
+            allItems: allItemsMap[subcategory.id] || []
           };
         })
       };
@@ -233,7 +233,7 @@ const getGroupedItemsForAdditionalLandscape = createSelector([
     const subcategories = landscape.filter(({ parentId }) => parentId === category.id);
 
     const itemsMap = groupAndSort(items, bigPictureSortOrder)
-    const allItemsMap = groupAndSort(allItems, bigPictureSortOrder)
+    const allItemsMap = groupAndSort(allItems, bigPictureSortOrder) || []
 
     const result = subcategories.map(function(subcategory) {
       const newFilters = {...filters, landscape: subcategory.id };
