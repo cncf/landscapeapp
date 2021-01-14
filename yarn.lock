@@ -1811,7 +1811,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@babel/runtime@npm:^7.12.5":
+"@babel/runtime@npm:^7.12.1, @babel/runtime@npm:^7.12.5":
   version: 7.12.5
   resolution: "@babel/runtime@npm:7.12.5"
   dependencies:
@@ -9319,17 +9319,17 @@ fsevents@~2.3.1:
     query-string: ^6.13.8
     raf: 3.4.1
     react: 16.13.1
-    react-chartjs-2: 2.10.0
-    react-dom: 16.13.1
-    react-ga: ^3.1.2
-    react-hot-loader: 4.12.21
-    react-key-handler: 1.2.0-beta.3
-    react-redux: 7.2.1
-    react-router: 5.2.0
-    react-router-dom: 5.2.0
-    react-snap: 1.23.0
-    react-test-renderer: 16.13.1
-    react-twitter-widgets: 1.9.5
+    react-chartjs-2: ^2.11.1
+    react-dom: ^17.0.1
+    react-ga: ^3.3.0
+    react-hot-loader: ^4.13.0
+    react-key-handler: ^1.2.0-beta.3
+    react-redux: ^7.2.2
+    react-router: ^5.2.0
+    react-router-dom: ^5.2.0
+    react-snap: ^1.23.0
+    react-test-renderer: ^17.0.1
+    react-twitter-widgets: ^1.9.5
     recompose: 0.30.0
     redux: 4.0.5
     redux-immutable-state-invariant: 2.1.0
@@ -13817,47 +13817,46 @@ fsevents@~2.3.1:
   languageName: node
   linkType: hard
 
-"react-chartjs-2@npm:2.10.0":
-  version: 2.10.0
-  resolution: "react-chartjs-2@npm:2.10.0"
+"react-chartjs-2@npm:^2.11.1":
+  version: 2.11.1
+  resolution: "react-chartjs-2@npm:2.11.1"
   dependencies:
     lodash: ^4.17.19
     prop-types: ^15.7.2
   peerDependencies:
     chart.js: ^2.3
-    react: ^0.14.0 || ^15.0.0 || ^16.0.0-beta || ^16.0.0
-    react-dom: ^0.14.0 || ^15.0.0 || ^16.0.0-beta || ^16.0.0
-  checksum: 31c66a51da162020180bd9be63862287e5b73756088a54aba52262dc426e736f604bc692caaea75110ed0530a6e2cb58fe0390604ac09ae23e7b1599e1071460
+    react: ^0.14.0 || ^15.0.0 || ^16.0.0 || ^17.0.0
+    react-dom: ^0.14.0 || ^15.0.0 || ^16.0.0 || ^17.0.0
+  checksum: 81886664cc61f0cce666267311b6ca730686d22e848d93a2b08d818284e53da6d24a332ac41eae329c57ab03e867af5c8aec65fa2da41fe5226bf7004692827e
   languageName: node
   linkType: hard
 
-"react-dom@npm:16.13.1":
-  version: 16.13.1
-  resolution: "react-dom@npm:16.13.1"
+"react-dom@npm:^17.0.1":
+  version: 17.0.1
+  resolution: "react-dom@npm:17.0.1"
   dependencies:
     loose-envify: ^1.1.0
     object-assign: ^4.1.1
-    prop-types: ^15.6.2
-    scheduler: ^0.19.1
+    scheduler: ^0.20.1
   peerDependencies:
-    react: ^16.13.1
-  checksum: fb5c3ad41360c6a8674f33916aa895d05e79d063d31a6963074220c1cda9e07e880799d01670b4ebd570b4d3457584f13cc898b5033a05641e8e801f5611607e
+    react: 17.0.1
+  checksum: 6a70028fbe3c95e0056c5e8ce065b4a9b8d4ff3bffde9b016454072bde5e4b012af7668ca45b7235ace428267d5be5237b68ea87ce8c296e54e81a8d678a4355
   languageName: node
   linkType: hard
 
-"react-ga@npm:^3.1.2":
-  version: 3.1.2
-  resolution: "react-ga@npm:3.1.2"
+"react-ga@npm:^3.3.0":
+  version: 3.3.0
+  resolution: "react-ga@npm:3.3.0"
   peerDependencies:
     prop-types: ^15.6.0
-    react: ^15.6.2 || ^16.0
-  checksum: c1941f97b81a85c2f62b5407ea679b704385bdd287cb2a698f9bfdd001c684e08c69a441cdfe9ed5b3e994644f7018783c666bbffa027a16e084e1a9ba7fb9d2
+    react: ^15.6.2 || ^16.0 || ^17
+  checksum: fe3dc0a7679b3a52df3944660f2b1f353ee5d24f73e4bdb88c8323e012e1042ef3c2c1a6e432d3c6e3196861162925ff9f5ba515a8112e11187d21d8a00cc863
   languageName: node
   linkType: hard
 
-"react-hot-loader@npm:4.12.21":
-  version: 4.12.21
-  resolution: "react-hot-loader@npm:4.12.21"
+"react-hot-loader@npm:^4.13.0":
+  version: 4.13.0
+  resolution: "react-hot-loader@npm:4.13.0"
   dependencies:
     fast-levenshtein: ^2.0.6
     global: ^4.3.0
@@ -13868,31 +13867,31 @@ fsevents@~2.3.1:
     shallowequal: ^1.1.0
     source-map: ^0.7.3
   peerDependencies:
-    "@types/react": ^15.0.0 || ^16.0.0
-    react: ^15.0.0 || ^16.0.0
-    react-dom: ^15.0.0 || ^16.0.0
+    "@types/react": "^15.0.0 || ^16.0.0 || ^17.0.0 "
+    react: "^15.0.0 || ^16.0.0 || ^17.0.0 "
+    react-dom: "^15.0.0 || ^16.0.0 || ^17.0.0 "
   peerDependenciesMeta:
     "@types/react":
       optional: true
-  checksum: 371deabe49c3afd5316fbef0cd42e03bb33bd0ae4da215107a8560260769ab35159c1298921a36d101c3e5a6179bbb5c6cedc55cd6fc0ad9acb8f3683dcdbdff
+  checksum: f1df03e93206b379b605f3da983f700d5c8a16e3ebedf25ca1311067f4dc95cf968206af44d0b734a5505619958f2da5efe9df4bf749ed6a4989e1f6ea5d2915
   languageName: node
   linkType: hard
 
-"react-is@npm:^16.6.0, react-is@npm:^16.7.0, react-is@npm:^16.8.1, react-is@npm:^16.8.6, react-is@npm:^16.9.0":
-  version: 16.13.1
-  resolution: "react-is@npm:16.13.1"
-  checksum: 11bcf1267a314a522615f626f3ce3727a3a24cdbf61c4d452add3550a7875326669631326cfb1ba3e92b6f72244c32ffecf93ad21c0cad8455d3e169d0e3f060
-  languageName: node
-  linkType: hard
-
-"react-is@npm:^16.8.0 || ^17.0.0, react-is@npm:^17.0.1":
+"react-is@npm:^16.12.0 || ^17.0.0, react-is@npm:^16.8.0 || ^17.0.0, react-is@npm:^17.0.1":
   version: 17.0.1
   resolution: "react-is@npm:17.0.1"
   checksum: 5a83dfc78e7adcb93d632bf367b0733db650e3abd2e9c57c33b87e50d201212c1884b0d7bcf13e692f1556189fa1b87f9f3e0ba10fe858fd6aebe83ed4fcd1ea
   languageName: node
   linkType: hard
 
-"react-key-handler@npm:1.2.0-beta.3":
+"react-is@npm:^16.13.1, react-is@npm:^16.6.0, react-is@npm:^16.7.0, react-is@npm:^16.8.1":
+  version: 16.13.1
+  resolution: "react-is@npm:16.13.1"
+  checksum: 11bcf1267a314a522615f626f3ce3727a3a24cdbf61c4d452add3550a7875326669631326cfb1ba3e92b6f72244c32ffecf93ad21c0cad8455d3e169d0e3f060
+  languageName: node
+  linkType: hard
+
+"react-key-handler@npm:^1.2.0-beta.3":
   version: 1.2.0-beta.3
   resolution: "react-key-handler@npm:1.2.0-beta.3"
   dependencies:
@@ -13912,30 +13911,28 @@ fsevents@~2.3.1:
   languageName: node
   linkType: hard
 
-"react-redux@npm:7.2.1":
-  version: 7.2.1
-  resolution: "react-redux@npm:7.2.1"
+"react-redux@npm:^7.2.2":
+  version: 7.2.2
+  resolution: "react-redux@npm:7.2.2"
   dependencies:
-    "@babel/runtime": ^7.5.5
-    hoist-non-react-statics: ^3.3.0
+    "@babel/runtime": ^7.12.1
+    hoist-non-react-statics: ^3.3.2
     loose-envify: ^1.4.0
     prop-types: ^15.7.2
-    react-is: ^16.9.0
+    react-is: ^16.13.1
   peerDependencies:
-    react: ^16.8.3
-    react-dom: "*"
-    react-native: "*"
+    react: ^16.8.3 || ^17
     redux: ^2.0.0 || ^3.0.0 || ^4.0.0-0
   peerDependenciesMeta:
     react-dom:
       optional: true
     react-native:
       optional: true
-  checksum: 94ef2d0f38608e4b659b8f7e3998d33a00066b5d3e52129121f92c354564a3e989ee67ba81395e5b681415a75917e549e0f45e1b251db3a20cff7713e7cfd8f7
+  checksum: 7892258f8e51415833b8e9a4dabde73a1f03fa30e91c3ef3eb2c258491482540a652a3bdaabf157c152a079633b142d5273dd4df392dff4baafa2fe3349f8af0
   languageName: node
   linkType: hard
 
-"react-router-dom@npm:5.2.0":
+"react-router-dom@npm:^5.2.0":
   version: 5.2.0
   resolution: "react-router-dom@npm:5.2.0"
   dependencies:
@@ -13952,7 +13949,7 @@ fsevents@~2.3.1:
   languageName: node
   linkType: hard
 
-"react-router@npm:5.2.0":
+"react-router@npm:5.2.0, react-router@npm:^5.2.0":
   version: 5.2.0
   resolution: "react-router@npm:5.2.0"
   dependencies:
@@ -13972,7 +13969,19 @@ fsevents@~2.3.1:
   languageName: node
   linkType: hard
 
-"react-snap@npm:1.23.0":
+"react-shallow-renderer@npm:^16.13.1":
+  version: 16.14.1
+  resolution: "react-shallow-renderer@npm:16.14.1"
+  dependencies:
+    object-assign: ^4.1.1
+    react-is: ^16.12.0 || ^17.0.0
+  peerDependencies:
+    react: ^16.0.0 || ^17.0.0
+  checksum: d52cb869e25605b00d4a67ff16598dbbf2826b0f09535de499b2f21a339cabf8b954d4b8855e0e6bdaf0a95603a2b6702e2b47eca8797a7d6bf7e6170ab8b2f3
+  languageName: node
+  linkType: hard
+
+"react-snap@npm:^1.23.0":
   version: 1.23.0
   resolution: "react-snap@npm:1.23.0"
   dependencies:
@@ -13992,17 +14001,17 @@ fsevents@~2.3.1:
   languageName: node
   linkType: hard
 
-"react-test-renderer@npm:16.13.1":
-  version: 16.13.1
-  resolution: "react-test-renderer@npm:16.13.1"
+"react-test-renderer@npm:^17.0.1":
+  version: 17.0.1
+  resolution: "react-test-renderer@npm:17.0.1"
   dependencies:
     object-assign: ^4.1.1
-    prop-types: ^15.6.2
-    react-is: ^16.8.6
-    scheduler: ^0.19.1
+    react-is: ^17.0.1
+    react-shallow-renderer: ^16.13.1
+    scheduler: ^0.20.1
   peerDependencies:
-    react: ^16.13.1
-  checksum: e9c3c068d09a4252103eed270635d05897e23cbb86c6f0f74beced9345ed1b94a0fff44f16f97526e6f7a8337669156616e1e02eacb6d7b8f40295c92d91be12
+    react: 17.0.1
+  checksum: 6ec269430beea4356180d90868a9959399781a03ae8de6a29f2edc29d6ca41432653d4103991467ebcc47be5bd2d9197789411e913da66369c2aa2f13311105f
   languageName: node
   linkType: hard
 
@@ -14021,7 +14030,7 @@ fsevents@~2.3.1:
   languageName: node
   linkType: hard
 
-"react-twitter-widgets@npm:1.9.5":
+"react-twitter-widgets@npm:^1.9.5":
   version: 1.9.5
   resolution: "react-twitter-widgets@npm:1.9.5"
   dependencies:
@@ -14772,13 +14781,13 @@ fsevents@~2.3.1:
   languageName: node
   linkType: hard
 
-"scheduler@npm:^0.19.1":
-  version: 0.19.1
-  resolution: "scheduler@npm:0.19.1"
+"scheduler@npm:^0.20.1":
+  version: 0.20.1
+  resolution: "scheduler@npm:0.20.1"
   dependencies:
     loose-envify: ^1.1.0
     object-assign: ^4.1.1
-  checksum: 804f990b9f370cca6d42b65f3cba2cc2bfed4973ee5623bed1ea36a6627842db8c891e2e5ac003f06f9ee892d1d3396921e27fa077346caf0213af05776e8dee
+  checksum: 377b4ad0d8313c4548bac7374bc38409e9d142799979ce396787efa04d1bcabf2591540f243f2131e3df8e56e7f5b29c5415248523e88ecb60f13a32db2e076f
   languageName: node
   linkType: hard
 
