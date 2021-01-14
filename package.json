@@ -65,6 +65,7 @@
     "chartjs-adapter-date-fns": "1.0.0",
     "classnames": "2.2.6",
     "colors": "1.4.0",
+    "compression": "^1.7.4",
     "current-device": "0.10.1",
     "date-fns": "2.15.0",
     "debug": "4.1.1",
