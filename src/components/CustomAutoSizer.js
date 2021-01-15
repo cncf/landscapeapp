@@ -2,6 +2,7 @@ import { useContext, useEffect, useRef, useState } from 'react'
 import LandscapeContext from '../contexts/LandscapeContext'
 import useBrowserZoom from '../utils/useBrowserZoom'
 
+// TODO: try to see if we can do this with CSS instead.
 const AutoSizer = ({ children }) => {
   const { params } = useContext(LandscapeContext)
   const { isFullscreen } = params
