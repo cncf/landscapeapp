@@ -69,7 +69,7 @@ export default {
     filename: '[name].[contenthash].js'
   },
   optimization: {
-    minimizer: [new TerserPlugin({ sourceMap: true, parallel: true, terserOptions: {ecma: 7}})]
+    minimizer: [new TerserPlugin({parallel: 2, terserOptions: {ecma: 7}})]
   },
   plugins: [
     new BundleAnalyzerPlugin({analyzerMode: 'static', openAnalyzer: false}),
