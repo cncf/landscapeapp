@@ -1,6 +1,6 @@
 const path = require('path')
 const { readFileSync } = require('fs')
-const { safeLoad } = require('js-yaml')
+const { load } = require('js-yaml')
 const bundleAnalyzerPlugin = require('@next/bundle-analyzer')
 
 const withBundleAnalyzer = bundleAnalyzerPlugin({ enabled: !!process.env.ANALYZE })
@@ -9,7 +9,7 @@ const projectPath = process.env.PROJECT_PATH
 
 const lastUpdated = new Date().toISOString().substring(0, 19).replace('T', ' ') + 'Z'
 
-const processedLandscape =  safeLoad(readFileSync(path.resolve(projectPath, 'processed_landscape.yml')));
+const processedLandscape =  load(readFileSync(path.resolve(projectPath, 'processed_landscape.yml')));
 const tweets = (processedLandscape.twitter_options || {}).count || 0
 
 const GA = process.env.GA

@@ -1,12 +1,12 @@
 import path from 'path'
-import { safeLoad } from 'js-yaml'
+import { load  } from 'js-yaml'
 import { readFileSync, writeFileSync, mkdirSync, existsSync, rmdirSync } from 'fs'
 import { execSync } from 'child_process'
 import prepareItemsForExport from './prepareItemsForExport'
 
 const projectPath = process.env.PROJECT_PATH || path.resolve('../..')
 const settingsPath = path.resolve(projectPath, 'settings.yml')
-const settings = safeLoad(readFileSync(settingsPath))
+const settings = load(readFileSync(settingsPath))
 const items = require(path.resolve(projectPath, 'data.json'))
 
 rmdirSync('public', { recursive: true })
