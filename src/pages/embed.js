@@ -15,12 +15,14 @@ export async function getStaticProps() {
   const fs = require('fs')
   const path = require('path')
   const filePath = file => path.join(process.cwd(), file)
-  const iframeResizerContent = fs.readFileSync(filePath('node_modules/iframe-resizer/js/iframeResizer.min.js'), 'utf-8');
+  const resizerPath = require('child_process').execSync('yarn get-iframe-resizer-path', {encoding: 'utf-8'}).trim();
+  const iframeResizerContent = fs.readFileSync(resizerPath, 'utf-8');
   const resizerConfig = fs.readFileSync(filePath('src/iframeResizer.js'), 'utf-8');
 
   const finalResizer = (iframeResizerContent + '\n' + resizerConfig).replace('sourceMap', '');
 
   fs.writeFileSync(filePath('public/iframeResizer.js'), finalResizer);
+  console.info('finalResizer prepared');
 
   return { props: {} }
 }

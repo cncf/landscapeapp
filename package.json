@@ -9,6 +9,7 @@
   "scripts": {
     "autocrop-images": "babel-node tools/autocropImages",
     "dev": "yarn yaml2json && yarn prepare-landscape && next dev",
+    "get-iframe-resizer-path": "node -e \"console.info(require.resolve('iframe-resizer/js/iframeResizer.min.js'))\" ",
     "landscapes": "babel-node tools/landscapes.js",
     "lint": "esw webpack.config.* src tools --color",
     "lint:watch": "yarn lint -- --watch",
@@ -34,7 +35,7 @@
     "copy-dist": "cp -r _headers out && ([ -z \"${PROJECT_NAME:-}\" ] || mkdir \"$PROJECT_PATH\"/dist ) && cp -r out/ \"$PROJECT_PATH\"/dist/${PROJECT_NAME:-}",
     "prepare-landscape": "babel-node tools/prepareLandscape.js",
     "setup-robots": "babel-node tools/sitemap && babel-node tools/addRobots",
-    "quick-build": "babel-node tools/build.js && yarn setup-robots && yarn copy-dist ",
+    "quick-build": "yarn build-next && yarn setup-robots && yarn copy-dist ",
     "build": "((yarn fetch && yarn prepare-landscape && yarn build-next && yarn setup-robots && yarn remove-dist && yarn copy-dist && yarn stop-old-ci && yarn start-ci && babel-node tools/parallelWithRetry integration-test check-landscape render-landscape funding) || (yarn stop-old-ci && false)) && babel-node tools/parallelWithRetry integration-test && yarn stop-ci",
     "build-next": "next build && next export",
     "show-report": "open dist/report.html",
@@ -49,6 +50,7 @@
   "dependencies": {
     "@babel/core": "^7.12.10",
     "@babel/node": "^7.12.10",
+    "@babel/runtime": "^7.12.5",
     "@date-io/date-fns": "1.3.13",
     "@material-ui/core": "4.11.0",
     "@material-ui/icons": "4.9.1",
@@ -124,6 +126,7 @@
     "sass": "^1.32.4",
     "serve-static": "1.14.1",
     "sitemap": "^6.2.0",
+    "styled-jsx": "^3.4.1",
     "svg-autocrop": "^2.0.34",
     "swr": "^0.3.11",
     "traverse": "0.6.6",
@@ -162,9 +165,6 @@
     ]
   },
   "dependenciesMeta": {
-    "iframe-resizer": {
-      "unplugged": true
-    },
     "open": {
       "unplugged": true
     }

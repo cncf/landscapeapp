@@ -217,21 +217,21 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@babel/helper-module-imports@npm:7.12.5, @babel/helper-module-imports@npm:^7.12.1":
+  version: 7.12.5
+  resolution: "@babel/helper-module-imports@npm:7.12.5"
+  dependencies:
+    "@babel/types": ^7.12.5
+  checksum: 7f63b03496f0d03dac33050e9f925b0b32c5acffb2f4f5bb5936431e5da3df03792f67033875005e00dd7a3b565ffc95b4af3da276ae6ff8f81d860d7acbfe65
+  languageName: node
+  linkType: hard
+
 "@babel/helper-module-imports@npm:^7.10.1":
   version: 7.10.1
   resolution: "@babel/helper-module-imports@npm:7.10.1"
   dependencies:
     "@babel/types": ^7.10.1
   checksum: 83dde1cadb538c2c395aafdbd54b968828395b58d1e399513771c610c82b1e64eca684c598e465f81a43c36247d6def25b3a22ab7038fedd25224c60998182d9
-  languageName: node
-  linkType: hard
-
-"@babel/helper-module-imports@npm:^7.12.1":
-  version: 7.12.5
-  resolution: "@babel/helper-module-imports@npm:7.12.5"
-  dependencies:
-    "@babel/types": ^7.12.5
-  checksum: 7f63b03496f0d03dac33050e9f925b0b32c5acffb2f4f5bb5936431e5da3df03792f67033875005e00dd7a3b565ffc95b4af3da276ae6ff8f81d860d7acbfe65
   languageName: node
   linkType: hard
 
@@ -580,7 +580,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@babel/runtime@npm:7.12.5":
+"@babel/runtime@npm:7.12.5, @babel/runtime@npm:^7.12.5":
   version: 7.12.5
   resolution: "@babel/runtime@npm:7.12.5"
   dependencies:
@@ -7527,6 +7527,7 @@ fsevents@~2.3.1:
   dependencies:
     "@babel/core": ^7.12.10
     "@babel/node": ^7.12.10
+    "@babel/runtime": ^7.12.5
     "@date-io/date-fns": 1.3.13
     "@material-ui/core": 4.11.0
     "@material-ui/icons": 4.9.1
@@ -7602,14 +7603,13 @@ fsevents@~2.3.1:
     sass: ^1.32.4
     serve-static: 1.14.1
     sitemap: ^6.2.0
+    styled-jsx: ^3.4.1
     svg-autocrop: ^2.0.34
     swr: ^0.3.11
     traverse: 0.6.6
     typeface-roboto: ^0.0.75
     yarn: 1.22.4
   dependenciesMeta:
-    iframe-resizer:
-      unplugged: true
     open:
       unplugged: true
   languageName: unknown
@@ -13434,6 +13434,25 @@ resolve@^1.1.7:
   peerDependencies:
     react: 15.x.x || 16.x.x || 17.x.x
   checksum: 479d44268272f185308a8b1f7e3cd7bacac95bc153976ab9bf20818c6b542d5729817186365153d490a1ca9c4158f3f08d58c828a236a65485bdf827c83e0b12
+  languageName: node
+  linkType: hard
+
+"styled-jsx@npm:^3.4.1":
+  version: 3.4.1
+  resolution: "styled-jsx@npm:3.4.1"
+  dependencies:
+    "@babel/helper-module-imports": 7.12.5
+    "@babel/types": 7.8.3
+    babel-plugin-syntax-jsx: 6.18.0
+    convert-source-map: 1.7.0
+    loader-utils: 1.2.3
+    source-map: 0.7.3
+    string-hash: 1.1.3
+    stylis: 3.5.4
+    stylis-rule-sheet: 0.0.10
+  peerDependencies:
+    react: 15.x.x || 16.x.x || 17.x.x
+  checksum: f64c4c58e9cbeadcc4309e23a78afce964132de87435664386995698ffe7e9e15d31051b80b71da8ab5e48222ad140ea1572166456c1568889cade403b7b3320
   languageName: node
   linkType: hard
 
