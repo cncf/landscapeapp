@@ -12,17 +12,6 @@ async function main() {
   const sha = await getLastCommitSha();
   const time = new Date().toISOString().slice(0, 19) + 'Z';
   const version = `${time} ${sha}`;
-  if (process.env.USE_OLD_PUPPETEER) {
-    const run = function(x) {
-      console.info(require('child_process').execSync(x).toString())
-    }
-    run('~/.nvm/versions/node/`cat .nvmrc`/bin/yarn remove puppeteer');
-    run('~/.nvm/versions/node/`cat .nvmrc`/bin/yarn add puppeteer@3.0.4');
-    process.on('exit', function() {
-      run('~/.nvm/versions/node/`cat .nvmrc`/bin/yarn remove puppeteer');
-      run('~/.nvm/versions/node/`cat .nvmrc`/bin/yarn add puppeteer@4.0.1');
-    });
-  }
   const puppeteer = require('puppeteer');
 
   const landscapeSettingsList = Object.values(settings.big_picture)
@@ -54,6 +43,7 @@ async function main() {
       const { url, deviceScaleFactor, fileName, pdfFileName, basePath } = pageInfo
       const { width, height } = sizes[url]
       const page = await browser.newPage();
+      page.setDefaultNavigationTimeout(120 * 1000);
       await page.setViewport({ width, height, deviceScaleFactor })
 
       const baseUrl = [appUrl, 'fullscreen', basePath].filter(_ => _).join('/')
@@ -64,7 +54,9 @@ async function main() {
       await page.screenshot({ path: resolve(...imagesPath, fileName), fullPage: false });
       if (pdfFileName) {
         await page.emulateMediaType('screen');
-        await page.pdf({path: resolve(...imagesPath, pdfFileName), width, height, printBackground: true, pageRanges: '1' });
+        const pdfPath = resolve(...imagesPath, pdfFileName);
+        const pdfData = await page.pdf({width, height, printBackground: true, pageRanges: '1' });
+        require('fs').writeFileSync(pdfPath, pdfData);
       }
     }
   });
