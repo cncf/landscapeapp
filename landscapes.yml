@@ -62,7 +62,6 @@ landscapes:
     name: omp
     repo: openmainframeproject/omp-landscape
     hook: 5d6a6f73080982abfbd46290
-    required: true
   - landscape:
     name: presto
     repo: prestodb/presto-landscape

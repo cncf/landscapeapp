@@ -78,6 +78,7 @@ function mainTest() {
       test('I can open a page', async function() {
         page = await makePage(appUrl + '/card-mode');
         await page.waitFor('.cards-section');
+        await page.waitForSelector('.cards-section');
       });
 
       //header
