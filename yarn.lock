@@ -9338,6 +9338,7 @@ fsevents@~2.3.1:
     postcss: ^8.2.4
     postcss-import: ^14.0.0
     postcss-loader: ^4.1.0
+    postcss-nested: ^5.0.3
     postcss-simple-vars: ^6.0.2
     prop-types: 15.7.2
     puppeteer: ^5.5.0
@@ -13141,6 +13142,17 @@ fsevents@~2.3.1:
   peerDependencies:
     postcss: ^8.1.0
   checksum: 43fa6db334e38acb9b835578dccab45a5e9e5951dcbb20647348cdc0ad35ed362e36833facd8dab753fa83ffbecd26d2b3f9d4f06a2f9ae4c5c39abf9a0191e0
+  languageName: node
+  linkType: hard
+
+"postcss-nested@npm:^5.0.3":
+  version: 5.0.3
+  resolution: "postcss-nested@npm:5.0.3"
+  dependencies:
+    postcss-selector-parser: ^6.0.4
+  peerDependencies:
+    postcss: ^8.1.13
+  checksum: c5688d54ac92d7c171f437eeb11f37b9067c89c5a4d92e55a07289cde8cfa0fa333090979ee10c1bab16f89d2a24a25935748e05f30af921f1779f8d02e1bad7
   languageName: node
   linkType: hard
 
