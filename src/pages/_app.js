@@ -1,9 +1,9 @@
 import { CssBaseline, Snackbar } from '@material-ui/core'
 import { Alert } from '@material-ui/lab'
 import Head from 'next/head'
-import '../styles/roboto.scss'
-import '../styles/theme.scss'
-import '../styles/itemModal.scss'
+import '../styles/roboto.css'
+import '../styles/theme.css'
+import '../styles/itemModal.css'
 import settings from 'public/settings.json';
 import ReactGA from 'react-ga';
 import iframeResizerContentWindow from 'iframe-resizer/js/iframeResizer.contentWindow';

@@ -3224,24 +3224,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"autoprefixer@npm:^10.2.1":
-  version: 10.2.1
-  resolution: "autoprefixer@npm:10.2.1"
-  dependencies:
-    browserslist: ^4.16.1
-    caniuse-lite: ^1.0.30001173
-    colorette: ^1.2.1
-    fraction.js: ^4.0.13
-    normalize-range: ^0.1.2
-    postcss-value-parser: ^4.1.0
-  peerDependencies:
-    postcss: ^8.1.0
-  bin:
-    autoprefixer: bin/autoprefixer
-  checksum: ede6dec5a51c1eaa2271e93acb238f840d89c26e9a2b88f5149488684487e23a0532c7d080359e70d52d24b252bd85ab3a7fad8c8051afd76f224a6041123f51
-  languageName: node
-  linkType: hard
-
 "aws-sign2@npm:~0.7.0":
   version: 0.7.0
   resolution: "aws-sign2@npm:0.7.0"
@@ -3690,21 +3672,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"browserslist@npm:^4.16.1":
-  version: 4.16.1
-  resolution: "browserslist@npm:4.16.1"
-  dependencies:
-    caniuse-lite: ^1.0.30001173
-    colorette: ^1.2.1
-    electron-to-chromium: ^1.3.634
-    escalade: ^3.1.1
-    node-releases: ^1.1.69
-  bin:
-    browserslist: cli.js
-  checksum: 56f51464c3a3bd9b2aeb75ded1dc3fce5ad91bd6d84187aba812a78ba66b69bc97c2de25a1b7409daac3c0049e979bf0faa6cca4aacce0abcaf3107c250ce3fb
-  languageName: node
-  linkType: hard
-
 "bser@npm:2.1.1":
   version: 2.1.1
   resolution: "bser@npm:2.1.1"
@@ -3929,13 +3896,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"caniuse-lite@npm:^1.0.30001173":
-  version: 1.0.30001178
-  resolution: "caniuse-lite@npm:1.0.30001178"
-  checksum: 313a8c784ac57db4423f90a19987ca6f9ad3ed51dc240264f6786c9b8f99a96b193c5b8ffb0a43fc6a85ca79b75ed8ed7c8c6e8cc221bdb50d86c89e496bd225
-  languageName: node
-  linkType: hard
-
 "capital-case@npm:^1.0.4":
   version: 1.0.4
   resolution: "capital-case@npm:1.0.4"
@@ -4092,25 +4052,6 @@ __metadata:
     fsevents:
       optional: true
   checksum: b5a566b31267b1a71c2e7544fbf8c21f597883515d9bfc0356719be6c3b34ee51b0329f3ee5f5d98060ce2930be68f8c33b53f8b3659dc101fd51be265831deb
-  languageName: node
-  linkType: hard
-
-"chokidar@npm:>=2.0.0 <4.0.0":
-  version: 3.5.0
-  resolution: "chokidar@npm:3.5.0"
-  dependencies:
-    anymatch: ~3.1.1
-    braces: ~3.0.2
-    fsevents: ~2.3.1
-    glob-parent: ~5.1.0
-    is-binary-path: ~2.1.0
-    is-glob: ~4.0.1
-    normalize-path: ~3.0.0
-    readdirp: ~3.5.0
-  dependenciesMeta:
-    fsevents:
-      optional: true
-  checksum: 36c67d9d4b5a96006bc023b8c4799b4a5697ac602b3bd1cbcec54f8516c5625382aaee0bc9e2325b7fa288b1d67ecdc308911f7448b55cfe37c384ff1f8cb62a
   languageName: node
   linkType: hard
 
@@ -5511,13 +5452,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"electron-to-chromium@npm:^1.3.634":
-  version: 1.3.641
-  resolution: "electron-to-chromium@npm:1.3.641"
-  checksum: d2b89bab4e7e8a3328c7e1da7dc9d3eea522920c9f7410d486ca3ddc496a64113dbb5283f91c493e123cd8787b536db11afd2441839ce21171ebc6e3045d3728
-  languageName: node
-  linkType: hard
-
 "elliptic@npm:^6.0.0, elliptic@npm:^6.5.2":
   version: 6.5.2
   resolution: "elliptic@npm:6.5.2"
@@ -6728,13 +6662,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"fraction.js@npm:^4.0.13":
-  version: 4.0.13
-  resolution: "fraction.js@npm:4.0.13"
-  checksum: 1e9ec132b09f17f3e41aa53508197901277f11896f6adc0b51a4b38511e6236813a471488c319221f4fadf7c854be9566a4924215623b460364591d80e1791c3
-  languageName: node
-  linkType: hard
-
 "fragment-cache@npm:^0.2.1":
   version: 0.2.1
   resolution: "fragment-cache@npm:0.2.1"
@@ -6838,24 +6765,6 @@ fsevents@^1.2.7:
   dependencies:
     node-gyp: latest
   checksum: e2b8c379340e21a786d32c653854c8876f94eb1202dd5be378fd42c062bc123aab5051c32bf0011865257c85982c41ded203f9fe8c9f9c8f8c84dc4672abc0e0
-  languageName: node
-  linkType: hard
-
-"fsevents@patch:fsevents@~2.3.1#builtin<compat/fsevents>":
-  version: 2.3.1
-  resolution: "fsevents@patch:fsevents@npm%3A2.3.1#builtin<compat/fsevents>::version=2.3.1&hash=11e9ea"
-  dependencies:
-    node-gyp: latest
-  checksum: 66b24358e15cdd0f705b456346e58b4613f2bf54206b47874decda4152614fb0632d2d662c92b0ea54810109f646e5233e4cdd64dbb2a1949070ee5dc14dab87
-  languageName: node
-  linkType: hard
-
-fsevents@~2.3.1:
-  version: 2.3.1
-  resolution: "fsevents@npm:2.3.1"
-  dependencies:
-    node-gyp: latest
-  checksum: 32619a121e7f9ac8a5ce4954f5fdf06be68b7b1c16e4ac8fa6e5e13cbf97d83c86cdcdf872ab7b188ebb07b34d2271b7818aebfc305b4a7d5b35f4bc2117f8be
   languageName: node
   linkType: hard
 
@@ -7661,7 +7570,6 @@ fsevents@~2.3.1:
     "@material-ui/pickers": ^3.2.10
     "@next/bundle-analyzer": ^10.0.5
     anchorme: ^2.1.2
-    autoprefixer: ^10.2.1
     axe-puppeteer: 1.1.0
     babel-plugin-module-resolver: ^4.1.0
     bluebird: 3.7.2
@@ -7706,7 +7614,7 @@ fsevents@~2.3.1:
     postcss: ^8.2.4
     postcss-import: ^14.0.0
     postcss-loader: ^4.1.0
-    postcss-nested: ^5.0.3
+    postcss-nested: 4
     postcss-simple-vars: ^6.0.2
     prop-types: 15.7.2
     puppeteer: ^5.5.0
@@ -7726,7 +7634,6 @@ fsevents@~2.3.1:
     request-promise: 4.2.6
     reselect: 4.0.0
     rimraf: 3.0.2
-    sass: ^1.32.4
     serve-static: 1.14.1
     sitemap: ^6.3.5
     svg-autocrop: ^2.0.37
@@ -10241,7 +10148,7 @@ fsevents@~2.3.1:
   languageName: node
   linkType: hard
 
-"node-releases@npm:^1.1.65, node-releases@npm:^1.1.69":
+"node-releases@npm:^1.1.65":
   version: 1.1.69
   resolution: "node-releases@npm:1.1.69"
   checksum: 240b2534f32c8bbdfefb1fb052d2b1c198f3a745141ce245c6c5241a6efefae22d356b66965e5250869013c3c4777050cdca78d39f3b46965166b5f3e02b08d7
@@ -10299,13 +10206,6 @@ fsevents@~2.3.1:
   version: 3.0.0
   resolution: "normalize-path@npm:3.0.0"
   checksum: 215a701b471948884193628f3e38910353abf445306b519c42c2a30144b8beb8ca0a684da97bfc2ee11eb168c35c776d484274da4bd8f213d2b22f70579380ee
-  languageName: node
-  linkType: hard
-
-"normalize-range@npm:^0.1.2":
-  version: 0.1.2
-  resolution: "normalize-range@npm:0.1.2"
-  checksum: bca997d800d76b7954b36d394f44bbe65948eb4cca954b2e731cd81a7a5540725dcd237df7cb2006449e705c4803755658b8f23d89f9cc2eb5da464558baba69
   languageName: node
   linkType: hard
 
@@ -11227,14 +11127,13 @@ fsevents@~2.3.1:
   languageName: node
   linkType: hard
 
-"postcss-nested@npm:^5.0.3":
-  version: 5.0.3
-  resolution: "postcss-nested@npm:5.0.3"
+"postcss-nested@npm:4":
+  version: 4.2.3
+  resolution: "postcss-nested@npm:4.2.3"
   dependencies:
-    postcss-selector-parser: ^6.0.4
-  peerDependencies:
-    postcss: ^8.1.13
-  checksum: c5688d54ac92d7c171f437eeb11f37b9067c89c5a4d92e55a07289cde8cfa0fa333090979ee10c1bab16f89d2a24a25935748e05f30af921f1779f8d02e1bad7
+    postcss: ^7.0.32
+    postcss-selector-parser: ^6.0.2
+  checksum: 73b9e0115cfd19cbc2a9bb61bc3f795008dc6d59ebdc460f035499d3ade5e1cc5bd05ddaca525c818f570747fa96aab984eb0c81209c6294d38b2a9a52e62b2e
   languageName: node
   linkType: hard
 
@@ -11255,18 +11154,6 @@ fsevents@~2.3.1:
     indexes-of: ^1.0.1
     uniq: ^1.0.1
   checksum: 0c8bec00e966038572228df54782ef4eefcd76902e5fc3822e6ad8f144c097c48acd9d00376d95cbbd902bfc0ecdf078e3a42eaba2679e1e43b4f91660534121
-  languageName: node
-  linkType: hard
-
-"postcss-selector-parser@npm:^6.0.4":
-  version: 6.0.4
-  resolution: "postcss-selector-parser@npm:6.0.4"
-  dependencies:
-    cssesc: ^3.0.0
-    indexes-of: ^1.0.1
-    uniq: ^1.0.1
-    util-deprecate: ^1.0.2
-  checksum: f6b6e30f515e0909af2555df29feca42f2141d10fac7f8e719ac72f071729a9b9f631241bb1d8ff88cbec7e8fb2ada22c0c92ee0d629582340551ea090985a74
   languageName: node
   linkType: hard
 
@@ -12534,17 +12421,6 @@ fsevents@~2.3.1:
     sass:
       optional: true
   checksum: 6ff9bafd127a33aae35850433d9bb7d6b2b2cf50f44fa02ea189436700d4c20a66d5d33f93b3e693712589eed72f67f6e7dee893e2835d663c4fe72bb58422b0
-  languageName: node
-  linkType: hard
-
-"sass@npm:^1.32.4":
-  version: 1.32.4
-  resolution: "sass@npm:1.32.4"
-  dependencies:
-    chokidar: ">=2.0.0 <4.0.0"
-  bin:
-    sass: sass.js
-  checksum: d7ff2252fe702f122bb002f6b65a785213dd2e8c738b247b910d34c959a77215cce93655ceddd08ce1a7fecbb9fb6c376924d271fd9d9af036699d3076c2a4fd
   languageName: node
   linkType: hard
 
@@ -14325,7 +14201,7 @@ fsevents@~2.3.1:
   languageName: node
   linkType: hard
 
-"util-deprecate@npm:^1.0.1, util-deprecate@npm:^1.0.2, util-deprecate@npm:~1.0.1":
+"util-deprecate@npm:^1.0.1, util-deprecate@npm:~1.0.1":
   version: 1.0.2
   resolution: "util-deprecate@npm:1.0.2"
   checksum: 73c2b1cf0210ccac300645384d8443cabbd93194117b2dc1b3bae8d8279ad39aedac857e020c4ea505e96a1045059c7359db3df6a9df0be6b8584166c9d61dc9
