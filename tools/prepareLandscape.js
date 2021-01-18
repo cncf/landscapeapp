@@ -2,7 +2,6 @@ import path from 'path'
 import { load  } from 'js-yaml'
 import { readFileSync, writeFileSync, mkdirSync, existsSync, rmdirSync } from 'fs'
 import { execSync } from 'child_process'
-import prepareItemsForExport from './prepareItemsForExport'
 
 const projectPath = process.env.PROJECT_PATH || path.resolve('../..')
 const settingsPath = path.resolve(projectPath, 'settings.yml')
@@ -23,5 +22,10 @@ items.forEach(item => {
   writeFileSync(`./public/data/${item.id}.json`, JSON.stringify(item))
 })
 
-const itemsForExport = prepareItemsForExport(items)
-writeFileSync(`./public/data/items-export.json`, JSON.stringify(itemsForExport))
+const afterSettingsSaved = _ => {
+  const prepareItemsForExport = require('./prepareItemsForExport').default
+  const itemsForExport = prepareItemsForExport(items)
+  writeFileSync(`./public/data/items-export.json`, JSON.stringify(itemsForExport))
+}
+
+afterSettingsSaved()
