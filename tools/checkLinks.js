@@ -73,24 +73,28 @@ export const checkUrl = (url, attempt = 1) => {
         ].join(' ')
         const command = `curl ${curlOptions} ${url}`
         exec(command, async (error, stdout) => {
-            const { effectiveUrl, status } = JSON.parse(stdout)
-            if (error && status === '429' && attempt <= 5) {
-              console.log("Rate limitted, waiting 30s. URL: ", url)
-              await new Promise(resolve => setTimeout(resolve, 30000))
-              resolve(await checkUrl(url, attempt + 1))
-            } else if (error) {
-              try {
-                const puppeteerResult = await checkViaPuppeteer(url);
-                if (puppeteerResult === 'ok') {
-                  resolve({ effectiveUrl, success: true })
-                } else {
+            try {
+              const { effectiveUrl, status } = JSON.parse(stdout)
+              if (error && status === '429' && attempt <= 5) {
+                console.log("Rate limitted, waiting 30s. URL: ", url)
+                await new Promise(resolve => setTimeout(resolve, 30000))
+                resolve(await checkUrl(url, attempt + 1))
+              } else if (error) {
+                try {
+                  const puppeteerResult = await checkViaPuppeteer(url);
+                  if (puppeteerResult === 'ok') {
+                    resolve({ effectiveUrl, success: true })
+                  } else {
+                    resolve({ success: false, status: status || 'UNKNOWN' })
+                  }
+                } catch(ex) {
                   resolve({ success: false, status: status || 'UNKNOWN' })
                 }
-              } catch(ex) {
-                resolve({ success: false, status: status || 'UNKNOWN' })
+              } else {
+                resolve({ effectiveUrl, success: true })
               }
-            } else {
-              resolve({ effectiveUrl, success: true })
+            } catch (ex) {
+                resolve({ success: false, status: 'UNKNOWN' })
             }
         })
     })
