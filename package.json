@@ -59,7 +59,6 @@
     "@material-ui/pickers": "^3.2.10",
     "@next/bundle-analyzer": "^10.0.5",
     "anchorme": "^2.1.2",
-    "autoprefixer": "^10.2.1",
     "axe-puppeteer": "1.1.0",
     "babel-plugin-module-resolver": "^4.1.0",
     "bluebird": "3.7.2",
