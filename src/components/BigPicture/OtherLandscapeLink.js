@@ -1,5 +1,6 @@
 import React from 'react';
 import { pure } from 'recompose';
+import assetPath from '../../utils/assetPath'
 
 const OtherLandscapeLink = function({top, left, height, width, color, onClick, title, url, layout}) {
   if (layout === 'category') {
@@ -13,7 +14,7 @@ const OtherLandscapeLink = function({top, left, height, width, color, onClick, t
     }} onClick={onClick} >
       <div style={{ width, height: 30, lineHeight: '25px', textAlign: 'center', color: 'white', fontSize: 12}}>{title}</div>
       <div style={{ flex: 1, background: 'white'}}>
-        <img loading="lazy" src={`images/${url}_preview.png`} style={{ width: width - 10, height: height - 40, margin: 5,
+        <img loading="lazy" src={assetPath(`/images/${url}_preview.png`)} style={{ width: width - 10, height: height - 40, margin: 5,
           objectFit: 'contain', backgroundPosition: 'center', backgroundRepeat: 'no-repeat' }} alt={title} />
       </div>
   </div>
@@ -21,7 +22,7 @@ const OtherLandscapeLink = function({top, left, height, width, color, onClick, t
   if (layout === 'subcategory') {
     return <div style={{position: 'absolute', top, left, height, width, cursor: 'pointer' }} onClick={onClick}>
       <div style={{ width, top: 0, height: 20, lineHeight: '20px', textAlign: 'center', color: 'white', fontSize: 11}}>{title}</div>
-      <img loading="lazy" src={`images/${url}_preview.png`} alt={title}
+      <img loading="lazy" src={assetPath(`/images/${url}_preview.png`)} alt={title}
            style={{ width: width, height: height - 20, objectFit: 'contain', backgroundPosition: 'center', backgroundRepeat: 'no-repeat' }} />
     </div>;
   }

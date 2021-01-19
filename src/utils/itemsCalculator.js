@@ -5,24 +5,29 @@ import groupingLabel from '../utils/groupingLabel';
 import groupingOrder from '../utils/groupingOrder';
 import formatAmount from '../utils/formatAmount';
 import formatNumber from 'format-number';
-import { filtersToUrl } from '../utils/syncToUrl';
 import stringOrSpecial from '../utils/stringOrSpecial';
 import { getLandscapeCategories } from './sharedItemsCalculator';
 import { findLandscapeSettings } from "./landscapeSettings";
+import { stringifyParams } from './routing'
 
 const landscape = fields.landscape.values;
 
+const groupAndSort = (items, sortCriteria) => {
+  return _.groupBy(_.orderBy(items, sortCriteria), 'landscape')
+}
+
 export const getFilteredItems = createSelector(
-  [(state) => state.main.data,
-    (state) => state.main.filters,
-    (state) => state.main.mainContentMode
+  [
+    (_, entries) => entries,
+    (params) => params.filters,
+    (params) => params.mainContentMode
   ],
   function(data, filters, mainContentMode) {
     var filterHostedProject = filterFn({field: 'relation', filters});
     var filterByLicense = filterFn({field: 'license', filters});
     var filterByOrganization = filterFn({field: 'organization', filters});
     var filterByHeadquarters = filterFn({field: 'headquarters', filters});
-    var filterByLandscape = mainContentMode === 'card' ? filterFn({field: 'landscape', filters}) : (x) => true;
+    var filterByLandscape = mainContentMode === 'card-mode' ? filterFn({field: 'landscape', filters}) : _ => true;
     var filterByBestPractices = filterFn({field: 'bestPracticeBadgeId', filters});
     var filterByEnduser = filterFn({field: 'enduser', filters});
     var filterByParent = filterFn({field: 'parents', filters});
@@ -47,8 +52,9 @@ const addExtraFields = function(data) {
 }
 
 const getFilteredItemsForBigPicture = createSelector(
-  [(state) => state.main.data,
-  (state) => state.main.filters
+  [
+    (_, entries) => entries,
+    (params) => params.filters
   ],
   function(data, filters) {
     var filterHostedProject = filterFn({field: 'relation', filters});
@@ -72,8 +78,8 @@ const getExtraFields = createSelector(
 const getSortedItems = createSelector(
   [
   getExtraFields,
-  (state) => state.main.sortField,
-  (state) => state.main.sortDirection
+  (params) => params.sortField,
+  (params) => params.sortDirection
   ],
   function(data, sortField, sortDirection) {
     const fieldInfo = fields[sortField];
@@ -121,9 +127,9 @@ const getSortedItems = createSelector(
 const getGroupedItems = createSelector(
   [
   getSortedItems,
-  (state) => state.main.grouping,
-  (state) => state.main.filters,
-  (state) => state.main.sortField
+  (params) => params.grouping,
+  (params) => params.filters,
+  (params) => params.sortField
   ],
   function(items, grouping, filters, sortField) {
     if (grouping === 'no') {
@@ -146,7 +152,7 @@ const getGroupedItems = createSelector(
         key: properKey,
         header: groupingLabel(grouping, properKey),
         items: value,
-        href: filtersToUrl({filters: newFilters, grouping, sortField})
+        href: stringifyParams({filters: newFilters, grouping, sortField})
       }
     }), (group) => groupingOrder(grouping)(group.key));
   }
@@ -154,7 +160,7 @@ const getGroupedItems = createSelector(
 
 const bigPictureSortOrder = [
   function orderByProjectKind(item) {
-    const result = _.find(fields.relation.values, {id: item.project});
+    const result = fields.relation.valuesMap[item.project]
     if (!result) {
       return 99;
     }
@@ -168,46 +174,45 @@ const bigPictureSortOrder = [
   }
 ];
 
-export const getGroupedItemsForBigPicture = function(state, landscapeSettings = null) {
+export const getGroupedItemsForContentMode = function(params, entries, landscapeSettings = null) {
   if (!landscapeSettings) {
-    landscapeSettings = findLandscapeSettings(state.main.mainContentMode);
+    landscapeSettings = findLandscapeSettings(params.mainContentMode);
   }
-  if (state.main.mainContentMode === 'card') {
-    return [];
-  } else if (landscapeSettings.url === 'landscape') {
-    return getGroupedItemsForMainLandscape(state, landscapeSettings);
+  if (params.mainContentMode === 'card-mode') {
+    return getGroupedItems(params, entries)
+  } else if (landscapeSettings.isMain) {
+    return getGroupedItemsForMainLandscape(params, entries, landscapeSettings);
   } else {
-    return getGroupedItemsForAdditionalLandscape(state, landscapeSettings)
+    return getGroupedItemsForAdditionalLandscape(params, entries, landscapeSettings)
   }
 }
 
 const getGroupedItemsForMainLandscape = createSelector(
   [ getFilteredItemsForBigPicture,
-    (state) => state.main.data,
-    (state) => state.main.grouping,
-    (state) => state.main.filters,
-    (state) => state.main.sortField,
-    (state, landscapeSettings) => landscapeSettings
+    (_, entries) => entries,
+    (params) => params.grouping,
+    (params) => params.filters,
+    (params) => params.sortField,
+    (params, entries, landscapeSettings) => landscapeSettings
   ],
   function(items, allItems, grouping, filters, sortField, landscapeSettings) {
     const categories = getLandscapeCategories({landscapeSettings, landscape });
+    const itemsMap = groupAndSort(items, bigPictureSortOrder)
+    const allItemsMap = groupAndSort(allItems, bigPictureSortOrder)
+
     return categories.map(function(category) {
       const newFilters = {...filters, landscape: category.id };
       return {
         key: stringOrSpecial(category.label),
         header: category.label,
-        href: filtersToUrl({filters: newFilters, grouping: 'landscape', sortField, mainContentMode: 'card'}),
+        href: stringifyParams({filters: newFilters, grouping: 'landscape', sortField, mainContentMode: 'card-mode'}),
         subcategories: landscape.filter( (l) => l.parentId === category.id).map(function(subcategory) {
           const newFilters = {...filters, landscape: subcategory.id };
           return {
             name: subcategory.label,
-            href: filtersToUrl({filters: newFilters, grouping: 'landscape', sortField, mainContentMode: 'card'}),
-            items: _.orderBy(items.filter(function(item) {
-              return item.landscape ===  subcategory.id
-            }), bigPictureSortOrder),
-            allItems: _.orderBy(allItems.filter(function(item) {
-              return item.landscape ===  subcategory.id
-            }), bigPictureSortOrder)
+            href: stringifyParams({filters: newFilters, grouping: 'landscape', sortField, mainContentMode: 'card-mode'}),
+            items: itemsMap[subcategory.id] || [],
+            allItems: allItemsMap[subcategory.id] || []
           };
         })
       };
@@ -217,36 +222,31 @@ const getGroupedItemsForMainLandscape = createSelector(
 
 const getGroupedItemsForAdditionalLandscape = createSelector([
      getFilteredItemsForBigPicture,
-    (state) => state.main.data,
-    (state) => state.main.grouping,
-    (state) => state.main.filters,
-    (state) => state.main.sortField,
-    (state, landscapeSettings) => landscapeSettings
+    (_, entries) => entries,
+    (params) => params.grouping,
+    (params) => params.filters,
+    (params) => params.sortField,
+    (params, entries, landscapeSettings) => landscapeSettings
   ],
   function(items, allItems, grouping, filters, sortField, landscapeSettings) {
     const category = getLandscapeCategories({landscapeSettings, landscape})[0];
     const subcategories = landscape.filter(({ parentId }) => parentId === category.id);
 
-    const itemsFrom = function(subcategoryId) {
-      return _.orderBy(items.filter((item) => item.landscape ===  subcategoryId), bigPictureSortOrder)
-    };
-
-    const allItemsFrom = function(subcategoryId) {
-      return _.orderBy(allItems.filter((item) => item.landscape ===  subcategoryId), bigPictureSortOrder)
-    };
+    const itemsMap = groupAndSort(items, bigPictureSortOrder)
+    const allItemsMap = groupAndSort(allItems, bigPictureSortOrder) || []
 
     const result = subcategories.map(function(subcategory) {
       const newFilters = {...filters, landscape: subcategory.id };
       return {
         key: stringOrSpecial(subcategory.label),
         header: subcategory.label,
-        href: filtersToUrl({filters: newFilters, grouping: 'landscape', sortField, mainContentMode: 'card'}),
+        href: stringifyParams({filters: newFilters, grouping: 'landscape', sortField, mainContentMode: 'card'}),
         subcategories: [
           {
             name: '',
             href: '',
-            items: itemsFrom(subcategory.id),
-            allItems: allItemsFrom(subcategory.id)
+            items: itemsMap[subcategory.id] || [],
+            allItems: allItemsMap[subcategory.id]
           }
         ]
       };
@@ -256,8 +256,15 @@ const getGroupedItemsForAdditionalLandscape = createSelector([
   }
 );
 
-export function getItemsForExport(state) {
-  return _.flatten(getGroupedItems(state).map((x) => x.items));
+export const flattenItems = groupedItems => {
+  return groupedItems.flatMap(group => {
+    const { items, subcategories } = group
+    return group.hasOwnProperty('items') ? items : subcategories.flatMap(({ items }) => items)
+  })
+}
+
+export function getItemsForExport(params, entries) {
+  return _.flatten(getGroupedItems(params, entries).map((x) => x.items));
 }
 
 export default getGroupedItems;

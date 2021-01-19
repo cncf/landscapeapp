@@ -1,23 +1,22 @@
-import React, { useEffect, useState } from 'react';
-import { pure } from 'recompose';
+import React, { useContext, useEffect, useState } from 'react';
 import LandscapeContent from './LandscapeContent';
-import { calculateSize, outerPadding, headerHeight } from "../../utils/landscapeCalculations";
-import isDesktop from "../../utils/isDesktop";
+import useCurrentDevice from '../../utils/useCurrentDevice'
+import { useRouter } from 'next/router'
+import LandscapeContext from '../../contexts/LandscapeContext'
+import { headerHeight} from '../../utils/landscapeCalculations'
 
-const calculateZoom = (width, height, zoomedIn) => {
-  const boxHeight = height + headerHeight + 2 * outerPadding
-  const boxWidth = width + 2 * outerPadding
+const _calculateZoom = (fullscreenWidth, fullscreenHeight, zoomedIn, currentDevice) => {
   const isFirefox = navigator.userAgent.indexOf('Firefox') > -1
 
   const aspectRatio = innerWidth / innerHeight
   const adjustedWidth = outerWidth
   const adjustedHeight = adjustedWidth / aspectRatio
-  let baseZoom = Math.min(adjustedHeight / boxHeight, adjustedWidth / boxWidth, 2).toPrecision(4)
+  let baseZoom = Math.min(adjustedHeight / fullscreenHeight, adjustedWidth / fullscreenWidth, 2).toPrecision(4)
   let wrapperWidth, wrapperHeight
 
-  if (baseZoom <= 0.95 || !isDesktop || isFirefox || location.search.indexOf('scale=false') > -1) {
-    wrapperWidth = Math.max(boxWidth, innerWidth)
-    wrapperHeight = Math.max(boxHeight, innerHeight)
+  if (baseZoom <= 0.95 || !currentDevice.desktop() || isFirefox || location.search.indexOf('scale=false') > -1) {
+    wrapperWidth = Math.max(fullscreenWidth, innerWidth)
+    wrapperHeight = Math.max(fullscreenHeight, innerHeight)
     baseZoom = 1
   } else {
     wrapperWidth = adjustedWidth / baseZoom
@@ -27,31 +26,39 @@ const calculateZoom = (width, height, zoomedIn) => {
   return { zoom: Math.min(baseZoom * (zoomedIn ? 3 : 1), 3), wrapperWidth, wrapperHeight }
 }
 
-const Fullscreen = ({ready, groupedItems, landscapeSettings, version}) => {
-  if (ready !== true) {
-    return <div></div>
+const Fullscreen = _ => {
+  const { version } = useRouter().query
+  const { fullscreenWidth, fullscreenHeight, landscapeSettings } = useContext(LandscapeContext)
+  const currentDevice = useCurrentDevice()
+
+  const [zoomState, setZoomState] = useState({
+    zoom: 1,
+    wrapperHeight: fullscreenHeight,
+    wrapperWidth: fullscreenWidth,
+    zoomedIn: false,
+    zoomedAt: {}
+  })
+  const { zoom, wrapperHeight, wrapperWidth, zoomedIn, zoomedAt } = zoomState
+
+  const calculateZoom = (zoomedIn = false, zoomedAt = {}) => {
+    const zoomAttrs = _calculateZoom(fullscreenWidth, fullscreenHeight, zoomedIn, currentDevice)
+    setZoomState({ zoomedIn, zoomedAt, ...zoomAttrs })
   }
 
-  const [_, setWindowSize] = useState(1)
-  const [zoomedIn, setZoomedIn] = useState(false)
-  const [zoomedAt, setZoomedAt] = useState({})
-  const onZoom = (e) => {
-    setZoomedAt({ x: e.pageX / zoom, y: e.pageY / zoom })
-    setZoomedIn(!zoomedIn)
+  const onZoom = e => {
+    const zoomedAt = { x: e.pageX / zoom, y: e.pageY / zoom }
+    calculateZoom(!zoomedIn, zoomedAt)
   }
 
   useEffect(() => {
-    const calculateWindowSize = () => setWindowSize(`${innerWidth}x${innerHeight}`)
-    window.addEventListener("resize", calculateWindowSize)
-    return () => window.removeEventListener("resize", calculateWindowSize)
+    calculateZoom()
+    window.addEventListener("resize", calculateZoom)
+    return () => window.removeEventListener("resize", calculateZoom)
   }, [true]);
 
   useEffect(() => {
-    zoomedIn ? window.scrollTo((zoomedAt.x * zoom - innerWidth / 2), (zoomedAt.y * zoom - innerHeight / 2)) : null
+    window.scrollTo((zoomedAt.x * zoom - innerWidth / 2), (zoomedAt.y * zoom - innerHeight / 2))
   }, [zoomedAt, zoomedIn])
-
-  const { width, height } = calculateSize(landscapeSettings)
-  const { zoom, wrapperWidth, wrapperHeight } = calculateZoom(width, height, zoomedIn)
 
   return (
       <div className="gradient-bg" style={{
@@ -71,7 +78,7 @@ const Fullscreen = ({ready, groupedItems, landscapeSettings, version}) => {
           justifyContent: 'center'
         }}>
           <div
-            onClick={isDesktop && onZoom}
+            onClick={currentDevice.desktop() && onZoom}
             style={{
               position: 'absolute',
               top: 0,
@@ -82,7 +89,7 @@ const Fullscreen = ({ready, groupedItems, landscapeSettings, version}) => {
               zIndex: 100000
             }}>
           </div>
-          <LandscapeContent groupedItems={groupedItems} landscapeSettings={landscapeSettings} padding={0} />
+          <LandscapeContent padding={0} />
           <div style={{
             position: 'absolute',
             top: 10,
@@ -129,4 +136,4 @@ const Fullscreen = ({ready, groupedItems, landscapeSettings, version}) => {
   );
 };
 
-export default pure(Fullscreen);
+export default Fullscreen

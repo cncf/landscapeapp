@@ -1,39 +1,30 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { pure } from 'recompose';
 import Dialog from '@material-ui/core/Dialog';
 import classNames from 'classnames'
-import _ from 'lodash';
 import ItemDialogContent from './ItemDialogContent';
-import ItemDialogButtonsContainer from './ItemDialogButtonsContainer';
+import ItemDialogButtons from './ItemDialogButtons'
+import LandscapeContext from '../contexts/LandscapeContext'
+import useSWR from 'swr'
+import assetPath from '../utils/assetPath'
 
-import '../styles/itemModal.css';
-import fields from '../types/fields';
-import isModalOnly from "../utils/isModalOnly";
+const fetchItem = itemId => useSWR(itemId ? assetPath(`/data/${itemId}.json`) : null)
 
-let lastItemInfo;
-function getRelationStyle(relation) {
-  const relationInfo = _.find(fields.relation.values, {id: relation});
-  if (relationInfo && relationInfo.color) {
-    return {
-      border: '4px solid ' + relationInfo.color
-    };
-  } else {
-    return {};
-  }
-}
+const ItemDialog = _ => {
+  const { navigate, params, entries } = useContext(LandscapeContext)
+  const { onlyModal, selectedItemId } = params
+  const { data: selectedItem } = fetchItem(selectedItemId)
+  const closeDialog = _ => onlyModal ? _ : navigate({ selectedItemId: null })
+  const nonoss = selectedItem && selectedItem.oss === false
+  const loading = selectedItemId && !selectedItem
+  const itemInfo = selectedItem || entries.find(({ id }) => id === selectedItemId)
 
-const ItemDialog = ({onClose, itemInfo}) => {
-  const recentItemInfo = itemInfo || lastItemInfo || {};
-  const closeDialog = isModalOnly ? _ => _ : onClose
-  if (itemInfo) {
-    lastItemInfo = itemInfo;
-  }
   return (
-      <Dialog open={!!itemInfo} onClose={closeDialog} transitionDuration={400}
+      <Dialog open={!!selectedItemId} onClose={closeDialog} transitionDuration={400}
         classes={{paper:'modal-body'}}
-        className={classNames('modal', 'product', {nonoss : recentItemInfo.oss === false})}>
-          { itemInfo && !isModalOnly && <ItemDialogButtonsContainer/> }
-          { (itemInfo || lastItemInfo) && <ItemDialogContent itemInfo={itemInfo || lastItemInfo}/> }
+        className={classNames('modal', 'product', {nonoss})}>
+          { !onlyModal && <ItemDialogButtons closeDialog={closeDialog} /> }
+          <ItemDialogContent itemInfo={itemInfo} loading={loading}/>
       </Dialog>
   );
 }

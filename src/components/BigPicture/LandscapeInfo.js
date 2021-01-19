@@ -1,8 +1,11 @@
 import React from 'react';
 import { pure } from 'recompose';
 import _ from 'lodash';
+import assetPath from '../../utils/assetPath'
+import { useRouter } from 'next/router'
 
 const LandscapeInfo = ({width, height, top, left, childrenInfo}) => {
+  const { query } = useRouter()
   const children = childrenInfo.map(function(info) {
     const positionProps = {
         position: 'absolute',
@@ -15,7 +18,7 @@ const LandscapeInfo = ({width, height, top, left, childrenInfo}) => {
     };
     if (info.type === 'text') {
       // pdf requires a normal version without a zoom trick
-      if (window.location.href.indexOf('&pdf') !== -1) {
+      if (query.hasOwnProperty('pdf')) {
         return <div key='text' style={{
           ...positionProps,
           fontSize: info.font_size,
@@ -53,7 +56,7 @@ const LandscapeInfo = ({width, height, top, left, childrenInfo}) => {
       }}>{info.title}</div>
     }
     if (info.type === 'image') {
-      return <img src={`images/${info.image}`} style={{...positionProps}} key={info.image} alt={info.title || info.image} />
+      return <img src={assetPath(`/images/${info.image}`)} style={{...positionProps}} key={info.image} alt={info.title || info.image} />
     }
   });
 

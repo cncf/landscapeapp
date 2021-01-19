@@ -1,15 +1,13 @@
 import _ from 'lodash';
-export default function(groupedItems,groupedItemsForBigPicture, selectedItemId, isBigPicture) {
+
+export default function selectedItemCalculator(groupedItems, selectedItemId, isBigPicture) {
     const calcItems = function() {
       if (!isBigPicture) {
-        return _.flatten(_.map(groupedItems, 'items'));
+        return groupedItems.flatMap(group => group.items)
       }
       // if we are in a big picture mode, we want to allow prev/next button to work only inside a given category
-      const allItems = groupedItemsForBigPicture.map((x) => _.flatten(x.subcategories.map( (subcategory) => subcategory.items)));
-      const itemsBelongingToCategory = allItems.filter(function(arr) {
-        return !! _.find(arr, {id: selectedItemId});
-      });
-      return itemsBelongingToCategory[0] || [];
+      const itemsByCategory = groupedItems.map(category => category.subcategories.flatMap(subcategory => subcategory.items))
+      return itemsByCategory.find(items => items.find(item => item.id === selectedItemId)) || []
     }
     const items = calcItems();
     const index = _.findIndex(items, {id: selectedItemId});

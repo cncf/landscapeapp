@@ -203,6 +203,9 @@ EOSSH
     const dockerCommand = `
       mkdir -p /root/builds/${outputFolder}
       chmod -R 777 /root/builds/${outputFolder}
+      mkdir -p /tmp/${outputFolder}/public  /tmp/${outputFolder}/out  /tmp/${outputFolder}/.next
+      chmod -R 777 /tmp/${outputFolder}
+
       REPO_PATH=/root/builds/${folder}
       OUTPUT_PATH=/root/builds/${outputFolder}
 
@@ -213,11 +216,12 @@ EOSSH
         -e PARALLEL=TRUE \
         -v /root/builds/${nodeModulesFolder}/nvm:${dockerHome}/.nvm \
         -v /root/builds/${nodeModulesFolder}/yarnGlobal:${dockerHome}/.yarn \
+        -v /tmp/${outputFolder}/public:/opt/repo/public \
+        -v /tmp/${outputFolder}/out:/opt/repo/out \
+        -v /tmp/${outputFolder}/.next:/opt/repo/.next \
         -v /root/builds/${folder}:/opt/repo \
         -v /root/builds/${outputFolder}:/dist \
         ${dockerImage} /bin/bash -lc "${buildCommand}"
-
-
     `;
 
     console.info(`processing ${landscape.name} at ${landscape.repo}`);
@@ -243,9 +247,10 @@ EOSSH
 
     await runLocal(
       `
-      rsync -az -e "ssh -i /tmp/buildbot  -o StrictHostKeyChecking=no " ${remote}:/root/builds/${outputFolder}/dist/ dist/${landscape.name}
+      rsync -az -e "ssh -i /tmp/buildbot  -o StrictHostKeyChecking=no " ${remote}:/root/builds/${outputFolder}/dist/${landscape.name}/ dist/${landscape.name}
       `
     );
+
     await runRemote(
       `
       rm -rf /root/builds/${outputFolder}
@@ -263,20 +268,18 @@ EOSSH
       process.exit(1);
     }
   }
-  const redirects = results.map((result) => `
-    /${result.landscape.name}/ /${result.landscape.name}/prerender.html 200!
-    /${result.landscape.name} /${result.landscape.name}/prerender.html 200!
-    /${result.landscape.name}/* /${result.landscape.name}/index.html 200
-  `).join('\n');
+
   const index = generateIndex(results)
   const robots = `
     User-agent: *
     Disallow: /
   `;
-  require('fs').writeFileSync('dist/_redirects', redirects);
   require('fs').writeFileSync('dist/index.html', index);
   require('fs').writeFileSync('dist/robots.html', robots);
   require('fs').copyFileSync(path.resolve(__dirname, '..', '_headers'), 'dist/_headers')
+
+  const redirects = landscapesInfo.landscapes.map(({ name }) => `/${name}/* /${name}/404.html 404`).join('\n')
+  require('fs').writeFileSync('dist/_redirects', redirects)
 
   require('fs').writeFileSync("dist/robots.txt", "User-agent: *");
   // comment below when about to test a googlebot rendering

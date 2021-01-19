@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { pure } from 'recompose';
 import IconButton from '@material-ui/core/IconButton';
 import CloseIcon from '@material-ui/icons/Close';
@@ -7,37 +7,30 @@ import classNames from 'classnames'
 import Filters from './Filters';
 import Grouping from './Grouping';
 import Sorting from './Sorting';
-import PresetsContainer from './PresetsContainer';
 import Ad from './Ad';
 import AutoSizer from './CustomAutoSizer';
 import OutboundLink from './OutboundLink';
-import {
-  LandscapeContentContainer,
-  SwitchButtonContainer,
-  ZoomButtonsContainer,
-  FullscreenButtonContainer
-} from './BigPicture';
 import TweetButton from './TweetButton';
-import MainContentContainer from './MainContentContainer';
-import HomePageUrlContainer from './HomePageUrlContainer';
-import HomePageScrollerContainer from './HomePageScrollerContainer';
-import ResetFiltersContainer from './ResetFiltersContainer';
-import ItemDialogContainer from './ItemDialogContainer';
-import HeaderContainer from './HeaderContainer';
-import SummaryContainer from './SummaryContainer';
-import ExportCsvContainer from './ExportCsvContainer';
 import Footer from './Footer';
 import EmbeddedFooter from './EmbeddedFooter';
 
-import isIphone from '../utils/isIphone';
 import isGoogle from '../utils/isGoogle';
 import bus from '../reducers/bus';
-import settings from 'project/settings.yml'
-import isModalOnly from "../utils/isModalOnly";
-
-const state = {
-  lastScrollPosition: 0
-};
+import settings from 'public/settings.json'
+import useCurrentDevice from '../utils/useCurrentDevice'
+import LandscapeContent from './BigPicture/LandscapeContent'
+import LandscapeContext from '../contexts/LandscapeContext'
+import ResetFilters from './ResetFilters'
+import ItemDialog from './ItemDialog'
+import ZoomButtons from './BigPicture/ZoomButtons'
+import Summary from './Summary'
+import FullscreenButton from './BigPicture/FullscreenButton'
+import Header from './Header'
+import SwitchButton from './BigPicture/SwitchButton'
+import ExportCsv from './ExportCsv'
+import MainContent from './MainContent'
+import Presets from './Presets'
+import useBrowserZoom from '../utils/useBrowserZoom'
 
 bus.on('scrollToTop', function() {
   (document.scrollingElement || document.body).scrollTop = 0;
@@ -66,148 +59,148 @@ function enableScroll(){
   document.body.removeEventListener('touchmove', preventDefault);
 }
 
-const HomePage = ({isEmbed, mainContentMode, ready, hasSelectedItem, filtersVisible, hideFilters, showFilters, onClose, title, isFullscreen}) => {
-  const isBigPicture = mainContentMode !== 'card';
-  if (!ready) {
-    return (
-      <div>
-        <HomePageUrlContainer />
-      </div>
-    )
-  }
-  document.title = title;
+const HomePage = _ => {
+  const { params } = useContext(LandscapeContext)
+  const { mainContentMode, zoom, isFullscreen, isEmbed, onlyModal, selectedItemId } = params
+  const isBigPicture = mainContentMode !== 'card-mode';
+  const [sidebarVisible, setSidebarVisible] = useState(false)
+  const showSidebar = _ => setSidebarVisible(true)
+  const hideSidebar = _ => setSidebarVisible(false)
+  const [lastScrollPosition, setLastScrollPosition] = useState(0)
+  const isZoomedIn = useBrowserZoom()
+  const currentDevice = useCurrentDevice()
 
-  if (isModalOnly) {
+  if (onlyModal) {
     document.querySelector('body').classList.add('popup');
   }
 
-  if ((isGoogle || isModalOnly) && hasSelectedItem) {
-    return <ItemDialogContainer />;
-  }
+  useEffect(() => {
+    const { classList } = document.querySelector('html')
+    isBigPicture ? classList.add('big-picture') : classList.remove('big-picture')
+  }, [isBigPicture])
 
-  if (isBigPicture) {
-    document.querySelector('html').classList.add('big-picture');
-  } else {
-    document.querySelector('html').classList.remove('big-picture');
-  }
+  useEffect(() => {
+    const { classList } = document.querySelector('html')
+    isFullscreen ? classList.add('fullscreen') : classList.remove('fullscreen')
+  }, [isFullscreen])
 
-  if (isFullscreen) {
-    document.querySelector('html').classList.add('fullscreen');
-  } else {
-    document.querySelector('html').classList.remove('fullscreen');
-  }
-
-  if (isIphone) {
-    if (hasSelectedItem) {
-      if (!document.querySelector('.iphone-scroller')) {
-        state.lastScrollPosition = (document.scrollingElement || document.body).scrollTop;
-      }
-      document.querySelector('html').classList.add('has-selected-item');
-      (document.scrollingElement || document.body).scrollTop = 0;
-      disableScroll();
-    } else {
-      document.querySelector('html').classList.remove('has-selected-item');
-      if (document.querySelector('.iphone-scroller')) {
-        (document.scrollingElement || document.body).scrollTop = state.lastScrollPosition;
-      }
-      enableScroll();
-    }
-  }
-
-  if (isEmbed) {
-    if (window.parentIFrame) {
-      if (hasSelectedItem) {
-        window.parentIFrame.sendMessage({type: 'showModal'})
+  useEffect(() => {
+    if (currentDevice.ios()) {
+      if (selectedItemId) {
+        if (!document.querySelector('.iphone-scroller')) {
+          setLastScrollPosition((document.scrollingElement || document.body).scrollTop)
+        }
+        document.querySelector('html').classList.add('has-selected-item');
+        (document.scrollingElement || document.body).scrollTop = 0;
+        disableScroll();
       } else {
-        window.parentIFrame.sendMessage({type: 'hideModal'})
-      }
-      if (hasSelectedItem) {
-        window.parentIFrame.getPageInfo(function(info) {
-          var offset = info.scrollTop - info.offsetTop;
-          var height = info.iframeHeight - info.clientHeight;
-          var maxHeight = info.clientHeight * 0.9;
-          if (maxHeight > 480) {
-            maxHeight = 480;
-          }
-          var t = function(x1, y1, x2, y2, x3) {
-            if (x3 < x1 - 50) {
-              x3 = x1 - 50;
-            }
-            if (x3 > x2 + 50) {
-              x3 = x2 + 50;
-            }
-            return y1 + (x3 - x1) / (x2 - x1) * (y2 - y1);
-          }
-          var top = t(0, -height, height, height, offset);
-          if (top < 0 && info.iframeHeight <= 600) {
-            top = 10;
-          }
-          setTimeout(function() {
-            const modal = document.querySelector('.modal-body');
-            if (modal) {
-              modal.style.top = top + 'px';
-              modal.style.maxHeight = maxHeight + 'px';
-            }
-          }, 10);
-        });
+        document.querySelector('html').classList.remove('has-selected-item');
+        if (document.querySelector('.iphone-scroller')) {
+          (document.scrollingElement || document.body).scrollTop = lastScrollPosition;
+        }
+        enableScroll();
       }
     }
-    document.querySelector('body').classList.add('embed');
+  }, [currentDevice, selectedItemId])
+
+  useEffect(() => {
+    if (isEmbed) {
+      if (window.parentIFrame) {
+        if (selectedItemId) {
+          window.parentIFrame.sendMessage({type: 'showModal'})
+        } else {
+          window.parentIFrame.sendMessage({type: 'hideModal'})
+        }
+        if (selectedItemId) {
+          window.parentIFrame.getPageInfo(function(info) {
+            var offset = info.scrollTop - info.offsetTop;
+            var height = info.iframeHeight - info.clientHeight;
+            var maxHeight = info.clientHeight * 0.9;
+            if (maxHeight > 480) {
+              maxHeight = 480;
+            }
+            var t = function(x1, y1, x2, y2, x3) {
+              if (x3 < x1 - 50) {
+                x3 = x1 - 50;
+              }
+              if (x3 > x2 + 50) {
+                x3 = x2 + 50;
+              }
+              return y1 + (x3 - x1) / (x2 - x1) * (y2 - y1);
+            }
+            var top = t(0, -height, height, height, offset);
+            if (top < 0 && info.iframeHeight <= 600) {
+              top = 10;
+            }
+            setTimeout(function() {
+              const modal = document.querySelector('.modal-body');
+              if (modal) {
+                modal.style.top = top + 'px';
+                modal.style.maxHeight = maxHeight + 'px';
+              }
+            }, 10);
+          });
+        }
+      }
+      document.querySelector('body').classList.add('embed');
+    }
+  }, [isEmbed])
+
+  if ((isGoogle() || onlyModal) && selectedItemId) {
+    return <ItemDialog />;
   }
 
+  const isIphone = currentDevice.ios()
 
   return (
-    <div>
-    <HomePageScrollerContainer/>
-    <ItemDialogContainer/>
-    <div className={classNames('app',{'filters-opened' : filtersVisible})}>
-      <div />
-      <div style={{marginTop: (isIphone && hasSelectedItem) ? -state.lastScrollPosition : 0}} className={classNames({"iphone-scroller": isIphone && hasSelectedItem}, 'main-parent')} >
-        { !isEmbed && !isFullscreen && <HeaderContainer/> }
-        { !isEmbed && !isFullscreen && <IconButton className="sidebar-show" title="Show sidebar" onClick={showFilters}><MenuIcon /></IconButton> }
-        { !isEmbed && !isFullscreen && <div className="sidebar">
-          <div className="sidebar-scroll">
-            <IconButton className="sidebar-collapse" title="Hide sidebar" onClick={hideFilters}><CloseIcon /></IconButton>
-            <ResetFiltersContainer />
-            <Grouping/>
-            <Sorting/>
-            <Filters />
-            <PresetsContainer />
-            <ExportCsvContainer />
-            <Ad />
+    <div className={isZoomedIn ? 'zoomed-in' : ''}>
+    {selectedItemId && <ItemDialog/>}
+    <div className={classNames('app',{'filters-opened' : sidebarVisible})}>
+      <div style={{marginTop: isIphone && selectedItemId ? -lastScrollPosition : 0}} className={classNames({"iphone-scroller": isIphone && selectedItemId}, 'main-parent')} >
+        { !isEmbed && !isFullscreen && <>
+          <Header />
+          <IconButton className="sidebar-show" title="Show sidebar" onClick={showSidebar}><MenuIcon /></IconButton>
+          <div className="sidebar">
+            <div className="sidebar-scroll">
+              <IconButton className="sidebar-collapse" title="Hide sidebar" onClick={hideSidebar}><CloseIcon /></IconButton>
+              <ResetFilters />
+              <Grouping/>
+              <Sorting/>
+              <Filters />
+              <Presets />
+              <ExportCsv />
+              <Ad />
+            </div>
           </div>
-        </div>
-        }
+        </>}
 
-        <div className="app-overlay" onClick={hideFilters}></div>
-
-        <HomePageUrlContainer />
+        {sidebarVisible && <div className="app-overlay" onClick={hideSidebar}></div>}
 
         <div className={classNames('main', {'embed': isEmbed})}>
           { !isEmbed && <div className="disclaimer">
             <span  dangerouslySetInnerHTML={{__html: settings.home.header}} />
             Please <OutboundLink to={`https://github.com/${settings.global.repo}`}>open</OutboundLink> a pull request to
-            correct any issues. Greyed logos are not open source. Last Updated: {window.lastUpdated}
+            correct any issues. Greyed logos are not open source. Last Updated: {process.env.lastUpdated}
           </div> }
-          { !isEmbed && <SummaryContainer /> }
+          { !isEmbed && <Summary /> }
 
           <div className="cards-section">
-            <SwitchButtonContainer />
+            <SwitchButton />
             <div className="right-buttons">
-              <ZoomButtonsContainer/>
-              <FullscreenButtonContainer/>
+              <ZoomButtons/>
+              <FullscreenButton/>
               <TweetButton cls="tweet-button-main"/>
             </div>
             { isBigPicture &&
             <AutoSizer>
               {({ height }) => (
                 <div className="landscape-wrapper" style={{height: height}}>
-                  <LandscapeContentContainer />
+                  <LandscapeContent zoom={zoom} />
                 </div>
               )}
             </AutoSizer>
             }
-            { !isBigPicture && <MainContentContainer/> }
+            { !isBigPicture && <MainContent /> }
           </div>
           { !isEmbed && !isBigPicture && <Footer/> }
           { isEmbed && <EmbeddedFooter/> }

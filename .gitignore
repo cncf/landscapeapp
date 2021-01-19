@@ -28,6 +28,8 @@ node_modules
 #dist folder
 dist
 
+public
+
 # IDEA/Webstorm project files
 .idea
 *.iml
@@ -46,3 +48,6 @@ dist
 !.yarn/releases
 !.yarn/plugins
 .pnp.*
+
+.next
+out

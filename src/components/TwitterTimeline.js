@@ -1,18 +1,17 @@
-import React from "react";
-import { Timeline } from 'react-twitter-widgets/es';
-import currentDevice from 'current-device';
+import { useRef, useEffect } from 'react'
+import { Timeline } from 'react-twitter-widgets'
+import useCurrentDevice from '../utils/useCurrentDevice'
 
-class TwitterTimeline extends React.Component {
-  constructor(props) {
-    super(props);
-    this.timelineRef = null;
-  }
+const TwitterTimeline = ({ twitter }) => {
+  const timelineRef = useRef(null)
+  const name = twitter.split('/').pop()
+  const currentDevice = useCurrentDevice()
 
-  componentDidMount () {
-    // This is a hack to fix overflow issues on Safari iPhone
-    // see https://github.com/cncf/landscapeapp/issues/331
+  // This is a hack to fix overflow issues on Safari iPhone
+  // see https://github.com/cncf/landscapeapp/issues/331
+  useEffect(() => {
     if (currentDevice.ios() && navigator.vendor.match(/^apple/i)) {
-      this.timelineRef.addEventListener("DOMSubtreeModified", (el) => {
+      timelineRef.addEventListener("DOMSubtreeModified", (el) => {
         if (el.target.tagName === "IFRAME") {
           const head = el.target.contentDocument.head;
           const newStyle = el.target.contentDocument.createElement("style");
@@ -25,24 +24,20 @@ class TwitterTimeline extends React.Component {
         }
       })
     }
-  }
+  }, [])
 
-  render() {
-    const name =  this.props.twitter.split('/').pop();
-
-    return <div ref={el => this.timelineRef = el}>
-      <Timeline
-        dataSource={{
-          sourceType: 'profile',
-          screenName: name
-        }}
-        options={{
-          username: name,
-          tweetLimit: 3
-        }}
-      />
-    </div>
-  }
+  return <div ref={timelineRef}>
+    <Timeline
+      dataSource={{
+        sourceType: 'profile',
+        screenName: name
+      }}
+      options={{
+        username: name,
+        tweetLimit: 3
+      }}
+    />
+  </div>
 }
 
-export default TwitterTimeline;
+export default TwitterTimeline

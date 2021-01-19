@@ -1,17 +1,14 @@
-import { connect } from 'react-redux';
+import { useContext } from 'react'
 import TreeSelector from './TreeSelector';
-import { changeFilter } from '../reducers/mainReducer.js';
 import { options } from '../types/fields';
+import LandscapeContext from '../contexts/LandscapeContext'
 
-const mapStateToProps = (state) => ({
-  value: state.main.filters.license,
-  options: options('license')
-});
-const onChange = function(newValue) {
-  return changeFilter('license', newValue);
+const LicenseFilterContainer = () => {
+  const { navigate, params } = useContext(LandscapeContext)
+  const value = params.filters.license
+  const _options = options('license')
+  const onChange = license => navigate({ filters: { license }})
+  return <TreeSelector onChange={onChange} value={value} options={_options} />
 }
-const mapDispatchToProps = {
-  onChange: onChange
-};
 
-export default connect(mapStateToProps, mapDispatchToProps)(TreeSelector);
+export default LicenseFilterContainer

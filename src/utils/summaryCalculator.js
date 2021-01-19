@@ -1,4 +1,4 @@
-import settings from 'project/settings.yml';
+import settings from 'public/settings.json';
 import createSelector from '../utils/createSelector';
 import _ from 'lodash';
 import { getItemsForExport } from './itemsCalculator';

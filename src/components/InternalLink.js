@@ -1,23 +1,18 @@
-import React from 'react';
-import { pure } from 'recompose';
-import isEmbed from '../utils/isEmbed';
+import React, { useContext } from 'react';
+import Link from 'next/link'
 import isGoogle from '../utils/isGoogle';
-import isModalOnly from '../utils/isModalOnly';
-import { NavLink } from 'react-router-dom';
-const skipDefaultHandler = (e) => e.preventDefault();
+import LandscapeContext from '../contexts/LandscapeContext'
+
 const InternalLink = ({to, children, onClick, className, ...other}) => {
-  if (onClick) {
-    other.onClick = function(e) {
-      skipDefaultHandler(e);
-      onClick();
-    };
-  }
-  if (isEmbed || isGoogle || isModalOnly || !to) {
+  const { params } = useContext(LandscapeContext)
+  if (params.isEmbed || isGoogle() || params.onlyModal || !to) {
     return <span className={`${className}`} {...other}>{children}</span>;
   } else {
-    return <NavLink className={`${className}  nav-link`} {...other} to={to}>{children}</NavLink>
+    return <Link href={to} prefetch={false}>
+      <a className={`${className} nav-link`} {...other}>{children}</a>
+    </Link>
   }
 }
-export default pure(InternalLink);
+export default InternalLink
 
 

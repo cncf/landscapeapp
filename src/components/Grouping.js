@@ -3,12 +3,12 @@ import { pure } from 'recompose';
 import FormGroup from '@material-ui/core/FormGroup';
 import FormControl from '@material-ui/core/FormControl';
 import FormLabel from '@material-ui/core/FormLabel';
-import GroupingTypeContainer from './GroupingTypeContainer';
+import GroupingSelector from './GroupingSelector';
 const Grouping = () => {
   return <FormGroup row>
         <FormControl component="fieldset">
           <FormLabel component="legend">Grouping</FormLabel>
-          <GroupingTypeContainer />
+          <GroupingSelector />
         </FormControl>
       </FormGroup>;
 };

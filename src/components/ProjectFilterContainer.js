@@ -1,17 +1,14 @@
-import { connect } from 'react-redux';
 import TreeSelector from './TreeSelector';
-import { changeFilter } from '../reducers/mainReducer';
 import { options } from '../types/fields';
+import { useContext } from 'react'
+import LandscapeContext from '../contexts/LandscapeContext'
 
-const mapStateToProps = (state) => ({
-  value: state.main.filters.relation,
-  options: options('relation')
-});
-const onChange = function(newValue) {
-  return changeFilter('relation', newValue);
+const ProjectFilterContainer = () => {
+  const { navigate, params } = useContext(LandscapeContext)
+  const value = params.filters.relation
+  const _options = options('relation')
+  const onChange = relation => navigate({ filters: { relation }})
+  return <TreeSelector onChange={onChange} options={_options} value={value} />
 }
-const mapDispatchToProps = {
-  onChange: onChange
-};
 
-export default connect(mapStateToProps, mapDispatchToProps)(TreeSelector);
+export default ProjectFilterContainer

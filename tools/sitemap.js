@@ -7,14 +7,13 @@ const items = JSON.parse(require('fs').readFileSync(path.resolve(projectPath, 'd
 import _ from 'lodash';
 import { landscapeSettingsList } from "../src/utils/landscapeSettings";
 
+
 async function main() {
   const bigPictureElements = {};
   const landscape = fields.landscape.values;
   landscapeSettingsList.forEach((landscapeSettings) => {
     const categories = getLandscapeCategories({landscapeSettings, landscape});
     bigPictureElements[landscapeSettings.url] = {
-      format: landscapeSettings.url,
-      urlPart: landscapeSettings.url === "landscape" ? null : landscapeSettings.url,
       categories: categories.map( ({ label }) => label)
     }
   });
@@ -31,7 +30,7 @@ async function main() {
     hostname: settings.global.website,
     cacheTime: 600 * 1000,
   });
-  const fileName = path.resolve(projectPath, 'dist/sitemap.xml');
+  const fileName = 'out/sitemap.xml'
   const writeStream = require('fs').createWriteStream(fileName);
   stream.pipe(writeStream);
 
@@ -49,12 +48,12 @@ async function main() {
     _.orderBy(sectionsWithOrder, 'tab_index').map(function(orderEntry) {
       if (orderEntry.key === 'card-mode') {
         return {
-          url: '/format=card-mode',
+          url: '/card-mode',
         };
       }
       const section = settings.big_picture[orderEntry.key];
       return {
-        url: orderEntry.key === 'main' ? '/' : `/format=${section.url}`,
+        url: `/${section.basePath}`,
         img: [{
           title: section.title,
           url: `images/${section.url}.png`,
@@ -73,18 +72,10 @@ async function main() {
         return entry.categories.indexOf(item.category) !== -1;
       });
 
-      const formatPart = (function() {
-        if (!landscapeInfo) {
-          return 'format=card-mode&'
-        }
-        if (!landscapeInfo.urlPart) {
-          return ''
-        }
-        return `format=${landscapeInfo.urlPart}&`;
-      })();
+      const basePath = !landscapeInfo ? 'card-mode' : landscapeInfo.basePath
 
       return {
-        url: `${formatPart}selected=${item.id}`,
+        url: `/${basePath}?selected=${item.id}`,
         img: [{
           url: item.href,
           title: `${item.name} logo`

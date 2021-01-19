@@ -1,4 +1,4 @@
-import React, { Fragment, useState } from 'react';
+import React, { Fragment, useContext, useEffect, useState } from 'react';
 import SvgIcon from '@material-ui/core/SvgIcon';
 import StarIcon from '@material-ui/icons/Star';
 import KeyHandler from 'react-key-handler';
@@ -6,27 +6,25 @@ import _ from 'lodash';
 import OutboundLink from './OutboundLink';
 import millify from 'millify';
 import relativeDate from 'relative-date';
-import { filtersToUrl } from '../utils/syncToUrl';
 import formatNumber from '../utils/formatNumber';
 import isParent from '../utils/isParent';
 import InternalLink from './InternalLink';
-import '../styles/itemModal.css';
 import fields from '../types/fields';
 import isGoogle from '../utils/isGoogle';
-import isModalOnly from '../utils/isModalOnly';
-import isEmbed from '../utils/isEmbed';
-import settings from 'project/settings.yml';
+import settings from 'public/settings.json';
 import TweetButton from './TweetButton';
-import currentDevice from 'current-device';
 import TwitterTimeline from "./TwitterTimeline";
 import {Bar, Pie, defaults} from 'react-chartjs-2';
 import 'chartjs-adapter-date-fns';
-import useWindowSize from "@rooks/use-window-size"
 import classNames from 'classnames'
 import CreateWidthMeasurer from 'measure-text-width';
+import assetPath from '../utils/assetPath'
+import { stringifyParams } from '../utils/routing'
+import LandscapeContext from '../contexts/LandscapeContext'
+import Head from 'next/head'
+import useWindowSize from '../utils/useWindowSize'
 
-const measureWidth = CreateWidthMeasurer(window).setFont('0.6rem Roboto');
-
+const closeUrl = params => stringifyParams({ mainContentMode: 'card-mode', selectedItemId: null, ...params })
 
 let productScrollEl = null;
 const formatDate = function(x) {
@@ -41,7 +39,7 @@ const formatTwitter = function(x) {
 }
 
 function getRelationStyle(relation) {
-  const relationInfo = _.find(fields.relation.values, {id: relation});
+  const relationInfo = fields.relation.valuesMap[relation]
   if (relationInfo && relationInfo.color) {
     return {
       border: '4px solid ' + relationInfo.color
@@ -52,7 +50,7 @@ function getRelationStyle(relation) {
 }
 
 
-const showTwitter = !isGoogle;
+const showTwitter = !isGoogle();
 
 const iconGithub = <svg viewBox="0 0 24 24">
     <path d="M12,2A10,10 0 0,0 2,12C2,16.42 4.87,20.17 8.84,21.5C9.34,21.58
@@ -80,7 +78,8 @@ const parentTag = (project) => {
   if (membership) {
     const { label, name, crunchbase_and_children } = membership;
     const slug = crunchbase_and_children.split("/").pop();
-    return linkTag(label, {name, url: filtersToUrl({filters: {parents: slug}, grouping: 'organization'})});
+    const url = closeUrl({ grouping: 'organization', filters: {parents: slug}})
+    return linkTag(label, {name, url});
   }
 }
 
@@ -88,15 +87,16 @@ const projectTag = function({relation, isSubsidiaryProject, project, ...item}) {
   if (relation === false) {
     return null;
   }
-  const { prefix, tag } = _.find(fields.relation.values, {id: project}) || {};
+  const { prefix, tag } = fields.relation.valuesMap[project] || {};
 
   if (prefix && tag) {
-    return linkTag(tag, {name: prefix, url: filtersToUrl({filters:{relation: project}})})
+    const url = closeUrl({ filters: { relation: project }})
+    return linkTag(tag, {name: prefix, url })
   }
 
   if (isSubsidiaryProject) {
-    const url = filtersToUrl({filters: {format: 'card-mode', relation: 'member', organization: item.organization}});
-    return linkTag("Subsidiary Project", { name: settings.global.short_name, url: url });
+    const url = closeUrl({ mainContentMode: 'card-mode', filters: { relation: 'member', organization: item.organization }})
+    return linkTag("Subsidiary Project", { name: settings.global.short_name, url });
   }
   return null;
 };
@@ -109,27 +109,33 @@ const memberTag = function({relation, member, enduser}) {
     if (!label) {
       return null;
     }
-    return linkTag(label, {name: name, url: filtersToUrl({filters: {relation: relation}})});
+    const url = closeUrl({ filters: { relation }})
+    return linkTag(label, {name: name, url });
   }
   return null;
 }
 
 const openSourceTag = function(oss) {
   if (oss) {
-    const url = filtersToUrl({grouping: 'license', filters: {license: 'Open Source'}});
+    const url = closeUrl({ grouping: 'license', filters: {license: 'Open Source'}})
     return linkTag("Open Source Software", { url, color: "orange" });
   }
 };
 
 const licenseTag = function({relation, license, hideLicense}) {
+  const { label } = _.find(fields.license.values, {id: license});
+  const [width, setWidth] = useState(0)
+
+  useEffect(() => {
+    const width = CreateWidthMeasurer(window).setFont('0.6rem Roboto');
+    setWidth(width)
+  }, [label])
+
   if (relation === 'company' || hideLicense) {
     return null;
   }
 
-  const { label } = _.find(fields.license.values, {id: license});
-  const url = filtersToUrl({grouping: 'license', filters:{license: license}});
-  const width = measureWidth(label);
-  console.info({width: width});
+  const url = closeUrl({ grouping: 'license', filters: { license }});
   return linkTag(label, { name: "License", url, color: "purple", multiline: width > 90 });
 }
 const badgeTag = function(itemInfo) {
@@ -155,7 +161,8 @@ const badgeTag = function(itemInfo) {
 }
 
 const chart = function(itemInfo) {
-  if (isEmbed || !itemInfo.github_data || !itemInfo.github_data.languages) {
+  const { params } = useContext(LandscapeContext)
+  if (params.isEmbed || !itemInfo.github_data || !itemInfo.github_data.languages) {
     return null;
   }
   const callbacks = defaults.global.tooltips.callbacks;
@@ -208,21 +215,13 @@ const chart = function(itemInfo) {
   const total = _.sumBy(languages, 'value');
 
   function getLegendText(language) {
-    const millify = require('millify').default;
-    const total = _.sumBy(languages, 'value');
     return `${language.name} ${percents(language.value)}`;
   }
 
-  function getPopupText(language) {
-    const millify = require('millify').default;
-    return `${language.name} ${millify(language.value, {precision: 1})}`;
-  }
-
-
   const legend = <div style={{position: 'absolute', width: 170, left: 0, top: 0, marginTop: -5, marginBottom: 5, fontSize: '0.8em'  }}>
     {languages.map(function(language) {
-      const url = language.name === 'Other' ? null : filtersToUrl({grouping: 'no', filters: {language: language.name }});
-      return <div style = {{
+      const url = language.name === 'Other' ? null : closeUrl({ grouping: 'no', filters: {language: language.name }});
+      return <div key={language.name} style = {{
         position: 'relative',
         marginTop: 2,
         height: 12
@@ -243,8 +242,9 @@ const chart = function(itemInfo) {
 }
 
 const participation = function(itemInfo) {
-  const { innerWidth } = useWindowSize();
-  if (isEmbed || !itemInfo.github_data || !itemInfo.github_data.contributions) {
+  const { innerWidth } = window;
+  const { params } = useContext(LandscapeContext)
+  if (params.isEmbed || !itemInfo.github_data || !itemInfo.github_data.contributions) {
     return null;
   }
   let lastMonth = null;
@@ -328,27 +328,22 @@ function handleDown() {
   productScrollEl.scrollBy({top: 200, behavior: 'smooth' });
 }
 
-let timeoutId;
-const ItemDialogContent = ({ itemInfo }) => {
-  const setIsLandscape = useState(currentDevice.landscape())[1]
+const ItemDialogContent = ({ itemInfo, loading }) => {
+  const { params } = useContext(LandscapeContext)
+  const { onlyModal } = params
   const [showAllRepos, setShowAllRepos] = useState(false)
-  if (!timeoutId) {
-    timeoutId = setInterval(function() {
-      setIsLandscape(currentDevice.landscape());
-    }, 1000);
-  }
-  const { innerWidth, innerHeight } = useWindowSize();
+  const { innerWidth, innerHeight } = useWindowSize()
 
-  const linkToOrganization = filtersToUrl({grouping: 'organization', filters: {organization: itemInfo.organization}});
+  const linkToOrganization = closeUrl({ grouping: 'organization', filters: {organization: itemInfo.organization}});
   const itemCategory = function(path) {
     var separator = <span className="product-category-separator" key="product-category-separator">•</span>;
     var subcategory = _.find(fields.landscape.values,{id: path});
     var category = _.find(fields.landscape.values, {id: subcategory.parentId});
     var categoryMarkup = (
-      <InternalLink key="category" to={filtersToUrl({grouping: 'landscape', filters: {landscape: category.id}})}>{category.label}</InternalLink>
+      <InternalLink key="category" to={closeUrl({ grouping: 'landscape', filters: {landscape: category.id}})}>{category.label}</InternalLink>
     )
     var subcategoryMarkup = (
-      <InternalLink key="subcategory" to={filtersToUrl({grouping: 'landscape', filters: {landscape: path}})}>{subcategory.label}</InternalLink>
+      <InternalLink key="subcategory" to={closeUrl({ grouping: 'landscape', filters: {landscape: path}})}>{subcategory.label}</InternalLink>
     )
     return (<span>{[categoryMarkup, separator, subcategoryMarkup]}</span>);
   }
@@ -391,13 +386,13 @@ const ItemDialogContent = ({ itemInfo }) => {
                       </div>
                     ) : null;
 
-  const headquartersElement =  itemInfo.headquarters && itemInfo.headquarters !== 'N/A' && (
+  const headquartersElement = itemInfo.headquarters && itemInfo.headquarters !== 'N/A' && (
     <div className="product-property row">
       <div className="product-property-name col col-40">Headquarters</div>
-      <div className="product-property-value tight-col col-60"><InternalLink to={filtersToUrl({grouping: 'headquarters', filters:{headquarters:itemInfo.headquarters}})}>{itemInfo.headquarters}</InternalLink></div>
+      <div className="product-property-value tight-col col-60"><InternalLink to={closeUrl({ grouping: 'headquarters', filters:{headquarters:itemInfo.headquarters}})}>{itemInfo.headquarters}</InternalLink></div>
     </div>
   );
-  const amountElement = !settings.global.hide_funding_and_market_cap && Number.isInteger(itemInfo.amount) && (
+  const amountElement = !loading && !settings.global.hide_funding_and_market_cap && Number.isInteger(itemInfo.amount) && (
     <div className="product-property row">
       <div className="product-property-name col col-40">{itemInfo.amountKind === 'funding' ? 'Funding' : 'Market Cap'}</div>
       {  itemInfo.amountKind === 'funding' &&
@@ -461,7 +456,7 @@ const ItemDialogContent = ({ itemInfo }) => {
 
   const productLogoAndTags = <Fragment>
             <div className="product-logo" style={getRelationStyle(itemInfo.relation)}>
-              <img src={itemInfo.href} className='product-logo-img' alt={itemInfo.name}/>
+              <img src={assetPath(itemInfo.href)} className='product-logo-img' alt={itemInfo.name}/>
             </div>
             <div className="product-tags">
               <div className="product-badges" style = {{width: Math.min(300, innerWidth - 110)}} >
@@ -482,7 +477,7 @@ const ItemDialogContent = ({ itemInfo }) => {
 
   const productLogoAndTagsAndCharts = <Fragment>
             <div className="product-logo" style={getRelationStyle(itemInfo.relation)}>
-              <img src={itemInfo.href} className='product-logo-img'/>
+              <img src={assetPath(itemInfo.href)} className='product-logo-img'/>
             </div>
             <div className="product-tags">
               <div className="product-badges" style = {{width: 300}} >
@@ -502,7 +497,7 @@ const ItemDialogContent = ({ itemInfo }) => {
 
   const productInfo = <Fragment>
               <div className="product-main">
-                { (isGoogle || isModalOnly) ?
+                { (isGoogle() || onlyModal) ?
                   <React.Fragment>
                     <div className="product-name">{itemInfo.name}</div>
                     <div className="product-description">{itemInfo.description}</div>
@@ -517,7 +512,7 @@ const ItemDialogContent = ({ itemInfo }) => {
                   </React.Fragment>
                 }
               </div>
-              <div className="product-properties">
+              { !loading && <div className="product-properties">
                 <div className="product-property row">
                   <div className="product-property-name col col-20">Website</div>
                   <div className="product-property-value col col-80">
@@ -525,7 +520,7 @@ const ItemDialogContent = ({ itemInfo }) => {
                   </div>
                 </div>
                 { itemInfo.repos && itemInfo.repos.map(({ url, stars }, idx) => {
-                  return <div className={`product-property row ${ idx < 3 || showAllRepos ? '' : 'hidden' }`}>
+                  return <div className={`product-property row ${ idx < 3 || showAllRepos ? '' : 'hidden' }`} key={idx}>
                     <div className="product-property-name col col-20">
                       { idx === 0 && (itemInfo.repos.length > 1 ? 'Repositories' : 'Repository') }
                     </div>
@@ -609,15 +604,19 @@ const ItemDialogContent = ({ itemInfo }) => {
                     </div>
                   }
               </div>
-            </div>
+            </div> }
   </Fragment>;
 
   return (
         <div className={classNames("modal-content", {'scroll-all-content': scrollAllContent})} >
+          <Head>
+            <title>{`${itemInfo.name} - ${settings.global.meta.title}`}</title>
+          </Head>
+
             <KeyHandler keyEventName="keydown" keyValue="ArrowUp" onKeyHandle={handleUp} />
             <KeyHandler keyEventName="keydown" keyValue="ArrowDown" onKeyHandle={handleDown} />
 
-            { !scrollAllContent && !isGoogle && productLogoAndTagsAndCharts }
+            { !scrollAllContent && !isGoogle() && productLogoAndTagsAndCharts }
 
             <div className="product-scroll" ref={(x) => productScrollEl = x }>
               { !scrollAllContent && productInfo }
@@ -630,7 +629,7 @@ const ItemDialogContent = ({ itemInfo }) => {
 
               { showTwitter && itemInfo.twitter && <TwitterTimeline twitter={itemInfo.twitter} />}
             </div>
-            { !scrollAllContent && isGoogle && productLogoAndTags }
+            { !scrollAllContent && isGoogle() && productLogoAndTags }
         </div>
   );
 }

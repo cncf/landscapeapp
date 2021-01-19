@@ -1,6 +1,5 @@
-import React from "react";
-import Fade from "@material-ui/core/Fade";
-import settings from 'project/settings.yml'
+import { useContext } from 'react'
+import settings from 'public/settings.json'
 import fields from "../../types/fields";
 import {
   largeItemHeight,
@@ -8,70 +7,91 @@ import {
   smallItemHeight,
   smallItemWidth
 } from "../../utils/landscapeCalculations";
+import LandscapeContext from '../../contexts/LandscapeContext'
+import assetPath from '../../utils/assetPath'
 
-const LargeItem = (({ item, onSelectItem }) => {
-  const relationInfo = fields.relation.values.find(({ id }) => id === item.relation);
+const LargeItem = ({ item, onClick }) => {
+  const relationInfo = fields.relation.valuesMap[item.relation]
   const color = relationInfo.big_picture_color;
   const label = relationInfo.big_picture_label;
   const textHeight = label ? 10 : 0
   const padding = 2
 
-  return <div style={{
-    cursor: 'pointer',
-    position: 'relative',
-    background: color,
-    visibility: item.isVisible ? 'visible' : 'hidden',
-    width: largeItemWidth,
-    height: largeItemHeight }}
-              onClick={ () => onSelectItem(item.id)}
-  >
-    <img loading="lazy" src={item.href} style={{
-      width: `calc(100% - ${2 * padding}px)`,
-      height: `calc(100% - ${2 * padding + textHeight}px)`,
-      padding: 5,
-      margin: `${padding}px ${padding}px 0 ${padding}px`,
-    }} data-href={item.id} alt={item.name} />
-    <div style={{position: 'absolute', bottom: 0, width: '100%', height: textHeight + padding, textAlign: 'center', verticalAlign: 'middle', background: color, color: 'white', fontSize: 6.7, lineHeight: '13px'}}>
-      {label}
-    </div>
+  return <div className="large-item" onClick={onClick}>
+    <style jsx>{`
+      .large-item {
+        cursor: pointer;
+        position: relative;
+        background: ${color};
+        visibility: ${item.isVisible ? 'visible' : 'hidden'};
+        width: ${largeItemWidth}px;
+        height: ${largeItemHeight}px;
+      }
+
+      .large-item img {
+        width: calc(100% - ${2 * padding}px);
+        height: calc(100% - ${2 * padding + textHeight}px);
+        padding: 5px;
+        margin: ${padding}px ${padding}px 0 ${padding}px;
+      }
+
+      .large-item .label {
+        position: absolute;
+        bottom: 0;
+        width: 100%;
+        height: ${textHeight + padding}px;
+        text-align: center;
+        vertical-align: middle;
+        background: ${color};
+        color: white;
+        font-size: 6.7px;
+        line-height: 13px;
+      }
+    `}</style>
+
+    <img loading="lazy" src={assetPath(item.href)} data-href={item.id} alt={item.name} />
+    <div className="label">{label}</div>
   </div>;
-})
+}
 
-const SmallItem = (({ item, onSelectItem }) => {
+const SmallItem = ({ item, onClick }) => {
   const isMember = item.category === settings.global.membership;
-  return <img style={{
-    cursor: 'pointer',
-    width: smallItemWidth,
-    height: smallItemHeight,
-    border: `1px solid ${isMember ? 'white' : 'grey'}`,
-    borderRadius: 2,
-    padding: 1,
-    visibility: item.isVisible ? 'visible' : 'hidden'
-  }}
-              data-href={item.id}
-              loading="lazy"
-              src={item.href}
-              onClick={() => onSelectItem(item.id)}
-              alt={item.name}
-  />
+  return <>
+    <style jsx>{`
+      img {
+        cursor: pointer;
+        width: ${smallItemWidth}px;
+        height: ${smallItemHeight}px;
+        border: 1px solid ${isMember ? 'white' : 'grey'};
+        border-radius: 2px;
+        padding: 1px;
+        visibility: ${item.isVisible ? 'visible' : 'hidden'};
+      }
+    `}</style>
+    <img data-href={item.id} loading="lazy" src={assetPath(item.href)} onClick={onClick} alt={item.name} />
+  </>
+}
 
-})
-
-export default props => {
+const Item = props => {
   const { isLarge, isVisible, category, oss, categoryAttrs } = props.item
   const isMember = category === settings.global.membership;
+  const { navigate } = useContext(LandscapeContext)
+  const onClick = _ => navigate({ selectedItemId: props.item.id })
+  const newProps = { ...props, onClick }
 
-  const style = {
-    display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'center',
-    gridColumnEnd: `span ${isLarge ? 2 : 1}`,
-    gridRowEnd: `span ${isLarge ? 2 : 1}`
-  }
+  return <div className={isMember || oss || categoryAttrs.isLarge ? 'oss' : 'nonoss'}>
+    <style jsx>{`
+      div {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        grid-column-end: span ${isLarge ? 2 : 1};
+        grid-row-end: span ${isLarge ? 2 : 1};
+      }
+    `}</style>
 
-  return <Fade timeout={1000} in={isVisible}>
-    <div className={isMember || oss || categoryAttrs.isLarge ? 'oss' : 'nonoss'} style={style}>
-      {isLarge ? <LargeItem {...props} isMember={isMember} /> : <SmallItem {...props} />}
-    </div>
-  </Fade>
+    {isLarge ? <LargeItem {...newProps} isMember={isMember} /> : <SmallItem {...newProps} />}
+  </div>
 }
+
+export default Item

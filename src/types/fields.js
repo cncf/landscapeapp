@@ -12,7 +12,7 @@
 import _ from 'lodash';
 import lookups from 'project/lookup.json';
 import unpack from '../utils/unpackArray';
-import settings from 'project/settings.yml';
+import settings from 'public/settings.json';
 import isParent from '../utils/isParent';
 
 const relationField = (function() {
@@ -202,16 +202,6 @@ const fields = {
     },
     values: [{id: true, label: 'Yes', url: 'yes'}, {id: false, label: 'No', url: 'no'}]
   },
-  googlebot: {
-    id: 'googlebot',
-    url: 'googlebot',
-    values: [{ id: true, url: 'yes' }, { id: false, url: 'no' }]
-  },
-  onlyModal: {
-    id: 'only-modal',
-    url: 'only-modal',
-    values: [{ id: true, url: 'yes' }, { id: false, url: 'no' }]
-  },
   parents: {
     id: 'parent',
     url: 'parent',
@@ -225,13 +215,13 @@ const fields = {
     id: 'language',
     url: 'language',
     values: lookups.languages.map( (id) => ({id: decodeURIComponent(id), url: id})).concat({
-      id: null,
+      id: false,
       url: 'no',
       label: 'No information'
     }),
     filterFn:  function(filter, value, record) {
-      if (filter === null) {
-        return record.language === null;
+      if (filter === false) {
+        return !record.github_data || record.github_data.languages.length === 0;
       }
       if (!filter) {
         return true;
@@ -265,6 +255,8 @@ _.each(fields, function(field, key) {
       groupingSortOrder: index
     });
   });
+
+  field.valuesMap = _.keyBy(field.values, 'id')
 });
 export default fields;
 
@@ -338,3 +330,39 @@ export function getGroupingValue({item, grouping, filters}) {
   const { id, groupFn } = fields[grouping];
   return groupFn ? groupFn({ item , filters }) : item[id];
 }
+
+export const sortOptions = [{
+  id: 'name',
+  direction: 'asc',
+  label: 'Alphabetical (a to z)',
+}, {
+  id: 'stars',
+  direction: 'desc',
+  label: 'Stars (high to low)',
+}, {
+  id: 'amount',
+  direction: 'desc',
+  label: 'Funding / Market Cap (high to low)',
+  disabled: settings.global.hide_funding_and_market_cap
+}, {
+  id: 'firstCommitDate',
+  direction: 'asc',
+  label: 'Project Started (earlier to later)',
+}, {
+  id: 'latestCommitDate',
+  direction: 'asc',
+  label: 'Latest Commit (earlier to later)',
+}, {
+  id: 'latestTweetDate',
+  direction: 'asc',
+  label: 'Latest Tweet (earlier to later)',
+}, {
+  id: 'contributorsCount',
+  direction: 'desc',
+  label: 'Contributors # (high to low)',
+}, {
+  id: 'commitsThisYear',
+  direction: 'desc',
+  label: 'Commits this year (high to low)',
+}].filter(field => !field.disabled)
+

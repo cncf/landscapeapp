@@ -1,10 +1,8 @@
 // locate zoom buttons
-import { connect } from 'react-redux';
-import { withState, pure } from 'recompose';
-import settings from 'project/settings.yml'
+import settings from 'public/settings.json'
 import qs from 'query-string';
 
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 
 const bird = ( <svg
   viewBox="0 0 300 244">
@@ -14,27 +12,27 @@ const bird = ( <svg
   </g>
 </svg>);
 
-const isPrerendering = navigator.userAgent === "ReactSnap";
+const TweetButton = function({cls}) {
+  const [ready, setReady] = useState(false)
 
-const TweetButton = function({url, cls}) {
-  if (isPrerendering) {
+  useEffect(() => {
+    setReady(true)
+  }, [])
+
+  if (!ready) {
     return null;
   }
-  const params = qs.stringify({
-    text: settings.twitter.text,
-    url: url
-  });
-  const twitterUrl = `https://twitter.com/intent/tweet?${params}`;
+
+  const { origin, pathname } = window.location
+  const url = `${origin}${pathname}`
+  const { text } = settings.twitter
+  const params = qs.stringify({ text, url })
+  const twitterUrl = `https://twitter.com/intent/tweet?${params}`
+
   return <div className={`tweet-button ${cls}`}>
     <a href={twitterUrl}>{bird}<span>Tweet</span></a>
-    <div className="tweet-count-wrapper"><div className="tweet-count">{window.tweets}</div></div>
+    <div className="tweet-count-wrapper"><div className="tweet-count">{process.env.tweets}</div></div>
   </div>
 }
 
-const mapStateToProps = (state) => ({
-  url: window.location.origin + state.router.location.pathname
-});
-const mapDispatchToProps = {};
-
-const TweetButtonContainer = connect(mapStateToProps, mapDispatchToProps)(TweetButton);
-export default TweetButtonContainer;
+export default TweetButton

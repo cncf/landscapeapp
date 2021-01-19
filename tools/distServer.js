@@ -1,27 +1,30 @@
-// This file configures a web server for testing the production build
-// on your local machine.
-import open from 'open';
 import path from 'path';
-import historyApiFallback from 'connect-history-api-fallback';
-import {chalkProcessing} from './chalkConfig';
-import { projectPath } from './settings';
-const app = require('connect')();
-const serveStatic = require('serve-static');
+import { existsSync, readFileSync } from 'fs'
+import express from 'express'
+import serveStatic from 'serve-static'
+import {chalkProcessing} from './chalkConfig'
+import { projectPath } from './settings'
+import compression from 'compression'
+
+const app = express()
+const distPath = path.resolve(projectPath, 'dist')
+
 console.log(chalkProcessing('running a dist server on http://localhost:4000 ...'));
-app.use(function (req, res, next) {
-  const contentPath = path.resolve(projectPath, 'dist', 'prerender.html');
-  if (req.url === '/' && require('fs').existsSync(contentPath)) {
-    console.info('Serving prerendered content for /');
-    const content = require('fs').readFileSync(contentPath, 'utf-8');
-    res.end(content);
+
+app.use(compression({ level: 6 }))
+app.use(serveStatic(distPath, { redirect: false, cacheControl: false }));
+app.use((req, res, next) => {
+  const urlPath = req.url.split('?')[0]
+  const filePath = `${projectPath}/dist${urlPath}.html`
+  const indexPath = `${projectPath}/dist${urlPath}/index.html`
+  if (existsSync(filePath)) {
+    res.end(readFileSync(filePath, 'utf-8'))
+  } else if(existsSync(indexPath)) {
+    res.end(readFileSync(indexPath, 'utf-8'))
   } else {
-    next();
+    next()
   }
 });
-app.use(serveStatic(path.resolve(projectPath, 'dist')));
-app.use(historyApiFallback());
-app.use(function(req, res) {
-  res.end(require('fs').readFileSync(path.resolve(projectPath, 'dist', 'index.html')));
-});
 app.listen(4000);
-open('http://localhost:4000');
+
+require('fs').writeFileSync('/tmp/ci.pid', process.pid.toString());

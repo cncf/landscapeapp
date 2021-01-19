@@ -9,7 +9,7 @@ import {
   subcategoryMargin
 } from "../../utils/landscapeCalculations";
 
-const VerticalCategory = ({header, subcategories, top, left, width, height, color, href, onSelectItem, fitWidth}) => {
+const VerticalCategory = ({header, subcategories, top, left, width, height, color, href, fitWidth}) => {
   const subcategoriesWithCalculations = calculateVerticalCategory({ subcategories, fitWidth, width })
   return <div>
     <div style={{
@@ -38,7 +38,7 @@ const VerticalCategory = ({header, subcategories, top, left, width, height, colo
             </div>
 
             <div style={{width, overflow: 'hidden', margin: '0 auto', ...style, ...extraStyle}}>
-              {subcategory.allItems.map(item => <Item item={item} onSelectItem={onSelectItem} key={item.name} fitWidth={fitWidth} />)}
+              {subcategory.allItems.map(item => <Item item={item} key={item.name} fitWidth={fitWidth} />)}
             </div>
           </div>
         })}

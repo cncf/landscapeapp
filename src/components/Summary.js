@@ -1,8 +1,10 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { pure } from 'recompose';
 import millify from 'millify';
 import formatNumber from '../utils/formatNumber';
 import _ from 'lodash';
+import LandscapeContext from '../contexts/LandscapeContext'
+import getSummary from '../utils/summaryCalculator'
 
 const getText = ({summary}) => {
   if (!summary.total) {
@@ -24,7 +26,10 @@ const getText = ({summary}) => {
   return `${startText} ${text}.`;
 }
 
-const Summary = ({ready, summary}) => {
+const Summary = _ => {
+  const { entries, params } = useContext(LandscapeContext)
+  const summary = getSummary(params, entries)
+
   return <h4 className="summary">{getText({summary})}</h4>;
 }
 export default pure(Summary);
