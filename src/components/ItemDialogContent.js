@@ -22,6 +22,7 @@ import assetPath from '../utils/assetPath'
 import { stringifyParams } from '../utils/routing'
 import LandscapeContext from '../contexts/LandscapeContext'
 import Head from 'next/head'
+import useWindowSize from '../utils/useWindowSize'
 
 const closeUrl = params => stringifyParams({ mainContentMode: 'card-mode', selectedItemId: null, ...params })
 
@@ -331,7 +332,7 @@ const ItemDialogContent = ({ itemInfo, loading }) => {
   const { params } = useContext(LandscapeContext)
   const { onlyModal } = params
   const [showAllRepos, setShowAllRepos] = useState(false)
-  const { innerWidth, innerHeight } = window;
+  const { innerWidth, innerHeight } = useWindowSize()
 
   const linkToOrganization = closeUrl({ grouping: 'organization', filters: {organization: itemInfo.organization}});
   const itemCategory = function(path) {
