@@ -18,6 +18,8 @@ if (!existsSync('./public/data')) {
   mkdirSync('./public/data')
 }
 
+writeFileSync(`./public/data/items.json`, JSON.stringify(items))
+
 items.forEach(item => {
   writeFileSync(`./public/data/${item.id}.json`, JSON.stringify(item))
 })
