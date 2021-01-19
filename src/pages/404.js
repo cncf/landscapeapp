@@ -17,9 +17,10 @@ const NotFoundPage = ({ setNotice }) => {
   const router = useRouter()
 
   useEffect(() => {
-    console.log("router", router.asPath)
+    const path = router.asPath.split('?')[0]
+    console.log("router", path)
     console.log("location", location.pathname)
-    const { redirectUrl, notice } = checkUrl(location.pathname)
+    const { redirectUrl, notice } = checkUrl(path)
     router.push(redirectUrl)
     return () => setNotice(notice)
   }, [])
