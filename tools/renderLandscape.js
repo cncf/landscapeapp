@@ -1,6 +1,7 @@
 import Promise from 'bluebird';
-import { projectPath, settings } from './settings';
+import { projectPath } from './settings';
 import { resolve } from 'path';
+import { landscapeSettingsList } from '../src/utils/landscapeSettings'
 import { calculateSize } from "../src/utils/landscapeCalculations";
 import { appUrl } from './distSettings'
 
@@ -13,8 +14,6 @@ async function main() {
   const time = new Date().toISOString().slice(0, 19) + 'Z';
   const version = `${time} ${sha}`;
   const puppeteer = require('puppeteer');
-
-  const landscapeSettingsList = Object.values(settings.big_picture)
 
   const sizes = landscapeSettingsList.reduce((acc, landscapeSettings) => {
     const { fullscreenWidth, fullscreenHeight } = calculateSize(landscapeSettings)
