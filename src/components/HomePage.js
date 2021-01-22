@@ -142,9 +142,13 @@ const HomePage = _ => {
           });
         }
       }
-      document.querySelector('body').classList.add('embed');
+
+      const { classList } = document.querySelector('body')
+      if (!classList.contains('embed')) {
+        classList.add('embed');
+      }
     }
-  }, [isEmbed])
+  }, [selectedItemId])
 
   if ((isGoogle() || onlyModal) && selectedItemId) {
     return <ItemDialog />;
