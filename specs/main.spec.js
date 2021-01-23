@@ -77,7 +77,6 @@ function mainTest() {
     describe("I visit a main page and have all required elements", () => {
       test('I can open a page', async function() {
         page = await makePage(appUrl + '/card-mode');
-        await page.waitFor('.cards-section');
         await page.waitForSelector('.cards-section');
       });
 
