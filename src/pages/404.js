@@ -4,12 +4,23 @@ import convertLegacyUrl from '../utils/convertLegacyUrl'
 
 const checkUrl = path => {
   if (path.indexOf('=') >= 0) {
-    const notice = { message: `URL deprecated: ${window.location.href}`, severity: 'warning' }
-    const redirectUrl = convertLegacyUrl(path)
-    return { redirectUrl, notice }
+    const redirectPath = convertLegacyUrl(path)
+    const redirectUrl = `${location.origin}${redirectPath}`
+    const message = <div>
+      <style jsx>{`
+        a {
+          color: white;
+          text-decoration: underline;
+        }
+      `}</style>
+      URL deprecated. The following URL should be used instead:
+      <div><a href={redirectUrl} target="_blank" rel="noopener noreferrer">{redirectUrl}</a></div>
+    </div>
+    const notice = { message, severity: 'warning' }
+    return { redirectPath, notice }
   } else {
-    const notice = { message: `URL not found: ${window.location.href}`, severity: 'error' }
-    return { redirectUrl: '/', notice }
+    const notice = { message: `URL not found: ${location.href}`, severity: 'error' }
+    return { redirectPath: '/', notice }
   }
 }
 
@@ -18,8 +29,8 @@ const NotFoundPage = ({ setNotice }) => {
 
   useEffect(() => {
     const path = router.asPath.split('?')[0]
-    const { redirectUrl, notice } = checkUrl(path)
-    router.push(redirectUrl)
+    const { redirectPath, notice } = checkUrl(path)
+    router.push(redirectPath)
     return () => setNotice(notice)
   }, [])
 

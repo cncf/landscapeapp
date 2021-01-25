@@ -9,6 +9,8 @@
   "scripts": {
     "autocrop-images": "babel-node tools/autocropImages",
     "dev": "yarn yaml2json && yarn prepare-landscape && next dev",
+    "open:src": "yarn dev",
+    "open:dist": "yarn stop-old-ci && babel-node tools/distServer.js",
     "get-iframe-resizer-path": "node -e \"console.info(require.resolve('iframe-resizer/js/iframeResizer.min.js'))\" ",
     "landscapes": "babel-node tools/landscapes.js",
     "lint": "esw webpack.config.* src tools --color",
