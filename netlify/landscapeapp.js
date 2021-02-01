@@ -286,6 +286,8 @@ EOSSH
   require('fs').appendFileSync("dist/robots.txt", "Disallow: /");
 
   runLocalWithoutErrors('cp -r dist netlify');
+  await runLocal('ls dist');
+  await runLocal('ls dist/netlify');
 
   if (process.env.BRANCH === 'master') {
     await runLocalWithoutErrors(`
