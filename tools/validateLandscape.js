@@ -32,7 +32,8 @@ async function main() {
     'open_source',
     'allow_duplicate_repo',
     'unnamed_organization',
-    'organization'
+    'organization',
+    'joined'
   ];
 
   const addKeyError = (title, key) => {
@@ -75,6 +76,18 @@ async function main() {
     }
   }
 
+  const validateJoined = ( { name, joined }) => {
+    if (joined === undefined) {
+      return
+    }
+
+    if (typeof joined !== 'string') {
+      errors.push(`item ${name} joined should be a string`)
+    } else if (!joined.match(/\d{4}-\d{2}-\d{2}/) || Number.isNaN(Date.parse(joined))) {
+      errors.push(`item ${name} joined '${joined}' is not a valid date`)
+    }
+  }
+
   function checkItem(item) {
     if (item.item !== null) {
       errors.push(`item ${item.name} does not have a "- item:" part `);
@@ -94,6 +107,7 @@ async function main() {
     validateTwitterUrl(item);
     validateRepos(item)
     validateGithubOrg(item)
+    validateJoined(item)
   }
 
   function checkCategoryEntry(item) {
