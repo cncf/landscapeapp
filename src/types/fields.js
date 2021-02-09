@@ -231,7 +231,18 @@ const fields = {
       }
       return !! _.find(record.github_data.languages.slice(0, 7), { name: filter })
     }
-  }
+  },
+  joined: {
+    id: 'joined',
+    label: 'Date Joined',
+    url: 'joined',
+    orderFn: function(x) {
+      if (x.value) {
+        return x.value;
+      }
+      return '1990-01-01';
+    }
+  },
 };
 _.each(fields, function(field, key) {
   field.id = key;
@@ -364,5 +375,10 @@ export const sortOptions = [{
   id: 'commitsThisYear',
   direction: 'desc',
   label: 'Commits this year (high to low)',
-}].filter(field => !field.disabled)
+},{
+  id: 'joined',
+  direction: 'desc',
+  label: 'Date Joined',
+  disabled: true
+}]
 
