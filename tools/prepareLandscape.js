@@ -20,12 +20,13 @@ writeFileSync('./public/settings.json', JSON.stringify(settings))
 
 if (!existsSync('./public/data')) {
   mkdirSync('./public/data/exports', { recursive: true })
+  mkdirSync('./public/data/items', { recursive: true })
 }
 
 writeFileSync(`./public/data/items.json`, JSON.stringify(items))
 
 items.forEach(item => {
-  writeFileSync(`./public/data/${item.id}.json`, JSON.stringify(item))
+  writeFileSync(`./public/data/items/${item.id}.json`, JSON.stringify(item))
 })
 
 const afterSettingsSaved = _ => {
