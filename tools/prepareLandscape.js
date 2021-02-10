@@ -2,11 +2,15 @@ import path from 'path'
 import { load  } from 'js-yaml'
 import { readFileSync, writeFileSync, mkdirSync, existsSync, rmdirSync } from 'fs'
 import { execSync } from 'child_process'
+import qs from 'query-string'
+import getGroupedItems, { flattenItems } from '../src/utils/itemsCalculator'
+import { parseParams } from '../src/utils/routing'
 
 const projectPath = process.env.PROJECT_PATH || path.resolve('../..')
 const settingsPath = path.resolve(projectPath, 'settings.yml')
 const settings = load(readFileSync(settingsPath))
 const items = require(path.resolve(projectPath, 'data.json'))
+const { website } = settings.global
 
 rmdirSync('public', { recursive: true })
 mkdirSync('public', { recursive: true })
@@ -15,7 +19,7 @@ execSync(`cp -r "${projectPath}/cached_logos" public/logos`)
 writeFileSync('./public/settings.json', JSON.stringify(settings))
 
 if (!existsSync('./public/data')) {
-  mkdirSync('./public/data')
+  mkdirSync('./public/data/exports', { recursive: true })
 }
 
 writeFileSync(`./public/data/items.json`, JSON.stringify(items))
@@ -28,6 +32,18 @@ const afterSettingsSaved = _ => {
   const prepareItemsForExport = require('./prepareItemsForExport').default
   const itemsForExport = prepareItemsForExport(items)
   writeFileSync(`./public/data/items-export.json`, JSON.stringify(itemsForExport))
+
+  Object.entries(settings.export || {}).forEach(([exportPath, query]) => {
+    const params = parseParams({ ...qs.parse(query) })
+    const groupedItems = getGroupedItems(params, items)
+      .map(group => {
+        const items = group.items.map(({ id, name, href }) => ({ id, name, logo: `${website}/${href}` }))
+        return { ...group, items }
+      })
+
+    const exportItems = params.grouping === 'no' ? flattenItems(groupedItems) : groupedItems
+    writeFileSync(`./public/data/exports/${exportPath}.json`, JSON.stringify(exportItems))
+  })
 }
 
 afterSettingsSaved()
