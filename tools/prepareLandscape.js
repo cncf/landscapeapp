@@ -3,8 +3,6 @@ import { load  } from 'js-yaml'
 import { readFileSync, writeFileSync, mkdirSync, existsSync, rmdirSync } from 'fs'
 import { execSync } from 'child_process'
 import qs from 'query-string'
-import getGroupedItems, { flattenItems } from '../src/utils/itemsCalculator'
-import { parseParams } from '../src/utils/routing'
 
 const projectPath = process.env.PROJECT_PATH || path.resolve('../..')
 const settingsPath = path.resolve(projectPath, 'settings.yml')
@@ -31,6 +29,10 @@ items.forEach(item => {
 
 const afterSettingsSaved = _ => {
   const prepareItemsForExport = require('./prepareItemsForExport').default
+  const { flattenItems } = require('../src/utils/itemsCalculator')
+  const getGroupedItems  = require('../src/utils/itemsCalculator').default
+  const { parseParams } = require('../src/utils/routing')
+
   const itemsForExport = prepareItemsForExport(items)
   writeFileSync(`./public/data/items-export.json`, JSON.stringify(itemsForExport))
 
