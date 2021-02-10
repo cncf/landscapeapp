@@ -285,9 +285,7 @@ EOSSH
   // comment below when about to test a googlebot rendering
   require('fs').appendFileSync("dist/robots.txt", "Disallow: /");
 
-  runLocalWithoutErrors('cp -r dist netlify');
-  await runLocal('ls dist');
-  await runLocal('ls dist/netlify');
+  await runLocalWithoutErrors('cp -r dist netlify');
 
   if (process.env.BRANCH === 'master') {
     await runLocalWithoutErrors(`
