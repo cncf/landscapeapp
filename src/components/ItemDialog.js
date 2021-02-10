@@ -8,7 +8,7 @@ import LandscapeContext from '../contexts/LandscapeContext'
 import useSWR from 'swr'
 import assetPath from '../utils/assetPath'
 
-const fetchItem = itemId => useSWR(itemId ? assetPath(`/data/${itemId}.json`) : null)
+const fetchItem = itemId => useSWR(itemId ? assetPath(`/data/items/${itemId}.json`) : null)
 
 const ItemDialog = _ => {
   const { navigate, params, entries } = useContext(LandscapeContext)
