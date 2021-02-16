@@ -27,9 +27,17 @@ If you get an error with the image that it has a PNG embeded, you will need to f
 
 ## SVGs Can't Include Text
 
-SVGs need to not rely on external fonts so that they will render correctly in any web browser, whether or not the correct fonts are installed. That means that all embedded text and tspan elements need to be converted to objects. Use of SVGs with embedded text will fail with an error. You can convert the SVGs as follows:
+SVGs need to not rely on external fonts so that they will render correctly in any web browser, whether or not the correct fonts are installed. That means that all embedded text and tspan elements need to be converted to objects. Use of SVGs with embedded text will fail with an error. You can convert the SVGs as using one of the tools below.
 
-Here are the steps in Adobe Illustrator to create convert text to objects:
+### CloudConvert
+
+1. Go to https://cloudconvert.com/, and click 'Select File' and select the SVG file.
+2. Next to 'Convert to', click the dropdown and select 'SVG'
+3. There will be wrench icon that appears. Click that.
+4. For the option 'Text To Path', select 'Yes' and then click 'Okay'
+5. Click 'Convert' to do the conversion and the download the converted file.
+
+### Adobe Illustrator
 
 1. Select all text
 1. With the text selected, go to Object > Expand in the top menu
@@ -38,7 +46,7 @@ Here are the steps in Adobe Illustrator to create convert text to objects:
 1. This will open a SVG options box, make sure to set Decimal to 5 (that is the highest possible, so to ensure that sufficient detail is preserved)
 1. Click Okay to export
 
-Here are the steps for Inkscape:
+### Inkscape
 
 1. Select the text
 1. Ctrl+K (path combine)
