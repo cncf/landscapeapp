@@ -63,6 +63,10 @@ landscapes:
     repo: openmainframeproject/omp-landscape
     hook: 5d6a6f73080982abfbd46290
   - landscape:
+    name: ospo
+    repo: todogroup/ospolandscape
+    hook: 6033b43a2572da242aee6a92
+  - landscape:
     name: presto
     repo: prestodb/presto-landscape
     hook: 5ecd46d9f5ea8819a9d610a6
