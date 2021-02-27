@@ -2,11 +2,78 @@
 
 [![CII Best Practices](https://bestpractices.coreinfrastructure.org/projects/2434/badge)](https://bestpractices.coreinfrastructure.org/projects/2434) [![npm version](https://img.shields.io/npm/v/interactive-landscape.svg)](https://www.npmjs.com/package/interactive-landscape) [![Dependency Status](https://img.shields.io/david/cncf/landscapeapp.svg?style=flat-square)](https://david-dm.org/cncf/landscapeapp) [![Netlify Status](https://api.netlify.com/api/v1/badges/50d760a8-5b21-4319-aa01-2ad54e453fd6/deploy-status)](https://app.netlify.com/sites/landscapeapp/deploys)
 
+- [Adding and managing landscape entries](#adding-and-managing-landscape-entries)
+  - [Logos](#logos)
+      - [SVGs Can't Include Text](#svgs-cant-include-text)
+        - [CloudConvert](#cloudconvert)
+        - [Adobe Illustrator](#adobe-illustrator)
+        - [Inkscape](#inkscape)
+    - [Crunchbase Requirement](#crunchbase-requirement)
+- [External Data](#external-data)
+- [Creating a New Landscape](#creating-a-new-landscape)
+  - [API Keys](#api-keys)
+  - [Installing Locally](#installing-locally)
+  - [Adding to a google search console](#adding-to-a-google-search-console)
+- [Vulnerability reporting](#vulnerability-reporting)
+- [Continuous Integration and NPM Publishing](#continuous-integration-and-npm-publishing)
+  - [Building an individual landscape](#building-an-individual-landscape)
+    - [Running "remotely" on our build server (fast and by default)](#running-remotely-on-our-build-server-fast-and-by-default)
+    - [Running "locally" on Netlify instances (if the remote server is broken)](#running-locally-on-netlify-instances-if-the-remote-server-is-broken)
+  - [Building this repo, `landscapeapp` on a Netlify](#building-this-repo-landscapeapp-on-a-netlify)
+  - [Setting up our build server to speed up Netlify builds](#setting-up-our-build-server-to-speed-up-netlify-builds)
+- [Keeping Project Up to Date](#keeping-project-up-to-date)
+- [Embed landscape in a web site](#embed-landscape-in-a-web-site)
+
+
 The landscapeapp is an upstream NPM [module](https://www.npmjs.com/package/interactive-landscape) that supports building interactive landscape websites such as the [CNCF Cloud Native Landscape](https://landscape.cncf.io) ([source](https://github.com/cncf/landscape)) and the [LF Artificial Intelligence Landscape](https://landscape.lfai.foundation) ([source](https://github.com/lfai/lfai-landscape)). The application is managed by [Dan Kohn](https://www.dankohn.com) of [CNCF](https://www.cncf.io) and is under active development by [Andrey Kozlov](https://github.com/ZeusTheTrueGod) (who did most of the development to date) and [Jordi Noguera](https://jordinl.com).
 
 In addition to creating fully interactive sites, the landscapeapp builds static images on each update. See examples in [ADOPTERS.md](ADOPTERS.md). All current [Linux Foundation](https://linuxfoundation.org) landscapes are listed in [landscapes.yml](landscapes.yml).
 
-## Images
+## Adding and managing landscape entries
+
+When creating new entries, the only 4 required fields are `name`, `homepage_url`, `logo`, and `crunchbase`. 
+
+```yaml
+- item:
+  name: <entry name>
+  homepage_url: <website for entry>
+  # url or filename if in hosted_logos folder. It's generally easier to have the landscape fetch an SVG by adding it's URL rather than saving it yourself in the hosted_logos folder, but if the logo changes at that URL the landscape build won't update automatically unless the logo file is deleted from cached_logos 
+  logo: <logo for entry> 
+  crunchbase: <twitter for entry>
+```  
+
+Additional keys that can be set are defined below:
+
+```yaml
+  # url for the Twitter account; Only add if the value in Crunchbase is incorrect
+  twitter: 
+  # url to the GitHub repo for the project; must start with https://github.com/. If you add a `repo_url` the card will be white instead of grey. 
+  repo_url: 
+  # url to the GitHub organization for the project; when using `repo_url`, `project_org` can be set pointing to an organization on GitHub, this will have the effect of pulling the information for all the repos belonging to that organization but using `repo_url` for information regarding license and best practices.
+  project_org: 
+  # additional GitHub repos for the project; must start with https://github.com/
+  additional_repos: 
+  # Stock Ticker for the organization of the project/entry; normally pulls from Crunchbase but can be overriden here. For delisted and many foreign countries, you'll need to add `stock_ticker` with the value to look up on Yahoo Finance to find the market cap. 
+  stock_ticker: 
+  # description of the entry; if not set pulls from the GitHub repo description
+  description: 
+  # default branch to reference if not the main one for the repo
+  branch: 
+  # if the entry is a project hosted by the project, let's you set the maturity level. Should be a value in relations.values.children.id in settings.yml
+  project: 
+  # url for the CII Best Practices entry if it's not directly mapped to the repo_url
+  url_for_bestpractices: 
+  # set to false if a repo_url is given but the entry is a project that isn't open source
+  open_source: 
+  # allows mulitple entries with the same repo_url; set for each instance
+  allow_duplicate_repo: 
+  # set to true if you are using an anonymous organization. You will also need anonymous_organization set in settings.yml
+  unnamed_organization: 
+```
+
+For some of the key, there is some guidance as listed below.
+
+### Logos
 
 The most challenging part of creating a new landscape is finding SVG images for all projects and companies. These landscapes represent a valuable resource to a community in assembling all related projects, creating a taxonomy, and providing the up-to-date logos, and unfortunately, there are no shortcuts.
 
@@ -25,11 +92,11 @@ If the project is hosted/sponsored by an organization but doesn't have a logo, b
 
 If you get an error with the image that it has a PNG embeded, you will need to find a different SVG that doesn't include a PNG or work with a graphic artist to rebuild the logo.
 
-## SVGs Can't Include Text
+#### SVGs Can't Include Text
 
 SVGs need to not rely on external fonts so that they will render correctly in any web browser, whether or not the correct fonts are installed. That means that all embedded text and tspan elements need to be converted to objects. Use of SVGs with embedded text will fail with an error. You can convert the SVGs as using one of the tools below.
 
-### CloudConvert
+##### CloudConvert
 
 1. Go to https://cloudconvert.com/, and click 'Select File' and select the SVG file.
 2. Next to 'Convert to', click the dropdown and select 'SVG'
@@ -37,7 +104,7 @@ SVGs need to not rely on external fonts so that they will render correctly in an
 4. For the option 'Text To Path', select 'Yes' and then click 'Okay'
 5. Click 'Convert' to do the conversion and the download the converted file.
 
-### Adobe Illustrator
+##### Adobe Illustrator
 
 1. Select all text
 1. With the text selected, go to Object > Expand in the top menu
@@ -46,18 +113,14 @@ SVGs need to not rely on external fonts so that they will render correctly in an
 1. This will open a SVG options box, make sure to set Decimal to 5 (that is the highest possible, so to ensure that sufficient detail is preserved)
 1. Click Okay to export
 
-### Inkscape
+##### Inkscape
 
 1. Select the text
 1. Ctrl+K (path combine)
 1. Ctrl+J (dynamic offset)
 1. Save
 
-## New Entries
-
-When creating new entries, the only 4 required fields are `name`, `homepage_url`, `logo`, and `crunchbase`. It's generally easier to have the landscape fetch an SVG by adding it's URL rather than saving it yourself in the `hosted_logos` folder. Only add a `twitter` if the value in Crunchbase is incorrect. For delisted and many foreign countries, you'll need to add `stock_ticker` with the value to look up on Yahoo Finance to find the market cap. If you add a `repo_url` the card will be white instead of grey. Additonally, when using `repo_url`, `project_org` can be set pointing to an organization on GitHub, this will have the effect of pulling the information for all the repos belonging to that organization but using `repo_url` for information regarding license and best practices.
-
-## Crunchbase Requirement
+### Crunchbase Requirement
 
 We require all landscape entries to include a [Crunchbase](https://www.crunchbase.com/) url. We use the Crunchbase API to fetch the backing organization and headquarters location and (if they exist), Twitter, LinkedIn, funding, parent organization, and stock ticker. For open source, non-affiliated projects, we will just create a nonprofit organization representing the project (if one doesn't already exist), and set the location to the lead developer.
 
@@ -87,7 +150,7 @@ If you want to create an interactive landscape for your project or organization:
 7. Run `y reset-tweet-count` to start the count of tweets mentioning your landscape at zero.
 8. Edit [landscapes.yml](landscapes.yml) to add your project.
 
-## API Keys
+### API Keys
 
 You want to add the following to your `~/.bash_profile`. If you're with the LF, ask Dan Kohn on CNCF [Slack](https://slack.cncf.io) for the Crunchbase and Twitter keys.
 
@@ -99,7 +162,7 @@ export TWITTER_KEYS=keys-here
 export GITHUB_KEY=key-here
 ```
 
-## Installing Locally
+### Installing Locally
 
 You can administer a landscape without ever needing to install the software locally. However, a local install is helpful for rapid development, as it reduces the 5 minute build time on Netlify to 10 seconds or less locally. In particular, you want a local install when you're reconfiguring the layout. We recommend installing one or more landscapes as sibling directories to the landscapeapp. Then, you want to install the npm modules for landscapeapp but not for any of the landscapes. Here are the [install](INSTALL.md) directions.
 
@@ -128,7 +191,7 @@ alias a='for lpath in /Users/your-username/dev/{landscapeapp,cdf-landscape,lfai-
 ```
 Reload with `. ~/.bash_profile` and then use `yo`, `yf`, etc. to run functions on the landscape in your landscape directory. `a` will do a git pull on each of the project directories you specify and install any necessary node modules for landscapeapp.
 
-## Adding to a google search console
+### Adding to a google search console
   Go to the google search console, add a new property, enter the url of the
   given project, for example, https://landscape.cncf.io
 
@@ -267,7 +330,7 @@ is usually done:
    a red color, i.e. have a major update. They may require to implement certain
    changes in our code.
 
-# Embed landscape in a web site
+## Embed landscape in a web site
 
 You can embed the landscape in a website in a few different ways...
 
