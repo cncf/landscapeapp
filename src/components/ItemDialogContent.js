@@ -519,6 +519,12 @@ const ItemDialogContent = ({ itemInfo, loading }) => {
                     <OutboundLink to={itemInfo.homepage_url}>{shortenUrl(itemInfo.homepage_url)}</OutboundLink>
                   </div>
                 </div>
+                { itemInfo.other_repo_url && <div className="product-property row">
+                  <div className="product-property-name col col-20">Repo</div>
+                  <div className="product-property-value col col-80">
+                    <OutboundLink to={itemInfo.other_repo_url}>{shortenUrl(itemInfo.other_repo_url)}</OutboundLink>
+                  </div>
+                </div>}
                 { itemInfo.repos && itemInfo.repos.map(({ url, stars }, idx) => {
                   return <div className={`product-property row ${ idx < 3 || showAllRepos ? '' : 'hidden' }`} key={idx}>
                     <div className="product-property-name col col-20">

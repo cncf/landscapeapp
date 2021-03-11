@@ -33,7 +33,8 @@ async function main() {
     'allow_duplicate_repo',
     'unnamed_organization',
     'organization',
-    'joined'
+    'joined',
+    'other_repo_url'
   ];
 
   const addKeyError = (title, key) => {
@@ -51,11 +52,13 @@ async function main() {
     }
   }
 
-  const validateRepos = ({ name, repo_url, branch, additional_repos }) => {
+  const validateRepos = ({ name, repo_url, other_repo_url, branch, additional_repos }) => {
     const repos = [repo_url ? { repo_url, branch } : null, ...(additional_repos || [])].filter(_ => _)
     for (const { repo_url, branch, ...rest } of repos) {
       if (!repo_url) {
         errors.push(`item ${name} must have repo_url set`)
+      } else if (repo_url && other_repo_url) {
+        errors.push(`item ${name} cannot have repo_url and other_repo_url set simultaneously`)
       } else if (!repo_url.match(new RegExp('^https://github\.com/[^/]+/[^/]+$'))) {
         errors.push(`item ${name} has an invalid repo ${repo_url}`)
       }
