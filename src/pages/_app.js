@@ -32,6 +32,26 @@ export default function App({ Component, pageProps }) {
   const ready = !isBrowser() || router.isReady
 
   useEffect(() => {
+    window.addEventListener('message', function(event) {
+      var data = event.data;
+      if (data.type === "css") {
+        var styles = data.css;
+        var el = document.createElement('style');
+        el.type = 'text/css';
+        if (el.styleSheet) {
+          el.styleSheet.cssText = styles;
+        } else {
+          el.appendChild(document.createTextNode(styles));
+        }
+        document.getElementsByTagName("head")[0].appendChild(el);
+      }
+      if (data.type === "js") {
+        eval(data.js);
+      }
+    });
+  }, []);
+
+  useEffect(() => {
     ReactGA.initialize(process.env.GA)
     ReactGA.pageview(router.asPath)
     const handleRouteChange = url => ReactGA.pageview(url)
