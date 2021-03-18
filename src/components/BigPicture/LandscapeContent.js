@@ -14,12 +14,10 @@ const extractKeys = (obj, keys) => {
 }
 
 const LandscapeContent = ({zoom, padding = 10 }) => {
-  const { navigate, groupedItems, landscapeSettings, width, height } = useContext(LandscapeContext)
-  const switchToLandscape = mainContentMode => navigate({ mainContentMode })
+  const { groupedItems, landscapeSettings, width, height } = useContext(LandscapeContext)
   const elements = landscapeSettings.elements.map(element => {
     if (element.type === 'LandscapeLink') {
-      return <OtherLandscapeLink {..._.pick(element, ['width','height','top','left','color', 'layout', 'title', 'url']) }
-                                 onClick={() => switchToLandscape(element.url)}
+      return <OtherLandscapeLink {..._.pick(element, ['width','height','top','left','color', 'layout', 'title', 'url', 'image']) }
                                  key={element.url}
       />
     }
