@@ -12,6 +12,7 @@ import { useRouter } from 'next/router'
 import isBrowser from '../utils/isBrowser'
 import useCurrentDevice from '../utils/useCurrentDevice'
 import assetPath from '../utils/assetPath'
+import { parse } from 'query-string'
 
 const Notice = ({ onClose, notice }) => {
   const anchorOrigin = { vertical: 'top', horizontal: 'center' }
@@ -49,6 +50,14 @@ export default function App({ Component, pageProps }) {
         eval(data.js);
       }
     });
+    const params = parse(window.location.search);
+    if (params.css) {
+      var element = document.createElement("link");
+      element.setAttribute("rel", "stylesheet");
+      element.setAttribute("type", "text/css");
+      element.setAttribute("href", params.css);
+      document.getElementsByTagName("head")[0].appendChild(element);
+    }
   }, []);
 
   useEffect(() => {
