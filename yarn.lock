@@ -3105,7 +3105,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"chokidar@npm:3.5.1":
+"chokidar@npm:3.5.1, chokidar@npm:^3.5.1":
   version: 3.5.1
   resolution: "chokidar@npm:3.5.1"
   dependencies:
@@ -6165,6 +6165,7 @@ fsevents@~2.3.1:
     change-case: ^4.1.2
     chart.js: ^2.9.4
     chartjs-adapter-date-fns: 1.0.0
+    chokidar: ^3.5.1
     classnames: 2.2.6
     colors: 1.4.0
     compression: ^1.7.4
