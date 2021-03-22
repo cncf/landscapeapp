@@ -4,41 +4,70 @@ import assetPath from '../../utils/assetPath'
 import OutboundLink from '../OutboundLink'
 import InternalLink from '../InternalLink'
 import { stringifyParams } from '../../utils/routing'
+import { categoryBorder, categoryTitleHeight, subcategoryTitleHeight } from '../../utils/landscapeCalculations'
 
-const ImageLink = ({ url, children }) => {
+const CardLink = ({ url, children }) => {
   const Component = url.indexOf('http') === 0 ? OutboundLink : InternalLink
   const to = url.indexOf('http') === 0 ? url : stringifyParams({ mainContentMode: url })
 
-  return <Component to={to}>{children}</Component>
+  return <Component to={to} style={{ display: 'flex', flexDirection: 'column' }}>{children}</Component>
 }
 
-const OtherLandscapeLink = function({top, left, height, width, color, onClick, title, image, url, layout}) {
+const OtherLandscapeLink = function({top, left, height, width, color, title, image, url, layout}) {
   const imageSrc = image || assetPath(`/images/${url}_preview.png`)
   if (layout === 'category') {
     return <div style={{
       position: 'absolute', top, left, height, width, background: color,
       cursor: 'pointer',
       boxShadow: `0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19)`,
-      display: 'flex',
-      flexDirection: 'column',
-      padding: 1
-    }} onClick={onClick} >
-      <div style={{ width, height: 30, lineHeight: '25px', textAlign: 'center', color: 'white', fontSize: 12}}>{title}</div>
-      <div style={{ flex: 1, background: 'white'}}>
-        <ImageLink url={url}>
-          <img loading="lazy" src={imageSrc} style={{ width: width - 10, height: height - 40, margin: 5,
-            objectFit: 'contain', backgroundPosition: 'center', backgroundRepeat: 'no-repeat' }} alt={title} />
-        </ImageLink>
-      </div>
+      padding: 1,
+      display: 'flex'
+    }}>
+      <CardLink url={url}>
+        <div style={{ width, height: 30, lineHeight: '28px', textAlign: 'center', color: 'white', fontSize: 12}}>{title}</div>
+        <div style={{ flex: 1, background: 'white', position: 'relative', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+            <img loading="lazy" src={imageSrc} style={{ width: width - 12, height: height - 42,
+              objectFit: 'contain', backgroundPosition: 'center', backgroundRepeat: 'no-repeat' }} alt={title} />
+        </div>
+      </CardLink>
   </div>
   }
   if (layout === 'subcategory') {
-    return <div style={{position: 'absolute', top, left, height, width, cursor: 'pointer' }} onClick={onClick}>
-      <div style={{ width, top: 0, height: 20, lineHeight: '20px', textAlign: 'center', color: 'white', fontSize: 11}}>{title}</div>
-      <ImageLink url={url}>
-        <img loading="lazy" src={imageSrc} alt={title}
-             style={{ width: width, height: height - 20, objectFit: 'contain', backgroundPosition: 'center', backgroundRepeat: 'no-repeat' }} />
-      </ImageLink>
+    return <div style={{ width, left, height, top, position: 'absolute' }}>
+      <CardLink url={url}>
+        <div
+          style={{
+            position: 'absolute',
+            background: color,
+            top: subcategoryTitleHeight,
+            bottom: 0,
+            left: 0,
+            right: 0,
+            boxShadow: '0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.2)',
+            padding: categoryBorder,
+            display: 'flex'
+          }}
+        >
+          <div style={{
+            width: categoryTitleHeight,
+            writingMode: 'vertical-rl',
+            transform: 'rotate(180deg)',
+            textAlign: 'center',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            fontSize: 12,
+            lineHeight: '13px',
+            color: 'white'
+          }}>
+            {title}
+          </div>
+          <div style={{ display: 'flex', flex: 1, background: 'white', justifyContent: 'center', alignItems: 'center' }}>
+            <img loading="lazy" src={imageSrc} alt={title}
+                 style={{ width: width - 42, height: height - 32, objectFit: 'contain', backgroundPosition: 'center', backgroundRepeat: 'no-repeat' }} />
+          </div>
+        </div>
+      </CardLink>
     </div>;
   }
 }
