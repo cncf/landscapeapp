@@ -141,7 +141,7 @@ const MainContent = () => {
   }, [asPath])
 
   const handler = selectedItemId => {
-    if ((currentDevice.mobile() || window.innerWidth < 768) && isEmbed) {
+    if (currentDevice.mobile() && isEmbed) {
       const url = stringifyParams({ ...params, selectedItemId })
       window.open(url,'_blank')
     } else {
