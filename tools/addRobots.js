@@ -1,8 +1,7 @@
-import branch from 'git-branch';
-const currentBranch = require('process').env['BRANCH'] ||  branch.sync();
-const isMainBranch = currentBranch === 'master';
-import {projectPath, settings }  from './settings'
-import path from 'path';
+import { writeFileSync } from 'fs'
+import { settings }  from './settings'
+
+const isMainBranch = process.env.PULL_REQUEST !== 'true'
 
 const content = isMainBranch ?
   `
@@ -18,4 +17,4 @@ Disallow: /
   `
 ;
 
-require('fs').writeFileSync('out/robots.txt', content);
+writeFileSync('out/robots.txt', content);

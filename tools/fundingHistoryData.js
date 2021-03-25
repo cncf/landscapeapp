@@ -3,6 +3,7 @@ import _ from 'lodash';
 import saneName from '../src/utils/saneName'
 import { settings, projectPath } from './settings'
 import path from 'path';
+import { execSync } from 'child_process'
 const base = settings.global.website;
 // sync should go from a proper place!!!
 require('child_process').execSync(`cd '${projectPath}'; git remote rm github 2>/dev/null || true`);
@@ -20,7 +21,8 @@ function getFileFromHistory(days) {
 }
 
 function getCommitFromHistory(days) {
-  const commit = require('child_process').execSync(`cd '${projectPath}'; git log --format='%H' -n 1 --before='{${days} days ago}' --author='CNCF-bot' github/master`, {
+  const defaultBranch = execSync(`cd '${projectPath}'; git remote show github | grep HEAD`).toString().trim().split(' ').pop()
+  const commit = execSync(`cd '${projectPath}'; git log --format='%H' -n 1 --before='{${days} days ago}' --author='CNCF-bot' github/${defaultBranch}`, {
     maxBuffer: 100 * 1024 * 1024
   }).toString('utf-8').trim();
   return commit;
