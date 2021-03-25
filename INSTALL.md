@@ -14,7 +14,7 @@ Please follow the [directions](https://github.com/cncf/landscapeapp#installing-l
 
 ## Updating data
 
-After making your changes to `landscape.yml`, run `npm run fetch` to fetch any needed data and generate [processed_landscape.yml](https://github.com/cncf/landscape/blob/HEAD/processed_landscape.yml) and [data.json](https://github.com/cncf/landscapeapp/blob/HEAD/src/data.json).
+After making your changes to `landscape.yml`, run `npm run fetch` to fetch any needed data and generate [processed_landscape.yml](https://github.com/cncf/landscape/blob/HEAD/processed_landscape.yml) and [data/items.json](https://landscape.cncf.io/data/items.json).
 
 `npm run fetch` runs in 4 modes of increasingly aggressive downloading, with a default to easy. Reading data from the cache (meaning from processed_landscape.yml) means that no new data is fetched if the project/product already exists. The modes are:
 
