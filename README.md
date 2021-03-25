@@ -199,8 +199,8 @@ Reload with `. ~/.bash_profile` and then use `yo`, `yf`, etc. to run functions o
 
   Next, google will want to verify that it is your site, thus you need to choose
   an `html tag verification` option and copy a secret code from it and put it to
-  the `settings.yml` of a given landscape project. Then commit the change to the master branch and
-  wait till Netlify deploys the master branch. The key is named `google_site_veryfication` and it is
+  the `settings.yml` of a given landscape project. Then commit the change to the default branch and
+  wait till Netlify deploys the default branch. The key is named `google_site_veryfication` and it is
   somewhere around line 14 in settings.yml. After netlify succesfully deploys
   that dashbaord, verify the html tag in a google console. Do not forget to add
   Dan@linuxfoundation.org as someone who has a full access from a `Settings`
@@ -229,7 +229,7 @@ Note, that script `netlify/landscape.js` from THIS repo is used to run an
 individual build on every landscape.
 
 A file netlify.toml specifies which commands are used and how to make a build.
-We start from the `netlify` folder and then download the landscape.js script from the master branch
+We start from the `netlify` folder and then download the landscape.js script from the default branch
 of a landscapeapp repo and then run a `node netlify/landscape.js`
 script because otherwise, Netlify will run an unnecessary `npm install`
 In order to make a build as fast as possible, we designed a way to run it on our
@@ -289,7 +289,7 @@ Without BUILD_SERVER variable, the following steps are done, from a file netlify
   Then we use rsync to send the current checkout of a repo to our remote server
   Then for every individual landscape, we run a `build.sh` file on a remote
   server, in each own docker container for every landscape. That is done in parallel. The file `build.sh` checks out the
-  master branch of a given landscape and then runs `npm run build` with a
+  default branch of a given landscape and then runs `npm run build` with a
   PROJECT_PATH pointed to the given landscape
 
   When all builds had been finished, the output is returned to the `dist/${landscape.name}`

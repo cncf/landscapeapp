@@ -3,12 +3,7 @@ landscapes:
   # name: how we name a landscape project, used on a build server for logs and settings
   # repo: a github repo for a specific landscape
   # netlify: full | skip - do we build it on a netlify build or not
-  # hook: - id for a build hook, so it will be triggered after a master build
-  - landscape:
-    name: aswf
-    repo: AcademySoftwareFoundation/aswf-landscape
-    hook: 5d5c7ca6dc2c51cf02381f63
-    required: true
+  # hook: - id for a build hook, so it will be triggered after a default branch build
   - landscape:
     name: cncf
     repo: cncf/landscape
@@ -78,3 +73,8 @@ landscapes:
     name: ucf
     repo: ucfoundation/ucf-landscape
     hook: 5d96662e28b476477790dd8a
+  - landscape:
+    name: landscape-test
+    repo: cncf/landscape-test
+    hook: 605c69b9fb83c8ad42c15812
+    required: true

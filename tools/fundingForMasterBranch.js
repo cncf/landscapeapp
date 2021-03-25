@@ -1,3 +1,3 @@
-//TODO: if we have a non master branch just exit
+//TODO: if we have a non default branch just exit
 require('./fundingHistoryData');
 require('./fundingHistoryPage');

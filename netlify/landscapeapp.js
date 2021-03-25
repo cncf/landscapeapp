@@ -196,7 +196,7 @@ EOSSH
       `. ~/.nvm/nvm.sh`,
       `nvm use`,
       `export NODE_OPTIONS="--unhandled-rejections=strict"`,
-      `bash build.sh ${landscape.repo} ${landscape.name} master`,
+      `bash build.sh ${landscape.repo} ${landscape.name}`,
       `cp -r /opt/repo/${landscape.name}/dist /dist`
     ].join(' && ');
     const nodeModulesFolder = `${folder}_node`;

@@ -145,7 +145,7 @@
 
       repoEl.innerHTML = linkTo(`https://github.com/${repo}`, repo)
 
-      fetchFile(`${repo}/master/settings.yml`)
+      fetchFile(`${repo}/HEAD/settings.yml`)
         .then(async settings => {
           const { company_url, short_name, short_domain, website } = jsyaml.load(settings).global
           organizationEl.innerHTML = imageLinkTo(company_url, `${website}/images/right-logo.svg`, short_name)
@@ -160,14 +160,14 @@
           publishedEl.innerHTML = publishedAt ? dateTimeFormat.format(new Date(publishedAt)) : 'UNKNOWN'
         })
 
-      fetchFile(`${repo}/master/README.md`)
+      fetchFile(`${repo}/HEAD/README.md`)
         .then(async readme => {
           const statusUrl = readme.match(/https:\/\/api.netlify.com\/api\/v1\/badges[^)]*/)[0]
           const deploysUrl = readme.match(/https:\/\/app.netlify.com\/sites[^)]*/)[0]
           statusEl.innerHTML = imageLinkTo(deploysUrl, statusUrl, "Netlify Status")
         })
 
-      fetchFile(`${repo}/master/processed_landscape.yml`)
+      fetchFile(`${repo}/HEAD/processed_landscape.yml`)
         .then(processedLandscape => {
           const { updated_at, twitter_options } = jsyaml.load(processedLandscape)
           const updatedAt = updated_at ? new Date(updated_at) : null
@@ -183,7 +183,7 @@
         })
     }
 
-    fetchFile("cncf/landscapeapp/master/landscapes.yml")
+    fetchFile("cncf/landscapeapp/HEAD/landscapes.yml")
           .then(function(data) {
             const content = jsyaml.load(data);
             reportsIp = content.ip;
