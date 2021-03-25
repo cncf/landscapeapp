@@ -50,10 +50,6 @@ landscapes:
     hook: 5ec5145565b543b0b01aa9d7
     required: true
   - landscape:
-    name: openjsf
-    repo: openjs-foundation/openjsf-landscape
-    hook: 5de319ba9e61a5ddc3207294
-  - landscape:
     name: omp
     repo: openmainframeproject/omp-landscape
     hook: 5d6a6f73080982abfbd46290
@@ -73,8 +69,3 @@ landscapes:
     name: ucf
     repo: ucfoundation/ucf-landscape
     hook: 5d96662e28b476477790dd8a
-  - landscape:
-    name: landscape-test
-    repo: cncf/landscape-test
-    hook: 605c69b9fb83c8ad42c15812
-    required: true
