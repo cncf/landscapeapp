@@ -156,7 +156,7 @@
               </div>
               ${imageLinkTo(website, `${website}/images/landscape_preview.png`, short_domain)}`
           const landscapeIndex = await (await fetch(website)).text()
-          const publishedAt = landscapeIndex.match(/lastUpdated\s*=\s*"([^"]*)"/)[1]
+          const publishedAt = landscapeIndex.match(/Updated:\s*([^"]*)/)[1]
           publishedEl.innerHTML = publishedAt ? dateTimeFormat.format(new Date(publishedAt)) : 'UNKNOWN'
         })
 
