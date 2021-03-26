@@ -62,7 +62,7 @@ export async function fetchGithubEntries({cache, preferCache}) {
       reporter.write('.');
       return { ...cachedEntry, cached: true };
     }
-    if (preferCache && repo.parent && cache[repo.parent]) {
+    if (repo.url.indexOf('https://github.com') === -1 || (preferCache && repo.parent && cache[repo.parent])) {
       return {}
     }
     debug(`No cache found for ${repo.url} ${repo.branch}`);

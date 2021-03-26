@@ -241,7 +241,10 @@ async function main() {
         delete node.github_data.contributors_list
         delete node.github_data.cached
         delete node.github_data.repos
+      } else if (node.repo_url) {
+        node.repos = [node.repo_url, ...(node.additional_repos || []).map(({ repo_url }) => repo_url)].map(url => ({ url }))
       }
+
       //github start dates
       var dateEntry = _.clone(_.find(startDateEntries, {url: node.project_org || node.repo_url }));
       if (dateEntry) {
