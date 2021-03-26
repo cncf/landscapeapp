@@ -519,12 +519,6 @@ const ItemDialogContent = ({ itemInfo, loading }) => {
                     <OutboundLink to={itemInfo.homepage_url}>{shortenUrl(itemInfo.homepage_url)}</OutboundLink>
                   </div>
                 </div>
-                { itemInfo.other_repo_url && <div className="product-property row">
-                  <div className="product-property-name col col-20">Repo</div>
-                  <div className="product-property-value col col-80">
-                    <OutboundLink to={itemInfo.other_repo_url}>{shortenUrl(itemInfo.other_repo_url)}</OutboundLink>
-                  </div>
-                </div>}
                 { itemInfo.repos && itemInfo.repos.map(({ url, stars }, idx) => {
                   return <div className={`product-property row ${ idx < 3 || showAllRepos ? '' : 'hidden' }`} key={idx}>
                     <div className="product-property-name col col-20">
@@ -535,14 +529,14 @@ const ItemDialogContent = ({ itemInfo, loading }) => {
 
                       { idx === 0 && itemInfo.repos.length > 1 && <span className="primary-repo">(primary)</span> }
 
-                      <span className="product-repo-stars">
+                      { itemInfo.github_data && <span className="product-repo-stars">
                         <SvgIcon style={{ color: '#7b7b7b' }}>{iconGithub}</SvgIcon>
                         <StarIcon style={{ color: '#7b7b7b' }}/>{formatNumber(stars)}
-                      </span>
+                      </span> }
                     </div>
                   </div>
                 })}
-                {itemInfo.repos && itemInfo.repos.length > 1 &&
+                {itemInfo.repos && (itemInfo.repos.length > 3 || (itemInfo.repos.length > 1 && itemInfo.github_data)) &&
                 <div className="product-property row">
                   <div className="product-property-name col col-20"></div>
                   <div className="product-property-value product-repo col col-80">
@@ -551,14 +545,16 @@ const ItemDialogContent = ({ itemInfo, loading }) => {
                         <a href="#" onClick={() => setShowAllRepos(!showAllRepos)}>{ showAllRepos ? 'less...' : 'more...' }</a>
                       </span>
                     }
-                    <span className="product-repo-stars-label">
-                      total:
-                    </span>
-                    <span className="product-repo-stars">
-                      <SvgIcon style={{color: '#7b7b7b'}}>{iconGithub}</SvgIcon>
-                      <StarIcon style={{color: '#7b7b7b'}} />
-                      {itemInfo.starsAsText}
-                    </span>
+                    { itemInfo.github_data && <>
+                      <span className="product-repo-stars-label">
+                        total:
+                      </span>
+                      <span className="product-repo-stars">
+                        <SvgIcon style={{color: '#7b7b7b'}}>{iconGithub}</SvgIcon>
+                        <StarIcon style={{color: '#7b7b7b'}} />
+                        {itemInfo.starsAsText}
+                      </span>
+                    </>}
                   </div>
                 </div>
                 }

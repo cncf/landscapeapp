@@ -28,7 +28,7 @@ export async function fetchStartDateEntries({cache, preferCache}) {
       reporter.write('.');
       return { ...cachedEntry, cached: true }
     }
-    if (preferCache && repo.parent && cache[repo.parent]) {
+    if (repo.url.indexOf('https://github.com') === -1 || (preferCache && repo.parent && cache[repo.parent])) {
       return {}
     }
     debug(`Cache not found for ${repo.url}`);
