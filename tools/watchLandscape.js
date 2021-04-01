@@ -5,6 +5,7 @@ import { watch } from 'chokidar'
 const projectPath = process.env.PROJECT_PATH || path.resolve('../..')
 
 let ready = false
+let changedAt = null
 
 const prepareLandscape = () => {
   return new Promise((resolve, reject) => {
@@ -17,16 +18,26 @@ const prepareLandscape = () => {
         resolve()
       } else {
         console.log('FAILED To Prepare Landscape!')
-        reject()
+        resolve()
       }
     })
   })
 }
 
-watch(projectPath, { ignored: `${projectPath}/\.*` })
-  .on('all', _ => {
-    if (ready) {
+const onChange = ts => {
+  changedAt = ts
+  setTimeout(() => {
+    if (ts === changedAt) {
       prepareLandscape()
+    }
+  }, 100)
+}
+
+watch([`${projectPath}/*.yml`, `${projectPath}/cached_logos`])
+  .on('all', (event, path) => {
+    if (ready) {
+      console.log(event, path)
+      onChange(new Date())
     }
   })
   .on('ready', _ => {
