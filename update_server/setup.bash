@@ -9,8 +9,8 @@ which git || (
 )
 
 echo '
-0 0 * * * root bash -l -c "rm -rf /landscapeapp || true; git clone https://github.com/cncf/landscapeapp /landscapeapp; cd /landscapeapp; bash landscapes.sh"
-55 23 * * * root bash -l -c "sudo reboot"
+0 5 * * * root bash -l -c "rm -rf /landscapeapp || true; git clone https://github.com/cncf/landscapeapp /landscapeapp; cd /landscapeapp; bash landscapes.sh"
+55 4 * * * root bash -l -c "sudo reboot"
 ' > /etc/cron.d/updater
 ls "landscapes.env" 2>/dev/null || (
     echo "Creating a file with private settings, /root/landscapes.env,
