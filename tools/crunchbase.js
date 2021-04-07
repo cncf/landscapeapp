@@ -127,7 +127,7 @@ const fetchCrunchbaseOrganization = async id => {
     path: `entities/organizations/${id}`,
     params:{
       'card_ids': 'headquarters_address,acquiree_acquisitions,parent_organization,ipos',
-      'field_ids': 'num_employees_enum,linkedin,twitter,name,website,short_description,funding_total,stock_symbol,stock_exchange_symbol'
+      'field_ids': 'num_employees_enum,linkedin,twitter,name,website,short_description,funding_total,stock_symbol,stock_exchange_symbol,categories,company_type'
     }
   });
 }
@@ -193,7 +193,6 @@ export async function fetchData(name) {
     return 'no address';
   }
 
-  const employee_parts = (result.properties.num_employees_enum || '').split('_');
   return {
     name: result.properties.name,
     description: result.properties.short_description,
@@ -209,7 +208,9 @@ export async function fetchData(name) {
     parents: parentLinks,
     ticker: stockSymbol,
     funding: totalFunding,
-    stockExchange: result.properties.stock_exchange_symbol || null
+    stockExchange: result.properties.stock_exchange_symbol || null,
+    company_type: _.startCase(result.properties.company_type),
+    industries: (result.properties.categories || []).map(category => category.value).sort()
   }
 }
 
