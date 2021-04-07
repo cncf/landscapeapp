@@ -8,6 +8,7 @@ import ProjectFilterContainer from './ProjectFilterContainer';
 import LicenseFilterContainer from './LicenseFilterContainer';
 import OrganizationFilterContainer from './OrganizationFilterContainer';
 import HeadquartersFilterContainer from './HeadquartersFilterContainer';
+import ArrayFilterContainer from './ArrayFilterContainer';
 import fields from '../types/fields';
 import CategoryFilter from './CategoryFilter'
 const Filters = () => {
@@ -47,8 +48,12 @@ const Filters = () => {
         </FormControl>
       </FormGroup>
 
-
-
-    </div>;
+      <FormGroup row>
+        <FormControl component="fieldset">
+          <FormLabel component="legend">{fields.companyType.label}</FormLabel>
+          <ArrayFilterContainer name="companyType" />
+        </FormControl>
+      </FormGroup>
+  </div>;
 }
 export default pure(Filters);

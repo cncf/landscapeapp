@@ -19,12 +19,15 @@ const getPrerenderProps = params => {
     }, {})
 
     const languages = ((project.github_data || {}).languages || []).map(({ name }) => ({ name }))
-    const parents = (project.crunchbaseData || {}).parents || []
+    const crunchbaseData = project.crunchbaseData || {}
+
+    const parents = crunchbaseData.parents || []
+    const company_type = crunchbaseData.company_type || ''
 
     return {
       ...entry,
       github_data: { languages },
-      crunchbaseData: { parents }
+      crunchbaseData: { parents, company_type }
     }
   })
 

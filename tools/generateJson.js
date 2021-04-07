@@ -670,6 +670,15 @@ async function main () {
     return _.orderBy(_.uniq(languages));
   }
 
+  const generateCompanyTypes = () => {
+    const companyTypes = [...new Set(itemsWithExtraFields.map(({ crunchbaseData }) => (crunchbaseData || {}).company_type))]
+
+    return companyTypes
+      .filter(_ => _)
+      .sort()
+      .map(companyType => ({ id: companyType, url: saneName(companyType)}))
+  }
+
   const lookups = {
     organization: pack(extractOptions('organization')),
     landscape: pack(generateLandscapeHierarchy()),
@@ -677,6 +686,7 @@ async function main () {
     headquarters: pack(generateHeadquarters()),
     crunchbaseSlugs: generateCrunchbaseSlugs(),
     languages: generateLanguages(),
+    companyTypes: pack(generateCompanyTypes())
   }
 
   require('fs').writeFileSync(`${projectPath}/data.json`, JSON.stringify(itemsWithExtraFields, null, 2));
