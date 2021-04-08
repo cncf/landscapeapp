@@ -54,6 +54,13 @@ const Filters = () => {
           <ArrayFilterContainer name="companyType" />
         </FormControl>
       </FormGroup>
+
+    <FormGroup row>
+      <FormControl component="fieldset">
+        <FormLabel component="legend">{fields.industries.label}</FormLabel>
+        <ArrayFilterContainer name="industries" />
+      </FormControl>
+    </FormGroup>
   </div>;
 }
 export default pure(Filters);

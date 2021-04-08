@@ -679,6 +679,15 @@ async function main () {
       .map(companyType => ({ id: companyType, url: saneName(companyType)}))
   }
 
+  const generateIndustries = () => {
+    const allIndustries = itemsWithExtraFields.flatMap(({ crunchbaseData }) => (crunchbaseData || {}).industries || [])
+    const industries = [...new Set(allIndustries)]
+
+    return industries
+      .sort((str, other) => str.toLowerCase().localeCompare(other.toLowerCase()))
+      .map(industry => ({ id: industry, url: saneName(industry)}))
+  }
+
   const lookups = {
     organization: pack(extractOptions('organization')),
     landscape: pack(generateLandscapeHierarchy()),
@@ -686,7 +695,8 @@ async function main () {
     headquarters: pack(generateHeadquarters()),
     crunchbaseSlugs: generateCrunchbaseSlugs(),
     languages: generateLanguages(),
-    companyTypes: pack(generateCompanyTypes())
+    companyTypes: pack(generateCompanyTypes()),
+    industries: pack(generateIndustries())
   }
 
   require('fs').writeFileSync(`${projectPath}/data.json`, JSON.stringify(itemsWithExtraFields, null, 2));

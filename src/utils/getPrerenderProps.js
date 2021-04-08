@@ -22,12 +22,13 @@ const getPrerenderProps = params => {
     const crunchbaseData = project.crunchbaseData || {}
 
     const parents = crunchbaseData.parents || []
+    const industries = crunchbaseData.industries || []
     const company_type = crunchbaseData.company_type || ''
 
     return {
       ...entry,
       github_data: { languages },
-      crunchbaseData: { parents, company_type }
+      crunchbaseData: { parents, industries, company_type }
     }
   })
 

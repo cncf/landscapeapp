@@ -129,6 +129,20 @@ const fields = {
       return companyType && filter.includes(companyType)
     }
   },
+  industries: {
+    id: 'industries',
+    label: 'Industries',
+    isArray: true,
+    values: [].concat(unpack(lookups.industries) || []),
+    filterFn: function(filter, _, record) {
+      if (!filter || filter.length === 0) {
+        return true;
+      }
+
+      const industries = (record.crunchbaseData || {}).industries || []
+      return industries.length > 0 && !!industries.find(industry => filter.includes(industry));
+    }
+  },
   landscape: {
     id: 'landscape',
     url: 'category',
