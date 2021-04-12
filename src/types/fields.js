@@ -139,7 +139,7 @@ const fields = {
         return true;
       }
 
-      const industries = (record.crunchbaseData || {}).industries || []
+      const { industries } = record
       return industries.length > 0 && !!industries.find(industry => filter.includes(industry));
     }
   },

@@ -7,7 +7,7 @@ const getPrerenderProps = params => {
     const keys = [
       'name', 'stars', 'organization', 'path', 'landscape', 'category', 'oss', 'href', 'id',
       'flatName', 'member', 'relation', 'project', 'isSubsidiaryProject', 'amount', 'amountKind',
-      'headquarters', 'license', 'bestPracticeBadgeId', 'enduser', 'joined'
+      'headquarters', 'license', 'bestPracticeBadgeId', 'enduser', 'joined', 'industries'
     ]
 
     const entry = keys.reduce((hash, key) => {
@@ -22,13 +22,12 @@ const getPrerenderProps = params => {
     const crunchbaseData = project.crunchbaseData || {}
 
     const parents = crunchbaseData.parents || []
-    const industries = crunchbaseData.industries || []
     const company_type = crunchbaseData.company_type || ''
 
     return {
       ...entry,
       github_data: { languages },
-      crunchbaseData: { parents, industries, company_type }
+      crunchbaseData: { parents, company_type }
     }
   })
 
