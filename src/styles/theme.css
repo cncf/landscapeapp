@@ -89,6 +89,13 @@ a {text-decoration: none; transition: all 0.5s; color: $blue;
   }
 }
 
+.embed {
+  .summary,
+  .disclaimer {
+    display: none;
+  }
+}
+
 .fullscreen {
   .summary,
   .disclaimer {
@@ -629,7 +636,7 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='rgb(27,68,108
   }
 }
 
-html:not(.big-picture) .right-buttons {
+.app:not(.big-picture) .right-buttons {
   .zoom-buttons,
   .fullscreen-button {
     display: none;
@@ -649,7 +656,7 @@ html:not(.big-picture) .right-buttons {
 }
 
 @media (max-width: $sm-screen) {
-  html:not(.big-picture) .right-buttons {
+  .app:not(.big-picture) .right-buttons {
     position: fixed;
     top: initial;
     bottom: 0;

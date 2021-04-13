@@ -73,11 +73,6 @@ const HomePage = _ => {
 
   useEffect(() => {
     const { classList } = document.querySelector('html')
-    isBigPicture ? classList.add('big-picture') : classList.remove('big-picture')
-  }, [isBigPicture])
-
-  useEffect(() => {
-    const { classList } = document.querySelector('html')
     isFullscreen ? classList.add('fullscreen') : classList.remove('fullscreen')
   }, [isFullscreen])
 
@@ -155,7 +150,7 @@ const HomePage = _ => {
 
   return <>
     {selectedItemId && <ItemDialog/>}
-    <div className={classNames('app',{'filters-opened' : sidebarVisible })}>
+    <div className={classNames('app',{'filters-opened' : sidebarVisible, 'big-picture': isBigPicture })}>
       <div style={{marginTop: isIphone && selectedItemId ? -lastScrollPosition : 0}} className={classNames({"iphone-scroller": isIphone && selectedItemId}, 'main-parent')} >
         { !isEmbed && !isFullscreen && <>
           <Header />
@@ -177,12 +172,12 @@ const HomePage = _ => {
         {sidebarVisible && <div className="app-overlay" onClick={hideSidebar}></div>}
 
         <div className={classNames('main', {'embed': isEmbed})}>
-          { !isEmbed && <div className="disclaimer">
+          <div className="disclaimer">
             <span  dangerouslySetInnerHTML={{__html: settings.home.header}} />
             Please <OutboundLink to={`https://github.com/${settings.global.repo}`}>open</OutboundLink> a pull request to
             correct any issues. Greyed logos are not open source. Last Updated: {process.env.lastUpdated}
-          </div> }
-          { !isEmbed && <Summary /> }
+          </div>
+          <Summary />
 
           <div className="cards-section">
             <SwitchButton />
