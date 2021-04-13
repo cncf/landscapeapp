@@ -1,11 +1,15 @@
+import { readFileSync } from 'fs'
 import Promise from 'bluebird';
-import { reportFatalErrors, hasFatalErrors } from './fatalErrors';
+import { load } from 'js-yaml'
+import { hasFatalErrors, reportFatalErrors } from './fatalErrors';
 import { projectPath, settings } from './settings';
 import errorsReporter from './reporter';
 const { addFatal } = errorsReporter('general');
 
 console.info('processed', projectPath);
-const source = require('js-yaml').load(require('fs').readFileSync(`${projectPath}/processed_landscape.yml`));
+
+const processedLandscape = load(readFileSync(`${projectPath}/processed_landscape.yml`))
+const { crunchbase_overrides = {} } = load(readFileSync(`${projectPath}/landscape.yml`))
 const traverse = require('traverse');
 const _ = require('lodash');
 const { emojify } = require('node-emoji')
@@ -48,7 +52,7 @@ async function getMembers() {
   }
   console.info(`Fetching members from ${membershipCategoryName} category`);
   const directResult = {};
-  const tree = traverse(source);
+  const tree = traverse(processedLandscape);
   console.info('Processing the tree');
   tree.map(function(node) {
     if (node && node.category === null && node.name === settings.global.membership) {
@@ -124,7 +128,7 @@ async function main () {
   };
 
   const items = [];
-  const tree = traverse(source);
+  const tree = traverse(processedLandscape);
   tree.map(function(node) {
     if (node && node.item === null) {
       const parts = this.parents.filter(function(p) {
@@ -232,6 +236,7 @@ async function main () {
         href: `logos/${(node.image_data || {}).fileName}`,
         bestPracticeBadgeId: (node.best_practice_data || {}).badge,
         bestPracticePercentage: (node.best_practice_data || {}).percentage,
+        industries: (crunchbase_overrides[node.crunchbase] || {}).industries || (node.crunchbase_data || {}).industries || [],
         enduser: isEndUser()
       });
     }
@@ -501,7 +506,7 @@ async function main () {
       });
       // a first parent of a given item which has a given membership
       if (parentWithMembership) {
-        const tree = traverse(source);
+        const tree = traverse(processedLandscape);
         let parentName;
         tree.map(function(node) {
           if (node && node.crunchbase === parentWithMembership) {
@@ -670,6 +675,23 @@ async function main () {
     return _.orderBy(_.uniq(languages));
   }
 
+  const generateCompanyTypes = () => {
+    const companyTypes = [...new Set(itemsWithExtraFields.map(({ crunchbaseData }) => (crunchbaseData || {}).company_type))]
+
+    return companyTypes
+      .filter(_ => _)
+      .sort()
+      .map(companyType => ({ id: companyType, url: saneName(companyType)}))
+  }
+
+  const generateIndustries = () => {
+    const industries = [...new Set(itemsWithExtraFields.flatMap(({ industries }) => industries))]
+
+    return industries
+      .sort((str, other) => str.toLowerCase().localeCompare(other.toLowerCase()))
+      .map(industry => ({ id: industry, url: saneName(industry)}))
+  }
+
   const lookups = {
     organization: pack(extractOptions('organization')),
     landscape: pack(generateLandscapeHierarchy()),
@@ -677,6 +699,8 @@ async function main () {
     headquarters: pack(generateHeadquarters()),
     crunchbaseSlugs: generateCrunchbaseSlugs(),
     languages: generateLanguages(),
+    companyTypes: pack(generateCompanyTypes()),
+    industries: pack(generateIndustries())
   }
 
   require('fs').writeFileSync(`${projectPath}/data.json`, JSON.stringify(itemsWithExtraFields, null, 2));

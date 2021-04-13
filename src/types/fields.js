@@ -114,6 +114,35 @@ const fields = {
       return processValuesBeforeLoading({options: fields.headquarters.values, values: values});
     }
   },
+  companyType: {
+    id: 'companyType',
+    url: 'company-type',
+    label: 'Company Type',
+    isArray: true,
+    values: [].concat(unpack(lookups.companyTypes) || []),
+    filterFn: function(filter, _, record) {
+      if (!filter || filter.length === 0) {
+        return true;
+      }
+
+      const companyType = (record.crunchbaseData || {}).company_type
+      return companyType && filter.includes(companyType)
+    }
+  },
+  industries: {
+    id: 'industries',
+    label: 'Industries',
+    isArray: true,
+    values: [].concat(unpack(lookups.industries) || []),
+    filterFn: function(filter, _, record) {
+      if (!filter || filter.length === 0) {
+        return true;
+      }
+
+      const { industries } = record
+      return industries.length > 0 && !!industries.find(industry => filter.includes(industry));
+    }
+  },
   landscape: {
     id: 'landscape',
     url: 'category',
