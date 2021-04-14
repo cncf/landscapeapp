@@ -78,6 +78,15 @@ export default function App({ Component, pageProps }) {
   }, []);
 
   useEffect(() => {
+    const el = document.querySelector('.landscape-wrapper');
+    if (el) {
+      var height = el.parentElement.clientHeight + window.innerHeight -
+        document.body.offsetHeight;
+      el.style.height = height + "px";
+    }
+  }, [])
+
+  useEffect(() => {
     function updateOrientation() {
       if (window.matchMedia("(orientation: portrait)").matches) {
         document.querySelector('html').classList.remove('landscape');
