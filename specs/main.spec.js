@@ -58,7 +58,8 @@ function embedTest() {
       });
 
       test('Do not see a content from a main mode', async function() {
-        await expect(frame).not.toHaveElement(`//h1[text() = '${settings.test.header}']`);
+        const title = await frame.$('h1', { text: settings.test.header })
+        expect(await title.boundingBox()).toBe(null)
       });
 
       // ensure that it is clickable
