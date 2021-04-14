@@ -52,8 +52,9 @@ const Fullscreen = _ => {
 
   useEffect(() => {
     calculateZoom()
-    window.addEventListener("resize", calculateZoom)
-    return () => window.removeEventListener("resize", calculateZoom)
+    const onResize = _ => calculateZoom()
+    window.addEventListener('resize', onResize)
+    return () => window.removeEventListener('resize', onResize)
   }, [true]);
 
   useEffect(() => {
