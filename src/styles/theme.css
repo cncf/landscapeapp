@@ -10,6 +10,10 @@ html, body, main, #__next, .app {
   height: 100%;
 }
 
+html.embed {
+  height: auto;
+}
+
 html {-webkit-text-size-adjust: 100%;}
 
 body.popup {background-color:transparent !important; }
@@ -60,7 +64,7 @@ a {text-decoration: none; transition: all 0.5s; color: $blue;
 }
 
 .disclaimer {
-  margin: -30px 5px 14px;
+  margin: -45px 5px 14px;
   color: $navy;
   font-size: 0.8em;
   padding-right: 220px;
@@ -105,9 +109,8 @@ a {text-decoration: none; transition: all 0.5s; color: $blue;
 
 .header_container {
   z-index: 2;
-  height: 70px;
-
-  @media (max-width: $lg-screen) {height: 60px;}
+  height: 55px;
+  flex: none;
 
   .header {
     padding: 20px;
@@ -258,7 +261,7 @@ a {text-decoration: none; transition: all 0.5s; color: $blue;
   flex: 1;
 }
 
-body.embed {
+html.embed body {
   background-color: inherit;
 }
 

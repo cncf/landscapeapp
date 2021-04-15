@@ -135,7 +135,7 @@ const HomePage = _ => {
         }
       }
 
-      const { classList } = document.querySelector('body')
+      const { classList } = document.documentElement
       if (!classList.contains('embed')) {
         classList.add('embed');
       }
