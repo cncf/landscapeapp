@@ -6,17 +6,15 @@ $md-screen: 768px;
 $lg-screen: 992px;
 $xl-screen: 1200px;
 
-@media (max-width: $lg-screen) {
-  body, html {
-    overflow: auto;
-    max-height: 100%;
-  }
+html, body, main, #__next, .app {
+  height: 100%;
+}
+
+html.embed {
+  height: auto;
 }
 
 html {-webkit-text-size-adjust: 100%;}
-.big-picture .zoomed-in {
-  overflow: scroll;
-}
 
 body.popup {background-color:transparent !important; }
 body.popup .MuiBackdrop-root { display: none }
@@ -66,7 +64,7 @@ a {text-decoration: none; transition: all 0.5s; color: $blue;
 }
 
 .disclaimer {
-  margin: -60px 5px 14px;
+  margin: -45px 5px 14px;
   color: $navy;
   font-size: 0.8em;
   padding-right: 220px;
@@ -95,6 +93,13 @@ a {text-decoration: none; transition: all 0.5s; color: $blue;
   }
 }
 
+.embed {
+  .summary,
+  .disclaimer {
+    display: none;
+  }
+}
+
 .fullscreen {
   .summary,
   .disclaimer {
@@ -104,9 +109,8 @@ a {text-decoration: none; transition: all 0.5s; color: $blue;
 
 .header_container {
   z-index: 2;
-  height: 70px;
-
-  @media (max-width: $lg-screen) {height: 60px;}
+  height: 55px;
+  flex: none;
 
   .header {
     padding: 20px;
@@ -118,6 +122,9 @@ a {text-decoration: none; transition: all 0.5s; color: $blue;
       height: 70px;
       z-index: 2;
       cursor: pointer;
+      @media (max-width: $lg-screen) {
+        position: absolute;
+      }
       a {
         width: 100%;
         height: 100%;
@@ -150,11 +157,6 @@ a {text-decoration: none; transition: all 0.5s; color: $blue;
     }
     .info {margin-top: -32px; padding-left: 20px; height: auto;}
   }
-}
-
-.zoomed-in .header_container .header .landscape-logo,
-.zoomed-in .header_container .header .landscapeapp-logo {
-  position: absolute;
 }
 
 .sidebar {width: 205px; position: fixed; top: 60px; left: 0; bottom: 0; overflow: hidden; z-index: 6;
@@ -222,7 +224,7 @@ a {text-decoration: none; transition: all 0.5s; color: $blue;
   @media (max-width: $lg-screen) {
     .sidebar-show {
       display: block;
-      position: fixed;
+      position: absolute;
       top: 11px;
       left: 0;
       z-index: 3;
@@ -230,15 +232,17 @@ a {text-decoration: none; transition: all 0.5s; color: $blue;
   }
 }
 
-.zoomed-in .app .sidebar-show {
-  position: absolute;
-}
-
 .app-overlay {opacity: 0; position: fixed; top: 0; left: 0; bottom: 0; width: 100%; background: #000; margin-left: -100%;
   transition: opacity 0.3s, margin 0s; transition-delay: 0s, 0.3s; z-index: 4;
 }
 .filters-opened {overflow: hidden;
   .app-overlay {margin: 0; opacity: 0.4; transition-delay: 0s, 0s;}
+}
+
+.main-parent {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
 }
 
 .main {margin-left: 205px; padding: 10px;
@@ -250,7 +254,14 @@ a {text-decoration: none; transition: all 0.5s; color: $blue;
     min-height: 500px;
   }
 }
-body.embed {
+
+.main, .cards-section {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+
+html.embed body {
   background-color: inherit;
 }
 
@@ -505,19 +516,19 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='rgb(27,68,108
   @media (max-width: $sm-screen) {padding: 6px; min-width: 80px; }
 }
 
-.landscape-wrapper {
+.landscape-flex {
   position: relative;
-  background: #1b446c;
-  width: 100%;
-  height: 100%;
-  overflow: scroll;
-  -webkit-overflow-scrolling: touch;
+  flex: 1;
 }
 
-.zoomed-in .landscape-wrapper {
-  display: inline-block;
-  width: auto;
-  overflow: visible;
+.landscape-wrapper {
+  position: absolute;
+  background: #1b446c;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  overflow: scroll;
 }
 
 .cards-section {
@@ -628,7 +639,7 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='rgb(27,68,108
   }
 }
 
-html:not(.big-picture) .right-buttons {
+.app:not(.big-picture) .right-buttons {
   .zoom-buttons,
   .fullscreen-button {
     display: none;
@@ -645,20 +656,10 @@ html:not(.big-picture) .right-buttons {
     bottom: -35px;
     width: 100%;
   }
-
-  .zoomed-in .right-buttons > div {
-    float: left;
-    margin-left: 0;
-    margin-right: 2px;
-  }
-
-  .zoomed-in .right-buttons .tweet-button {
-    margin-left: 7px;
-  }
 }
 
 @media (max-width: $sm-screen) {
-  html:not(.big-picture) .right-buttons {
+  .app:not(.big-picture) .right-buttons {
     position: fixed;
     top: initial;
     bottom: 0;
