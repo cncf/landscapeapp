@@ -37,7 +37,7 @@ const afterSettingsSaved = _ => {
   writeFileSync(`./public/data/items-export.json`, JSON.stringify(itemsForExport))
 
   Object.entries(settings.export || {}).forEach(([exportPath, query]) => {
-    const params = parseParams({ ...qs.parse(query) })
+    const params = parseParams({ mainContentMode: 'card-mode', ...qs.parse(query) })
     const groupedItems = getGroupedItems(params, items)
       .map(group => {
         const items = group.items.map(({ id, name, href }) => ({ id, name, logo: `${website}/${href}` }))
