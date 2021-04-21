@@ -6,8 +6,8 @@ import { parseParams } from '../../utils/routing'
 
 const { website } = global
 
-export default function handler(req, res) {
-  const params = parseParams({ mainContentMode: 'card-mode', ...req.query })
+const processRequest = query => {
+  const params = parseParams({ mainContentMode: 'card-mode', ...query })
 
   const groupedItems = getGroupedItems(params, items)
     .map(group => {
@@ -15,6 +15,19 @@ export default function handler(req, res) {
       return { ...group, items }
     })
 
-  const body = params.grouping === 'no' ? flattenItems(groupedItems) : groupedItems
+  return params.grouping === 'no' ? flattenItems(groupedItems) : groupedItems
+}
+
+// Next.js function
+export default function nextHandler(req, res) {
+  const body = processRequest(req.query)
+
   res.status(200).json(body)
+}
+
+// Netlify function
+export async function handler(event, context) {
+  const body = processRequest(event.queryStringParameters)
+  const headers = { 'Content-Type': 'application/json' }
+  return { statusCode: 200, body: JSON.stringify(body), headers }
 }
