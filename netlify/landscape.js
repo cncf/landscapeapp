@@ -135,6 +135,7 @@ const makeLocalBuild = async function() {
       await runLocalWithoutErrors(`
           rm -rf netlify/dist || true
           cp -r dist netlify
+          mv netlify/dist/functions netlify/functions
         `);
       process.exit(0);
     } else {
@@ -323,7 +324,7 @@ const makeRemoteBuildWithCache = async function() {
   console.info(await runLocalWithoutErrors(
     `
       mkdir -p distRemote
-      rsync -az -e "ssh -i /tmp/buildbot  -o StrictHostKeyChecking=no " ${remote}:/root/builds/${outputFolder}/dist/* distRemote
+      rsync -az --chmod=a+r -p -e "ssh -i /tmp/buildbot  -o StrictHostKeyChecking=no " ${remote}:/root/builds/${outputFolder}/dist/* distRemote
     `
   ));
   await runRemoteWithoutErrors(
@@ -357,6 +358,7 @@ const makeRemoteBuildWithCache = async function() {
       mkdir -p dist
       cp -r distRemote/* netlify/dist
       cp -r distRemote/* dist
+      mv netlify/dist/functions netlify/functions
     `);
     process.exit(0);
   }

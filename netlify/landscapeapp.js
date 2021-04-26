@@ -142,7 +142,7 @@ EOSSH
 
   await runLocalWithoutErrors(`
       rm -rf dist || true
-      mkdir -p dist
+      mkdir -p dist netlify/functions
     `);
   await runRemoteWithoutErrors(`mkdir -p /root/builds`);
   await runRemoteWithoutErrors(`docker pull ${dockerImage}`);
@@ -247,9 +247,11 @@ EOSSH
 
     await runLocal(
       `
-      rsync -az -e "ssh -i /tmp/buildbot  -o StrictHostKeyChecking=no " ${remote}:/root/builds/${outputFolder}/dist/${landscape.name}/ dist/${landscape.name}
+      rsync -az --chmod=a+r -p -e "ssh -i /tmp/buildbot  -o StrictHostKeyChecking=no " ${remote}:/root/builds/${outputFolder}/dist/${landscape.name}/ dist/${landscape.name}
       `
     );
+
+    await runLocal(`mv dist/${landscape.name}/functions/* netlify/functions`)
 
     await runRemote(
       `
