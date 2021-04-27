@@ -38,7 +38,7 @@
     "watch-landscape": "babel-node tools/watchLandscape.js",
     "setup-robots": "babel-node tools/sitemap && babel-node tools/addRobots",
     "quick-build": "yarn build-next && yarn setup-robots && yarn copy-dist ",
-    "build": "((yarn fetch && yarn prepare-landscape && yarn build-next && yarn setup-robots && yarn remove-dist && yarn copy-dist && yarn export-functions && yarn stop-old-ci && yarn start-ci && babel-node tools/parallelWithRetry integration-test check-landscape render-landscape funding) || (yarn stop-old-ci && false)) && babel-node tools/parallelWithRetry integration-test && yarn stop-ci",
+    "build": "yarn fetch && yarn prepare-landscape && yarn build-next && yarn setup-robots && yarn remove-dist && yarn copy-dist && yarn export-functions && yarn stop-old-ci && yarn start-ci && babel-node tools/parallelWithRetry integration-test check-landscape render-landscape funding",
     "build-next": "next build && next export",
     "export-functions": "babel-node ./tools/exportFunctions",
     "show-report": "open dist/report.html",

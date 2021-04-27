@@ -1,4 +1,5 @@
-const path = require('path');
+const path = require('path')
+const { readdirSync, writeFileSync } = require('fs')
 const generateIndex = require('./generateIndex')
 const run = function(x) {
   console.info(require('child_process').execSync(x).toString())
@@ -280,8 +281,14 @@ EOSSH
   require('fs').writeFileSync('dist/robots.html', robots);
   require('fs').copyFileSync(path.resolve(__dirname, '..', '_headers'), 'dist/_headers')
 
-  const redirects = landscapesInfo.landscapes.map(({ name }) => `/${name}/* /${name}/404.html 404`).join('\n')
-  require('fs').writeFileSync('dist/_redirects', redirects)
+  const notFoundRedirects = landscapesInfo.landscapes.map(({ name }) => `/${name}/* /${name}/404.html 404`)
+  const functionRedirects = readdirSync('netlify/functions').map(file => {
+    const prefixedName = file.replace(/\..*/, '')
+    const [landscape, functionName] = prefixedName.split('--')
+    const newPath = `/${landscape}/api/${functionName}`
+    return `${newPath} /.netlify/functions/${prefixedName} 200`
+  })
+  writeFileSync('dist/_redirects', [...functionRedirects, ...notFoundRedirects].join('\n'))
 
   require('fs').writeFileSync("dist/robots.txt", "User-agent: *");
   // comment below when about to test a googlebot rendering
