@@ -545,16 +545,6 @@ const ItemDialogContent = ({ itemInfo, loading }) => {
                         <a href="#" onClick={() => setShowAllRepos(!showAllRepos)}>{ showAllRepos ? 'less...' : 'more...' }</a>
                       </span>
                     }
-                    { itemInfo.github_data && <>
-                      <span className="product-repo-stars-label">
-                        total:
-                      </span>
-                      <span className="product-repo-stars">
-                        <SvgIcon style={{color: '#7b7b7b'}}>{iconGithub}</SvgIcon>
-                        <StarIcon style={{color: '#7b7b7b'}} />
-                        {itemInfo.starsAsText}
-                      </span>
-                    </>}
                   </div>
                 </div>
                 }
