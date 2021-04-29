@@ -11,7 +11,7 @@ const items = require(path.resolve(projectPath, 'data.json'))
 const { website } = settings.global
 
 rmSync('public', { recursive: true, force: true })
-rmSync('public', { recursive: true, force: true })
+mkdirSync('public', { recursive: true })
 execSync(`cp -r "${projectPath}/images" public`)
 execSync(`cp -r "${projectPath}/cached_logos" public/logos`)
 writeFileSync('./public/settings.json', JSON.stringify(settings))
