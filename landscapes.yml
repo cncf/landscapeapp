@@ -7,7 +7,7 @@ landscapes:
   - landscape:
     name: aswf-landscape
     repo: AcademySoftwareFoundation/aswf-landscape
-    hook: h60648e5b74c76017210a2f53
+    hook: 5d5c7ca6dc2c51cf02381f63
     required: true
   - landscape:
     name: cncf
