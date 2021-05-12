@@ -8,7 +8,6 @@ import Filters from './Filters';
 import Grouping from './Grouping';
 import Sorting from './Sorting';
 import Ad from './Ad';
-import AutoSizer from './CustomAutoSizer';
 import OutboundLink from './OutboundLink';
 import TweetButton from './TweetButton';
 import Footer from './Footer';
@@ -30,7 +29,6 @@ import SwitchButton from './BigPicture/SwitchButton'
 import ExportCsv from './ExportCsv'
 import MainContent from './MainContent'
 import Presets from './Presets'
-import useBrowserZoom from '../utils/useBrowserZoom'
 
 bus.on('scrollToTop', function() {
   (document.scrollingElement || document.body).scrollTop = 0;
@@ -67,17 +65,11 @@ const HomePage = _ => {
   const showSidebar = _ => setSidebarVisible(true)
   const hideSidebar = _ => setSidebarVisible(false)
   const [lastScrollPosition, setLastScrollPosition] = useState(0)
-  const isZoomedIn = useBrowserZoom()
   const currentDevice = useCurrentDevice()
 
   if (onlyModal) {
     document.querySelector('body').classList.add('popup');
   }
-
-  useEffect(() => {
-    const { classList } = document.querySelector('html')
-    isBigPicture ? classList.add('big-picture') : classList.remove('big-picture')
-  }, [isBigPicture])
 
   useEffect(() => {
     const { classList } = document.querySelector('html')
@@ -143,7 +135,7 @@ const HomePage = _ => {
         }
       }
 
-      const { classList } = document.querySelector('body')
+      const { classList } = document.documentElement
       if (!classList.contains('embed')) {
         classList.add('embed');
       }
@@ -156,10 +148,9 @@ const HomePage = _ => {
 
   const isIphone = currentDevice.ios()
 
-  return (
-    <div className={isZoomedIn ? 'zoomed-in' : ''}>
+  return <>
     {selectedItemId && <ItemDialog/>}
-    <div className={classNames('app',{'filters-opened' : sidebarVisible})}>
+    <div className={classNames('app',{'filters-opened' : sidebarVisible, 'big-picture': isBigPicture })}>
       <div style={{marginTop: isIphone && selectedItemId ? -lastScrollPosition : 0}} className={classNames({"iphone-scroller": isIphone && selectedItemId}, 'main-parent')} >
         { !isEmbed && !isFullscreen && <>
           <Header />
@@ -181,12 +172,12 @@ const HomePage = _ => {
         {sidebarVisible && <div className="app-overlay" onClick={hideSidebar}></div>}
 
         <div className={classNames('main', {'embed': isEmbed})}>
-          { !isEmbed && <div className="disclaimer">
+          <div className="disclaimer">
             <span  dangerouslySetInnerHTML={{__html: settings.home.header}} />
             Please <OutboundLink to={`https://github.com/${settings.global.repo}`}>open</OutboundLink> a pull request to
             correct any issues. Greyed logos are not open source. Last Updated: {process.env.lastUpdated}
-          </div> }
-          { !isEmbed && <Summary /> }
+          </div>
+          <Summary />
 
           <div className="cards-section">
             <SwitchButton />
@@ -196,13 +187,11 @@ const HomePage = _ => {
               <TweetButton cls="tweet-button-main"/>
             </div>
             { isBigPicture &&
-            <AutoSizer>
-              {({ height }) => (
-                <div className="landscape-wrapper" style={{height: height}}>
+              <div className="landscape-flex">
+                <div className="landscape-wrapper">
                   <LandscapeContent zoom={zoom} />
                 </div>
-              )}
-            </AutoSizer>
+              </div>
             }
             { !isBigPicture && <MainContent /> }
           </div>
@@ -211,8 +200,7 @@ const HomePage = _ => {
         </div>
       </div>
     </div>
-    </div>
-  );
+  </>
 };
 
 export default pure(HomePage);

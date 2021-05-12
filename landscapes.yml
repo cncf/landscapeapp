@@ -1,9 +1,14 @@
-ip: 147.75.106.211
+ip: 145.40.64.211
 landscapes:
   # name: how we name a landscape project, used on a build server for logs and settings
   # repo: a github repo for a specific landscape
   # netlify: full | skip - do we build it on a netlify build or not
   # hook: - id for a build hook, so it will be triggered after a default branch build
+  - landscape:
+    name: aswf-landscape
+    repo: AcademySoftwareFoundation/aswf-landscape
+    hook: 608aa68eb6e5723d5d8a7e00
+    required: true
   - landscape:
     name: cncf
     repo: cncf/landscape
@@ -30,11 +35,11 @@ landscapes:
   - landscape:
     name: lf
     repo: jmertic/lf-landscape
-    hook: 5ed4f433987c7ad56b356a74
+    hook: 606487123224e20fb8f3896e
   - landscape:
     name: lfai
     repo: lfai/landscape
-    hook: 5ee219e3a8ae10e0246a9533
+    hook: 60648e5b74c76017210a2f53
     required: true
   - landscape:
     name: lfedge
@@ -43,7 +48,7 @@ landscapes:
   - landscape:
     name: lfenergy
     repo: lf-energy/lfenergy-landscape
-    hook: 5d98c95de9ff92d31e713003
+    hook: 606487bb9da603110d4b8139
   - landscape:
     name: lfph
     repo: lfph/lfph-landscape
@@ -52,7 +57,7 @@ landscapes:
   - landscape:
     name: omp
     repo: openmainframeproject/omp-landscape
-    hook: 5d6a6f73080982abfbd46290
+    hook: 6064862525138e14cfe87a39
   - landscape:
     name: ospo
     repo: todogroup/ospolandscape

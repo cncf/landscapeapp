@@ -1,6 +1,6 @@
 import path from 'path'
 import { load  } from 'js-yaml'
-import { readFileSync, writeFileSync, mkdirSync, existsSync, rmdirSync } from 'fs'
+import { readFileSync, writeFileSync, mkdirSync, existsSync, rmSync } from 'fs'
 import { execSync } from 'child_process'
 import qs from 'query-string'
 
@@ -10,7 +10,7 @@ const settings = load(readFileSync(settingsPath))
 const items = require(path.resolve(projectPath, 'data.json'))
 const { website } = settings.global
 
-rmdirSync('public', { recursive: true })
+rmSync('public', { recursive: true, force: true })
 mkdirSync('public', { recursive: true })
 execSync(`cp -r "${projectPath}/images" public`)
 execSync(`cp -r "${projectPath}/cached_logos" public/logos`)
@@ -37,7 +37,7 @@ const afterSettingsSaved = _ => {
   writeFileSync(`./public/data/items-export.json`, JSON.stringify(itemsForExport))
 
   Object.entries(settings.export || {}).forEach(([exportPath, query]) => {
-    const params = parseParams({ ...qs.parse(query) })
+    const params = parseParams({ mainContentMode: 'card-mode', ...qs.parse(query) })
     const groupedItems = getGroupedItems(params, items)
       .map(group => {
         const items = group.items.map(({ id, name, href }) => ({ id, name, logo: `${website}/${href}` }))

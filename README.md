@@ -126,6 +126,20 @@ We require all landscape entries to include a [Crunchbase](https://www.crunchbas
 
 Using an external source for this info saves effort in most cases, because most organizations are already listed. Going forward, the data is being independently maintained and updated over time.
 
+#### Overriding industries from Crunchbase
+
+To override industries returned from Crunchbase for a specific Crunchbase entry, add it to an `crunchbase_overrides` top-level entry on `landscape.yml`. For instance, the following will set `industries` for Linux Foundation to Linux and Cloud Computing:
+
+```yaml
+crunchbase_overrides:
+  https://www.crunchbase.com/organization/linux-foundation:
+    industries:
+      - Linux
+      - Cloud Computing
+```
+
+`crunchbase_overrides` must be a top-level key on `landscape.yml`, so it should be a sibling of `landscape`. That's to prevent having to override multiple items that share the same Crunchbase URL.
+
 ## External Data
 
 The canonical source for all data is `landscape.yml`. Once a day, the landscapeapp update_server pulls data for projects and companies from the following sources:

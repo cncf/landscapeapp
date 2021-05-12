@@ -2080,6 +2080,17 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@vercel/ncc@npm:^0.28.3":
+  version: 0.28.3
+  resolution: "@vercel/ncc@npm:0.28.3"
+  dependencies:
+    node-gyp: latest
+  bin:
+    ncc: dist/ncc/cli.js
+  checksum: 255a5cc5bcd266efb33dbbdf65177cf8d1297b09460da5d61511a0aa42988bf8c558fc2e31a4498e7cbb5c93b1745ce12ac111d640f300f1498057deb4ecc2e9
+  languageName: node
+  linkType: hard
+
 "abab@npm:^2.0.3":
   version: 2.0.3
   resolution: "abab@npm:2.0.3"
@@ -6456,6 +6467,7 @@ fsevents@~2.3.1:
     "@material-ui/lab": ^4.0.0-alpha.57
     "@material-ui/pickers": ^3.3.10
     "@next/bundle-analyzer": ^10.1.3
+    "@vercel/ncc": ^0.28.3
     anchorme: ^2.1.2
     axe-puppeteer: 1.1.0
     babel-plugin-module-resolver: ^4.1.0

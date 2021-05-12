@@ -14,7 +14,7 @@ const _calculateZoom = (fullscreenWidth, fullscreenHeight, zoomedIn, currentDevi
   let baseZoom = Math.min(adjustedHeight / fullscreenHeight, adjustedWidth / fullscreenWidth, 2).toPrecision(4)
   let wrapperWidth, wrapperHeight
 
-  if (baseZoom <= 0.95 || !currentDevice.desktop() || isFirefox || location.search.indexOf('scale=false') > -1) {
+  if (isFirefox || location.search.indexOf('scale=false') > -1) {
     wrapperWidth = Math.max(fullscreenWidth, innerWidth)
     wrapperHeight = Math.max(fullscreenHeight, innerHeight)
     baseZoom = 1
@@ -51,10 +51,13 @@ const Fullscreen = _ => {
   }
 
   useEffect(() => {
-    calculateZoom()
-    window.addEventListener("resize", calculateZoom)
-    return () => window.removeEventListener("resize", calculateZoom)
-  }, [true]);
+    if (currentDevice.ready && currentDevice.desktop()) {
+      calculateZoom()
+      const onResize = _ => calculateZoom()
+      window.addEventListener('resize', onResize)
+      return () => window.removeEventListener('resize', onResize)
+    }
+  }, [currentDevice]);
 
   useEffect(() => {
     window.scrollTo((zoomedAt.x * zoom - innerWidth / 2), (zoomedAt.y * zoom - innerHeight / 2))
@@ -78,7 +81,7 @@ const Fullscreen = _ => {
           justifyContent: 'center'
         }}>
           <div
-            onClick={currentDevice.desktop() && onZoom}
+            onClick={e => currentDevice.desktop() && onZoom(e)}
             style={{
               position: 'absolute',
               top: 0,

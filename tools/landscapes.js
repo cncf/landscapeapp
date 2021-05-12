@@ -38,6 +38,7 @@ async function main() {
   export PROJECT_PATH=/repo
   npm install -g yarn
   NETLIFY=1 yarn run update
+  cp files/landscape.netlify.toml /repo/netlify.toml
   cd /repo
   git add .
   git config --global user.email "info@cncf.io"
