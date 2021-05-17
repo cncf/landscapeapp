@@ -165,7 +165,7 @@ const chart = function(itemInfo) {
   if (params.isEmbed || !itemInfo.github_data || !itemInfo.github_data.languages) {
     return null;
   }
-  const callbacks = defaults.global.tooltips.callbacks;
+  const callbacks = defaults.plugins.tooltip.callbacks;
   function percents(v) {
     const p = Math.round(v / total * 100);
     if (p === 0) {
@@ -174,24 +174,12 @@ const chart = function(itemInfo) {
       return p + '%';
     }
   }
-  const newCallbacks =  {...callbacks, label: function(tooltipItem, data) {
-    const v = data.datasets[0].data[tooltipItem.index];
+  const newCallbacks =  { label: function(tooltipItem) {
+    const v = tooltipItem.dataset.data[tooltipItem.dataIndex];
     const value =  millify(v, {precision: 1});
-    const language = languages[tooltipItem.index];
-    return `${percents(language.value)} (${value})`;
+    const language = languages[tooltipItem.dataIndex];
+    return `${language.name} ${percents(language.value)} (${value})`;
   }};
-  /*{
-    label: function(tooltipItem, data) {
-      debugger
-                    var label = data.datasets[tooltipItem.datasetIndex].label || '';
-
-                    if (label) {
-                        label += ': ';
-                    }
-                    label += Math.round(tooltipItem.yLabel * 100) / 100;
-                    return label;
-                }
-  }; */
   const allLanguages = itemInfo.github_data.languages;
   const languages = (function() {
     const maxEntries = 7;
@@ -235,7 +223,7 @@ const chart = function(itemInfo) {
 
   return <div style={{width: 220, height: 120, position: 'relative'}}>
     <div style={{marginLeft: 170, width: 100, height: 100}}>
-      <Pie height={100} width={100} data={data} legend={{display: false}} options={{tooltips: {callbacks: newCallbacks}}} />
+      <Pie height={100} width={100} data={data} options={{plugins: {legend: { display: false}, tooltip: {callbacks: newCallbacks}}}} />
     </div>
     { legend }
   </div>
@@ -277,40 +265,43 @@ const participation = function(itemInfo) {
       data: itemInfo.github_data.contributions.split(';').map( (x)=> +x).slice(-51)
     }]
   };
-  const callbacks = defaults.global.tooltips.callbacks;
-  const newCallbacks =  {...callbacks, title: function(data) {
+  const callbacks = defaults.plugins.tooltip.callbacks;
+  const newCallbacks =  { title: function(data) {
     const firstWeek = new Date(itemInfo.github_data.firstWeek.replace('Z', 'T00:00:00Z'));
-    const week = data[0].index;
+    const week = data[0].dataIndex;
     firstWeek.setDate(firstWeek.getDate() + week * 7);
     const s = firstWeek.toISOString().substring(0, 10);
     return s;
   }};
   const options = {
-    tooltips: {callbacks: newCallbacks},
+    plugins: {
+      legend: { display: false },
+      tooltip: {callbacks: newCallbacks}
+    },
     scales: {
-      xAxes: [{
-        gridLines: false,
+      x: {
+        grid: { display: false },
         ticks: {
-          backdropPaddingY: 15,
+          padding: -1,
           autoSkip: false,
           minRotation: 0,
           maxRotation: 0
         },
-        scaleLabel: {
+        title: {
           display: false
         }
-      }],
-      yAxes: [{
+      },
+      y: {
         ticks: {
           beginAtZero: true,
           callback: function (value) { if (Number.isInteger(value)) { return value; } }
         }
-      }]
+      }
     }
   };
   const width = Math.min(innerWidth - 110, 300);
   return <div style={{width: width, height: 150, position: 'relative'}}>
-    <Bar height={150} width={width} data={data} legend={{display: false}} options={options} />
+    <Bar height={150} width={width} data={data} options={options} />
     <div style={{
       transform: 'rotate(-90deg)',
       position: 'absolute',
