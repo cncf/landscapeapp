@@ -39,16 +39,16 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@babel/core@npm:7.14.2, @babel/core@npm:^7.14.2":
-  version: 7.14.2
-  resolution: "@babel/core@npm:7.14.2"
+"@babel/core@npm:7.14.3, @babel/core@npm:^7.14.3":
+  version: 7.14.3
+  resolution: "@babel/core@npm:7.14.3"
   dependencies:
     "@babel/code-frame": ^7.12.13
-    "@babel/generator": ^7.14.2
+    "@babel/generator": ^7.14.3
     "@babel/helper-compilation-targets": ^7.13.16
     "@babel/helper-module-transforms": ^7.14.2
     "@babel/helpers": ^7.14.0
-    "@babel/parser": ^7.14.2
+    "@babel/parser": ^7.14.3
     "@babel/template": ^7.12.13
     "@babel/traverse": ^7.14.2
     "@babel/types": ^7.14.2
@@ -58,7 +58,7 @@ __metadata:
     json5: ^2.1.2
     semver: ^6.3.0
     source-map: ^0.5.0
-  checksum: 16dc0a52484da794afc69ac7f13721b7cf2f7e17db6467a36f19fef24fa59a8cea1524faa260d0c05f5a99836fb65acf076cf15abf6846fc66f6c142a94a8327
+  checksum: 4bc2d1abf53e8d1399d5fe159f4f6d275feb64cdfb3a975e903edcbbd98b71ba4a216af28f43db0a5303691a291590837964934acaf673b024563f3acad919f6
   languageName: node
   linkType: hard
 
@@ -128,6 +128,17 @@ __metadata:
     jsesc: ^2.5.1
     source-map: ^0.5.0
   checksum: eacc93d3446dec6fac064cd884ac6e2ecbcfed65f8de069da72855a8124d33004a9dc9f06833e18fae2e352929c493b46035785f948549d2e9d503af0bef8a79
+  languageName: node
+  linkType: hard
+
+"@babel/generator@npm:^7.14.3":
+  version: 7.14.3
+  resolution: "@babel/generator@npm:7.14.3"
+  dependencies:
+    "@babel/types": ^7.14.2
+    jsesc: ^2.5.1
+    source-map: ^0.5.0
+  checksum: 519fce36f3663dd346522d50d13b8549c02c0a340650c62db1bee0595a47f910b433f3bbdb513cc582bd932c5045b2673c8ef6a97913f9335fb16aa06085f274
   languageName: node
   linkType: hard
 
@@ -506,6 +517,15 @@ __metadata:
   bin:
     parser: ./bin/babel-parser.js
   checksum: 18dffc18a2c15f8877988c9b5a46c87f1763e8a383c3210c9b5b651955b1ac46dc54da27acc09acd7fb917f37e0bd92b8985dc4c9d7f1e750dfccbcea730aa0e
+  languageName: node
+  linkType: hard
+
+"@babel/parser@npm:^7.14.3":
+  version: 7.14.3
+  resolution: "@babel/parser@npm:7.14.3"
+  bin:
+    parser: ./bin/babel-parser.js
+  checksum: 5e8d1b2bfc53b59c7476c32adee20c8a4d19fdab58b04b6b177d89319bd76526219dad2f6ab6f51a80a518d0cbcdc3980b73c18bde16017aeee2dd8a50687fe3
   languageName: node
   linkType: hard
 
@@ -2227,13 +2247,6 @@ __metadata:
   bin:
     acorn: bin/acorn
   checksum: 9726714a9b5319f3d4969f8ace546a47086a7ea986f68fae3a2ffaabec219566c87b1ac21139ee3653462639cac357c9b8846725b7e72a741cc2421563a23ac8
-  languageName: node
-  linkType: hard
-
-"agent-base@npm:5":
-  version: 5.1.1
-  resolution: "agent-base@npm:5.1.1"
-  checksum: aff8e856932ba63bbe097ac460f2f474669c5a1ca7674d3be19d4c258b4276a6b71863fb25c8bc3d424320d0c81652044098346403e759a65a76712e697633fa
   languageName: node
   linkType: hard
 
@@ -4267,13 +4280,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"devtools-protocol@npm:0.0.818844":
-  version: 0.0.818844
-  resolution: "devtools-protocol@npm:0.0.818844"
-  checksum: 6f3e5bc2a50fc99453c75787256eb27a5707ac8e575c6783acd7cf3e13edb8974ded83f93b2e31ef2c553299b13d2970c3bf267bc32e5c0788afc933d42f39c6
-  languageName: node
-  linkType: hard
-
 "devtools-protocol@npm:0.0.869402":
   version: 0.0.869402
   resolution: "devtools-protocol@npm:0.0.869402"
@@ -5151,13 +5157,6 @@ __metadata:
   dependencies:
     homedir-polyfill: ^1.0.1
   checksum: 502e8b04a22094575c68639e68e0a2c19ad23d78441e440e5164ad2f38bef05e4b2c2568acfcf4af37b90bbf49ea587c253753ba6d351229e5858b96cb136125
-  languageName: node
-  linkType: hard
-
-"expect-puppeteer@npm:^4.4.0":
-  version: 4.4.0
-  resolution: "expect-puppeteer@npm:4.4.0"
-  checksum: 8687d4ed91d20d16e1ee7d5f8556103cbac612bc945a13f6f1a7fa786f9d2535ab170164f1c2beb2c764cb7baa1c906db43bbe1ac71da6ff9c34d0955f8323dc
   languageName: node
   linkType: hard
 
@@ -6331,16 +6330,6 @@ fsevents@~2.3.1:
   languageName: node
   linkType: hard
 
-"https-proxy-agent@npm:^4.0.0":
-  version: 4.0.0
-  resolution: "https-proxy-agent@npm:4.0.0"
-  dependencies:
-    agent-base: 5
-    debug: 4
-  checksum: d3d20730cdcfa1b1ac492280501fa7b14ee89eb4fa2e7d300cc260463b48ea98b6cf1d4b287f40faa8c36c2f88d87819b4b419be5ec4055e9dcd2db501ce4680
-  languageName: node
-  linkType: hard
-
 "https-proxy-agent@npm:^5.0.0":
   version: 5.0.0
   resolution: "https-proxy-agent@npm:5.0.0"
@@ -6501,7 +6490,7 @@ fsevents@~2.3.1:
   version: 0.0.0-use.local
   resolution: "interactive-landscape@workspace:."
   dependencies:
-    "@babel/core": ^7.14.2
+    "@babel/core": ^7.14.3
     "@babel/node": ^7.14.2
     "@babel/register": ^7.13.16
     "@babel/runtime": ^7.14.0
@@ -6533,7 +6522,7 @@ fsevents@~2.3.1:
     eslint-plugin-react: ^7.23.2
     eslint-watch: ^7.0.0
     event-emitter: 0.3.5
-    expect-puppeteer: ^4.4.0
+    expect-puppeteer: ^5.0.3
     express: ^4.17.1
     extract-zip: 2.0.1
     favicons-webpack-plugin: ^5.0.2
@@ -6560,7 +6549,7 @@ fsevents@~2.3.1:
     postcss-nested: 4
     postcss-simple-vars: ^6.0.3
     prop-types: 15.7.2
-    puppeteer: ^5.5.0
+    puppeteer: ^9.1.1
     query-string: ^7.0.0
     raf: 3.4.1
     react: ^17.0.2
@@ -10119,7 +10108,7 @@ fsevents@~2.3.1:
   languageName: node
   linkType: hard
 
-"proxy-from-env@npm:^1.0.0, proxy-from-env@npm:^1.1.0":
+"proxy-from-env@npm:^1.1.0":
   version: 1.1.0
   resolution: "proxy-from-env@npm:1.1.0"
   checksum: 6459372a57f3e8ef5211f7847ca2fffabcdd6490005892fcc0dcd62fe2b3551900c8a07fad7df9de3897547b1ab4ac7a7197964cd6fa7e76303caa4936bfaf32
@@ -10175,26 +10164,6 @@ fsevents@~2.3.1:
   version: 2.1.1
   resolution: "punycode@npm:2.1.1"
   checksum: 0202dc191cb35bfd88870ac99a1e824b03486d4cee20b543ef337a6dee8d8b11017da32a3e4c40b69b19976e982c030b62bd72bba42884acb691bc5ef91354c8
-  languageName: node
-  linkType: hard
-
-"puppeteer@npm:^5.5.0":
-  version: 5.5.0
-  resolution: "puppeteer@npm:5.5.0"
-  dependencies:
-    debug: ^4.1.0
-    devtools-protocol: 0.0.818844
-    extract-zip: ^2.0.0
-    https-proxy-agent: ^4.0.0
-    node-fetch: ^2.6.1
-    pkg-dir: ^4.2.0
-    progress: ^2.0.1
-    proxy-from-env: ^1.0.0
-    rimraf: ^3.0.2
-    tar-fs: ^2.0.0
-    unbzip2-stream: ^1.3.3
-    ws: ^7.2.3
-  checksum: 08ba8a7da56a4d09e959740e94ecfa5cda9429dc760001040eacb33c4185d9c59a71594697d10789e396e673aa7543caf4cbb48d4dab539760a44b7a2193d174
   languageName: node
   linkType: hard
 
