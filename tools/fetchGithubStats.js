@@ -48,12 +48,19 @@ const getContributorsList = async (repo, page = 1) => {
 }
 
 export async function fetchGithubEntries({cache, preferCache}) {
-  const githubOrgs = (await fetchGithubOrgs(preferCache))
-    .map(org => ({ ...org.data, ...org.github_data }))
-  const repos = [...getRepos(), ...githubOrgs.filter(org => !org.cached).map(org => org.repos).flat()]
-  debug(cache);
   const errors = [];
   const fatalErrors = [];
+  const githubOrgs = (await fetchGithubOrgs(preferCache))
+    .map(org => ({ ...org.data, ...org.github_data }))
+
+  githubOrgs.forEach(org => {
+    if (org.repos.length === 0) {
+      fatalErrors.push(`Organization ${org.url} does not have any repos or all repos are empty`)
+    }
+  })
+
+  const repos = [...getRepos(), ...githubOrgs.filter(org => !org.cached).map(org => org.repos).flat()]
+  debug(cache);
   const reporter = makeReporter();
   const result = await Promise.map(repos, async function(repo) {
     const cachedEntry = cache[cacheKey(repo.url, repo.branch)]
