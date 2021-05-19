@@ -221,7 +221,7 @@ async function main() {
           .sort((a, b) => b.stars - a.stars)
         const repos = [mainRepo, ...additionalRepos].filter( (x) => !!x);
 
-        if (repos.length > 1 && !githubEntry.cached) {
+        if ((node.project_org || node.additional_repos) && repos.length > 0 && !githubEntry.cached) {
           node.github_data.contributors_count = aggregateContributors(repos)
           node.github_data.contributions = aggregateContributions(repos)
           node.github_data.stars = repos.reduce((acc, { stars }) => acc + stars, 0)
