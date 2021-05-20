@@ -1,6 +1,5 @@
 import './suppressAnnoyingWarnings';
 import colors from 'colors';
-import rp from './rpRetry';
 import Promise from 'bluebird';
 import saneName from '../src/utils/saneName';
 import fs from 'fs';
@@ -101,10 +100,6 @@ export async function fetchImageEntries({cache, preferCache}) {
         return cachedEntry;
       }
       debug(`Fetching data for ${item.name} with logo ${item.logo}`);
-      if (url && url.indexOf('//github.com/') !== -1) {
-        url = url.replace('github.com', 'raw.githubusercontent.com');
-        url = url.replace('blob/', '');
-      }
       if (!url) {
         return null;
       }
@@ -125,14 +120,16 @@ export async function fetchImageEntries({cache, preferCache}) {
         }
         response = fs.readFileSync(path.resolve(projectPath, 'hosted_logos', url));
       } else {
-        response = await rp({
-          encoding: null,
-          uri: url,
-          followRedirect: true,
-          maxRedirects: 5,
-          simple: true,
-          timeout: 30 * 1000
-        });
+        fatalErrors.push(`We do not support urls for images anymore. Please download the image and put it into the hosted_logos folder, then put its name to the logo field`);
+        return null;
+        // response = await rp({
+          // encoding: null,
+          // uri: url,
+          // followRedirect: true,
+          // maxRedirects: 5,
+          // simple: true,
+          // timeout: 30 * 1000
+        // });
       }
       const croppedSvgResult = await retry(() => autoCropSvg(response, {title: `${item.name} logo`}), 2, 1000);
       const croppedSvg = croppedSvgResult.result;

@@ -37,7 +37,8 @@ When creating new entries, the only 4 required fields are `name`, `homepage_url`
 - item:
   name: <entry name>
   homepage_url: <website for entry>
-  # url or filename if in hosted_logos folder. It's generally easier to have the landscape fetch an SVG by adding it's URL rather than saving it yourself in the hosted_logos folder, but if the logo changes at that URL the landscape build won't update automatically unless the logo file is deleted from cached_logos 
+  # filename in hosted_logos folder. Put the svg file into the hosted_logos
+  folder and reference its name.
   logo: <logo for entry> 
   crunchbase: <twitter for entry>
 ```  
