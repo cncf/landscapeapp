@@ -33,7 +33,8 @@ async function main() {
     'allow_duplicate_repo',
     'unnamed_organization',
     'organization',
-    'joined'
+    'joined',
+    'extra'
   ];
 
   const addKeyError = (title, key) => {
