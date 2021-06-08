@@ -2,10 +2,8 @@ import { LandscapeProvider } from '../contexts/LandscapeContext'
 import HomePageComponent from '../components/HomePage'
 import { parseParams } from '../utils/routing'
 import getPrerenderProps from '../utils/getPrerenderProps'
-import { landscapeSettingsList } from '../utils/landscapeSettings'
-import settings from 'public/settings.json'
+import { getLandscapeSettingsList } from '../utils/landscapeSettings'
 
-const defaultContentMode = settings.big_picture.main.url
 
 const LandscapePage = ({ entries, mainContentMode }) => {
   return <LandscapeProvider entries={entries} pageParams={{ mainContentMode }}>
@@ -14,6 +12,8 @@ const LandscapePage = ({ entries, mainContentMode }) => {
 }
 
 export async function getStaticProps(context) {
+  const settings = JSON.parse(require('fs').readFileSync('public/settings.json', 'utf-8'));
+  const defaultContentMode = settings.big_picture.main.url
   const mainContentMode = (context.params.landscape || [])[0] || defaultContentMode
 
   const params = parseParams({ mainContentMode })
@@ -22,7 +22,8 @@ export async function getStaticProps(context) {
 }
 
 export async function getStaticPaths() {
-  const basePaths = landscapeSettingsList
+  const settings = JSON.parse(require('fs').readFileSync('public/settings.json', 'utf-8'));
+  const basePaths = getLandscapeSettingsList(settings)
     .filter(({ isMain }) => !isMain)
     .map(({ basePath }) => `/${basePath}`)
 

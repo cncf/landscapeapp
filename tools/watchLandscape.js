@@ -3,6 +3,7 @@ import path from 'path'
 import { watch } from 'chokidar'
 
 const projectPath = process.env.PROJECT_PATH || path.resolve('../..')
+const port = process.env.PORT || 3000;
 
 let ready = false
 let changedAt = null
@@ -43,8 +44,9 @@ watch([`${projectPath}/*.yml`, `${projectPath}/cached_logos`])
   .on('ready', _ => {
     prepareLandscape()
       .then(() => {
-        const nextProcess = exec('next dev')
+        const nextProcess = exec(`next dev -p ${port}`);
         nextProcess.stdout.pipe(process.stdout)
+        nextProcess.stderr.pipe(process.stderr)
         ready = true
       })
   })
