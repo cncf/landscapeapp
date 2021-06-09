@@ -450,7 +450,7 @@ const ItemDialogContent = ({ itemInfo, loading }) => {
         if (!!(new Date(value).getTime()) && typeof value === 'string') {
           return relativeDate(new Date(value));
         }
-        if (value.indexOf('http://') === 0 || value.indexOf('https://') === 0) {
+        if (typeof value === 'string' && (value.indexOf('http://') === 0 || value.indexOf('https://') === 0)) {
           return <OutboundLink to={value}>{value}</OutboundLink>;
         }
         return value;
