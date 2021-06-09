@@ -435,6 +435,34 @@ const ItemDialogContent = ({ itemInfo, loading }) => {
     </div>
   );
 
+  const extraElement = ( function() {
+    if (!itemInfo.extra) {
+      return null;
+    }
+    const items = Object.keys(itemInfo.extra).map( function(key) {
+      const value = itemInfo.extra[key];
+      const keyText = (function() {
+        const step1 =  key.replace(/_url/g, '');
+        const step2 = step1.split('_').map( (x) => x.charAt(0).toUpperCase() + x.substring(1)).join(' ');
+        return step2;
+      })();
+      const valueText = (function() {
+        if (!!(new Date(value).getTime()) && typeof value === 'string') {
+          return relativeDate(new Date(value));
+        }
+        if (value.indexOf('http://') === 0 || value.indexOf('https://') === 0) {
+          return <OutboundLink to={value}>{value}</OutboundLink>;
+        }
+        return value;
+      })();
+      return <div className="product-property row">
+        <div className="product-property-name tight-col col-20">{keyText}</div>
+        <div className="product-proerty-value tight-col col-80">{valueText}</div>
+      </div>;
+    });
+    return items;
+  })();
+
   const scrollAllContent = innerWidth < 1000 || innerHeight < 630;
   const cellStyle = {
     width: 146,
@@ -597,6 +625,7 @@ const ItemDialogContent = ({ itemInfo, loading }) => {
                     </div>
                   }
               </div>
+              { extraElement }
             </div> }
   </Fragment>;
 
