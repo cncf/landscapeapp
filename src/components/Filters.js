@@ -5,6 +5,9 @@ import FormControl from '@material-ui/core/FormControl';
 import FormLabel from '@material-ui/core/FormLabel';
 
 import ProjectFilterContainer from './ProjectFilterContainer';
+import IsvStatusFilterContainer from './IsvStatusFilterContainer';
+import FrameworksFilterContainer from './FrameworksFilterContainer';
+import UseCasesFilterContainer from './UseCasesFilterContainer';
 import LicenseFilterContainer from './LicenseFilterContainer';
 import OrganizationFilterContainer from './OrganizationFilterContainer';
 import HeadquartersFilterContainer from './HeadquartersFilterContainer';
@@ -22,8 +25,8 @@ const Filters = () => {
 
       <FormGroup row>
         <FormControl component="fieldset">
-          <FormLabel component="legend">{fields.relation.label}</FormLabel>
-          <ProjectFilterContainer/>
+          <FormLabel component="legend">{fields.status.label}</FormLabel>
+          <IsvStatusFilterContainer/>
         </FormControl>
       </FormGroup>
 
@@ -36,31 +39,25 @@ const Filters = () => {
 
       <FormGroup row>
         <FormControl component="fieldset">
+          <FormLabel component="legend">{fields.frameworks_filter.label}</FormLabel>
+          <FrameworksFilterContainer/>
+        </FormControl>
+      </FormGroup>
+
+      <FormGroup row>
+        <FormControl component="fieldset">
+          <FormLabel component="legend">{fields.use_cases_filter.label}</FormLabel>
+          <UseCasesFilterContainer/>
+        </FormControl>
+      </FormGroup>
+
+      <FormGroup row>
+        <FormControl component="fieldset">
           <FormLabel component="legend">{fields.organization.label}</FormLabel>
           <OrganizationFilterContainer />
         </FormControl>
       </FormGroup>
 
-      <FormGroup row>
-        <FormControl component="fieldset">
-          <FormLabel component="legend">{fields.headquarters.label}</FormLabel>
-          <HeadquartersFilterContainer />
-        </FormControl>
-      </FormGroup>
-
-      <FormGroup row>
-        <FormControl component="fieldset">
-          <FormLabel component="legend">{fields.companyType.label}</FormLabel>
-          <ArrayFilterContainer name="companyType" />
-        </FormControl>
-      </FormGroup>
-
-    <FormGroup row>
-      <FormControl component="fieldset">
-        <FormLabel component="legend">{fields.industries.label}</FormLabel>
-        <ArrayFilterContainer name="industries" />
-      </FormControl>
-    </FormGroup>
   </div>;
 }
 export default pure(Filters);

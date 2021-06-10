@@ -34,7 +34,12 @@ async function main() {
     'unnamed_organization',
     'organization',
     'joined',
-    'extra'
+    'components',
+    'status',
+    'frameworks',
+    'frameworks_filter',
+    'use_cases',
+    'use_cases_filter'
   ];
 
   const addKeyError = (title, key) => {

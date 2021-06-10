@@ -34,8 +34,12 @@ export const getFilteredItems = createSelector(
     var filterByLanguage = filterFn({field: 'language', filters});
     var filterByCompanyType = filterFn({field: 'companyType', filters});
     var filterByIndustries = filterFn({field: 'industries', filters});
+    var filterByStatus = filterFn({field: 'status', filters});
+    var filterByFrameworks = filterFn({field: 'frameworks_filter', filters});
+    var filterByUseCases = filterFn({field: 'use_cases_filter', filters});
     return data.filter(function(x) {
-      return filterHostedProject(x) && filterByLicense(x) && filterByOrganization(x) && filterByHeadquarters(x) && filterByLandscape(x) && filterByBestPractices(x) && filterByEnduser(x) && filterByParent(x) && filterByLanguage(x) && filterByCompanyType(x) && filterByIndustries(x);
+      return filterHostedProject(x) && filterByLicense(x) && filterByOrganization(x) && filterByHeadquarters(x) && filterByLandscape(x) && filterByBestPractices(x) && filterByEnduser(x) && filterByParent(x) && filterByLanguage(x) && filterByCompanyType(x) && filterByIndustries(x) 
+        && filterByStatus(x) && filterByFrameworks(x) && filterByUseCases(x);
     });
   }
 );
@@ -58,7 +62,7 @@ const getFilteredItemsForBigPicture = createSelector(
     (_, entries) => entries,
     (params) => params.filters
   ],
-  function(data, filters) {
+  function(data, filters) {    
     var filterHostedProject = filterFn({field: 'relation', filters});
     var filterByLicense = filterFn({field: 'license', filters});
     var filterByOrganization = filterFn({field: 'organization', filters});
@@ -69,8 +73,13 @@ const getFilteredItemsForBigPicture = createSelector(
     var filterByLanguage = filterFn({field: 'language', filters});
     var filterByCompanyType = filterFn({field: 'companyType', filters});
     var filterByIndustries = filterFn({field: 'industries', filters});
+    var filterByFrameworks = filterFn({field: 'frameworks_filter', filters});
+    var filterByStatus = filterFn({field: 'status', filters});
+    var filterByFrameworks = filterFn({field: 'frameworks_filter', filters});
+    var filterByUseCases = filterFn({field: 'use_cases_filter', filters});
     return addExtraFields(data.filter(function(x) {
-      return filterHostedProject(x) && filterByLicense(x) && filterByOrganization(x) && filterByHeadquarters(x) && filterByBestPractices(x) && filterByEnduser(x) && filterByParent(x) && filterByLanguage(x) && filterByCompanyType(x) && filterByIndustries(x);
+      return filterHostedProject(x) && filterByLicense(x) && filterByOrganization(x) && filterByHeadquarters(x) && filterByBestPractices(x) && filterByEnduser(x) && filterByParent(x) && filterByLanguage(x) && filterByCompanyType(x) && filterByIndustries(x) 
+        && filterByStatus(x) && filterByFrameworks(x) && filterByFrameworks(x) && filterByUseCases(x);
     }));
   }
 );

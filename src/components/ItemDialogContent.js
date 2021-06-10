@@ -377,31 +377,6 @@ const ItemDialogContent = ({ itemInfo, loading }) => {
                       </div>
                     ) : null;
 
-  const headquartersElement = itemInfo.headquarters && itemInfo.headquarters !== 'N/A' && (
-    <div className="product-property row">
-      <div className="product-property-name col col-40">Headquarters</div>
-      <div className="product-property-value tight-col col-60"><InternalLink to={closeUrl({ grouping: 'headquarters', filters:{headquarters:itemInfo.headquarters}})}>{itemInfo.headquarters}</InternalLink></div>
-    </div>
-  );
-  const amountElement = !loading && !settings.global.hide_funding_and_market_cap && Number.isInteger(itemInfo.amount) && (
-    <div className="product-property row">
-      <div className="product-property-name col col-40">{itemInfo.amountKind === 'funding' ? 'Funding' : 'Market Cap'}</div>
-      {  itemInfo.amountKind === 'funding' &&
-          <div className="product-property-value tight-col col-60">
-            <OutboundLink to={itemInfo.crunchbase + '#section-funding-rounds'}>
-              {'$' + millify(itemInfo.amount)}
-            </OutboundLink>
-          </div>
-      }
-      { itemInfo.amountKind !== 'funding' &&
-          <div className="product-property-value tight-col col-60">
-            <OutboundLink to={'https://finance.yahoo.com/quote/' + itemInfo.yahoo_finance_data.effective_ticker}>
-              {'$' + millify(itemInfo.amount)}
-            </OutboundLink>
-          </div>
-      }
-    </div>
-  );
   const tickerElement = itemInfo.ticker && (
     <div className="product-property row">
       <div className="product-property-name col col-40">Ticker</div>
@@ -434,34 +409,6 @@ const ItemDialogContent = ({ itemInfo, loading }) => {
       <div className="product-property-value col col-50">{formatNumber(itemInfo.crunchbaseData.numEmployeesMin)}-{formatNumber(itemInfo.crunchbaseData.numEmployeesMax)}</div>
     </div>
   );
-
-  const extraElement = ( function() {
-    if (!itemInfo.extra) {
-      return null;
-    }
-    const items = Object.keys(itemInfo.extra).map( function(key) {
-      const value = itemInfo.extra[key];
-      const keyText = (function() {
-        const step1 =  key.replace(/_url/g, '');
-        const step2 = step1.split('_').map( (x) => x.charAt(0).toUpperCase() + x.substring(1)).join(' ');
-        return step2;
-      })();
-      const valueText = (function() {
-        if (!!(new Date(value).getTime()) && typeof value === 'string') {
-          return relativeDate(new Date(value));
-        }
-        if (typeof value === 'string' && (value.indexOf('http://') === 0 || value.indexOf('https://') === 0)) {
-          return <OutboundLink to={value}>{value}</OutboundLink>;
-        }
-        return value;
-      })();
-      return <div className="product-property row">
-        <div className="product-property-name tight-col col-20">{keyText}</div>
-        <div className="product-proerty-value tight-col col-80">{valueText}</div>
-      </div>;
-    });
-    return items;
-  })();
 
   const scrollAllContent = innerWidth < 1000 || innerHeight < 630;
   const cellStyle = {
@@ -520,12 +467,12 @@ const ItemDialogContent = ({ itemInfo, loading }) => {
                   <React.Fragment>
                     <div className="product-name">{itemInfo.name}</div>
                     <div className="product-description">{itemInfo.description}</div>
-                    <div className="product-parent"><InternalLink to={linkToOrganization}>{itemInfo.organization}</InternalLink></div>
+                    <div className="product-parent">{itemInfo.organization}</div>
                     <div className="product-category">{itemCategory(itemInfo.landscape)}</div>
                   </React.Fragment> :
                   <React.Fragment>
                     <div className="product-name">{itemInfo.name}</div>
-                    <div className="product-parent"><InternalLink to={linkToOrganization}><span>{itemInfo.organization}</span>{memberTag(itemInfo)}</InternalLink></div>
+                    <div className="product-parent">{itemInfo.organization}</div>
                     <div className="product-category">{itemCategory(itemInfo.landscape)}</div>
                     <div className="product-description">{itemInfo.description}</div>
                   </React.Fragment>
@@ -538,6 +485,30 @@ const ItemDialogContent = ({ itemInfo, loading }) => {
                     <OutboundLink to={itemInfo.homepage_url}>{shortenUrl(itemInfo.homepage_url)}</OutboundLink>
                   </div>
                 </div>
+                {itemInfo.components &&
+                  <div className="product-property row">
+                    <div className="product-property-name col col-20">Components</div>
+                    <div className="product-property-value product-components col col-80">
+                      {itemInfo.components}
+                    </div>
+                  </div>
+                }
+                {itemInfo.frameworks &&
+                <div className="product-property row">
+                  <div className="product-property-name col col-20">Frameworks</div>
+                  <div className="product-property-value product-components col col-80">
+                    {itemInfo.frameworks}
+                  </div>
+                </div>
+                }
+                {itemInfo.use_cases &&
+                <div className="product-property row">
+                  <div className="product-property-name col col-20">Use Cases</div>
+                  <div className="product-property-value product-components col col-80">
+                    {itemInfo.use_cases}
+                  </div>
+                </div>
+                }
                 { itemInfo.repos && itemInfo.repos.map(({ url, stars }, idx) => {
                   return <div className={`product-property row ${ idx < 3 || showAllRepos ? '' : 'hidden' }`} key={idx}>
                     <div className="product-property-name col col-20">
@@ -577,14 +548,6 @@ const ItemDialogContent = ({ itemInfo, loading }) => {
                   </div>
                 </div>
                 }
-                {itemInfo.crunchbase &&
-                <div className="product-property row">
-                  <div className="product-property-name col col-20">Crunchbase</div>
-                  <div className="product-property-value col col-80">
-                    <OutboundLink to={itemInfo.crunchbase}>{shortenUrl(itemInfo.crunchbase)}</OutboundLink>
-                  </div>
-                </div>
-                }
                 {itemInfo.crunchbaseData && itemInfo.crunchbaseData.linkedin &&
                 <div className="product-property row">
                   <div className="product-property-name col col-20">LinkedIn</div>
@@ -603,17 +566,13 @@ const ItemDialogContent = ({ itemInfo, loading }) => {
                     { latestCommitDateElement }
                     { contributorsCountElement }
                     { releaseDateElement }
-                    { headquartersElement }
                     { crunchbaseEmployeesElement }
-                    { amountElement }
                     { tickerElement }
                   </div> }
                   { innerWidth > 1000 && <div className="col col-50">
                     { twitterElement }
                     { firstCommitDateElement }
                     { contributorsCountElement }
-                    { headquartersElement }
-                    { amountElement }
                     { tickerElement }
                   </div>
                   }
@@ -625,7 +584,6 @@ const ItemDialogContent = ({ itemInfo, loading }) => {
                     </div>
                   }
               </div>
-              { extraElement }
             </div> }
   </Fragment>;
 

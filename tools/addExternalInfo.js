@@ -190,25 +190,25 @@ async function main() {
   const newProcessedLandscape = tree.map(function(node) {
     if (node && node.item === null) {
       //crunchbase
-      if (node.organization) {
-        node.crunchbase_data = { ...node.organization, parents: [] }
-        if (node.crunchbase) {
-          addFatal(`the project does not use a crunchbase, but a crunchbase ${node.crunchbase} is present for a ${node.name}`);
-        }
-      } else if (node.unnamed_organization) {
-        node.crunchbase = settings.global.self;
-        node.crunchbase_data = _.clone({ ...settings.anonymous_organization, parents: [] });
-      } else {
-        if (settings.global.skip_crunchbase) {
-          addFatal(`organization field is not provided for a ${node.name}. Crunchbase fetching is disabled for this project`);
-        } else {
-          var crunchbaseInfo = _.clone(_.find(crunchbaseEntries, {url: node.crunchbase}));
-          if (crunchbaseInfo) {
-            delete crunchbaseInfo.url;
-          }
-          node.crunchbase_data = crunchbaseInfo;
-        }
-      }
+      // if (node.organization) {
+      //   node.crunchbase_data = { ...node.organization, parents: [] }
+      //   if (node.crunchbase) {
+      //     addFatal(`the project does not use a crunchbase, but a crunchbase ${node.crunchbase} is present for a ${node.name}`);
+      //   }
+      // } else if (node.unnamed_organization) {
+      //   node.crunchbase = settings.global.self;
+      //   node.crunchbase_data = _.clone({ ...settings.anonymous_organization, parents: [] });
+      // } else {
+      //   if (settings.global.skip_crunchbase) {
+      //     addFatal(`organization field is not provided for a ${node.name}. Crunchbase fetching is disabled for this project`);
+      //   } else {
+      //     var crunchbaseInfo = _.clone(_.find(crunchbaseEntries, {url: node.crunchbase}));
+      //     if (crunchbaseInfo) {
+      //       delete crunchbaseInfo.url;
+      //     }
+      //     node.crunchbase_data = crunchbaseInfo;
+      //   }
+      // }
       //github
       var githubEntry = _.clone(_.find(githubEntries, { url: node.project_org }) ||
                                 _.find(githubEntries, { url: node.repo_url }))
