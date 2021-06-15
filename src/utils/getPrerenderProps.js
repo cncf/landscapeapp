@@ -7,7 +7,8 @@ const getPrerenderProps = params => {
     const keys = [
       'name', 'stars', 'organization', 'path', 'landscape', 'category', 'oss', 'href', 'id',
       'flatName', 'member', 'relation', 'project', 'isSubsidiaryProject', 'amount', 'amountKind',
-      'headquarters', 'license', 'bestPracticeBadgeId', 'enduser', 'joined', 'industries'
+      'headquarters', 'license', 'bestPracticeBadgeId', 'enduser', 'joined', 'industries', 'status', 
+      'use_cases_filter', 'frameworks_filter'
     ]
 
     const entry = keys.reduce((hash, key) => {

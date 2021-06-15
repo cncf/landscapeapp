@@ -21,7 +21,7 @@ export async function getStaticProps() {
     })
     .flat()
 
-  const members = organizations.map(({ crunchbaseData }) => crunchbaseData.name)
+  const members = []; //organizations.map(({ crunchbaseData }) => crunchbaseData.name)
 
   return { props: { acquisitions, members }}
 }

@@ -74,8 +74,62 @@ const relationField = (function() {
 
 })();
 
+function buildValueList(values) {
+  let valueList = [];
+
+  values.forEach(topLevelItem => {
+    let children = topLevelItem.children || [];
+
+    valueList.push({
+      ...topLevelItem,
+      level: 1,
+      url: topLevelItem.url || topLevelItem.id,
+      children: children.map(child => child.id)
+    });
+
+    children.forEach(child => {
+      valueList.push({
+        ...child,
+        level: 2,
+        parentId: topLevelItem.id,
+        url: child.url || child.id,
+        children: []
+      })
+    })
+  });
+
+  return valueList;
+}
+
+const statusField = {
+  id: 'status',
+  label: settings.status.label,
+  url: settings.status.url,
+  isArray: true,
+  values: buildValueList(settings.status.values)
+};
+
+const frameworksField = {
+  id: 'frameworks',
+  label: settings.frameworks.label,
+  url: settings.frameworks.url,
+  isArray: true,
+  values: buildValueList(settings.frameworks.values)
+};
+
+const useCasesField = {
+  id: 'use_cases',
+  label: settings.use_cases.label,
+  url: settings.use_cases.url,
+  isArray: true,
+  values: buildValueList(settings.use_cases.values)
+};
+
 const fields = {
   relation: relationField,
+  status: statusField,
+  frameworks_filter: frameworksField,
+  use_cases_filter: useCasesField,
   stars: {
     id: 'stars',
     label: 'Stars',
@@ -360,6 +414,15 @@ export function filterFn({field, filters}) {
       return true;
     }
     if (_.isArray(filter)) {
+      if (_.isEmpty(value)) {
+        return filter.indexOf(false) !== -1;
+      }
+
+      if (_.isArray(value)) {
+        let found =_.find(value, valueItem => filter.indexOf(valueItem) !== -1);
+        return !!found;
+      }
+
       return filter.indexOf(value) !== -1;
     } else {
       return value === filter;

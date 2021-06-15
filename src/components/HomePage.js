@@ -174,8 +174,7 @@ const HomePage = _ => {
         <div className={classNames('main', {'embed': isEmbed})}>
           <div className="disclaimer">
             <span  dangerouslySetInnerHTML={{__html: settings.home.header}} />
-            Please <OutboundLink to={`https://github.com/${settings.global.repo}`}>open</OutboundLink> a pull request to
-            correct any issues. Greyed logos are not open source. Last Updated: {process.env.lastUpdated}
+            Greyed logos are not open source. Last Updated: {process.env.lastUpdated}
           </div>
           <Summary />
 

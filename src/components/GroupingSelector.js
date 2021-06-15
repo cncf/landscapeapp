@@ -6,7 +6,7 @@ import ComboboxSelector from './ComboboxSelector';
 import fields from '../types/fields'
 import LandscapeContext from '../contexts/LandscapeContext'
 
-const groupingFields = ['landscape', 'relation', 'license', 'organization', 'headquarters'];
+const groupingFields = ['landscape', 'license', 'organization'];
 const options = [{
   id: 'no',
   label: 'No Grouping',
