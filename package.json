@@ -9,7 +9,7 @@
   "scripts": {
     "autocrop-images": "babel-node tools/autocropImages",
     "dev": "yarn yaml2json && yarn watch-landscape",
-    "build-odh": "yarn fetch && yarn prepare-landscape && yarn build-next && yarn setup-robots && yarn remove-dist && yarn copy-dist && yarn export-functions",
+    "build-odh": "yarn fetch && yarn prepare-landscape && yarn build-next && yarn setup-robots && yarn remove-dist && yarn copy-dist",
     "open:src": "yarn dev",
     "open:dist": "yarn stop-old-ci && babel-node tools/distServer.js",
     "get-iframe-resizer-path": "node -e \"console.info(require.resolve('iframe-resizer/js/iframeResizer.min.js'))\" ",
