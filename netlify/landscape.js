@@ -136,6 +136,7 @@ const makeLocalBuild = async function() {
           rm -rf netlify/dist || true
           cp -r dist netlify
           mv netlify/dist/functions netlify/functions
+          cp -r netlify/functions functions # Fix netlify bug
         `);
       process.exit(0);
     } else {
@@ -359,6 +360,7 @@ const makeRemoteBuildWithCache = async function() {
       cp -r distRemote/* netlify/dist
       cp -r distRemote/* dist
       mv netlify/dist/functions netlify/functions
+      cp -r netlify/functions functions # Fix netlify bug
     `);
     process.exit(0);
   }
