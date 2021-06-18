@@ -1,3 +1,7 @@
 //TODO: if we have a non default branch just exit
-require('./fundingHistoryData');
-require('./fundingHistoryPage');
+
+import { settings } from './settings';
+if (!settings.global.skip_funding) {
+  require('./fundingHistoryData');
+  require('./fundingHistoryPage');
+}
