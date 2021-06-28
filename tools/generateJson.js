@@ -176,7 +176,7 @@ async function main () {
         if (node.yahoo_finance_data) {
           return node.yahoo_finance_data.market_cap;
         }
-        if (node.crunchbase_data) {
+        if (node.crunchbase_data && node.crunchbase_data.funding && node.crunchbase_data.funding > 0) {
           return node.crunchbase_data.funding;
         }
         return 'N/A';
