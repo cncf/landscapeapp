@@ -5,7 +5,7 @@ import settings from 'public/settings.json';
 import assetPath from '../utils/assetPath'
 
 const Ad = () => {
-  const entries = settings.ads;
+  const entries = settings.ads || [];
 
   return <div id="kubecon">
     { entries.map( (entry) => (
