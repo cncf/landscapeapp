@@ -1,7 +1,7 @@
 import assetPath from '../utils/assetPath'
 
 const EmbedPage = _ => {
-  const src = `${process.env.basePath}/card-mode?style=borderless&grouping=license&license=mit-license&embed=yes`
+  const src = assetPath(`/card-mode?style=borderless&grouping=license&license=mit-license&embed=yes`)
 
   return <div>
     <h1>Testing how great is that embed </h1>

@@ -14,11 +14,8 @@ const tweets = (processedLandscape.twitter_options || {}).count || 0
 
 const GA = process.env.GA
 
-const basePath = process.env.PROJECT_NAME ? `/${process.env.PROJECT_NAME}` : ''
-
 module.exports = withBundleAnalyzer({
-  env: { lastUpdated, tweets, GA, basePath },
-  basePath,
+  env: { lastUpdated, tweets, GA },
   webpack: (config, options) => {
     // CAREFUL before adding more presets, next/babel already includes some
     // see https://nextjs.org/docs/advanced-features/customizing-babel-config

@@ -4,6 +4,7 @@ import { load } from 'js-yaml'
 import { Converter } from 'showdown'
 import sanitizeHtml from 'sanitize-html'
 import traverse from 'traverse'
+import assetPath from '../src/utils/assetPath'
 
 const projectPath = process.env.PROJECT_PATH || path.resolve('../..')
 const guidePath = path.resolve(projectPath, 'guide.yml')
@@ -11,10 +12,20 @@ const guidePath = path.resolve(projectPath, 'guide.yml')
 const converter = new Converter({ simpleLineBreaks: false, tables: true })
 const allowedTags = [...sanitizeHtml.defaults.allowedTags, 'img']
 
+const transformTags = {
+  img: (tagName, attribs) => {
+    const src = attribs.src.indexOf('/') === 0 ? assetPath(attribs.src) : attribs.src
+    return {
+      tagName,
+      attribs: { ...attribs, src }
+    }
+  }
+}
+
 const markdownToHtml = (text) => {
   const html = converter.makeHtml(text)
 
-  return sanitizeHtml(html, { allowedTags })
+  return sanitizeHtml(html, { allowedTags, transformTags })
 }
 
 const loadGuide = () => {
