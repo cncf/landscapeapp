@@ -1,14 +1,15 @@
+import React, { useState } from 'react'
 import { existsSync, readFileSync } from 'fs'
 import traverse from 'traverse'
-import Typography from "@material-ui/core/Typography"
+import Typography from '@material-ui/core/Typography'
 import classNames from 'classnames'
-import React, { useState } from 'react'
-import Header from '../components/Header'
 import { LandscapeProvider } from '../contexts/LandscapeContext'
 import MenuIcon from '@material-ui/icons/Menu'
 import IconButton from '@material-ui/core/IconButton'
 import CloseIcon from '@material-ui/icons/Close'
 import Link from 'next/link'
+import { useRouter } from 'next/router'
+import Header from '../components/Header'
 
 const GuidePage = props => {
   const nodes = traverse(props).reduce(function(acc, node) {
@@ -22,12 +23,19 @@ const GuidePage = props => {
   const showSidebar = _ => setSidebarVisible(true)
   const hideSidebar = _ => setSidebarVisible(false)
 
+  const { asPath } = useRouter()
+  const currentSection = asPath.split('#')[1]
+
   return <LandscapeProvider entries={[]} pageParams={{ mainContentMode: 'landscape' }}>
     <div className={classNames('app',{'filters-opened' : sidebarVisible, 'big-picture': true })}>
       <div className="main-parent" >
         <style jsx global>{`
           blockquote {
             background: #a0a0a0;
+          }
+
+          .sidebar-scroll {
+            margin-top: 20px;
           }
         `}</style>
         <Header />
@@ -37,9 +45,9 @@ const GuidePage = props => {
             <IconButton className="sidebar-collapse" title="Hide sidebar" onClick={hideSidebar}><CloseIcon /></IconButton>
             {
               nodes.filter(node => node.title)
-                .map(node => <div key={node.key} style={{ marginLeft: node.level * 8 }}>
+                .map(node => <div key={node.key} style={{ marginLeft: node.level * 8, marginBottom: 6 }}>
                   <Link href={`#${node.identifier}`} prefetch={false}>
-                    <a className={`nav-link`}>{node.title}</a>
+                    <a className={`nav-link`} style={{ color: node.identifier === currentSection ? 'black' : null }}>{node.title}</a>
                   </Link>
                 </div>
               )
