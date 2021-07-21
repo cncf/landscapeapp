@@ -6,10 +6,12 @@ import classNames from 'classnames'
 import { LandscapeProvider } from '../contexts/LandscapeContext'
 import MenuIcon from '@material-ui/icons/Menu'
 import IconButton from '@material-ui/core/IconButton'
+import RoomIcon from '@material-ui/icons/Room'
 import CloseIcon from '@material-ui/icons/Close'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
 import Header from '../components/Header'
+import assetPath from '../utils/assetPath'
 
 const GuidePage = props => {
   const nodes = traverse(props).reduce(function(acc, node) {
@@ -92,6 +94,15 @@ const GuidePage = props => {
             display: block;
             margin: 0 auto;
           }
+
+          #guide-content .permalink svg {
+            vertical-align: text-top;
+            margin-left: 5px;
+          }
+
+          #guide-content .permalink:hover {
+            text-decoration: underline;
+          }
         `}</style>
         <Header />
         <IconButton className="sidebar-show" title="Show sidebar" onClick={showSidebar}><MenuIcon /></IconButton>
@@ -112,8 +123,13 @@ const GuidePage = props => {
         <div id="guide-content" className="main">
           {
             nodes.map(node => {
-              return <div key={node.key} id={node.title && node.identifier}>
-                { node.title && <Typography variant={`h${node.level + 1}`}>{node.title}</Typography> }
+              return <div key={node.key} id={node.title && node.identifier} >
+                { node.title && <Typography variant={`h${node.level + 1}`}>
+                  { node.permalink && <a href={assetPath(`/card-mode?category=${node.permalink}`)} target="_blank" className="permalink">
+                    {node.title}<RoomIcon />
+                  </a> }
+                  { !node.permalink && node.title }
+                </Typography> }
                 { node.isText && <div dangerouslySetInnerHTML={{ __html: node.content }} /> }
               </div>
             })

@@ -5,6 +5,10 @@ import { Converter } from 'showdown'
 import sanitizeHtml from 'sanitize-html'
 import traverse from 'traverse'
 import assetPath from '../src/utils/assetPath'
+import { landscape } from './landscape'
+import saneName from '../src/utils/saneName'
+
+const categories = landscape.landscape
 
 const projectPath = process.env.PROJECT_PATH || path.resolve('../..')
 const guidePath = path.resolve(projectPath, 'guide.yml')
@@ -39,6 +43,28 @@ const markdownToHtml = (text) => {
   return sanitizeHtml(html, { allowedTags, allowedAttributes, transformTags })
 }
 
+const getPermalink = node => {
+  if (!node.category && !node.subcategory) {
+    return null
+  }
+
+  const category = categories.find(category => category.name === node.categoryName || node.title)
+
+  if (!category) {
+    throw new Error(`Could not create guide. Category not found: ${node.title}`)
+  }
+
+  const subcategory = node.subcategory ? category.subcategories.find(subcategory => subcategory.name === node.title) : null
+
+  if (node.subcategory && !subcategory) {
+    throw new Error(`Could not create guide. Subcategory not found: ${node.title}`)
+  }
+
+  const resource = subcategory || category
+
+  return saneName(resource.name)
+}
+
 const loadGuide = () => {
   if (!existsSync(guidePath)) {
     return null
@@ -53,7 +79,15 @@ const loadGuide = () => {
       .filter(_ => _)
       .join('--')
       .toLowerCase()
-    const attrs = { ...node, level, identifier }
+    const permalink = getPermalink(node)
+    const attrs = {
+      ...node,
+      ...(node.category && { categoryName: node.title }),
+      ...(permalink && { permalink }),
+      level,
+      identifier
+    }
+    console.log(attrs)
     if (typeof node.content === 'string') {
       return { ...attrs, content: markdownToHtml(node.content), isText: true }
     } else if (!this.isLeaf) {
