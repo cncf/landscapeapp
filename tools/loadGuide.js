@@ -22,6 +22,14 @@ const transformTags = {
       tagName,
       attribs: { ...attribs, src }
     }
+  },
+  a: (tagName, attribs) => {
+    const isExternal =  attribs.href.indexOf('/') !== 0
+    const extra = isExternal ? { target: '_blank', rel: 'noopener noreferrer' } : {}
+    return {
+      tagName,
+      attribs: { ...attribs, ...extra }
+    }
   }
 }
 
