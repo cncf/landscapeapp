@@ -9,8 +9,11 @@ import assetPath from '../src/utils/assetPath'
 const projectPath = process.env.PROJECT_PATH || path.resolve('../..')
 const guidePath = path.resolve(projectPath, 'guide.yml')
 
-const converter = new Converter({ simpleLineBreaks: false, tables: true })
+const converter = new Converter({ simpleLineBreaks: false, tables: true, parseImgDimensions: true })
+
 const allowedTags = [...sanitizeHtml.defaults.allowedTags, 'img']
+
+const allowedAttributes = { ...sanitizeHtml.defaults.allowedAttributes, img: ['src', 'width', 'height'] }
 
 const transformTags = {
   img: (tagName, attribs) => {
@@ -25,7 +28,7 @@ const transformTags = {
 const markdownToHtml = (text) => {
   const html = converter.makeHtml(text)
 
-  return sanitizeHtml(html, { allowedTags, transformTags })
+  return sanitizeHtml(html, { allowedTags, allowedAttributes, transformTags })
 }
 
 const loadGuide = () => {
