@@ -3,6 +3,7 @@ import { Alert } from '@material-ui/lab'
 import Head from 'next/head'
 import '../styles/roboto.css'
 import '../styles/theme.css'
+import '../styles/guide.css'
 import '../styles/itemModal.css'
 import settings from 'public/settings.json';
 import ReactGA from 'react-ga';
