@@ -77,6 +77,11 @@ const GuidePage = props => {
             padding: 1.5rem 1.5rem 0.5rem;
           }
 
+          #guide-page table {
+            margin-left: auto;
+            margin-right: auto;
+          }
+
           #guide-page table,
           #guide-page table th,
           #guide-page table td {
