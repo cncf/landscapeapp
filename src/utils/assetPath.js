@@ -1,7 +1,7 @@
-const basePath = process.env.PROJECT_NAME ? `/${process.env.PROJECT_NAME}` : ''
+import getBasePath from '../../tools/getBasePath'
 
 const assetPath = path => {
-  return `${basePath || ''}${path[0] === '/' ? '' : '/'}${path}`
+  return `${getBasePath()}${path[0] === '/' ? '' : '/'}${path}`
 }
 
 export default assetPath

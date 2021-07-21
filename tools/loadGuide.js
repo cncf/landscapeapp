@@ -87,7 +87,6 @@ const loadGuide = () => {
       level,
       identifier
     }
-    console.log(attrs)
     if (typeof node.content === 'string') {
       return { ...attrs, content: markdownToHtml(node.content), isText: true }
     } else if (!this.isLeaf) {
