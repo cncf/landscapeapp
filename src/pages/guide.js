@@ -3,18 +3,19 @@ import { existsSync, readFileSync } from 'fs'
 import traverse from 'traverse'
 import Typography from '@material-ui/core/Typography'
 import classNames from 'classnames'
-import { LandscapeProvider } from '../contexts/LandscapeContext'
 import MenuIcon from '@material-ui/icons/Menu'
 import IconButton from '@material-ui/core/IconButton'
 import RoomIcon from '@material-ui/icons/Room'
 import CloseIcon from '@material-ui/icons/Close'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
+import Head from 'next/head'
 import Header from '../components/Header'
 import assetPath from '../utils/assetPath'
+import { LandscapeProvider } from '../contexts/LandscapeContext'
 
-const GuidePage = props => {
-  const nodes = traverse(props).reduce(function(acc, node) {
+const GuidePage = ({ content, title }) => {
+  const nodes = traverse(content).reduce(function(acc, node) {
     if (node.title || node.content) {
       acc.push({ ...node, key: this.path.join('-') })
     }
@@ -29,6 +30,10 @@ const GuidePage = props => {
   const currentSection = asPath.split('#')[1]
 
   return <LandscapeProvider entries={[]} pageParams={{ mainContentMode: 'landscape' }}>
+    <Head>
+      <title>Guide - {title}</title>
+    </Head>
+
     <div id="guide-page" className={classNames('app',{'filters-opened' : sidebarVisible, 'big-picture': true })}>
       <div className="main-parent" >
         <Header />
@@ -69,7 +74,9 @@ const GuidePage = props => {
 
 export async function getStaticProps() {
   const notFound = !existsSync('public/guide.json')
-  const props = notFound ? {} : JSON.parse(readFileSync('public/guide.json', 'utf-8'))
+  const { content } = notFound ? {} : JSON.parse(readFileSync('public/guide.json', 'utf-8'))
+  const settings = JSON.parse(require('fs').readFileSync('public/settings.json', 'utf-8'))
+  const props = { content, title: settings.global.meta.title }
   return { props, notFound }
 }
 
