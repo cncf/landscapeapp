@@ -15,7 +15,7 @@ export const outerPadding = 20
 export const headerHeight = 40
 
 // Check if item is large
-const isLargeFn = ({ relation, category, member, categoryAttrs }) => {
+export const isLargeFn = ({ relation, category, member, categoryAttrs }) => {
   const relationInfo = fields.relation.valuesMap[relation]
   if (category === settings.global.membership) {
     const membershipInfo = settings.membership[member];

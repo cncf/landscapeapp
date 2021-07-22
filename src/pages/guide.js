@@ -13,14 +13,30 @@ import Head from 'next/head'
 import Header from '../components/Header'
 import assetPath from '../utils/assetPath'
 import { LandscapeProvider } from '../contexts/LandscapeContext'
+import { parseParams } from '../utils/routing'
+import getPrerenderProps from '../utils/getPrerenderProps'
+import Item from '../components/BigPicture/Item'
+import { findLandscapeSettings } from '../utils/landscapeSettings'
+import { isLargeFn } from '../utils/landscapeCalculations'
 
-const GuidePage = ({ content, title }) => {
+const GuidePage = ({ content, title, entries, mainContentMode }) => {
   const nodes = traverse(content).reduce(function(acc, node) {
     if (node.title || node.content) {
       acc.push({ ...node, key: this.path.join('-') })
     }
     return acc
   }, [])
+
+  const landscapeSettings = findLandscapeSettings(mainContentMode)
+  const categories = landscapeSettings.elements.map(element => element).reduce((acc, category) => {
+    return { ...acc, [category.category]: category }
+  }, {})
+
+  const enhancedEntries = entries.map(entry => {
+    const categoryAttrs = categories[entry.category]
+    const enhanced = { ...entry, categoryAttrs, isVisible: true }
+    return { ...enhanced, isLarge: isLargeFn(enhanced) }
+  })
 
   const [sidebarVisible, setSidebarVisible] = useState(false)
   const showSidebar = _ => setSidebarVisible(true)
@@ -29,7 +45,7 @@ const GuidePage = ({ content, title }) => {
   const { asPath } = useRouter()
   const currentSection = asPath.split('#')[1]
 
-  return <LandscapeProvider entries={[]} pageParams={{ mainContentMode: 'landscape' }}>
+  return <LandscapeProvider entries={entries} pageParams={{ mainContentMode }}>
     <Head>
       <title>Guide - {title}</title>
     </Head>
@@ -52,7 +68,7 @@ const GuidePage = ({ content, title }) => {
             }
           </div>
         </div>
-        <div id="guide-content" className="main">
+        <div className="main">
           {
             nodes.map(node => {
               return <div key={node.key} id={node.title && node.identifier} >
@@ -62,7 +78,13 @@ const GuidePage = ({ content, title }) => {
                   </a> }
                   { !node.permalink && node.title }
                 </Typography> }
-                { node.isText && <div dangerouslySetInnerHTML={{ __html: node.content }} /> }
+                { node.isText && <div className="guide-content" dangerouslySetInnerHTML={{ __html: node.content }} /> }
+                { node.subcategory && <div className="items">
+                  {
+                    enhancedEntries.filter(entry => entry.path.split('/')[1].trim() === node.title)
+                      .map(entry => <Item item={entry}/>)
+                  }
+                </div>}
               </div>
             })
           }
@@ -76,7 +98,10 @@ export async function getStaticProps() {
   const notFound = !existsSync('public/guide.json')
   const { content } = notFound ? {} : JSON.parse(readFileSync('public/guide.json', 'utf-8'))
   const settings = JSON.parse(require('fs').readFileSync('public/settings.json', 'utf-8'))
-  const props = { content, title: settings.global.meta.title }
+  const mainContentMode = 'landscape'
+  const params = parseParams({ mainContentMode })
+  const { entries } = getPrerenderProps(params)
+  const props = { content, mainContentMode, entries, title: settings.global.meta.title }
   return { props, notFound }
 }
 

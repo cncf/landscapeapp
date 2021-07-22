@@ -35,13 +35,8 @@
     margin-top: 20px;
   }
 
-  #guide-content {
+  .main {
     max-width: 1050px;
-  }
-
-  #guide-content blockquote {
-    background: #ebebeb;
-    padding: 1.5rem 1.5rem 0.5rem;
   }
 
   table {
@@ -61,19 +56,35 @@
     background: #ebebeb;
   }
 
-  #guide-content img {
+  .guide-content blockquote {
+    background: #ebebeb;
+    padding: 1.5rem 1.5rem 0.5rem;
+  }
+
+  .guide-content img {
     max-width: 100%;
     display: block;
     margin: 0 auto;
   }
 
-  #guide-content .permalink svg {
+  .permalink svg {
     vertical-align: text-top;
     margin-left: 5px;
   }
 
-  #guide-content .permalink:hover {
+  .permalink:hover {
     text-decoration: underline;
+  }
+
+  .items {
+    padding: -1.5px;
+    margin: 13.5px 0;
+    overflow: hidden;
+  }
+
+  .items > * {
+    float: left;
+    margin: 1.5px;
   }
 }
 
