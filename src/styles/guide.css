@@ -50,10 +50,17 @@
     border: 1px solid #d0d0d0;
     border-collapse: collapse;
     padding: 0.5rem 1rem 0.3rem;
+    vertical-align: top;
   }
 
   table th {
     background: #ebebeb;
+  }
+
+  table ul {
+    margin: 0;
+    padding: 0.5rem 0.5rem 0.5rem 1rem;
+    list-style-type: disc;
   }
 
   .guide-content blockquote {

@@ -18,6 +18,34 @@ import getPrerenderProps from '../utils/getPrerenderProps'
 import Item from '../components/BigPicture/Item'
 import { findLandscapeSettings } from '../utils/landscapeSettings'
 import { isLargeFn } from '../utils/landscapeCalculations'
+import settings from 'public/settings.json'
+
+const SubcategoryMetadata = ({ node, entries }) => {
+  return <>
+    <table>
+      <thead>
+      <th>Buzzwords</th>
+      <th>{settings.global.short_name} Projects</th>
+      </thead>
+      <tbody>
+      <td>
+        <ul>
+          { node.buzzwords && node.buzzwords.map(str => <li>{str}</li>) }
+        </ul>
+      </td>
+      <td>
+        <ul>
+          { entries.filter(entry => entry.project)
+            .map(entry => <li>{entry.name} ({entry.project})</li>) }
+        </ul>
+      </td>
+      </tbody>
+    </table>
+    <div className="items">
+      { entries.map(entry => <Item item={entry}/>) }
+    </div>
+  </>
+}
 
 const GuidePage = ({ content, title, entries, mainContentMode }) => {
   const nodes = traverse(content).reduce(function(acc, node) {
@@ -71,6 +99,8 @@ const GuidePage = ({ content, title, entries, mainContentMode }) => {
         <div className="main">
           {
             nodes.map(node => {
+              const subcategoryEntries = node.subcategory && enhancedEntries.filter(entry => entry.path.split('/')[1].trim() === node.title)
+
               return <div key={node.key} id={node.title && node.identifier} >
                 { node.title && <Typography variant={`h${node.level + 1}`}>
                   { node.permalink && <a href={assetPath(`/card-mode?category=${node.permalink}`)} target="_blank" className="permalink">
@@ -79,12 +109,7 @@ const GuidePage = ({ content, title, entries, mainContentMode }) => {
                   { !node.permalink && node.title }
                 </Typography> }
                 { node.isText && <div className="guide-content" dangerouslySetInnerHTML={{ __html: node.content }} /> }
-                { node.subcategory && <div className="items">
-                  {
-                    enhancedEntries.filter(entry => entry.path.split('/')[1].trim() === node.title)
-                      .map(entry => <Item item={entry}/>)
-                  }
-                </div>}
+                { node.subcategory && <SubcategoryMetadata entries={subcategoryEntries} node={node} /> }
               </div>
             })
           }

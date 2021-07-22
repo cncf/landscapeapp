@@ -89,7 +89,7 @@ const loadGuide = () => {
     }
     if (typeof node.content === 'string') {
       return { ...attrs, content: markdownToHtml(node.content), isText: true }
-    } else if (!this.isLeaf) {
+    } else if (!this.isLeaf && !Array.isArray(node)) {
       return { ...attrs }
     }
   })
