@@ -6576,7 +6576,7 @@ fsevents@~2.3.1:
     rimraf: 3.0.2
     serve-static: 1.14.1
     sitemap: ^7.0.0
-    svg-autocrop: ^2.0.39
+    svg-autocrop: ^2.0.40
     swr: ^0.5.6
     traverse: 0.6.6
     typeface-roboto: ^1.1.13
@@ -11953,9 +11953,9 @@ resolve@^2.0.0-next.3:
   languageName: node
   linkType: hard
 
-"svg-autocrop@npm:^2.0.39":
-  version: 2.0.39
-  resolution: "svg-autocrop@npm:2.0.39"
+"svg-autocrop@npm:^2.0.40":
+  version: 2.0.40
+  resolution: "svg-autocrop@npm:2.0.40"
   dependencies:
     bluebird: ^3.7.2
     glob: ^7.1.7
@@ -11970,7 +11970,7 @@ resolve@^2.0.0-next.3:
     xml-beautifier: ^0.5.0
   bin:
     svg-autocrop: fix.js
-  checksum: 3107ec7b52171432e0220de7bc679c077e927e27c25dfe21d3309ac15596112bf13c7e1b8e349a05b67b90a2e79915af31a37d601cdb29b6af210dc80404309d
+  checksum: 79c2472ee2c5dfc46b4b6d5e68d39b29209617bc79f73767e5bf504d34ecfa0fcfc15924a12d9e260521162ad7190795acc74f07298d003b1afcb38fa6ebcce0
   languageName: node
   linkType: hard
 
