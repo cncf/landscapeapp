@@ -72,8 +72,18 @@ const loadGuide = () => {
 
   const guideContent = load(readFileSync(guidePath))
 
+  const getParentNode = context => {
+    const { parent } = context
+
+    if (!parent) {
+      return {}
+    }
+
+    return !Array.isArray(parent.node) ? parent.node : parent.parent.node
+  }
+
   return traverse(guideContent).map(function(node) {
-    const parentNode = this.parent && this.parent.node || {}
+    const parentNode = getParentNode(this)
     const level = (parentNode.level || 0) + (node.title ? 1 : 0)
     const identifier = [parentNode.identifier, (node.title || '').replace(/\W/g, " ").trim().replace(/\s+/g, '-')]
       .filter(_ => _)
