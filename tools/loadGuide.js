@@ -11,7 +11,7 @@ import saneName from '../src/utils/saneName'
 const categories = landscape.landscape
 
 const projectPath = process.env.PROJECT_PATH || path.resolve('../..')
-const guidePath = path.resolve(projectPath, 'guide.yml')
+const guidePath = path.resolve(projectPath, 'guide', 'index.yml')
 
 const converter = new Converter({ simpleLineBreaks: false, tables: true, parseImgDimensions: true })
 
@@ -65,22 +65,22 @@ const getPermalink = node => {
   return saneName(resource.name)
 }
 
+const getParentNode = context => {
+  const { parent } = context
+
+  if (!parent) {
+    return {}
+  }
+
+  return !Array.isArray(parent.node) ? parent.node : parent.parent.node
+}
+
 const loadGuide = () => {
   if (!existsSync(guidePath)) {
     return null
   }
 
   const guideContent = load(readFileSync(guidePath))
-
-  const getParentNode = context => {
-    const { parent } = context
-
-    if (!parent) {
-      return {}
-    }
-
-    return !Array.isArray(parent.node) ? parent.node : parent.parent.node
-  }
 
   return traverse(guideContent).map(function(node) {
     const parentNode = getParentNode(this)
@@ -97,8 +97,9 @@ const loadGuide = () => {
       level,
       identifier
     }
-    if (typeof node.content === 'string') {
-      return { ...attrs, content: markdownToHtml(node.content), isText: true }
+    if (node.file) {
+      const fileContent = readFileSync(path.resolve(projectPath, 'guide', node.file), 'utf-8')
+      return { ...attrs, content: markdownToHtml(fileContent), isText: true }
     } else if (!this.isLeaf && !Array.isArray(node)) {
       return { ...attrs }
     }
