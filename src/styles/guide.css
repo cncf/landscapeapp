@@ -84,14 +84,12 @@
   }
 
   .items {
-    padding: -1.5px;
     margin: 13.5px 0;
     overflow: hidden;
   }
 
-  .items > * {
+  .outer-item {
     float: left;
-    margin: 1.5px;
   }
 }
 
