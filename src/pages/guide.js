@@ -26,6 +26,7 @@ import {
   largeItemWidth,
   itemMargin
 } from '../utils/landscapeCalculations'
+import ItemDialog from '../components/ItemDialog'
 
 const scale = 1.8;
 
@@ -77,6 +78,9 @@ const SubcategoryMetadata = ({ node, entries }) => {
 }
 
 const GuidePage = ({ content, title, entries, mainContentMode }) => {
+  const router = useRouter()
+  const selectedItemId = router.query.selected
+
   const nodes = traverse(content).reduce(function(acc, node) {
     if (node.title || node.content) {
       acc.push({ ...node, key: this.path.join('-') })
@@ -106,6 +110,8 @@ const GuidePage = ({ content, title, entries, mainContentMode }) => {
     <Head>
       <title>Guide - {title}</title>
     </Head>
+
+    {selectedItemId && <ItemDialog/>}
 
     <div id="guide-page" className={classNames('app',{'filters-opened' : sidebarVisible, 'big-picture': true })}>
       <div className="main-parent" >
@@ -153,7 +159,7 @@ export async function getStaticProps() {
   const notFound = !existsSync('public/guide.json')
   const { content } = notFound ? {} : JSON.parse(readFileSync('public/guide.json', 'utf-8'))
   const settings = JSON.parse(require('fs').readFileSync('public/settings.json', 'utf-8'))
-  const mainContentMode = 'landscape'
+  const mainContentMode = 'guide'
   const params = parseParams({ mainContentMode })
   const { entries } = getPrerenderProps(params)
   const props = { content, mainContentMode, entries, title: settings.global.meta.title }
