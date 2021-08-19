@@ -1,10 +1,5 @@
-@import 'colors';
-$mobilewidth: 812px;
-
-$sm-screen: 576px;
-$md-screen: 768px;
-$lg-screen: 992px;
-$xl-screen: 1200px;
+@import 'colors.css';
+@import 'breakpoints.css';
 
 html, body, main, #__next, .app {
   height: 100%;
