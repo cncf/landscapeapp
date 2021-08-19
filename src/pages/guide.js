@@ -116,7 +116,7 @@ const GuidePage = ({ content, title, entries, mainContentMode }) => {
             <IconButton className="sidebar-collapse" title="Hide sidebar" onClick={hideSidebar}><CloseIcon /></IconButton>
             {
               nodes.filter(node => node.title)
-                .map(node => <div key={node.key} style={{ marginLeft: node.level * 8, marginBottom: 6 }}>
+                .map(node => <div key={node.key} style={{ marginLeft: (node.level - 1) * 8, marginBottom: 6 }}>
                   <Link href={`#${node.identifier}`} prefetch={false}>
                     <a className={`nav-link`} style={{ color: node.identifier === currentSection ? 'black' : null }}>{node.title}</a>
                   </Link>

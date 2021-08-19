@@ -32,7 +32,12 @@
   }
 
   .sidebar-scroll {
-    margin-top: 20px;
+    padding-top: 20px;
+  }
+
+  .sidebar .sidebar-collapse {
+    top: 5px;
+    right: 5px;
   }
 
   .main {
