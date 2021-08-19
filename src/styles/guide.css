@@ -5,9 +5,8 @@
   h3,
   h4,
   h5 {
-    line-height: 1.2;
     font-weight: bold;
-    margin: 0 0 1rem;
+    margin: 1.5rem 0 1rem;
   }
 
   p,
@@ -16,14 +15,16 @@
     margin: 0 0 1rem;
   }
 
+  blockquote :first-child {
+    margin-top: 0;
+  }
+
   h1 {
     font-size: 2.1rem;
-    margin: 0 0 1rem;
   }
 
   h2 {
     font-size: 1.85rem;
-    margin: 0 0 1rem;
   }
 
   h3 {
@@ -53,6 +54,7 @@
   }
 
   .main .title {
+    margin: 0;
     max-width: 580px;
   }
 
@@ -107,7 +109,7 @@
   }
 
   .items {
-    margin: 13.5px 0;
+    margin-bottom: 0.5rem;
     overflow: hidden;
   }
 
