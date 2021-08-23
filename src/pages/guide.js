@@ -136,7 +136,7 @@ const GuidePage = ({ content, title, entries, mainContentMode }) => {
           </div>
         </div>
         <div className="main">
-          <h1 className="title">{settings.global.name} guide</h1>
+          <h1 className="title">{settings.global.name} Guide</h1>
           {
             nodes.map(node => {
               const subcategoryEntries = node.subcategory && enhancedEntries.filter(entry => entry.path.split('/')[1].trim() === node.title)
