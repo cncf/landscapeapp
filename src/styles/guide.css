@@ -1,6 +1,8 @@
 @import 'breakpoints.css';
 
 #guide-page {
+  color: #38404a;
+
   h2,
   h3,
   h4,
