@@ -4,6 +4,7 @@ $spacing: 1rem;
 #guide-page {
   color: #38404a;
 
+  h1,
   h2,
   h3,
   h4,
@@ -14,7 +15,7 @@ $spacing: 1rem;
   }
 
   h2 {
-    padding-top: calc($spacing)
+    padding-top: calc($spacing * 1.25)
   }
 
   h3 {
@@ -29,6 +30,10 @@ $spacing: 1rem;
     padding-top: calc($spacing / 4)
   }
 
+  .guide-content {
+    margin-top: $spacing;
+  }
+
   p,
   table {
     margin: 0 0 $spacing;
@@ -39,7 +44,7 @@ $spacing: 1rem;
     margin: 0 0 calc($spacing * 1.5);
   }
 
-  .guide-content blockquote {
+  blockquote {
     background: #ebebeb;
     padding: calc($spacing * 1.25);
     font-size: 0.9em;
@@ -86,7 +91,8 @@ $spacing: 1rem;
 
   .main {
     max-width: 630px;
-    margin-top: -55px;
+    margin-top: -48px;
+    padding-left: 15px;
   }
 
   .main .title {

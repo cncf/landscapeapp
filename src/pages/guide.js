@@ -137,22 +137,25 @@ const GuidePage = ({ content, title, entries, mainContentMode }) => {
         </div>
         <div className="main">
           <h1 className="title">{settings.global.name} Guide</h1>
-          {
-            nodes.map(node => {
-              const subcategoryEntries = node.subcategory && enhancedEntries.filter(entry => entry.path.split('/')[1].trim() === node.title)
 
-              return <div key={node.key} id={node.title && node.identifier} >
-                { node.title && <Typography variant={`h${node.level + 1}`}>
-                  { node.permalink && <a href={assetPath(`/card-mode?category=${node.permalink}`)} target="_blank" className="permalink">
-                    {node.title}<RoomIcon />
-                  </a> }
-                  { !node.permalink && node.title }
-                </Typography> }
-                { node.isText && <div className="guide-content" dangerouslySetInnerHTML={{ __html: node.content }} /> }
-                { node.subcategory && <SubcategoryMetadata entries={subcategoryEntries} node={node} /> }
-              </div>
-            })
-          }
+          <div className="guide-content">
+            {
+              nodes.map(node => {
+                const subcategoryEntries = node.subcategory && enhancedEntries.filter(entry => entry.path.split('/')[1].trim() === node.title)
+
+                return <div key={node.key} id={node.title && node.identifier} >
+                  { node.title && <Typography variant={`h${node.level + 1}`}>
+                    { node.permalink && <a href={assetPath(`/card-mode?category=${node.permalink}`)} target="_blank" className="permalink">
+                      {node.title}<RoomIcon />
+                    </a> }
+                    { !node.permalink && node.title }
+                  </Typography> }
+                  { node.isText && <div className="guide-content" dangerouslySetInnerHTML={{ __html: node.content }} /> }
+                  { node.subcategory && <SubcategoryMetadata entries={subcategoryEntries} node={node} /> }
+                </div>
+              })
+            }
+          </div>
         </div>
       </div>
     </div>
