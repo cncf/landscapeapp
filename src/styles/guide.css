@@ -1,4 +1,5 @@
 @import 'breakpoints.css';
+$spacing: 1rem;
 
 #guide-page {
   color: #38404a;
@@ -7,38 +8,71 @@
   h3,
   h4,
   h5 {
+    line-height: 1;
     font-weight: bold;
-    margin: 1.5rem 0 1rem;
+    margin: 0 0 $spacing;
+  }
+
+  h2 {
+    padding-top: calc($spacing)
+  }
+
+  h3 {
+    padding-top: calc($spacing * 3  / 4)
+  }
+
+  h4 {
+    padding-top: calc($spacing / 2)
+  }
+
+  h5 {
+    padding-top: calc($spacing / 4)
   }
 
   p,
-  table,
+  table {
+    margin: 0 0 $spacing;
+  }
+
+  p > img,
   blockquote {
-    margin: 0 0 1rem;
+    margin: 0 0 calc($spacing * 1.5);
+  }
+
+  .guide-content blockquote {
+    background: #ebebeb;
+    padding: calc($spacing * 1.25);
+    font-size: 0.9em;
   }
 
   blockquote :first-child {
     margin-top: 0;
+    padding-top: 0;
+  }
+
+  blockquote :last-child {
+    margin-bottom: 0;
+    padding-bottom: 0;
   }
 
   h1 {
-    font-size: 2.1rem;
+    font-size: 2.4em;
   }
 
   h2 {
-    font-size: 1.85rem;
+    font-size: 2.1em;
   }
 
   h3 {
-    font-size: 1.5rem;
+    font-size: 1.7em;
   }
 
   h4 {
-    font-size: 1.25rem;
+    font-size: 1.4em;
   }
 
   h5 {
-    font-size: 1.125rem;
+    font-size: 1.275em;
   }
 
   .sidebar-scroll {
@@ -90,15 +124,11 @@
     list-style-type: disc;
   }
 
-  .guide-content blockquote {
-    background: #ebebeb;
-    padding: 1.5rem 1.5rem 0.5rem;
-  }
-
   .guide-content img {
     max-width: 100%;
     display: block;
-    margin: 0 auto;
+    margin-left: auto;
+    margin-right: auto;
   }
 
   .permalink svg {
@@ -111,7 +141,7 @@
   }
 
   .items {
-    margin-bottom: 0.5rem;
+    margin-bottom: $spacing;
     overflow: hidden;
   }
 
