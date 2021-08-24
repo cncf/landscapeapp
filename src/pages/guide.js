@@ -34,7 +34,7 @@ const WrappedItem = ({ entry }) => <div className="outer-item">
   <style jsx>{`
     .outer-item {
       width: ${(entry.isLarge ? largeItemWidth : smallItemWidth) * scale}px;
-      height: ${(entry.isLarge ? largeItemHeight : smallItemHeight) * scale}px;
+      height: ${Math.floor((entry.isLarge ? largeItemHeight : smallItemHeight) * scale)}px;
       margin: ${itemMargin * scale / 2}px;
     }
 
