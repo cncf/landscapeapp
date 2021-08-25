@@ -89,6 +89,19 @@ $spacing: 1rem;
     right: 5px;
   }
 
+  .sidebar-level {
+    margin-left: 10px;
+  }
+
+  .sidebar-scroll > .sidebar-level {
+    margin-left: 0;
+  }
+
+  .sidebar-link {
+    margin-bottom: 6px;
+    display: block;
+  }
+
   .main {
     max-width: 630px;
     margin-top: -48px;

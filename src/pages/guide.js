@@ -78,16 +78,43 @@ const SubcategoryMetadata = ({ node, entries }) => {
   </>
 }
 
+const TreeNavigation = ({ nodes, currentSection }) => {
+  return nodes.map(node => {
+    const showChildren = currentSection && currentSection.indexOf(node.identifier) === 0 && Array.isArray(node.content)
+
+    return node.title && <div key={node.identifier} className="sidebar-level">
+      <>
+        <Link href={`#${node.identifier}`} prefetch={false}>
+          <a className="sidebar-link" style={{ color: node.identifier === currentSection && 'black' }}>{node.title}</a>
+        </Link>
+
+        { showChildren && <TreeNavigation nodes={node.content} currentSection={currentSection} /> }
+      </>
+    </div>
+  })
+}
+
+const TreeContent = ({ nodes, enhancedEntries }) => {
+  return nodes.map(node => {
+    const subcategoryEntries = node.subcategory && enhancedEntries.filter(entry => entry.path.split('/')[1].trim() === node.title)
+
+    return <div key={node.identifier} id={node.title && node.identifier} >
+      { node.title && <Typography variant={`h${node.level + 1}`}>
+        { node.permalink && <a href={assetPath(`/card-mode?category=${node.permalink}`)} target="_blank" className="permalink">
+          {node.title}<RoomIcon />
+        </a> }
+        { !node.permalink && node.title }
+      </Typography> }
+      { node.isText && <div className="guide-content" dangerouslySetInnerHTML={{ __html: node.content }} /> }
+      { Array.isArray(node.content) && <TreeContent nodes={node.content} enhancedEntries={enhancedEntries} /> }
+      { node.subcategory && <SubcategoryMetadata entries={subcategoryEntries} node={node} /> }
+    </div>
+  })
+}
+
 const GuidePage = ({ content, title, entries, mainContentMode }) => {
   const router = useRouter()
   const selectedItemId = router.query.selected
-
-  const nodes = traverse(content).reduce(function(acc, node) {
-    if (node.title || node.content) {
-      acc.push({ ...node, key: this.path.join('-') })
-    }
-    return acc
-  }, [])
 
   const landscapeSettings = findLandscapeSettings(mainContentMode)
   const categories = landscapeSettings.elements.map(element => element).reduce((acc, category) => {
@@ -121,37 +148,14 @@ const GuidePage = ({ content, title, entries, mainContentMode }) => {
         <div className="sidebar">
           <div className="sidebar-scroll">
             <IconButton className="sidebar-collapse" title="Hide sidebar" onClick={hideSidebar}><CloseIcon /></IconButton>
-            {
-              nodes.filter(node => node.title)
-                .map(node => <div key={node.key} style={{ marginLeft: (node.level - 1) * 8, marginBottom: 6 }}>
-                  <Link href={`#${node.identifier}`} prefetch={false}>
-                    <a className={`nav-link`} style={{ color: node.identifier === currentSection ? 'black' : null }}>{node.title}</a>
-                  </Link>
-                </div>
-              )
-            }
+            <TreeNavigation nodes={content} currentSection={currentSection} />
           </div>
         </div>
         <div className="main">
           <h1 className="title">{settings.global.name} Guide</h1>
 
           <div className="guide-content">
-            {
-              nodes.map(node => {
-                const subcategoryEntries = node.subcategory && enhancedEntries.filter(entry => entry.path.split('/')[1].trim() === node.title)
-
-                return <div key={node.key} id={node.title && node.identifier} >
-                  { node.title && <Typography variant={`h${node.level + 1}`}>
-                    { node.permalink && <a href={assetPath(`/card-mode?category=${node.permalink}`)} target="_blank" className="permalink">
-                      {node.title}<RoomIcon />
-                    </a> }
-                    { !node.permalink && node.title }
-                  </Typography> }
-                  { node.isText && <div className="guide-content" dangerouslySetInnerHTML={{ __html: node.content }} /> }
-                  { node.subcategory && <SubcategoryMetadata entries={subcategoryEntries} node={node} /> }
-                </div>
-              })
-            }
+            <TreeContent nodes={content} enhancedEntries={enhancedEntries} />
           </div>
         </div>
       </div>
