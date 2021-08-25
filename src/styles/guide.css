@@ -35,7 +35,7 @@ $spacing: 1rem;
   }
 
   p,
-  table {
+  .metadata {
     margin: 0 0 $spacing;
   }
 
@@ -106,28 +106,45 @@ $spacing: 1rem;
     }
   }
 
-  table {
-    margin-left: auto;
-    margin-right: auto;
-  }
-
-  table,
-  table th,
-  table td {
+  .metadata {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
     border: 1px solid #d0d0d0;
-    border-collapse: collapse;
-    padding: 0.5rem 1rem 0.3rem;
-    vertical-align: top;
+    border-right: none;
+    border-bottom: none;
   }
 
-  table th {
+  .metadata > div {
+    display: flex;
+  }
+
+  .metadata .header {
     background: #ebebeb;
+    font-weight: 600;
+    text-align: center;
   }
 
-  table ul {
+  .metadata .header > div {
+    padding: 0.5em;
+  }
+
+  .metadata .body > div {
+    padding: 1em;
+  }
+
+  .metadata .header > div,
+  .metadata .body > div {
+    width: 50%;
+    border: 1px solid #d0d0d0;
+    border-top: 0;
+    border-left: 0;
+  }
+
+  .metadata .body ul {
     margin: 0;
-    padding: 0.5rem 0.5rem 0.5rem 1rem;
-    list-style-type: disc;
+    padding: 0;
+    list-style-position: inside;
   }
 
   .guide-content img {

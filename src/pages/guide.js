@@ -52,29 +52,26 @@ const WrappedItem = ({ entry }) => <div className="outer-item">
 
 const SubcategoryMetadata = ({ node, entries }) => {
   return <>
-    <table>
-      <thead>
-        <tr>
-          <th>Buzzwords</th>
-          <th>{settings.global.short_name} Projects</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td>
-            <ul>
-              { node.buzzwords && node.buzzwords.map(str => <li key={str}>{str}</li>) }
-            </ul>
-          </td>
-          <td>
-            <ul>
-              { entries.filter(entry => entry.project)
-                .map(entry => <li key={entry.name}>{entry.name} ({entry.project})</li>) }
-            </ul>
-          </td>
-        </tr>
-      </tbody>
-    </table>
+    <div className="metadata">
+      <div className="header">
+        <div>Buzzwords</div>
+        <div>{settings.global.short_name} Projects</div>
+      </div>
+      <div className="body">
+        <div>
+          <ul>
+            { node.buzzwords && node.buzzwords.map(str => <li key={str}>{str}</li>) }
+          </ul>
+        </div>
+        <div>
+          <ul>
+            { entries.filter(entry => entry.project)
+              .map(entry => <li key={entry.name}>{entry.name} ({entry.project})</li>) }
+          </ul>
+        </div>
+      </div>
+    </div>
+
     <div className="items">
       { entries.map(entry => <WrappedItem entry={entry} key={entry.id} />) }
     </div>
