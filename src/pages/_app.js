@@ -27,7 +27,7 @@ const Notice = ({ onClose, notice }) => {
 export default function App({ Component, pageProps }) {
   const router = useRouter()
   const description = `${settings.global.meta.description}. Updated: ${process.env.lastUpdated}`
-  const favicon = assetPath('images/favicon.png')
+  const favicon = `${settings.global.website}/${assetPath('images/favicon.png')}`
   const [notice, setNotice] = useState(null)
   const currentDevice = useCurrentDevice()
   // TODO: hydration fix
