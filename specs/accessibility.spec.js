@@ -15,7 +15,7 @@ const analyzePage = async url => {
   }
 }
 
-describe("Accessibility", () => {
+xdescribe("Accessibility", () => {
   test("Main Landscape", async () => {
     await analyzePage(appUrl)
   }, 60 * 1000);
