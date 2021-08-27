@@ -1,6 +1,5 @@
 import React, { useState } from 'react'
 import { existsSync, readFileSync } from 'fs'
-import traverse from 'traverse'
 import Typography from '@material-ui/core/Typography'
 import classNames from 'classnames'
 import MenuIcon from '@material-ui/icons/Menu'
@@ -27,6 +26,8 @@ import {
   itemMargin
 } from '../utils/landscapeCalculations'
 import ItemDialog from '../components/ItemDialog'
+import InternalLink from '../components/InternalLink'
+import OutboundLink from '../components/OutboundLink'
 
 const scale = 1.8;
 
@@ -113,6 +114,7 @@ const TreeContent = ({ nodes, enhancedEntries }) => {
 }
 
 const GuidePage = ({ content, title, entries, mainContentMode }) => {
+  const { short_name, company_url } = settings.global
   const router = useRouter()
   const selectedItemId = router.query.selected
 
@@ -141,22 +143,30 @@ const GuidePage = ({ content, title, entries, mainContentMode }) => {
 
     {selectedItemId && <ItemDialog/>}
 
-    <div id="guide-page" className={classNames('app',{'filters-opened' : sidebarVisible, 'big-picture': true })}>
-      <div className="main-parent" >
-        <Header />
-        <IconButton className="sidebar-show" title="Show sidebar" onClick={showSidebar}><MenuIcon /></IconButton>
-        <div className="sidebar">
-          <div className="sidebar-scroll">
-            <IconButton className="sidebar-collapse" title="Hide sidebar" onClick={hideSidebar}><CloseIcon /></IconButton>
-            <TreeNavigation nodes={content} currentSection={currentSection} />
-          </div>
-        </div>
-        <div className="main">
-          <h1 className="title">{settings.global.name} Guide</h1>
+    <div id="guide-page" className={classNames({'filters-opened' : sidebarVisible})}>
+      <div className="side-content">
+        <span className="landscape-logo">
+          <InternalLink to="/">
+            <img src={assetPath("/images/left-logo.svg")} alt={settings.global.name}/>
+          </InternalLink>
+        </span>
 
-          <div className="guide-content">
-            <TreeContent nodes={content} enhancedEntries={enhancedEntries} />
-          </div>
+        <IconButton className="sidebar-show" title="Show sidebar" onClick={showSidebar}><MenuIcon /></IconButton>
+        <div className="guide-sidebar">
+          <IconButton className="sidebar-collapse" title="Hide sidebar" onClick={hideSidebar}><CloseIcon /></IconButton>
+          <TreeNavigation nodes={content} currentSection={currentSection} />
+        </div>
+      </div>
+
+      <div className="main-content">
+        <h1 className="title">{settings.global.short_name} Landscape Guide</h1>
+
+        <OutboundLink eventLabel={short_name} to={company_url} className="landscapeapp-logo" title={`${short_name} Home`}>
+          <img src={assetPath("/images/right-logo.svg")} title={`${short_name} Logo`}/>
+        </OutboundLink>
+
+        <div className="guide-content">
+          <TreeContent nodes={content} enhancedEntries={enhancedEntries} />
         </div>
       </div>
     </div>

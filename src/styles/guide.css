@@ -3,6 +3,10 @@ $spacing: 1rem;
 
 #guide-page {
   color: #38404a;
+  font-size: 16px;
+  max-width: 960px;
+  position: relative;
+  margin: 0 auto;
 
   h1,
   h2,
@@ -80,6 +84,36 @@ $spacing: 1rem;
     font-size: 1.275em;
   }
 
+  .side-content {
+    position: fixed;
+    width: 250px;
+    top: 0;
+  }
+
+  .sidebar-show {
+    display: none;
+  }
+
+  .sidebar-collapse {
+    display: none;
+  }
+
+  .landscape-logo,
+  .landscape-logo a,
+  .landscape-logo img {
+    width: 215px;
+    height: 70px;
+    display: block;
+  }
+
+  .landscapeapp-logo {
+    width: 215px;
+    height: 70px;
+    position: absolute;
+    top: 0;
+    right: 0;
+  }
+
   .sidebar-scroll {
     padding-top: 20px;
   }
@@ -93,7 +127,7 @@ $spacing: 1rem;
     margin-left: 10px;
   }
 
-  .sidebar-scroll > .sidebar-level {
+  .guide-sidebar > .sidebar-level {
     margin-left: 0;
   }
 
@@ -102,21 +136,14 @@ $spacing: 1rem;
     display: block;
   }
 
-  .main {
-    max-width: 630px;
-    margin-top: -48px;
-    padding-left: 15px;
+  .main-content {
+    padding-left: 250px;
+    margin-top: 15px;
   }
 
-  .main .title {
-    margin: 0;
+  .main-content .title {
+    margin-bottom: 2rem;
     max-width: 580px;
-  }
-
-  @media (max-width: $lg-screen) {
-    .main {
-      margin-top: 20px;
-    }
   }
 
   .metadata {
