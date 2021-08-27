@@ -27,11 +27,11 @@ export const isLargeFn = ({ relation, category, member, categoryAttrs }) => {
 // Compute if items are large and/or visible.
 // Count number of items, large items count for 4 small items.
 // Count number of large items.
-const computeItems = subcategories => {
+const computeItems = (subcategories, horizontal = false) => {
   return subcategories.map(subcategory => {
     const filteredItems = subcategory.items.reduce((acc, { id }) => ({ ...acc, [id]: true }), {})
     const allItems = subcategory.allItems.map(item => ({ ...item, isLarge: isLargeFn(item), isVisible: filteredItems[item.id]  }))
-    const itemsCount = allItems.reduce((count, item) => count + (item.isLarge ? 4 : 1), 0)
+    const itemsCount = allItems.reduce((count, item) => count + (item.isLarge ? 4 : 1), 0) + (horizontal ? 1 : 0)
     const largeItemsCount = allItems.reduce((count, item) => count + (item.isLarge ? 1 : 0), 0)
 
     return { ...subcategory, allItems, itemsCount, largeItemsCount }
@@ -131,7 +131,7 @@ const calculateHorizontalStretch = ({ subcategories, maxWidth, maxHeight }) => {
 }
 
 export const calculateHorizontalCategory = ({ height, width, subcategories, fitWidth }) => {
-  const subcategoriesWithCalculations = computeItems(subcategories)
+  const subcategoriesWithCalculations = computeItems(subcategories, true)
   const maxWidth = width - categoryTitleHeight - categoryBorder - (2 * subcategoryMargin - itemMargin + dividerWidth) * subcategories.length + dividerWidth
   const maxHeight = height - 2 * (subcategoryMargin + categoryBorder) + itemMargin - 2 * categoryBorder
   const maxColumns = Math.floor(maxWidth / (itemMargin + smallItemWidth))

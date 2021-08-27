@@ -1,7 +1,8 @@
-import React, { Fragment } from "react";
+import React, { Fragment, useContext } from "react";
 import { getContrastRatio } from "@material-ui/core/styles";
 import Item from "./Item";
 import InternalLink from "../InternalLink";
+import GuideLink from '../GuideLink'
 import {
   calculateHorizontalCategory,
   categoryBorder,
@@ -13,6 +14,7 @@ import {
   subcategoryMargin,
   subcategoryTitleHeight
 } from "../../utils/landscapeCalculations";
+import LandscapeContext from '../../contexts/LandscapeContext'
 
 const Divider = ({ color }) => {
   const width = dividerWidth
@@ -24,6 +26,10 @@ const Divider = ({ color }) => {
 
 const HorizontalCategory = ({ header, subcategories, width, height, top, left, color, href, fitWidth }) => {
   const subcategoriesWithCalculations = calculateHorizontalCategory({ height, width, subcategories, fitWidth })
+  const { guideMap } = useContext(LandscapeContext)
+
+  const categoryLink = guideMap[header]
+  const subcategoryLinks = (categoryLink && categoryLink.subcategories) || {}
 
   return (
     <div style={{ width, left, height, top, position: 'absolute' }} className="big-picture-section">
@@ -59,6 +65,10 @@ const HorizontalCategory = ({ header, subcategories, width, height, top, left, c
           }}>
             {header}
           </InternalLink>
+
+          { categoryLink && <div style={{ transform: 'rotate(90deg)', position: 'absolute', bottom: 0 }}>
+            <GuideLink color={color} identifier={categoryLink.identifier} />
+          </div> }
         </div>
         <div style={{
           marginLeft: 30,
@@ -105,6 +115,10 @@ const HorizontalCategory = ({ header, subcategories, width, height, top, left, c
                   {
                     allItems.map(item => <Item item={item} key={item.name}/>)
                   }
+
+                  { subcategoryLinks[name] && <div style={{ position: 'absolute', bottom: 5, right: 0 }}>
+                    <GuideLink identifier={subcategoryLinks[name].identifier} fontSize={16} />
+                  </div> }
                 </div>
               </div>
 

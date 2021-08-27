@@ -9,7 +9,7 @@ import { stringifyParams } from '../utils/routing'
 
 const LandscapeContext = createContext()
 
-export const LandscapeProvider = ({ entries, pageParams, children }) => {
+export const LandscapeProvider = ({ entries, pageParams, guideMap = {}, children }) => {
   const router = useRouter()
   const params = parseParams({ ...pageParams, ...router.query })
 
@@ -34,6 +34,7 @@ export const LandscapeProvider = ({ entries, pageParams, children }) => {
     previousItemId,
     params,
     landscapeSettings,
+    guideMap,
     ...size
   }
 
