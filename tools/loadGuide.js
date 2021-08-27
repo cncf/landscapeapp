@@ -43,12 +43,12 @@ const markdownToHtml = (text) => {
   return sanitizeHtml(html, { allowedTags, allowedAttributes, transformTags })
 }
 
-const getPermalink = node => {
+const getPermalink = (node, categoryName) => {
   if (!node.category && !node.subcategory) {
     return null
   }
 
-  const category = categories.find(category => category.name === node.categoryName || node.title)
+  const category = categories.find(category => category.name === categoryName)
 
   if (!category) {
     throw new Error(`Could not create guide. Category not found: ${node.title}`)
@@ -89,10 +89,11 @@ const loadGuide = () => {
       .filter(_ => _)
       .join('--')
       .toLowerCase()
-    const permalink = getPermalink(node)
+    const categoryName = node.category ? node.title : parentNode.categoryName
+    const permalink = getPermalink(node, categoryName)
     const attrs = {
       ...node,
-      ...(node.category && { categoryName: node.title }),
+      ...(categoryName && { categoryName }),
       ...(permalink && { permalink }),
       level,
       identifier
