@@ -143,7 +143,7 @@ const GuidePage = ({ content, title, entries, mainContentMode }) => {
 
     {selectedItemId && <ItemDialog/>}
 
-    <div id="guide-page" className={classNames({'filters-opened' : sidebarVisible})}>
+    <div id="guide-page" className={classNames('app',{'filters-opened' : sidebarVisible})}>
       <div className="side-content">
         <span className="landscape-logo">
           <InternalLink to="/">
@@ -151,7 +151,10 @@ const GuidePage = ({ content, title, entries, mainContentMode }) => {
           </InternalLink>
         </span>
 
-        <IconButton className="sidebar-show" title="Show sidebar" onClick={showSidebar}><MenuIcon /></IconButton>
+        <div className="sidebar-show">
+          <IconButton title="Show sidebar" onClick={showSidebar}><MenuIcon /></IconButton>
+        </div>
+
         <div className="guide-sidebar">
           <IconButton className="sidebar-collapse" title="Hide sidebar" onClick={hideSidebar}><CloseIcon /></IconButton>
           <TreeNavigation nodes={content} currentSection={currentSection} />
@@ -169,6 +172,7 @@ const GuidePage = ({ content, title, entries, mainContentMode }) => {
           <TreeContent nodes={content} enhancedEntries={enhancedEntries} />
         </div>
       </div>
+      <div className="app-overlay"></div>
     </div>
   </LandscapeProvider>
 }

@@ -1,12 +1,19 @@
 @import 'breakpoints.css';
+
 $spacing: 1rem;
 
 #guide-page {
   color: #38404a;
   font-size: 16px;
-  max-width: 960px;
+  max-width: 996px;
+  min-width: 360px;
   position: relative;
   margin: 0 auto;
+  padding: $spacing;
+
+  &.filters-opened {
+    overflow: hidden;
+  }
 
   h1,
   h2,
@@ -87,31 +94,62 @@ $spacing: 1rem;
   .side-content {
     position: fixed;
     width: 250px;
-    top: 0;
+    top: $spacing;
+
+    @media (max-width: $lg-screen) {
+      position: absolute;
+    }
   }
 
   .sidebar-show {
     display: none;
+
+    @media (max-width: $lg-screen) {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: calc($spacing * 2);
+      height: calc($spacing * 2);
+    }
   }
 
   .sidebar-collapse {
     display: none;
+
+    @media (max-width: $lg-screen) {
+      display: block;
+      position: absolute;
+      top: 0;
+      right: 0;
+    }
   }
 
-  .landscape-logo,
-  .landscape-logo a,
-  .landscape-logo img {
-    width: 215px;
-    height: 70px;
+  .landscape-logo {
     display: block;
+
+    @media (max-width: $lg-screen) {
+      margin-left: calc($spacing * 3);
+    }
   }
 
   .landscapeapp-logo {
-    width: 215px;
-    height: 70px;
     position: absolute;
-    top: 0;
-    right: 0;
+    top: $spacing;
+    right: 1rem;
+  }
+
+  .landscape-logo img,
+  .landscapeapp-logo img {
+    max-width: 15em;
+    height: 3em;
+
+    @media (max-width: $lg-screen) {
+      max-width: 10em;
+      height: 2em;
+    }
   }
 
   .sidebar-scroll {
@@ -127,6 +165,24 @@ $spacing: 1rem;
     margin-left: 10px;
   }
 
+  @media (max-width: $lg-screen) {
+    .guide-sidebar {
+      display: none;
+    }
+
+    &.filters-opened .guide-sidebar {
+      display: block;
+      z-index: 1000;
+      background: white;
+      height: 100vh;
+      position: fixed;
+      top: 0;
+      left: 0;
+      padding: $spacing;
+      width: 250px;
+    }
+  }
+
   .guide-sidebar > .sidebar-level {
     margin-left: 0;
   }
@@ -138,7 +194,11 @@ $spacing: 1rem;
 
   .main-content {
     padding-left: 250px;
-    margin-top: 15px;
+
+    @media (max-width: $lg-screen) {
+      padding-left: 0;
+      padding-top: 4em;
+    }
   }
 
   .main-content .title {
