@@ -162,7 +162,7 @@ const GuidePage = ({ content, title, entries, mainContentMode }) => {
       </div>
 
       <div className="main-content">
-        <h1 className="title">{settings.global.short_name} Landscape Guide</h1>
+        <Typography variant="h1" className="title">{settings.global.short_name} Landscape Guide</Typography>
 
         <OutboundLink eventLabel={short_name} to={company_url} className="landscapeapp-logo" title={`${short_name} Home`}>
           <img src={assetPath("/images/right-logo.svg")} title={`${short_name} Logo`}/>

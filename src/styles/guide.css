@@ -1,10 +1,10 @@
 @import 'breakpoints.css';
 
-$spacing: 1rem;
+$spacing: 1em;
 
 #guide-page {
   color: #38404a;
-  font-size: 16px;
+  font-size: 1rem;
   max-width: 996px;
   min-width: 360px;
   position: relative;
@@ -15,49 +15,50 @@ $spacing: 1rem;
     overflow: hidden;
   }
 
-  h1,
-  h2,
-  h3,
-  h4,
-  h5 {
-    line-height: 1;
-    font-weight: bold;
-    margin: 0 0 $spacing;
+  h1 {
+    font-size: 2.5em;
   }
 
   h2 {
-    padding-top: calc($spacing * 1.25)
+    font-size: 2.25em;
   }
 
   h3 {
-    padding-top: calc($spacing * 3  / 4)
+    font-size: 1.75em;
   }
 
   h4 {
-    padding-top: calc($spacing / 2)
+    font-size: 1.375em;
   }
 
   h5 {
-    padding-top: calc($spacing / 4)
+    font-size: 1.125em;
   }
 
-  .guide-content {
-    margin-top: $spacing;
+  h1, h2, h3, h4, h5 {
+    margin-top: calc($spacing * 0.8);
   }
 
-  p,
-  .metadata {
-    margin: 0 0 $spacing;
+  h1.title {
+    margin-top: 0;
+    margin-bottom: calc($spacing * 0.8);
+    max-width: 580px;
+  }
+
+  h1, h2, h3, h4, h5 {
+    margin-bottom: 0;
   }
 
   p > img,
-  blockquote {
-    margin: 0 0 calc($spacing * 1.5);
+  .items,
+  .metadata {
+    margin: calc($spacing * 1.5) 0;
   }
 
   blockquote {
+    margin: calc($spacing * 1.375) 0;
+    padding: $spacing;
     background: #ebebeb;
-    padding: calc($spacing * 1.25);
     font-size: 0.9em;
   }
 
@@ -69,26 +70,6 @@ $spacing: 1rem;
   blockquote :last-child {
     margin-bottom: 0;
     padding-bottom: 0;
-  }
-
-  h1 {
-    font-size: 2.4em;
-  }
-
-  h2 {
-    font-size: 2.1em;
-  }
-
-  h3 {
-    font-size: 1.7em;
-  }
-
-  h4 {
-    font-size: 1.4em;
-  }
-
-  h5 {
-    font-size: 1.275em;
   }
 
   .side-content {
@@ -197,13 +178,8 @@ $spacing: 1rem;
 
     @media (max-width: $lg-screen) {
       padding-left: 0;
-      padding-top: 4em;
+      padding-top: 3.5em;
     }
-  }
-
-  .main-content .title {
-    margin-bottom: 2rem;
-    max-width: 580px;
   }
 
   .metadata {
@@ -264,7 +240,6 @@ $spacing: 1rem;
   }
 
   .items {
-    margin-bottom: $spacing;
     overflow: hidden;
   }
 

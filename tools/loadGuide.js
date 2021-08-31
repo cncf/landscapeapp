@@ -19,6 +19,21 @@ const allowedTags = [...sanitizeHtml.defaults.allowedTags, 'img']
 
 const allowedAttributes = { ...sanitizeHtml.defaults.allowedAttributes, img: ['src', 'width', 'height'] }
 
+const allowedClasses = {
+  p: ['MuiTypography-paragraph'],
+  h1: ['MuiTypography-h1'],
+  h2: ['MuiTypography-h2'],
+  h3: ['MuiTypography-h3'],
+  h4: ['MuiTypography-h4'],
+  h5: ['MuiTypography-h5']
+}
+
+const transformToMUI = suffix => {
+  return (tagName, attribs) => {
+    return { tagName, attribs: { ...attribs, class: `MuiTypography-${suffix}` } }
+  }
+}
+
 const transformTags = {
   img: (tagName, attribs) => {
     const src = attribs.src.indexOf('/') === 0 ? assetPath(attribs.src) : attribs.src
@@ -34,13 +49,19 @@ const transformTags = {
       tagName,
       attribs: { ...attribs, ...extra }
     }
-  }
+  },
+  p: transformToMUI('paragraph'),
+  h1: transformToMUI('h1'),
+  h2: transformToMUI('h2'),
+  h3: transformToMUI('h3'),
+  h4: transformToMUI('h4'),
+  h5: transformToMUI('h5')
 }
 
 const markdownToHtml = (text) => {
   const html = converter.makeHtml(text)
 
-  return sanitizeHtml(html, { allowedTags, allowedAttributes, transformTags })
+  return sanitizeHtml(html, { allowedTags, allowedClasses, allowedAttributes, transformTags })
 }
 
 const getPermalink = (node, categoryName) => {
