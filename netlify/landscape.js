@@ -110,10 +110,15 @@ const makeLocalBuild = async function() {
       cd package
       cp _yarn.lock yarn.lock
       nvm install \`cat .nvmrc\`
+      echo 1
       nvm use \`cat .nvmrc\`
+      echo 2
       npm install -g agentkeepalive --save
+      echo 3
       npm install -g npm --no-progress
+      echo 4
       npm install -g yarn@latest
+      echo 5
       ~/.nvm/versions/node/\`cat .nvmrc\`/bin/yarn >/dev/null
       export NODE_OPTIONS="--unhandled-rejections=strict"
       export JEST_OPTIONS="-i"
