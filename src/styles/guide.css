@@ -37,16 +37,14 @@ $spacing: 1em;
 
   h1, h2, h3, h4, h5 {
     margin-top: calc($spacing * 0.8);
+    margin-bottom: 0;
+    font-weight: 400;
   }
 
   h1.title {
     margin-top: 0;
     margin-bottom: calc($spacing * 0.8);
     max-width: 580px;
-  }
-
-  h1, h2, h3, h4, h5 {
-    margin-bottom: 0;
   }
 
   p > img,
