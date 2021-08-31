@@ -111,6 +111,7 @@ const makeLocalBuild = async function() {
       cp _yarn.lock yarn.lock
       nvm install \`cat .nvmrc\`
       nvm use \`cat .nvmrc\`
+      npm install -g agentkeepalive --save
       npm install -g npm --no-progress
       npm install -g yarn@latest
       ~/.nvm/versions/node/\`cat .nvmrc\`/bin/yarn >/dev/null
