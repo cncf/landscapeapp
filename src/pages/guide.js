@@ -102,7 +102,7 @@ const TreeContent = ({ nodes, enhancedEntries }) => {
     return <div key={node.identifier} id={node.title && node.identifier} >
       { node.title && <Typography variant={`h${node.level + 1}`}>
         { node.permalink && <a href={assetPath(`/card-mode?category=${node.permalink}`)} target="_blank" className="permalink">
-          {node.title}<RoomIcon />
+          <span className="guide-icon" />{node.title}
         </a> }
         { !node.permalink && node.title }
       </Typography> }

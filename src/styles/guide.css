@@ -244,5 +244,18 @@ $spacing: 1em;
   .outer-item {
     float: left;
   }
-}
 
+  .guide-icon {
+    background: url(../images/guide.svg);
+    width: 0.7em;
+    height: 0.85em;
+    display: inline-block;
+    background-repeat: no-repeat;
+    margin-right: 0.25em;
+    vertical-align: text-top;
+  }
+
+  .permalink:hover {
+   filter: brightness(0.8);
+  }
+}
