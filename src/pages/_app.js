@@ -12,7 +12,6 @@ import { useEffect, useState } from 'react'
 import { useRouter } from 'next/router'
 import isBrowser from '../utils/isBrowser'
 import useCurrentDevice from '../utils/useCurrentDevice'
-import assetPath from '../utils/assetPath'
 import { parse } from 'query-string'
 
 const Notice = ({ onClose, notice }) => {
@@ -27,7 +26,7 @@ const Notice = ({ onClose, notice }) => {
 export default function App({ Component, pageProps }) {
   const router = useRouter()
   const description = `${settings.global.meta.description}. Updated: ${process.env.lastUpdated}`
-  const favicon = `${settings.global.website}/${assetPath('images/favicon.png')}`
+  const favicon = `${settings.global.website}/images/favicon.png`
   const [notice, setNotice] = useState(null)
   const currentDevice = useCurrentDevice()
   // TODO: hydration fix

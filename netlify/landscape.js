@@ -109,10 +109,17 @@ const makeLocalBuild = async function() {
       tar xzf interactive*
       cd package
       cp _yarn.lock yarn.lock
+      echo 0
       nvm install \`cat .nvmrc\`
+      echo 1
       nvm use \`cat .nvmrc\`
+      echo 2
+      npm install -g agentkeepalive --save
+      echo 3
       npm install -g npm --no-progress
+      echo 4
       npm install -g yarn@latest
+      echo 5
       ~/.nvm/versions/node/\`cat .nvmrc\`/bin/yarn >/dev/null
       export NODE_OPTIONS="--unhandled-rejections=strict"
       export JEST_OPTIONS="-i"
@@ -217,7 +224,10 @@ const makeRemoteBuildWithCache = async function() {
       "(ls . ~/.nvm/nvm.sh || (curl -s -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.35.3/install.sh | bash >/dev/null))",
       ". ~/.nvm/nvm.sh",
       `nvm install ${nvmrc}`,
+      `echo 0`,
       `nvm use ${nvmrc}`,
+      `echo 1`,
+      `npm install -g agentkeepalive --save`,
       `npm install -g npm --no-progress`,
       `npm install -g yarn@latest`,
       `cd /opt/repo/packageRemote`,
