@@ -20,10 +20,10 @@ export const LandscapeProvider = ({ entries, pageParams, guideMap = {}, children
   const { nextItemId, previousItemId } = selectedItemCalculator(groupedItems, selectedItemId, isBigPicture)
   const size = calculateSize(landscapeSettings)
 
-  const navigate = (newParams = {}) => {
+  const navigate = (newParams = {}, options = {}) => {
     const filters = { ...(params.filters || {}), ...(newParams.filters || {}) }
     const url = stringifyParams({ ...params, ...newParams, filters })
-    router.push(url)
+    router.push(url, null, options)
   }
 
   const baseProps = {

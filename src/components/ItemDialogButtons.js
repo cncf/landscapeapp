@@ -8,7 +8,7 @@ import LandscapeContext from '../contexts/LandscapeContext'
 
 const ItemDialogButtons = ({ closeDialog }) => {
   const { navigate, nextItemId, previousItemId } = useContext(LandscapeContext)
-  const onSelectItem = selectedItemId => navigate({ selectedItemId })
+  const onSelectItem = selectedItemId => navigate({ selectedItemId }, { scroll: false })
   return (
     <div className='modal-buttons'>
           { nextItemId && <KeyHandler keyValue="ArrowRight" onKeyHandle={() => onSelectItem(nextItemId)} /> }

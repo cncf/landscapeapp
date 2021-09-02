@@ -14,7 +14,7 @@ const ItemDialog = _ => {
   const { navigate, params, entries } = useContext(LandscapeContext)
   const { onlyModal, selectedItemId } = params
   const { data: selectedItem } = fetchItem(selectedItemId)
-  const closeDialog = _ => onlyModal ? _ : navigate({ selectedItemId: null })
+  const closeDialog = _ => onlyModal ? _ : navigate({ selectedItemId: null }, { scroll: false })
   const nonoss = selectedItem && selectedItem.oss === false
   const loading = selectedItemId && !selectedItem
   const itemInfo = selectedItem || entries.find(({ id }) => id === selectedItemId)

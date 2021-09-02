@@ -145,7 +145,7 @@ const MainContent = () => {
       const url = stringifyParams({ ...params, selectedItemId })
       window.open(url,'_blank')
     } else {
-      navigate({ selectedItemId })
+      navigate({ selectedItemId }, { scroll: false })
     }
   }
 

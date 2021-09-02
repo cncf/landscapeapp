@@ -73,10 +73,10 @@ const SmallItem = ({ item, onClick }) => {
 }
 
 const Item = props => {
-  const { isLarge, isVisible, category, oss, categoryAttrs } = props.item
+  const { isLarge, category, oss, categoryAttrs } = props.item
   const isMember = category === settings.global.membership;
   const { navigate } = useContext(LandscapeContext)
-  const onClick = _ => navigate({ selectedItemId: props.item.id })
+  const onClick = _ => navigate({ selectedItemId: props.item.id }, { scroll: false })
   const newProps = { ...props, onClick }
 
   return <div className={isMember || oss || categoryAttrs.isLarge ? 'oss' : 'nonoss'}>
