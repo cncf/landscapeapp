@@ -11,11 +11,24 @@ const analyzePage = async url => {
   await browser.close()
 
   if (results.violations.length > 0) {
-    throw(`Page has accessibility issues!: \n\n${JSON.stringify(results.violations, null, 4)}`)
+    const output = [
+      'Encountered the following accessibility issues:',
+      ...results.violations.flatMap(violation => {
+        return [
+          '',
+          `[${violation.impact}] ${violation.help}:`,
+          `  DESCRIPTION: ${violation.helpUrl}`,
+          '  ELEMENTS:',
+          ...violation.nodes.flatMap(node => `    * ${node.html}`),
+        ]
+      })
+    ].join('\n')
+
+    throw output
   }
 }
 
-xdescribe("Accessibility", () => {
+describe("Accessibility", () => {
   test("Main Landscape", async () => {
     await analyzePage(appUrl)
   }, 60 * 1000);

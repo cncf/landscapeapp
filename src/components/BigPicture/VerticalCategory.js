@@ -32,7 +32,7 @@ const VerticalCategory = ({header, subcategories, top, left, width, height, colo
         </InternalLink>
 
         { categoryLink && <div style={{ position: 'absolute', right: 5, top: 5 }}>
-          <GuideLink color={color} identifier={categoryLink.identifier} />
+          <GuideLink label={header} color={color} identifier={categoryLink.identifier} />
         </div> }
       </div>
       <div style={{ width: '100%', position: 'relative', flex: 1, padding: `${subcategoryMargin}px 0`, display: 'flex', flexDirection: 'column', justifyContent: 'space-between', background: 'white' }}>
@@ -48,7 +48,7 @@ const VerticalCategory = ({header, subcategories, top, left, width, height, colo
               </InternalLink>
 
               { subcategoryLinks[name] && <div style={{ position: 'absolute', right: 5, top: -1 }}>
-                <GuideLink identifier={subcategoryLinks[name].identifier} fontSize={16} />
+                <GuideLink label={name} identifier={subcategoryLinks[name].identifier} fontSize={16} />
               </div> }
             </div>
 

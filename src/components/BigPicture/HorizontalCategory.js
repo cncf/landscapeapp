@@ -67,7 +67,7 @@ const HorizontalCategory = ({ header, subcategories, width, height, top, left, c
           </InternalLink>
 
           { categoryLink && <div style={{ transform: 'rotate(90deg)', position: 'absolute', bottom: 0 }}>
-            <GuideLink color={color} identifier={categoryLink.identifier} />
+            <GuideLink label={header} color={color} identifier={categoryLink.identifier} />
           </div> }
         </div>
         <div style={{
@@ -117,7 +117,7 @@ const HorizontalCategory = ({ header, subcategories, width, height, top, left, c
                   }
 
                   { subcategoryLinks[name] && <div style={{ position: 'absolute', bottom: 5, right: 0 }}>
-                    <GuideLink identifier={subcategoryLinks[name].identifier} fontSize={16} />
+                    <GuideLink label={name} identifier={subcategoryLinks[name].identifier} fontSize={16} />
                   </div> }
                 </div>
               </div>
