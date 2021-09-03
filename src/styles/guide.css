@@ -228,13 +228,14 @@ $spacing: 1em;
     margin-right: auto;
   }
 
-  .permalink svg {
-    vertical-align: text-top;
-    margin-left: 5px;
+  .permalink {
+    align-items: center;
+    vertical-align: text-bottom;
   }
 
   .permalink:hover {
     text-decoration: underline;
+    filter: brightness(0.8);
   }
 
   .items {
@@ -248,14 +249,10 @@ $spacing: 1em;
   .guide-icon {
     background: url(../images/guide.svg);
     width: 0.7em;
-    height: 0.85em;
+    height: 0.95em;
     display: inline-block;
     background-repeat: no-repeat;
+    vertical-align: middle;
     margin-right: 0.25em;
-    vertical-align: text-top;
-  }
-
-  .permalink:hover {
-   filter: brightness(0.8);
   }
 }
