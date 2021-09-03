@@ -1,12 +1,14 @@
+import { existsSync } from 'fs'
 import puppeteer from "puppeteer";
 const { AxePuppeteer } = require('axe-puppeteer');
 import { appUrl } from '../tools/distSettings'
+import { projectPath } from '../tools/settings'
 
 const analyzePage = async url => {
   const browser = await puppeteer.launch({args: ['--no-sandbox', '--disable-setuid-sandbox'], defaultViewport: { width: 1600, height: 1200 }});
   const page = await browser.newPage();
   await page.goto(url);
-  await page.waitForSelector('.cards-section')
+  await page.waitForSelector('.app')
   const results = await new AxePuppeteer(page).withTags('wcag2a').analyze()
   await browser.close()
 
@@ -36,4 +38,10 @@ describe("Accessibility", () => {
   test("Card Mode", async () => {
     await analyzePage(`${appUrl}/card-mode`)
   }, 60 * 1000);
+
+  if (existsSync(`${projectPath}/guide`)) {
+    test("Guide", async () => {
+      await analyzePage(`${appUrl}/guide`)
+    }, 60 * 1000);
+  }
 });

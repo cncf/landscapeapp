@@ -17,7 +17,7 @@ const converter = new Converter({ simpleLineBreaks: false, tables: true, parseIm
 
 const allowedTags = [...sanitizeHtml.defaults.allowedTags, 'img']
 
-const allowedAttributes = { ...sanitizeHtml.defaults.allowedAttributes, img: ['src', 'width', 'height'] }
+const allowedAttributes = { ...sanitizeHtml.defaults.allowedAttributes, img: ['src', 'width', 'height', 'alt'] }
 
 const allowedClasses = {
   p: ['MuiTypography-paragraph'],
@@ -37,9 +37,10 @@ const transformToMUI = suffix => {
 const transformTags = {
   img: (tagName, attribs) => {
     const src = attribs.src.indexOf('/') === 0 ? assetPath(attribs.src) : attribs.src
+    const alt = src.split('/').pop()
     return {
       tagName,
-      attribs: { ...attribs, src }
+      attribs: { ...attribs, src, alt }
     }
   },
   a: (tagName, attribs) => {
