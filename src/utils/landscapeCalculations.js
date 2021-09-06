@@ -154,7 +154,8 @@ export const calculateVerticalCategory = ({ subcategories, fitWidth, width }) =>
       columns -= 1
     }
     const subWidth = fitWidth ? width - 2 * categoryBorder : maxColumns * (smallItemWidth + itemMargin) - itemMargin
+    const rows = Math.ceil(subcategory.itemsCount / columns)
 
-    return { ...subcategory, columns, width: subWidth }
+    return { ...subcategory, columns, width: subWidth, rows }
   })
 }

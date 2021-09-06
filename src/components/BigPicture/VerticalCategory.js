@@ -28,9 +28,9 @@ const VerticalCategory = ({header, subcategories, top, left, width, height, colo
         {subcategoriesWithCalculations.map(subcategory => {
           const { width, columns } = subcategory
           const style = { display: 'grid', gridTemplateColumns: `repeat(${columns}, ${smallItemWidth}px)` }
-          const extraStyle = fitWidth ? { justifyContent: 'space-evenly' } : { gridGap: itemMargin }
+          const extraStyle = fitWidth ? { justifyContent: 'space-evenly', flex: 1 } : { gridGap: itemMargin }
 
-          return <div key={subcategory.name} style={{position: 'relative'}}>
+          return <div key={subcategory.name} style={{position: 'relative', flexGrow: subcategory.rows, display: 'flex', flexDirection: 'column' }}>
             <div style={{ lineHeight: '15px', textAlign: 'center'}}>
               <InternalLink to={subcategory.href} style={{ color: '#282828', fontSize: 11 }}>
                 {subcategory.name}
