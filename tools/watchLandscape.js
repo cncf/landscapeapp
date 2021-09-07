@@ -13,6 +13,7 @@ const prepareLandscape = () => {
     console.log('Preparing Landscape')
     const prepareProcess = exec('yarn prepare-landscape')
     prepareProcess.stdout.pipe(process.stdout);
+    prepareProcess.stderr.pipe(process.stderr);
     prepareProcess.on('exit', code => {
       if  (code === 0) {
         console.log('Landscape Prepared Successfully!')
