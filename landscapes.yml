@@ -59,6 +59,10 @@ landscapes:
     repo: openmainframeproject/omp-landscape
     hook: 6064862525138e14cfe87a39
   - landscape:
+    name: openssf
+    repo: ossf/ossf-landscape
+    hook: 613768338a16cb9182b21c3d
+  - landscape:
     name: ospo
     repo: todogroup/ospolandscape
     hook: 6033b43a2572da242aee6a92
