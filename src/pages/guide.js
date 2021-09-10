@@ -138,6 +138,20 @@ const TreeContent = ({ nodes, enhancedEntries }) => {
   })
 }
 
+const LandscapeLogo = () => {
+  return <span className="landscape-logo">
+    <InternalLink to="/">
+      <img src={assetPath("/images/left-logo.svg")} alt={settings.global.name}/>
+    </InternalLink>
+  </span>
+}
+
+const Title = () => {
+  return <Typography variant="h1" className="title">
+    {settings.global.short_name} Landscape Guide
+  </Typography>
+}
+
 const GuidePage = ({ content, title, entries, mainContentMode }) => {
   const { short_name, company_url } = settings.global
   const router = useRouter()
@@ -172,12 +186,7 @@ const GuidePage = ({ content, title, entries, mainContentMode }) => {
 
     <div id="guide-page" className={classNames('app',{'sidebar-open' : sidebarVisible})}>
       <div className="side-content">
-        <span className="landscape-logo">
-          <InternalLink to="/">
-            <img src={assetPath("/images/left-logo.svg")} alt={settings.global.name}/>
-          </InternalLink>
-        </span>
-
+        <LandscapeLogo />
         <div className="guide-sidebar">
           <IconButton className="sidebar-collapse" title="Hide sidebar" onClick={hideSidebar}>
             <CloseIcon />
@@ -193,7 +202,8 @@ const GuidePage = ({ content, title, entries, mainContentMode }) => {
               <IconButton title="Show sidebar" onClick={showSidebar}><MenuIcon  /></IconButton>
             </div>
 
-            <Typography variant="h1" className="title">{settings.global.short_name} Landscape Guide</Typography>
+            <LandscapeLogo />
+            <Title />
           </div>
         </div>
 
@@ -205,6 +215,8 @@ const GuidePage = ({ content, title, entries, mainContentMode }) => {
       <div className="main-content">
         <div className="container">
           <div className="content">
+            <Title />
+
             <TreeContent nodes={content} enhancedEntries={enhancedEntries} />
           </div>
         </div>

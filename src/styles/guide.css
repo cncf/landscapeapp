@@ -43,9 +43,19 @@ $spacing: 1em;
   h1.title {
     margin-top: 0;
     max-width: 580px;
+  }
+
+  .guide-header h1.title {
+    @media (max-width: $lg-screen) {
+      display: none;
+    }
+  }
+
+  .main-content h1.title {
+    display: none;
 
     @media (max-width: $lg-screen) {
-      font-size: 2em;
+      display: block;
     }
   }
 
@@ -139,22 +149,32 @@ $spacing: 1em;
     }
   }
 
-  .landscape-logo {
+  .side-content .landscape-logo {
     display: block;
     padding: $spacing;
+
+    @media (max-width: $lg-screen) {
+      display: none;
+    }
+  }
+
+  .guide-header .landscape-logo {
+    display: none;
+
+    @media (max-width: $lg-screen) {
+      display: block;
+    }
   }
 
   .landscapeapp-logo {
     position: absolute;
     top: $spacing;
     right: 1rem;
+  }
 
-    @media (max-width: $lg-screen) {
-      position: relative;
-      top: initial;
-      right: initial;
-      display: none;
-    }
+  .landscape-logo a,
+  .landscapeapp-logo a {
+    display: flex;
   }
 
   .landscape-logo img,
@@ -191,10 +211,6 @@ $spacing: 1em;
     }
   }
 
-  .guide-sidebar {
-    font-size: 0.875em;
-  }
-
   .sidebar-link {
     display: block;
     color: #38404a;
@@ -222,6 +238,10 @@ $spacing: 1em;
   .main-content {
     border-top: 2px solid #e5e5e5;
     padding-top: 5.5em;
+
+    @media (max-width: $lg-screen) {
+      padding-top: 4.5em;
+    }
   }
 
   .container {
@@ -239,7 +259,11 @@ $spacing: 1em;
   }
 
   .guide-section {
-    scroll-margin-top: 100px;
+    scroll-margin-top: 6em;
+
+    @media (max-width: $lg-screen) {
+      scroll-margin-top: 5em;
+    }
   }
 
   .metadata {
