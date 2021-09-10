@@ -2,18 +2,17 @@
 
 $spacing: 1em;
 
+.no-scroll-mobile {
+  @media (max-width: $lg-screen) {
+    overflow: hidden;
+  }
+}
+
 #guide-page {
   color: #38404a;
   font-size: 1rem;
-  max-width: 996px;
   min-width: 360px;
   position: relative;
-  margin: 0 auto;
-  padding: $spacing;
-
-  &.filters-opened {
-    overflow: hidden;
-  }
 
   h1 {
     font-size: 2.5em;
@@ -43,8 +42,16 @@ $spacing: 1em;
 
   h1.title {
     margin-top: 0;
-    margin-bottom: calc($spacing * 0.8);
     max-width: 580px;
+
+    @media (max-width: $lg-screen) {
+      font-size: 2em;
+    }
+  }
+
+  .container {
+    margin-left: 250px;
+    max-width: 1280px;
   }
 
   p > img,
@@ -70,14 +77,39 @@ $spacing: 1em;
     padding-bottom: 0;
   }
 
+  .guide-header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    border-bottom: 2px solid #e5e5e5;
+    background: #fafafa;
+    z-index: 2;
+
+    @media (max-width: $lg-screen) {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 $spacing;
+
+      .content {
+        display: flex;
+        align-items: center;
+      }
+    }
+  }
+
+  .guide-header .container {
+    padding: $spacing 0;
+  }
+
   .side-content {
     position: fixed;
     width: 250px;
-    top: $spacing;
-
-    @media (max-width: $lg-screen) {
-      position: absolute;
-    }
+    border-right: 2px solid #e5e5e5;
+    background: #fafafa;
+    min-height: 100%;
+    z-index: 3;
   }
 
   .sidebar-show {
@@ -87,11 +119,12 @@ $spacing: 1em;
       display: flex;
       justify-content: center;
       align-items: center;
-      position: absolute;
-      top: 0;
-      left: 0;
       width: calc($spacing * 2);
       height: calc($spacing * 2);
+      margin-right: 0.5em;
+      position: relative;
+      top: initial;
+      left: initial;
     }
   }
 
@@ -108,16 +141,20 @@ $spacing: 1em;
 
   .landscape-logo {
     display: block;
-
-    @media (max-width: $lg-screen) {
-      margin-left: calc($spacing * 3);
-    }
+    padding: $spacing;
   }
 
   .landscapeapp-logo {
     position: absolute;
     top: $spacing;
     right: 1rem;
+
+    @media (max-width: $lg-screen) {
+      position: relative;
+      top: initial;
+      right: initial;
+      display: none;
+    }
   }
 
   .landscape-logo img,
@@ -140,44 +177,69 @@ $spacing: 1em;
     right: 5px;
   }
 
-  .sidebar-level {
-    margin-left: 10px;
-  }
-
   @media (max-width: $lg-screen) {
-    .guide-sidebar {
+    .side-content {
       display: none;
     }
 
-    &.filters-opened .guide-sidebar {
+    &.sidebar-open .side-content {
       display: block;
-      z-index: 1000;
-      background: white;
-      height: 100vh;
       position: fixed;
-      top: 0;
-      left: 0;
       padding: $spacing;
-      width: 250px;
+      inset: 0;
+      width: initial;
     }
   }
 
-  .guide-sidebar > .sidebar-level {
-    margin-left: 0;
+  .guide-sidebar {
+    font-size: 0.875em;
   }
 
   .sidebar-link {
-    margin-bottom: 6px;
     display: block;
+    color: #38404a;
+    padding: 10px 20px;
+  }
+
+  .expandable {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .expandable.expanded svg {
+    transform: rotate(90deg);
+  }
+
+  .sidebar-link:hover {
+    background: #efefef;
+  }
+
+  .sidebar-link.active {
+    font-weight: 700;
   }
 
   .main-content {
-    padding-left: 250px;
+    border-top: 2px solid #e5e5e5;
+    padding-top: 5.5em;
+  }
+
+  .container {
+    margin-left: 250px;
 
     @media (max-width: $lg-screen) {
-      padding-left: 0;
-      padding-top: 3.5em;
+      margin-left: 0;
+      padding: 1em;
     }
+  }
+
+  .content {
+    max-width: 714px;
+    margin: 0 auto;
+  }
+
+  .guide-section {
+    scroll-margin-top: 100px;
   }
 
   .metadata {
