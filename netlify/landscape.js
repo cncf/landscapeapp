@@ -6,6 +6,12 @@ const remote = `root@${process.env.BUILD_SERVER}`;
 const dockerImage = 'netlify/build:xenial';
 const dockerHome = '/opt/buildhome';
 
+const systemName = require('child_process').execSync('uname -a');
+if (systemName.indexOf('16.04') === -1) {
+  console.info('Please ensure that you have a 16.04 ubuntu image for this netlify project, current uname -a', systemName);
+  process.exit(1);
+}
+
 const secrets = [
   process.env.CRUNCHBASE_KEY_4, process.env.TWITTER_KEYS, process.env.GITHUB_TOKEN, process.env.GITHUB_USER, process.env.GITHUB_KEY
 ].filter( (x) => !!x);
