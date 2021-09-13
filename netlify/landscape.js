@@ -6,7 +6,7 @@ const remote = `root@${process.env.BUILD_SERVER}`;
 const dockerImage = 'netlify/build:xenial';
 const dockerHome = '/opt/buildhome';
 
-const systemName = require('child_process').execSync('uname -a');
+const systemName = require('child_process').execSync('uname -a').toString();
 if (systemName.indexOf('16.04') === -1) {
   console.info('Please ensure that you have a 16.04 ubuntu image for this netlify project, current uname -a', systemName);
   process.exit(1);
