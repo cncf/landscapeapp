@@ -9,10 +9,10 @@ const dockerHome = '/opt/buildhome';
 const systemName = require('child_process').execSync('lsb_release -a').toString();
 const is1604 = systemName.indexOf('16.04');
 console.info(systemName, is1604);
-// if (systemName.indexOf('16.04') === -1) {
-  // console.info('Please ensure that you have a 16.04 ubuntu image for this netlify project, current uname -a', systemName);
-  // process.exit(1);
-// }
+if (!is1604) {
+  console.info('Please ensure that you have a 16.04 ubuntu image for this netlify project, current lsb_release -a', systemName);
+  process.exit(1);
+}
 
 const secrets = [
   process.env.CRUNCHBASE_KEY_4, process.env.TWITTER_KEYS, process.env.GITHUB_TOKEN, process.env.GITHUB_USER, process.env.GITHUB_KEY
