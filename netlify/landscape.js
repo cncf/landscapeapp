@@ -7,7 +7,8 @@ const dockerImage = 'netlify/build:xenial';
 const dockerHome = '/opt/buildhome';
 
 const systemName = require('child_process').execSync('lsb_release -a').toString();
-console.info(systemName);
+const is1604 = systemName.indexOf('16.04');
+console.info(systemName, is1604);
 // if (systemName.indexOf('16.04') === -1) {
   // console.info('Please ensure that you have a 16.04 ubuntu image for this netlify project, current uname -a', systemName);
   // process.exit(1);
