@@ -104,7 +104,7 @@ const TreeNavigation = ({ nodes, hideSidebar }) => {
     const paddingLeft = 20 + (node.level - 1) * 10
     const toggleExpanded = e => {
       e.preventDefault()
-      setExpandedItems({ ...expandedItems, [node.identifier]: !isExpanded })
+      setExpandedItems({ [node.identifier]: !isExpanded })
     }
 
     return node.title && <Fragment key={node.identifier}>
