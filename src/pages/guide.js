@@ -27,6 +27,7 @@ import {
 import ItemDialog from '../components/ItemDialog'
 import InternalLink from '../components/InternalLink'
 import OutboundLink from '../components/OutboundLink'
+import GuideToggle from '../components/GuideToggle'
 
 const scale = 1.8;
 
@@ -188,9 +189,10 @@ const GuidePage = ({ content, title, entries, mainContentMode }) => {
       <div className="side-content">
         <LandscapeLogo />
         <div className="guide-sidebar">
-          <IconButton className="sidebar-collapse" title="Hide sidebar" onClick={hideSidebar}>
+          <IconButton className="sidebar-collapse" title="Hide sidebar" size="small" onClick={hideSidebar}>
             <CloseIcon />
           </IconButton>
+          <GuideToggle active="guide" />
           <TreeNavigation nodes={content} hideSidebar={hideSidebar} />
         </div>
       </div>

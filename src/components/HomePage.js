@@ -29,6 +29,7 @@ import SwitchButton from './BigPicture/SwitchButton'
 import ExportCsv from './ExportCsv'
 import MainContent from './MainContent'
 import Presets from './Presets'
+import GuideToggle from './GuideToggle'
 
 bus.on('scrollToTop', function() {
   (document.scrollingElement || document.body).scrollTop = 0;
@@ -150,14 +151,15 @@ const HomePage = _ => {
 
   return <>
     {selectedItemId && <ItemDialog/>}
-    <div className={classNames('app',{'filters-opened' : sidebarVisible, 'big-picture': isBigPicture })}>
+    <div id="home" className={classNames('app',{'filters-opened' : sidebarVisible, 'big-picture': isBigPicture })}>
       <div style={{marginTop: isIphone && selectedItemId ? -lastScrollPosition : 0}} className={classNames({"iphone-scroller": isIphone && selectedItemId}, 'main-parent')} >
         { !isEmbed && !isFullscreen && <>
           <Header />
           <IconButton className="sidebar-show" title="Show sidebar" onClick={showSidebar}><MenuIcon /></IconButton>
           <div className="sidebar">
             <div className="sidebar-scroll">
-              <IconButton className="sidebar-collapse" title="Hide sidebar" onClick={hideSidebar}><CloseIcon /></IconButton>
+              <IconButton className="sidebar-collapse" title="Hide sidebar" size="small" onClick={hideSidebar}><CloseIcon /></IconButton>
+              <GuideToggle active="landscape"/>
               <ResetFilters />
               <Grouping/>
               <Sorting/>

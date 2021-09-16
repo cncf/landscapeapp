@@ -159,7 +159,7 @@ a {text-decoration: none; transition: all 0.5s; color: $blue;
     overflow: hidden; overflow-y: auto;
   }
   /* @media (max-height: 799px) {position: absolute; bottom: auto; top: 70px; z-index: 1;} */
-  .sidebar-collapse {position: absolute; top: 11px; right: 11px; display: none; z-index: 3;}
+  .sidebar-collapse {position: absolute; top: 2px; right: 2px; display: none; z-index: 3;}
   @media (max-width: $lg-screen) {
     position: fixed; bottom: 0; width: 215px;
     transform: translate(-215px, 0); transition: 0.3s; top: 0; z-index: 6; background: #fff;
@@ -671,3 +671,10 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='rgb(27,68,108
   min-height: 26px !important;
 }
 
+#home .guide-toggle {
+  margin: 10px 0;
+
+  @media (max-width: $lg-screen) {
+    margin: 30px 0 5px;
+  }
+}

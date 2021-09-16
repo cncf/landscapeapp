@@ -151,8 +151,8 @@ $spacing: 1em;
     @media (max-width: $lg-screen) {
       display: block;
       position: absolute;
-      top: 0;
-      right: 0;
+      top: 10px;
+      right: 10px;
     }
   }
 
@@ -199,11 +199,6 @@ $spacing: 1em;
     padding-top: 20px;
   }
 
-  .sidebar .sidebar-collapse {
-    top: 5px;
-    right: 5px;
-  }
-
   @media (max-width: $lg-screen) {
     .side-content {
       display: none;
@@ -216,6 +211,14 @@ $spacing: 1em;
       inset: 0;
       width: 100%;
       overflow-y: auto;
+    }
+  }
+
+  .guide-toggle {
+    margin: 0 20px 10px;
+
+    @media (max-width: $lg-screen) {
+      margin-top: 10px;
     }
   }
 
