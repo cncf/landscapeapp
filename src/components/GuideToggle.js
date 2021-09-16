@@ -18,9 +18,13 @@ const ToggleItem = ({ isActive, title, to }) => {
         background: #2E67BF;
         color: white;
       }
+
+      a {
+        transition: none;
+      }
     `}</style>
     {isActive ? title : <Link href={to} prefetch={false}>
-      <a >{title}</a>
+      <a>{title}</a>
     </Link>}
   </span>
 }
@@ -38,8 +42,11 @@ const GuideToggle = ({ active }) => {
         border: 2px solid #2E67BF;
         border-radius: 4px;
         max-width: 400px;
+        margin: 0;
+        font-size: 14px;
+        margin: 15px 0;
+        max-width: 165px;
       }
-
     `}</style>
     <ToggleItem isActive={active === 'landscape'} title="Landscape" to="/" />
     <ToggleItem isActive={active === 'guide'} title="Guide" to="/guide" />

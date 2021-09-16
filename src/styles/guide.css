@@ -1,7 +1,5 @@
 @import 'breakpoints.css';
 
-$spacing: 1em;
-
 .no-scroll-mobile {
   @media (max-width: $lg-screen) {
     overflow: hidden;
@@ -127,6 +125,11 @@ $spacing: 1em;
   .guide-sidebar {
     padding-bottom: 10px;
     overflow-y: auto;
+    margin-top: -10px;
+
+    @media (max-width: $lg-screen) {
+      margin-top: 0;
+    }
   }
 
   .sidebar-show {
@@ -167,31 +170,10 @@ $spacing: 1em;
 
   .guide-header .landscape-logo {
     display: none;
+    padding: 0;
 
     @media (max-width: $lg-screen) {
       display: block;
-    }
-  }
-
-  .landscapeapp-logo {
-    position: absolute;
-    top: $spacing;
-    right: 1rem;
-  }
-
-  .landscape-logo a,
-  .landscapeapp-logo a {
-    display: flex;
-  }
-
-  .landscape-logo img,
-  .landscapeapp-logo img {
-    max-width: 15em;
-    height: 3em;
-
-    @media (max-width: $lg-screen) {
-      max-width: 10em;
-      height: 2em;
     }
   }
 
@@ -215,11 +197,7 @@ $spacing: 1em;
   }
 
   .guide-toggle {
-    margin: 0 20px 10px;
-
-    @media (max-width: $lg-screen) {
-      margin-top: 10px;
-    }
+    margin: 5px 20px 10px;
   }
 
   .sidebar-link {

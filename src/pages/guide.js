@@ -28,6 +28,7 @@ import ItemDialog from '../components/ItemDialog'
 import InternalLink from '../components/InternalLink'
 import OutboundLink from '../components/OutboundLink'
 import GuideToggle from '../components/GuideToggle'
+import LandscapeLogo from '../components/LandscapeLogo'
 
 const scale = 1.8;
 
@@ -137,14 +138,6 @@ const TreeContent = ({ nodes, enhancedEntries }) => {
       { node.subcategory && <SubcategoryMetadata entries={subcategoryEntries} node={node} /> }
     </div>
   })
-}
-
-const LandscapeLogo = () => {
-  return <span className="landscape-logo">
-    <InternalLink to="/">
-      <img src={assetPath("/images/left-logo.svg")} alt={settings.global.name}/>
-    </InternalLink>
-  </span>
 }
 
 const Title = () => {
