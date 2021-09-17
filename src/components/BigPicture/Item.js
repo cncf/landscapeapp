@@ -17,7 +17,7 @@ const LargeItem = ({ item, onClick }) => {
   const textHeight = label ? 10 : 0
   const padding = 2
 
-  return <div className="large-item" onClick={onClick}>
+  return <div className="large-item item" onClick={onClick}>
     <style jsx>{`
       .large-item {
         cursor: pointer;
@@ -68,7 +68,7 @@ const SmallItem = ({ item, onClick }) => {
         visibility: ${item.isVisible ? 'visible' : 'hidden'};
       }
     `}</style>
-    <img data-href={item.id} loading="lazy" src={assetPath(item.href)} onClick={onClick} alt={item.name} />
+    <img data-href={item.id} loading="lazy" className="item" src={assetPath(item.href)} onClick={onClick} alt={item.name} />
   </>
 }
 

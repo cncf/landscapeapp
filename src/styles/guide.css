@@ -318,10 +318,9 @@
 
   .items {
     overflow: hidden;
-  }
-
-  .outer-item {
-    float: left;
+    display: grid;
+    justify-content: center;
+    grid-auto-flow: row dense;
   }
 
   .guide-icon {

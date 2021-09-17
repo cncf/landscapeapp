@@ -17,43 +17,27 @@ import Item from '../components/BigPicture/Item'
 import { findLandscapeSettings } from '../utils/landscapeSettings'
 import { isLargeFn } from '../utils/landscapeCalculations'
 import settings from 'public/settings.json'
-import {
-  smallItemHeight,
-  smallItemWidth,
-  largeItemHeight,
-  largeItemWidth,
-  itemMargin
-} from '../utils/landscapeCalculations'
+import { smallItemHeight, smallItemWidth, itemMargin } from '../utils/landscapeCalculations'
 import ItemDialog from '../components/ItemDialog'
-import InternalLink from '../components/InternalLink'
 import OutboundLink from '../components/OutboundLink'
 import GuideToggle from '../components/GuideToggle'
 import LandscapeLogo from '../components/LandscapeLogo'
 
 const scale = 1.8;
 
-const WrappedItem = ({ entry }) => <div className="outer-item">
-  <style jsx>{`
-    .outer-item {
-      width: ${(entry.isLarge ? largeItemWidth : smallItemWidth) * scale}px;
-      height: ${Math.floor((entry.isLarge ? largeItemHeight : smallItemHeight) * scale)}px;
-      margin: ${itemMargin * scale / 2}px;
-    }
-
-    .inner-item {
-      width: ${entry.isLarge ? largeItemWidth : smallItemWidth}px;
-      height: ${entry.isLarge ? largeItemHeight : smallItemHeight}px;
-      transform: scale(${scale});
-      transform-origin: 0 0;
-    }
-  `}</style>
-  <div className="inner-item">
-    <Item item={entry}/>
-  </div>
-</div>
-
 const SubcategoryMetadata = ({ node, entries }) => {
   return <>
+    <style jsx>{`
+      .items {
+        grid-template-columns: repeat(auto-fill, ${scale * smallItemWidth}px);
+        grid-auto-rows: ${scale * smallItemHeight}px;
+        gap: ${scale * itemMargin}px;
+      }
+
+      .items :global(.item) {
+        transform: scale(${scale});
+      }
+    `}</style>
     <div className="metadata">
       <div className="header">
         <div>Buzzwords</div>
@@ -75,7 +59,7 @@ const SubcategoryMetadata = ({ node, entries }) => {
     </div>
 
     <div className="items">
-      { entries.map(entry => <WrappedItem entry={entry} key={entry.id} />) }
+      { entries.map(entry => <Item item={entry} key={entry.id} />) }
     </div>
   </>
 }
