@@ -38,7 +38,11 @@ const landscapeKeys = [
   'open_source',
   'twitter',
   'crunchbase',
-  'allow_duplicate_repo'
+  'allow_duplicate_repo',
+  'joined',
+  'extra',
+  'organization',
+  'unnamed_organization'
 ];
 cleanupFile('landscape.yml', landscapeKeys);
 cleanupFile('settings.yml');
