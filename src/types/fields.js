@@ -266,10 +266,11 @@ const fields = {
     label: 'Date Joined',
     url: 'joined',
     orderFn: function(x) {
-      if (x.value) {
-        return x.value;
+      if (x) {
+        return x;
+      } else {
+        return '1990-01-01';
       }
-      return '1990-01-01';
     }
   },
 };
