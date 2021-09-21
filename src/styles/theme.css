@@ -671,3 +671,72 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='rgb(27,68,108
   padding-bottom: 0 !important;
   min-height: 26px !important;
 }
+
+.category-header-vertical {
+  width: 100%;
+  display: flex;
+}
+
+.category-header-link {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  flex: 1;
+  font-size: 12px;
+  line-height: 13px;
+}
+
+.category-dark-bg .category-header-info,
+.category-dark-bg .category-header-link {
+  color: #ffffff;
+
+  &:hover {
+    color: #ffffff;
+  }
+}
+
+.category-light-bg .category-header-info,
+.category-light-bg .category-header-link {
+  color: #282828;
+
+  &:hover {
+    color: #282828;
+  }
+}
+
+.category-header-info {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: #ffffff;
+}
+
+.guide-info-link,
+.guide-info-link:hover {
+  color: #282828;
+}
+
+.category-header-horizontal .category-header-info {
+  transform: rotate(180deg);
+}
+
+.category-dark-bg .category-header-info,
+.category-dark-bg .category-header-link:hover {
+  background: rgba(0, 0, 0, 0.2);
+}
+
+.category-dark-bg .category-header-info:hover,
+.category-dark-bg .category-header-link {
+  background: none;
+}
+
+.category-light-bg .category-header-info,
+.category-light-bg .category-header-link:hover {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+.category-light-bg .category-header-info:hover,
+.category-light-bg .category-header-link {
+  background: none;
+}

@@ -1,5 +1,6 @@
 import React, { Fragment, useContext } from "react";
 import { getContrastRatio } from "@material-ui/core/styles";
+import css from 'styled-jsx/css'
 import Item from "./Item";
 import InternalLink from "../InternalLink";
 import GuideLink from '../GuideLink'
@@ -30,9 +31,16 @@ const HorizontalCategory = ({ header, subcategories, width, height, top, left, c
 
   const categoryLink = guideMap[header]
   const subcategoryLinks = (categoryLink && categoryLink.subcategories) || {}
+  const backgroundType = getContrastRatio('#ffffff', color) < 4.5 ? 'light' : 'dark'
+  const { styles, className } = css.resolve`
+    width: ${categoryTitleHeight}px;
+    height: ${categoryTitleHeight}px;
+    border: 2px solid ${color};
+  `
 
   return (
     <div style={{ width, left, height, top, position: 'absolute' }} className="big-picture-section">
+      {styles}
       <div
         style={{
           position: 'absolute',
@@ -45,9 +53,9 @@ const HorizontalCategory = ({ header, subcategories, width, height, top, left, c
           padding: categoryBorder
         }}
       >
-        <div style={{
-          top: 5,
-          bottom: 5,
+        <div className={`category-header-horizontal category-${backgroundType}-bg`} style={{
+          top: 0,
+          bottom: 0,
           left: 0,
           width: categoryTitleHeight,
           position: 'absolute',
@@ -58,17 +66,9 @@ const HorizontalCategory = ({ header, subcategories, width, height, top, left, c
           alignItems: 'center',
           justifyContent: 'center'
         }}>
-          <InternalLink to={href} style={{
-            color: getContrastRatio('#ffffff', color) < 4.5 ? '#282828' : '#ffffff',
-            fontSize: 12,
-            lineHeight: '13px'
-          }}>
-            {header}
-          </InternalLink>
+          <InternalLink to={href} className="category-header-link">{header}</InternalLink>
 
-          { categoryLink && <div style={{ transform: 'rotate(90deg)', position: 'absolute', bottom: 0 }}>
-            <GuideLink label={header} color={color} identifier={categoryLink.identifier} />
-          </div> }
+          { categoryLink && <GuideLink className={`category-header-info ${className}`} label={header} identifier={categoryLink.identifier} /> }
         </div>
         <div style={{
           marginLeft: 30,
