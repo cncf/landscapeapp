@@ -4,19 +4,25 @@ import { smallItemHeight, smallItemWidth } from '../utils/landscapeCalculations'
 
 
 const SubcategoryInfo = ({ label, identifier, row, column }) => {
-  const { styles, className } = css.resolve`
+  const base = css.resolve`
     width: ${smallItemWidth}px;
     height: ${smallItemHeight}px;
     display: flex;
     align-items: center;
     justify-content: center;
     font-size: 18px;
+  `
+
+  const extra = css.resolve`
     grid-column-start: ${column || 'auto'};
     grid-row-start: ${row || 'auto'};
   `
 
+  const className = `${base.className} ${extra.className}`
+
   return <>
-    {styles}
+    {base.styles}
+    {extra.styles}
     <GuideLink className={className} label={label} identifier={identifier}/>
   </>
 }

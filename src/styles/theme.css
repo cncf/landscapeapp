@@ -18,6 +18,14 @@ a {text-decoration: none; transition: all 0.5s; color: $blue;
   &:hover {transition: all 0.1s; color: $blue-hover;}
 }
 
+a svg {
+  stroke: $blue;
+
+  &:hover {
+    stroke: $blue-hover;
+  }
+}
+
 .hidden {
   display: none !important;
 }
@@ -717,21 +725,16 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='rgb(27,68,108
   font-size: 18px;
 }
 
-.category-header-info:hover svg {
-  stroke-width: 0.5;
+.guide-info-link svg {
+  stroke-width: 0;
 }
 
-.category-light-bg .category-header-info:hover svg {
-  stroke: #282828;
+.guide-info-link:hover svg {
+  stroke-width: 0.5;
 }
 
 .category-dark-bg .category-header-info:hover svg {
   stroke: #ffffff;
-}
-
-.guide-info-link,
-.guide-info-link:hover {
-  color: #282828;
 }
 
 .category-header-horizontal .category-header-info {
