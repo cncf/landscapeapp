@@ -705,11 +705,28 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='rgb(27,68,108
   }
 }
 
+.category-header-link:hover {
+  font-weight: bold;
+}
+
 .category-header-info {
   display: flex;
   justify-content: center;
   align-items: center;
   color: #ffffff;
+  font-size: 18px;
+}
+
+.category-header-info:hover svg {
+  stroke-width: 0.5;
+}
+
+.category-light-bg .category-header-info:hover svg {
+  stroke: #282828;
+}
+
+.category-dark-bg .category-header-info:hover svg {
+  stroke: #ffffff;
 }
 
 .guide-info-link,
