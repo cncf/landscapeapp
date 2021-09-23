@@ -11,6 +11,7 @@ import LandscapeContext from '../../contexts/LandscapeContext'
 import GuideLink from '../GuideLink'
 import { getContrastRatio } from '@material-ui/core/styles'
 import css from 'styled-jsx/css'
+import SubcategoryInfo from '../SubcategoryInfo'
 
 const VerticalCategory = ({header, subcategories, top, left, width, height, color, href, fitWidth}) => {
   const subcategoriesWithCalculations = calculateVerticalCategory({ subcategories, fitWidth, width })
@@ -50,14 +51,12 @@ const VerticalCategory = ({header, subcategories, top, left, width, height, colo
               <InternalLink to={subcategory.href} style={{ color: '#282828', fontSize: 11 }}>
                 {name}
               </InternalLink>
-
-              { subcategoryLinks[name] && <div style={{ position: 'absolute', right: 5, top: -1 }}>
-                <GuideLink label={name} identifier={subcategoryLinks[name].identifier} fontSize={16} />
-              </div> }
             </div>
 
             <div style={{width, overflow: 'hidden', margin: '0 auto', ...style, ...extraStyle}}>
               {subcategory.allItems.map(item => <Item item={item} key={item.name} fitWidth={fitWidth} />)}
+
+              { subcategoryLinks[name] && <SubcategoryInfo label={name} identifier={subcategoryLinks[name].identifier} column={columns}/> }
             </div>
           </div>
         })}

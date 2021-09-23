@@ -16,6 +16,7 @@ import {
   subcategoryTitleHeight
 } from "../../utils/landscapeCalculations";
 import LandscapeContext from '../../contexts/LandscapeContext'
+import SubcategoryInfo from '../SubcategoryInfo'
 
 const Divider = ({ color }) => {
   const width = dividerWidth
@@ -27,12 +28,13 @@ const Divider = ({ color }) => {
 
 const HorizontalCategory = ({ header, subcategories, width, height, top, left, color, href, fitWidth }) => {
   const subcategoriesWithCalculations = calculateHorizontalCategory({ height, width, subcategories, fitWidth })
+  const totalRows = Math.max(...subcategoriesWithCalculations.map(({ rows }) => rows))
   const { guideMap } = useContext(LandscapeContext)
 
   const categoryLink = guideMap[header]
   const subcategoryLinks = (categoryLink && categoryLink.subcategories) || {}
   const backgroundType = getContrastRatio('#ffffff', color) < 4.5 ? 'light' : 'dark'
-  const { styles, className } = css.resolve`
+  const categoryInfo = css.resolve`
     width: ${categoryTitleHeight}px;
     height: ${categoryTitleHeight}px;
     border: 2px solid ${color};
@@ -40,7 +42,7 @@ const HorizontalCategory = ({ header, subcategories, width, height, top, left, c
 
   return (
     <div style={{ width, left, height, top, position: 'absolute' }} className="big-picture-section">
-      {styles}
+      {categoryInfo.styles}
       <div
         style={{
           position: 'absolute',
@@ -68,7 +70,8 @@ const HorizontalCategory = ({ header, subcategories, width, height, top, left, c
         }}>
           <InternalLink to={href} className="category-header-link">{header}</InternalLink>
 
-          { categoryLink && <GuideLink className={`category-header-info ${className}`} label={header} identifier={categoryLink.identifier} /> }
+          { categoryLink &&
+            <GuideLink className={`category-header-info ${categoryInfo.className}`} label={header} identifier={categoryLink.identifier} /> }
         </div>
         <div style={{
           marginLeft: 30,
@@ -79,7 +82,7 @@ const HorizontalCategory = ({ header, subcategories, width, height, top, left, c
         }}>
           {subcategoriesWithCalculations.map((subcategory, index) => {
             const lastSubcategory = index !== subcategories.length - 1
-            const { allItems, columns, width, name, href } = subcategory
+            const { allItems, columns, width, name, href, rows } = subcategory
             const padding = fitWidth ? 0 : `${subcategoryMargin}px 0`
             const style = {
               display: 'grid',
@@ -116,9 +119,7 @@ const HorizontalCategory = ({ header, subcategories, width, height, top, left, c
                     allItems.map(item => <Item item={item} key={item.name}/>)
                   }
 
-                  { subcategoryLinks[name] && <div style={{ position: 'absolute', bottom: 5, right: 0 }}>
-                    <GuideLink label={name} identifier={subcategoryLinks[name].identifier} fontSize={16} />
-                  </div> }
+                  { subcategoryLinks[name] && <SubcategoryInfo label={name} identifier={subcategoryLinks[name].identifier} column={columns} row={totalRows}/> }
                 </div>
               </div>
 
