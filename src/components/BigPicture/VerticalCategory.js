@@ -48,9 +48,7 @@ const VerticalCategory = ({header, subcategories, top, left, width, height, colo
 
           return <div key={subcategory.name} style={{position: 'relative', flexGrow: subcategory.rows, display: 'flex', flexDirection: 'column' }}>
             <div style={{ lineHeight: '15px', textAlign: 'center'}}>
-              <InternalLink to={subcategory.href} style={{ color: '#282828', fontSize: 11 }}>
-                {name}
-              </InternalLink>
+              <InternalLink to={subcategory.href}>{name}</InternalLink>
             </div>
 
             <div style={{width, overflow: 'hidden', margin: '0 auto', ...style, ...extraStyle}}>

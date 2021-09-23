@@ -22,6 +22,11 @@ const ToggleItem = ({ isActive, title, to }) => {
       a {
         transition: none;
       }
+
+      a:hover {
+        font-weight: normal;
+        color: #2E67BF;
+      }
     `}</style>
     {isActive ? title : <Link href={to} prefetch={false}>
       <a>{title}</a>

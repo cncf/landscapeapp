@@ -15,7 +15,15 @@ body.popup {background-color:transparent !important; }
 body.popup .MuiBackdrop-root { display: none }
 
 a {text-decoration: none; transition: all 0.5s; color: $blue;
-  &:hover {transition: all 0.1s; color: $blue-hover;}
+  &:hover {transition: all 0.1s; color: $blue-hover; font-weight: bold; }
+}
+
+a.white-link {
+  color: white;
+
+  &:hover {
+    color: $aqua;
+  }
 }
 
 a svg {
@@ -533,6 +541,11 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='rgb(27,68,108
   left: 0;
   right: 0;
   overflow: scroll;
+  font-size: 12px;
+}
+
+.landscape-wrapper a {
+  line-height: 13px;
 }
 
 .cards-section {
@@ -692,7 +705,6 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='rgb(27,68,108
   width: 100%;
   flex: 1;
   font-size: 12px;
-  line-height: 13px;
 }
 
 .category-dark-bg .category-header-info,

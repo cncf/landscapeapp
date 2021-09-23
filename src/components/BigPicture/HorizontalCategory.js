@@ -82,7 +82,7 @@ const HorizontalCategory = ({ header, subcategories, width, height, top, left, c
         }}>
           {subcategoriesWithCalculations.map((subcategory, index) => {
             const lastSubcategory = index !== subcategories.length - 1
-            const { allItems, columns, width, name, href, rows } = subcategory
+            const { allItems, columns, width, name, href } = subcategory
             const padding = fitWidth ? 0 : `${subcategoryMargin}px 0`
             const style = {
               display: 'grid',
@@ -96,7 +96,6 @@ const HorizontalCategory = ({ header, subcategories, width, height, top, left, c
               <div style={{
                 width,
                 position: 'relative',
-                fontSize: 10,
                 overflow: 'visible',
                 padding,
                 boxSizing: 'border-box'
@@ -112,7 +111,7 @@ const HorizontalCategory = ({ header, subcategories, width, height, top, left, c
                   justifyContent: 'center',
                   textAlign: 'center'
                 }}>
-                  <InternalLink to={href} style={{ color: 'white', fontSize: 11 }}>{name}</InternalLink>
+                  <InternalLink to={href} className="white-link">{name}</InternalLink>
                 </div>
                 <div style={{...style, ...extraStyle}}>
                   {
