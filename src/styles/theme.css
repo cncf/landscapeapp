@@ -15,15 +15,15 @@ body.popup {background-color:transparent !important; }
 body.popup .MuiBackdrop-root { display: none }
 
 a {text-decoration: none; transition: all 0.5s; color: $blue;
-  &:hover {transition: all 0.1s; color: $blue-hover; font-weight: bold; }
+  &:hover {transition: all 0.1s; font-weight: bold; }
+}
+
+a.MuiTab-root:hover {
+  color: $blue;
 }
 
 a.white-link {
   color: white;
-
-  &:hover {
-    color: $aqua;
-  }
 }
 
 a svg {
@@ -187,7 +187,7 @@ a svg {
   fieldset {margin-top: 5px; color: $navy;}
   .content-sidebar {flex: 150px 0 0; padding: 13px 0 0 20px;}
   .filters-action {
-    height: 25px; margin-bottom: 5px; color: #366fa8; font-size: 20px; cursor: pointer;
+    height: 25px; margin-bottom: 5px; font-size: 20px; cursor: pointer;
     span {
       font-size: 14px;
       position: relative;
