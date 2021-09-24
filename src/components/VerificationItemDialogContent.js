@@ -79,11 +79,6 @@ const VerificationItemDialogContent = ({ itemInfo, loading }) => {
 
                 <div className="verification-mosaic-product" key="v-product">
                   {itemInfo.name}
-                  {itemInfo.extra && itemInfo.extra.version &&
-                    <span>
-                      ({itemInfo.extra.version})
-                    </span>
-                  }
                 </div>
 
                 <div className="verification-mosaic-description" key="v-description">
@@ -91,7 +86,11 @@ const VerificationItemDialogContent = ({ itemInfo, loading }) => {
                 </div>
 
                 <div className="verification-mosaic-description" key="v-indication">
-                  Indication of release (Version)
+                  Indication of release {itemInfo.extra && itemInfo.extra.version &&
+                    <span>
+                      ({itemInfo.extra.version})
+                    </span>
+                  }
                 </div>
 
                 <div className="verification-mosaic-category" key="v-category">
