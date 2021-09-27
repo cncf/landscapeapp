@@ -1,5 +1,5 @@
 @import 'colors.css';
-@import 'breakpoints.css';
+@import 'constants.css';
 
 html, body, main, #__next, .app {
   height: 100%;

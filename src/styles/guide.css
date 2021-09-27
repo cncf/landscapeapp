@@ -1,4 +1,4 @@
-@import 'breakpoints.css';
+@import 'constants.css';
 
 .no-scroll-mobile {
   @media (max-width: $lg-screen) {
