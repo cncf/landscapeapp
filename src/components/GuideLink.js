@@ -1,4 +1,5 @@
 import React from 'react'
+import css from 'styled-jsx/css'
 import InfoIcon from '@material-ui/icons/InfoOutlined'
 import OutboundLink from './OutboundLink'
 import assetPath from '../utils/assetPath'
@@ -6,10 +7,20 @@ import assetPath from '../utils/assetPath'
 const GuideLink = ({ identifier, label, className="" }) => {
   const ariaLabel = `Read more about ${label} on the guide`
   const to = assetPath(`/guide#${identifier}`)
-  return <OutboundLink className={`${className} guide-info-link`} to={to} aria-label={ariaLabel}>
-    <InfoIcon style={{
-      fontSize: 'inherit'
-    }}/>
+
+  const svgEl = css.resolve`
+    svg {
+      stroke-width: 0;
+    }
+
+    svg:hover {
+      stroke-width: 0.5;
+    }
+  `
+
+  return <OutboundLink className={className} to={to} aria-label={ariaLabel}>
+    {svgEl.styles}
+    <InfoIcon style={{ fontSize: 'inherit' }} className={svgEl.className}/>
   </OutboundLink>
 }
 

@@ -1,9 +1,6 @@
 import React, { Fragment, useContext } from "react";
-import { getContrastRatio } from "@material-ui/core/styles";
-import css from 'styled-jsx/css'
 import Item from "./Item";
 import InternalLink from "../InternalLink";
-import GuideLink from '../GuideLink'
 import {
   calculateHorizontalCategory,
   categoryBorder,
@@ -17,6 +14,7 @@ import {
 } from "../../utils/landscapeCalculations";
 import LandscapeContext from '../../contexts/LandscapeContext'
 import SubcategoryInfo from '../SubcategoryInfo'
+import CategoryHeader from '../CategoryHeader'
 
 const Divider = ({ color }) => {
   const width = dividerWidth
@@ -31,18 +29,11 @@ const HorizontalCategory = ({ header, subcategories, width, height, top, left, c
   const totalRows = Math.max(...subcategoriesWithCalculations.map(({ rows }) => rows))
   const { guideMap } = useContext(LandscapeContext)
 
-  const categoryLink = guideMap[header]
-  const subcategoryLinks = (categoryLink && categoryLink.subcategories) || {}
-  const backgroundType = getContrastRatio('#ffffff', color) < 4.5 ? 'light' : 'dark'
-  const categoryInfo = css.resolve`
-    width: ${categoryTitleHeight}px;
-    height: ${categoryTitleHeight}px;
-    border: 2px solid ${color};
-  `
+  const categoryLink = guideMap[header] || {}
+  const subcategoryLinks = categoryLink.subcategories || {}
 
   return (
     <div style={{ width, left, height, top, position: 'absolute' }} className="big-picture-section">
-      {categoryInfo.styles}
       <div
         style={{
           position: 'absolute',
@@ -55,7 +46,7 @@ const HorizontalCategory = ({ header, subcategories, width, height, top, left, c
           padding: categoryBorder
         }}
       >
-        <div className={`category-header-horizontal category-${backgroundType}-bg`} style={{
+        <div style={{
           top: 0,
           bottom: 0,
           left: 0,
@@ -68,10 +59,7 @@ const HorizontalCategory = ({ header, subcategories, width, height, top, left, c
           alignItems: 'center',
           justifyContent: 'center'
         }}>
-          <InternalLink to={href} className="category-header-link">{header}</InternalLink>
-
-          { categoryLink &&
-            <GuideLink className={`category-header-info ${categoryInfo.className}`} label={header} identifier={categoryLink.identifier} /> }
+          <CategoryHeader href={href} label={header} guideId={categoryLink.identifier} background={color} rotate={true} />
         </div>
         <div style={{
           marginLeft: 30,
