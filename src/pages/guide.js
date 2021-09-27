@@ -19,9 +19,9 @@ import { isLargeFn } from '../utils/landscapeCalculations'
 import settings from 'public/settings.json'
 import { smallItemHeight, smallItemWidth, itemMargin } from '../utils/landscapeCalculations'
 import ItemDialog from '../components/ItemDialog'
-import OutboundLink from '../components/OutboundLink'
 import GuideToggle from '../components/GuideToggle'
 import LandscapeLogo from '../components/LandscapeLogo'
+import OrganizationLogo from '../OrganizationLogo'
 
 const scale = 1.8;
 
@@ -131,7 +131,6 @@ const Title = () => {
 }
 
 const GuidePage = ({ content, title, entries, mainContentMode }) => {
-  const { short_name, company_url } = settings.global
   const router = useRouter()
   const selectedItemId = router.query.selected
 
@@ -186,9 +185,7 @@ const GuidePage = ({ content, title, entries, mainContentMode }) => {
           </div>
         </div>
 
-        <OutboundLink eventLabel={short_name} to={company_url} className="landscapeapp-logo" title={`${short_name} Home`}>
-          <img src={assetPath("/images/right-logo.svg")} title={`${short_name} Logo`}/>
-        </OutboundLink>
+        <OrganizationLogo />
       </div>
 
       <div className="main-content">
