@@ -312,8 +312,7 @@
   }
 
   .permalink:hover {
-    text-decoration: underline;
-    filter: brightness(0.8);
+    font-weight: bold;
   }
 
   .items {
