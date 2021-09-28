@@ -140,6 +140,12 @@ a svg {
   }
 }
 
+#home:not(.big-picture) .landscape-logo {
+  @media (min-width: $lg-screen) {
+    position: fixed;
+  }
+}
+
 .landscapeapp-logo {
   position: absolute;
   top: $spacing;
@@ -258,6 +264,7 @@ a svg {
 }
 
 .main {margin-left: 205px; padding: 10px;
+  z-index: 3;
   @media (max-width: $lg-screen) {margin-left: 0; position: relative; padding-top: 70px;}
   &-note {background: #e8e8e8; font-size: 0.7rem; color: #999; padding: 10px 15px; border-radius: 3px;}
   &.embed {
