@@ -553,11 +553,11 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='rgb(27,68,108
   left: 0;
   right: 0;
   overflow: scroll;
-  font-size: 12px;
 }
 
-.landscape-wrapper a {
-  line-height: 13px;
+.inner-landscape {
+  font-size: 12px;
+  line-height: 1.1;
 }
 
 .cards-section {
