@@ -33,8 +33,6 @@ const SwitchButton = _ => {
     <Tabs
           className="big-picture-switch big-picture-switch-normal"
           value={mainContentMode}
-          indicatorColor="primary"
-          textColor="primary"
           onChange={(_event, mainContentMode) => navigate({ mainContentMode })}
           key='tabs'
         >

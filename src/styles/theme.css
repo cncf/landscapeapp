@@ -514,7 +514,12 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='rgb(27,68,108
 }
 
 .big-picture-switch .nav-link {
-  color: #6E6E6E;
+  color: $blue;
+  opacity: 1;
+}
+
+.big-picture-switch .MuiTabs-indicator {
+  background-color: $blue;
 }
 
 .big-picture-switch-normal {
