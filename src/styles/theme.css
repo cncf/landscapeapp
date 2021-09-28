@@ -28,10 +28,11 @@ a.white-link {
 
 a svg {
   stroke: $blue;
+  stroke-width: 0;
+}
 
-  &:hover {
-    stroke: $blue-hover;
-  }
+a:hover svg {
+  stroke-width: 0.5;
 }
 
 .hidden {

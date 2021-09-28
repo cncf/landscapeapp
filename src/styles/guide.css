@@ -206,6 +206,10 @@
     padding: 10px 20px;
   }
 
+  .sidebar-link svg {
+    stroke: none;
+  }
+
   .expandable {
     display: flex;
     justify-content: space-between;
