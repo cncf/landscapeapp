@@ -75,7 +75,11 @@ const VerificationItemDialogContent = ({ itemInfo, loading }) => {
                 </div>
                 <div className="verification-mosaic-wrap" key="v-member">LFN Member Level</div>
 
-                <div className="verification-mosaic-wrap" key="v-aalogo">AALogo</div>
+                <div className="verification-mosaic-wrap" key="v-aalogo">
+                  <div className="verification-product-logo" style={getRelationStyle(itemInfo.relation)}>
+                    <img src={assetPath('images/anuket_assured.svg')} className='verification-product-logo-img'/>
+                  </div>
+                </div>
 
                 <div className="verification-mosaic-product" key="v-product">
                   {itemInfo.name}
