@@ -26,6 +26,27 @@ function getRelationStyle(relation) {
   }
 }
 
+const linkTag = (label, { name, url = null, color = 'blue', multiline = false }) => {
+  return (<InternalLink to={url || '/'} className={`tag tag-${color} ${multiline ? 'multiline' : ''}`}>
+    {(name ? <span className="tag-name">{name}</span> : null)}
+    <span className="tag-value">{label}</span>
+  </InternalLink>)
+}
+
+const memberTag = function({relation, member, enduser}) {
+  if (relation === 'member' || relation === 'company') {
+    const info = settings.membership[member];
+    const name = info.name;
+    const label = enduser ? (info.end_user_label || info.label) : info.label ;
+    if (!label) {
+      return null;
+    }
+    const url = closeUrl({ filters: { relation }})
+    return linkTag(label, {name: name, url });
+  }
+  return null;
+}
+
 function handleUp() {
   productScrollEl.scrollBy({top: -200, behavior: 'smooth'});
 }
@@ -38,6 +59,7 @@ const VerificationItemDialogContent = ({ itemInfo, loading }) => {
   const { onlyModal } = params
   const [showAllRepos, setShowAllRepos] = useState(false)
   const { innerWidth, innerHeight } = useWindowSize()
+  const linkToOrganization = closeUrl({ grouping: 'organization', filters: {organization: itemInfo.organization}});
 
   const itemCategory = function(path) {
     var separator = <span className="product-category-separator" key="product-category-separator">•</span>;
@@ -73,11 +95,13 @@ const VerificationItemDialogContent = ({ itemInfo, loading }) => {
                     <img src={assetPath(itemInfo.href)} className='verification-product-logo-img'/>
                   </div>
                 </div>
-                <div className="verification-mosaic-wrap" key="v-member">LFN Member Level</div>
+                <div className="verification-mosaic-wrap" key="v-member">
+                  <InternalLink to={linkToOrganization}><span>{itemInfo.organization}</span>{memberTag(itemInfo)}</InternalLink>
+                </div>
 
                 <div className="verification-mosaic-wrap" key="v-aalogo">
                   <div className="verification-product-logo" style={getRelationStyle(itemInfo.relation)}>
-                    <img src={assetPath('images/anuket_assured.svg')} className='verification-product-logo-img'/>
+                    <img src={assetPath(settings.global.aa_logo)} className='verification-product-logo-img'/>
                   </div>
                 </div>
 
