@@ -5,7 +5,7 @@ import { categoryTitleHeight } from '../utils/landscapeCalculations'
 import InternalLink from './InternalLink'
 import { getContrastRatio } from '@material-ui/core/styles'
 
-const CategoryHeader = ({ href, label, guideId, background, rotate = false }) => {
+const CategoryHeader = ({ href, label, guideAnchor, background, rotate = false }) => {
   const lowContrast = getContrastRatio('#ffffff', background) < 4.5
   const color = lowContrast ? '#282828' : '#ffffff'
   const backgroundColor = lowContrast ? 'rgba(255, 255, 255, 0.2)' : 'rgba(0, 0, 0, 0.2)'
@@ -57,7 +57,7 @@ const CategoryHeader = ({ href, label, guideId, background, rotate = false }) =>
 
     <InternalLink to={href} className={linkEl.className}>{label}</InternalLink>
 
-    { guideId && <GuideLink label={label} identifier={guideId} className={infoEl.className} /> }
+    { guideAnchor && <GuideLink label={label} anchor={guideAnchor} className={infoEl.className} /> }
   </>
 }
 

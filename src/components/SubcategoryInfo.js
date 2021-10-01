@@ -3,7 +3,7 @@ import css from 'styled-jsx/css'
 import { smallItemHeight, smallItemWidth } from '../utils/landscapeCalculations'
 
 
-const SubcategoryInfo = ({ label, identifier, row, column }) => {
+const SubcategoryInfo = ({ label, anchor, row, column }) => {
   const base = css.resolve`
     width: ${smallItemWidth}px;
     height: ${smallItemHeight}px;
@@ -23,7 +23,7 @@ const SubcategoryInfo = ({ label, identifier, row, column }) => {
   return <>
     {base.styles}
     {extra.styles}
-    <GuideLink className={className} label={label} identifier={identifier}/>
+    <GuideLink className={className} label={label} anchor={anchor}/>
   </>
 }
 

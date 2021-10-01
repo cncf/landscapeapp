@@ -5,39 +5,36 @@ import { parseParams } from '../utils/routing'
 import getPrerenderProps from '../utils/getPrerenderProps'
 import { getLandscapeSettingsList } from '../utils/landscapeSettings'
 
-const loadGuideMap = () => {
+const loadGuideIndex = () => {
   if (!existsSync('public/guide.json')) {
     return {}
   }
 
   const guide = JSON.parse(readFileSync('public/guide.json', 'utf-8'))
 
-  return guide.content
-    .filter(section => section.category)
-    .reduce((accumulator, { title, content, identifier }) => {
-      const subcategories = content.filter(section => section.subcategory)
-        .reduce((accumulator, { title, identifier }) => {
-          return { ...accumulator, [title]: { identifier } }
-        }, {})
-      return { ...accumulator, [title]: { title, identifier, subcategories } }
+  return guide
+    .filter(section => section.category || section.subcategory)
+    .reduce((accumulator, { category, subcategory, anchor }) => {
+      const key = [category, subcategory].filter(_ => _).join(' / ')
+      return { ...accumulator, [key]: anchor }
     }, {})
 }
 
-const LandscapePage = ({ entries, mainContentMode, guideMap }) => {
-  return <LandscapeProvider entries={entries} pageParams={{ mainContentMode }} guideMap={guideMap}>
+const LandscapePage = ({ entries, mainContentMode, guideIndex }) => {
+  return <LandscapeProvider entries={entries} pageParams={{ mainContentMode }} guideIndex={guideIndex}>
     <HomePageComponent />
   </LandscapeProvider>
 }
 
 export async function getStaticProps(context) {
   const settings = JSON.parse(readFileSync('public/settings.json', 'utf-8'))
-  const guideMap = loadGuideMap()
+  const guideIndex = loadGuideIndex()
   const defaultContentMode = settings.big_picture.main.url
   const mainContentMode = (context.params.landscape || [])[0] || defaultContentMode
 
   const params = parseParams({ mainContentMode })
   const props = getPrerenderProps(params)
-  return { props: { ...props, mainContentMode, guideMap } }
+  return { props: { ...props, mainContentMode, guideIndex } }
 }
 
 export async function getStaticPaths() {

@@ -251,17 +251,6 @@
     margin: 0 auto;
   }
 
-  .guide-section {
-    /* Prevent anchor links from scrolling behind a fixed header */
-    padding-top: 5em;
-    margin-top: -5em;
-
-    @media (max-width: $lg-screen) {
-      padding-top: 4em;
-      margin-top: -4em;
-    }
-  }
-
   .metadata {
     width: 100%;
     display: flex;
@@ -312,7 +301,18 @@
 
   .permalink {
     align-items: center;
-    vertical-align: text-bottom;
+    vertical-align: text-bottom
+  }
+
+  .section-title {
+    /* Prevent anchor links from scrolling behind a fixed header */
+    padding-top: 5em;
+    margin-top: -5em;
+
+    @media (max-width: $lg-screen) {
+      padding-top: 4em;
+      margin-top: -4em;
+    }
   }
 
   .permalink:hover {

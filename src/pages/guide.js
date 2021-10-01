@@ -1,4 +1,4 @@
-import React, { useState, Fragment, useEffect } from 'react'
+import React, { Fragment, useEffect, useState } from 'react'
 import { existsSync, readFileSync } from 'fs'
 import Typography from '@material-ui/core/Typography'
 import classNames from 'classnames'
@@ -15,9 +15,8 @@ import { parseParams } from '../utils/routing'
 import getPrerenderProps from '../utils/getPrerenderProps'
 import Item from '../components/BigPicture/Item'
 import { findLandscapeSettings } from '../utils/landscapeSettings'
-import { isLargeFn } from '../utils/landscapeCalculations'
+import { isLargeFn, itemMargin, smallItemHeight, smallItemWidth } from '../utils/landscapeCalculations'
 import settings from 'public/settings.json'
-import { smallItemHeight, smallItemWidth, itemMargin } from '../utils/landscapeCalculations'
 import ItemDialog from '../components/ItemDialog'
 import GuideToggle from '../components/GuideToggle'
 import LandscapeLogo from '../components/LandscapeLogo'
@@ -64,61 +63,66 @@ const SubcategoryMetadata = ({ node, entries }) => {
   </>
 }
 
-const TreeNavigation = ({ nodes, hideSidebar }) => {
+const SidebarLink = ({ anchor, level, className, children, ...extra }) => {
+  const paddingLeft = 20 + (level - 1) * 10
+
+  return <Link href={`#${anchor}`} prefetch={false}>
+    <a className={`sidebar-link ${className}`} style={{ paddingLeft }} {...extra}>
+      { children }
+    </a>
+  </Link>
+}
+
+const Navigation = ({ nodes, hideSidebar }) => {
   const router = useRouter()
-  const currentSection = router.asPath.split('#')[1]
-  const defaultExpanded = nodes.reduce((acc, node) => {
-    return { ...acc, [node.identifier]: currentSection && currentSection.indexOf(node.identifier) === 0 }
-  }, {})
-  const [expandedItems, setExpandedItems] = useState(defaultExpanded)
   const [isReady, setIsReady] = useState(false)
+  const currentSection = isReady && router.asPath.split('#')[1] || ''
+  const currentLevel = (nodes.find(node => node.anchor === currentSection) || {}).level || 0
+  const visibleSections = currentSection.split('--').slice(0, Math.max(currentLevel - 1, 1)).join('--')
 
   useEffect(() => setIsReady(true), [])
 
-  return nodes.map(node => {
-    const hasChildren = Array.isArray(node.content)
-    const children = hasChildren && [
-      { ...node, content: null, title: 'Overview', level: node.level + 1 },
-      ...node.content
-    ]
-    const isExpanded = isReady && expandedItems[node.identifier]
-    const showChildren = isExpanded && hasChildren
-    const className = `sidebar-link ${isReady && node.identifier === currentSection ? 'active' : ''}`
-    const expandableClass = `sidebar-link expandable ${isExpanded ? 'expanded' : ''}`
-    const paddingLeft = 20 + (node.level - 1) * 10
-    const toggleExpanded = e => {
-      e.preventDefault()
-      setExpandedItems({ [node.identifier]: !isExpanded })
-    }
+  const parents = nodes.filter(n => n.anchor)
+    .map(n => n.anchor.split('--')[0])
+    .reduce((acc, n) => ({ ...acc, [n]: (acc[n] || 0) + 1}), {})
 
-    return node.title && <Fragment key={node.identifier}>
-      { hasChildren ?
-          <a className={expandableClass} href='#' onClick={toggleExpanded} style={{ paddingLeft }}>
-            {node.title} <ArrowRightIcon />
-          </a> :
-          <Link href={`#${node.identifier}`} prefetch={false}>
-            <a className={className} style={{ paddingLeft }} onClick={hideSidebar}>{node.title}</a>
-          </Link>
-      }
+  return nodes
+    .filter(({ title, level, anchor }) => {
+      return title && (level === 1 || (currentLevel + 1 >= level && anchor.indexOf(visibleSections) === 0))
+    })
+    .map(node => {
+      const hasChildren = (parents[node.anchor] || 0) > 1
+      const isExpanded = hasChildren && currentSection && currentSection.indexOf(node.anchor) === 0
+      const activeClass = node.anchor === currentSection ? 'active' : ''
+      const expandableClass = `expandable ${isExpanded ? 'expanded' : ''}`
+      const className = hasChildren ? expandableClass : activeClass
+      const extra = hasChildren ? {} : { onClick: hideSidebar }
 
-      { showChildren && <TreeNavigation nodes={children} hideSidebar={hideSidebar} /> }
-    </Fragment>
+      return <Fragment key={node.anchor}>
+        <SidebarLink className={className} anchor={node.anchor} level={node.level} {...extra}>
+          {node.title} {hasChildren && <ArrowRightIcon/>}
+        </SidebarLink>
+
+        {isExpanded && <SidebarLink className={activeClass} anchor={node.anchor} level={node.level + 1} onClick={hideSidebar}>
+          Overview
+        </SidebarLink>}
+      </Fragment>
   })
 }
 
-const TreeContent = ({ nodes, enhancedEntries }) => {
-  return nodes.map(node => {
+const Content = ({ nodes, enhancedEntries }) => {
+  return nodes.map((node, idx) => {
     const subcategoryEntries = node.subcategory && enhancedEntries.filter(entry => entry.path.split('/')[1].trim() === node.title)
 
-    return <div key={node.identifier} id={node.title && node.identifier} className="guide-section">
-      { node.title && <Typography variant={`h${node.level + 1}`}>
-        { node.permalink && <a href={assetPath(`/card-mode?category=${node.permalink}`)} target="_blank" className="permalink">
-          <span className="guide-icon" />{node.title}
-        </a> }
-        { !node.permalink && node.title }
-      </Typography> }
-      { node.isText && <div className="guide-content" dangerouslySetInnerHTML={{ __html: node.content }} /> }
-      { Array.isArray(node.content) && <TreeContent nodes={node.content} enhancedEntries={enhancedEntries} /> }
+    return <div key={idx}>
+      { node.title && <div className="section-title" id={node.anchor}>
+        <Typography variant={`h${node.level + 1}`}>
+          <a href={assetPath(`/card-mode?category=${node.permalink}`)} target="_blank" className="permalink">
+            <span className="guide-icon" />{node.title}
+          </a>
+        </Typography>
+      </div>}
+      { node.content && <div className="guide-content" dangerouslySetInnerHTML={{ __html: node.content }} /> }
       { node.subcategory && <SubcategoryMetadata entries={subcategoryEntries} node={node} /> }
     </div>
   })
@@ -169,7 +173,7 @@ const GuidePage = ({ content, title, entries, mainContentMode }) => {
             <CloseIcon />
           </IconButton>
           <GuideToggle active="guide" />
-          <TreeNavigation nodes={content} hideSidebar={hideSidebar} />
+          <Navigation nodes={content} hideSidebar={hideSidebar} />
         </div>
       </div>
 
@@ -193,7 +197,7 @@ const GuidePage = ({ content, title, entries, mainContentMode }) => {
           <div className="content">
             <Title />
 
-            <TreeContent nodes={content} enhancedEntries={enhancedEntries} />
+            <Content nodes={content} enhancedEntries={enhancedEntries} />
           </div>
         </div>
       </div>
@@ -203,7 +207,7 @@ const GuidePage = ({ content, title, entries, mainContentMode }) => {
 
 export async function getStaticProps() {
   const notFound = !existsSync('public/guide.json')
-  const { content } = notFound ? {} : JSON.parse(readFileSync('public/guide.json', 'utf-8'))
+  const content = notFound ? [] : JSON.parse(readFileSync('public/guide.json', 'utf-8'))
   const settings = JSON.parse(require('fs').readFileSync('public/settings.json', 'utf-8'))
   const mainContentMode = 'guide'
   const params = parseParams({ mainContentMode })

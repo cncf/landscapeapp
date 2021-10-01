@@ -13,10 +13,7 @@ import CategoryHeader from '../CategoryHeader'
 
 const VerticalCategory = ({header, subcategories, top, left, width, height, color, href, fitWidth}) => {
   const subcategoriesWithCalculations = calculateVerticalCategory({ subcategories, fitWidth, width })
-  const { guideMap } = useContext(LandscapeContext)
-
-  const categoryLink = guideMap[header] || {}
-  const subcategoryLinks = categoryLink.subcategories || {}
+  const { guideIndex } = useContext(LandscapeContext)
 
   return <div>
     <div style={{
@@ -27,13 +24,14 @@ const VerticalCategory = ({header, subcategories, top, left, width, height, colo
       flexDirection: 'column'
     }} className="big-picture-section">
       <div style={{ height: categoryTitleHeight, width: '100%', display: 'flex' }}>
-        <CategoryHeader href={href} label={header} guideId={categoryLink.identifier} background={color} />
+        <CategoryHeader href={href} label={header} guideAnchor={guideIndex[header]} background={color} />
       </div>
       <div style={{ width: '100%', position: 'relative', flex: 1, padding: `${subcategoryMargin}px 0`, display: 'flex', flexDirection: 'column', justifyContent: 'space-between', background: 'white' }}>
         {subcategoriesWithCalculations.map(subcategory => {
           const { width, columns, name } = subcategory
           const style = { display: 'grid', gridTemplateColumns: `repeat(${columns}, ${smallItemWidth}px)` }
           const extraStyle = fitWidth ? { justifyContent: 'space-evenly', flex: 1 } : { gridGap: itemMargin }
+          const path = [header, name].join(' / ')
 
           return <div key={subcategory.name} style={{position: 'relative', flexGrow: subcategory.rows, display: 'flex', flexDirection: 'column' }}>
             <div style={{ lineHeight: '15px', textAlign: 'center'}}>
@@ -43,7 +41,7 @@ const VerticalCategory = ({header, subcategories, top, left, width, height, colo
             <div style={{width, overflow: 'hidden', margin: '0 auto', ...style, ...extraStyle}}>
               {subcategory.allItems.map(item => <Item item={item} key={item.name} fitWidth={fitWidth} />)}
 
-              { subcategoryLinks[name] && <SubcategoryInfo label={name} identifier={subcategoryLinks[name].identifier} column={columns}/> }
+              { guideIndex[path] && <SubcategoryInfo label={name} anchor={guideIndex[path]} column={columns}/> }
             </div>
           </div>
         })}

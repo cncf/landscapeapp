@@ -27,10 +27,7 @@ const Divider = ({ color }) => {
 const HorizontalCategory = ({ header, subcategories, width, height, top, left, color, href, fitWidth }) => {
   const subcategoriesWithCalculations = calculateHorizontalCategory({ height, width, subcategories, fitWidth })
   const totalRows = Math.max(...subcategoriesWithCalculations.map(({ rows }) => rows))
-  const { guideMap } = useContext(LandscapeContext)
-
-  const categoryLink = guideMap[header] || {}
-  const subcategoryLinks = categoryLink.subcategories || {}
+  const { guideIndex } = useContext(LandscapeContext)
 
   return (
     <div style={{ width, left, height, top, position: 'absolute' }} className="big-picture-section">
@@ -59,7 +56,7 @@ const HorizontalCategory = ({ header, subcategories, width, height, top, left, c
           alignItems: 'center',
           justifyContent: 'center'
         }}>
-          <CategoryHeader href={href} label={header} guideId={categoryLink.identifier} background={color} rotate={true} />
+          <CategoryHeader href={href} label={header} guideAnchor={guideIndex[header]} background={color} rotate={true} />
         </div>
         <div style={{
           marginLeft: 30,
@@ -79,6 +76,7 @@ const HorizontalCategory = ({ header, subcategories, width, height, top, left, c
               gridAutoRows: `${smallItemHeight}px`
             }
             const extraStyle = fitWidth ? { justifyContent: 'space-evenly', alignContent: 'space-evenly' } : { gridGap: itemMargin }
+            const path = [header, name].join(' / ')
 
             return <Fragment key={name}>
               <div style={{
@@ -106,7 +104,7 @@ const HorizontalCategory = ({ header, subcategories, width, height, top, left, c
                     allItems.map(item => <Item item={item} key={item.name}/>)
                   }
 
-                  { subcategoryLinks[name] && <SubcategoryInfo label={name} identifier={subcategoryLinks[name].identifier} column={columns} row={totalRows}/> }
+                  { guideIndex[path] && <SubcategoryInfo label={name} anchor={guideIndex[path]} column={columns} row={totalRows}/> }
                 </div>
               </div>
 

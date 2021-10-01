@@ -4,9 +4,9 @@ import InfoIcon from '@material-ui/icons/InfoOutlined'
 import OutboundLink from './OutboundLink'
 import assetPath from '../utils/assetPath'
 
-const GuideLink = ({ identifier, label, className="" }) => {
+const GuideLink = ({ anchor, label, className="" }) => {
   const ariaLabel = `Read more about ${label} on the guide`
-  const to = assetPath(`/guide#${identifier}`)
+  const to = assetPath(`/guide#${anchor}`)
 
   const svgEl = css.resolve`
     svg {

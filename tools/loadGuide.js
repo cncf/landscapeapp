@@ -1,9 +1,8 @@
 import path from 'path'
 import { existsSync, readFileSync } from 'fs'
-import { load } from 'js-yaml'
+import cheerio from 'cheerio'
 import { Converter } from 'showdown'
 import sanitizeHtml from 'sanitize-html'
-import traverse from 'traverse'
 import assetPath from '../src/utils/assetPath'
 import { landscape } from './landscape'
 import saneName from '../src/utils/saneName'
@@ -11,7 +10,7 @@ import saneName from '../src/utils/saneName'
 const categories = landscape.landscape
 
 const projectPath = process.env.PROJECT_PATH || path.resolve('../..')
-const guidePath = path.resolve(projectPath, 'guide', 'index.yml')
+const guidePath = path.resolve(projectPath, 'guide.md')
 
 const converter = new Converter({ simpleLineBreaks: false, tables: true, parseImgDimensions: true })
 
@@ -60,6 +59,10 @@ const transformTags = {
 }
 
 const markdownToHtml = (text) => {
+  if (!text) {
+    return ''
+  }
+
   const html = converter.makeHtml(text)
 
   return sanitizeHtml(html, { allowedTags, allowedClasses, allowedAttributes, transformTags })
@@ -73,13 +76,13 @@ const getPermalink = (node, categoryName) => {
   const category = categories.find(category => category.name === categoryName)
 
   if (!category) {
-    throw new Error(`Could not create guide. Category not found: ${node.title}`)
+    throw new Error(`Could not create guide. Category not found: ${node.category}`)
   }
 
-  const subcategory = node.subcategory ? category.subcategories.find(subcategory => subcategory.name === node.title) : null
+  const subcategory = node.subcategory ? category.subcategories.find(subcategory => subcategory.name === node.subcategory) : null
 
   if (node.subcategory && !subcategory) {
-    throw new Error(`Could not create guide. Subcategory not found: ${node.title}`)
+    throw new Error(`Could not create guide. Subcategory not found: ${node.subcategory}`)
   }
 
   const resource = subcategory || category
@@ -87,14 +90,27 @@ const getPermalink = (node, categoryName) => {
   return saneName(resource.name)
 }
 
-const getParentNode = context => {
-  const { parent } = context
+const parseGuide = () => {
+  const $ = cheerio.load(readFileSync(guidePath));
 
-  if (!parent) {
-    return {}
-  }
+  const sections = $('body')[0].children.map(node => {
+    const text = $(node).text().trim()
 
-  return !Array.isArray(parent.node) ? parent.node : parent.parent.node
+    // TODO: validate only right data attributes are used
+    if (text || node.name === 'section') {
+      const attributes = node.attribs || {}
+      const category = attributes['data-category']
+      const subcategory = attributes['data-subcategory']
+      const buzzwords = (attributes['data-buzzwords'] || '')
+        .split(',')
+        .filter(_ => _)
+        .map(str => str.trim())
+
+      return { text, category, subcategory, buzzwords }
+    }
+  })
+
+  return sections.filter(_ => _)
 }
 
 const loadGuide = () => {
@@ -102,30 +118,28 @@ const loadGuide = () => {
     return null
   }
 
-  const guideContent = load(readFileSync(guidePath))
+  const guideSections = parseGuide()
 
-  return traverse(guideContent).map(function(node) {
-    const parentNode = getParentNode(this)
-    const level = (parentNode.level || 0) + (node.title ? 1 : 0)
-    const identifier = [parentNode.identifier, (node.title || '').replace(/\W/g, " ").trim().replace(/\s+/g, '-')]
-      .filter(_ => _)
-      .join('--')
-      .toLowerCase()
-    const categoryName = node.category ? node.title : parentNode.categoryName
-    const permalink = getPermalink(node, categoryName)
-    const attrs = {
-      ...node,
-      ...(categoryName && { categoryName }),
-      ...(permalink && { permalink }),
-      level,
-      identifier
+  let lastCategory = null
+
+  return guideSections.map(section => {
+    if (section.category) {
+      lastCategory = section.category
+    } else if (!section.subcategory) {
+      lastCategory = null
     }
-    if (node.file) {
-      const fileContent = readFileSync(path.resolve(projectPath, 'guide', node.file), 'utf-8')
-      return { ...attrs, content: markdownToHtml(fileContent), isText: true }
-    } else if (!this.isLeaf && !Array.isArray(node)) {
-      return { ...attrs }
-    }
+
+    const permalink = getPermalink(section, lastCategory)
+    const level = section.category ? 1 : (section.subcategory && 2)
+    const title = section.category || section.subcategory
+    const content = markdownToHtml(section.text)
+    const anchor = [lastCategory, section.subcategory && title]
+        .filter(_ => _)
+        .map(str => str.replace(/\W/g, " ").trim().replace(/\s+/g, '-'))
+        .join('--')
+        .toLowerCase()
+
+    return { ...section, permalink, title, level, content, anchor, category: lastCategory }
   })
 }
 
