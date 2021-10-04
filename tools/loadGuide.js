@@ -68,7 +68,7 @@ const markdownToHtml = (text) => {
   return sanitizeHtml(html, { allowedTags, allowedClasses, allowedAttributes, transformTags })
 }
 
-const getPermalink = (node, categoryName) => {
+const getLandscapeKey = (node, categoryName) => {
   if (!node.category && !node.subcategory) {
     return null
   }
@@ -90,23 +90,58 @@ const getPermalink = (node, categoryName) => {
   return saneName(resource.name)
 }
 
-const parseGuide = () => {
-  const $ = cheerio.load(readFileSync(guidePath));
+const parseHtml = html => {
+  const $ = cheerio.load(html)
 
-  const sections = $('body')[0].children.map(node => {
-    const text = $(node).text().trim()
+  return $('body')[0].children.map(node => {
+    const $node = $(node)
+    return ({ ...node, text: $node.text().trim(), html: $.html(node) })
+  })
+}
+
+const parseSubsections = html => {
+  const content = parseHtml(html)
+
+  return content.reduce((acc, node) => {
+    if (node.name === 'h2' || node.name === 'h3') {
+      const level = node.name === 'h2' ? 1 : 2
+      return [...acc, { title: node.text, level }]
+    }
+
+    if (node.text) {
+      const last = acc.slice(-1)[0] || {}
+      const content = last.content || ''
+      const level = last.level || 1
+      return [...acc.slice(0, -1), { ...last, level, content: content + node.html }]
+    }
+
+    return acc
+  }, [])
+}
+
+const parseGuide = () => {
+  const content = parseHtml(readFileSync(guidePath))
+
+  const sections = content.flatMap(node => {
+    const attributes = node.attribs || {}
+    const category = attributes['data-category']
+    const subcategory = attributes['data-subcategory']
+    const buzzwords = (attributes['data-buzzwords'] || '')
+      .split(',')
+      .filter(_ => _)
+      .map(str => str.trim())
 
     // TODO: validate only right data attributes are used
-    if (text || node.name === 'section') {
-      const attributes = node.attribs || {}
-      const category = attributes['data-category']
-      const subcategory = attributes['data-subcategory']
-      const buzzwords = (attributes['data-buzzwords'] || '')
-        .split(',')
-        .filter(_ => _)
-        .map(str => str.trim())
+    if (node.text) {
+      const content = markdownToHtml(node.text)
 
-      return { text, category, subcategory, buzzwords }
+      if (category || subcategory) {
+        const title = category || subcategory
+        const level = category ? 1 : 2
+        return [{ content, title, category, subcategory, buzzwords, level }]
+      }
+
+      return parseSubsections(content)
     }
   })
 
@@ -120,26 +155,22 @@ const loadGuide = () => {
 
   const guideSections = parseGuide()
 
-  let lastCategory = null
+  let lastParent = null
 
   return guideSections.map(section => {
-    if (section.category) {
-      lastCategory = section.category
-    } else if (!section.subcategory) {
-      lastCategory = null
+    if (section.level === 1) {
+      lastParent = section
     }
+    const category = section.category || (section.subcategory && lastParent.category)
 
-    const permalink = getPermalink(section, lastCategory)
-    const level = section.category ? 1 : (section.subcategory && 2)
-    const title = section.category || section.subcategory
-    const content = markdownToHtml(section.text)
-    const anchor = [lastCategory, section.subcategory && title]
+    const landscapeKey = getLandscapeKey(section, lastParent.category)
+    const anchor = [lastParent.title, lastParent.level < section.level ? section.title : null]
         .filter(_ => _)
         .map(str => str.replace(/\W/g, " ").trim().replace(/\s+/g, '-'))
         .join('--')
         .toLowerCase()
 
-    return { ...section, permalink, title, level, content, anchor, category: lastCategory }
+    return { ...section, landscapeKey, anchor, category }
   })
 }
 

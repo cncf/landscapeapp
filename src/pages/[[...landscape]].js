@@ -13,7 +13,7 @@ const loadGuideIndex = () => {
   const guide = JSON.parse(readFileSync('public/guide.json', 'utf-8'))
 
   return guide
-    .filter(section => section.category || section.subcategory)
+    .filter(section => section.landscapeKey)
     .reduce((accumulator, { category, subcategory, anchor }) => {
       const key = [category, subcategory].filter(_ => _).join(' / ')
       return { ...accumulator, [key]: anchor }

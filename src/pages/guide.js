@@ -77,16 +77,17 @@ const Navigation = ({ nodes, hideSidebar }) => {
   const router = useRouter()
   const [isReady, setIsReady] = useState(false)
   const currentSection = isReady && router.asPath.split('#')[1] || ''
-  const currentLevel = (nodes.find(node => node.anchor === currentSection) || {}).level || 0
+  const links = nodes.filter(node => node.anchor)
+  const currentLevel = (links.find(node => node.anchor === currentSection) || {}).level || 0
   const visibleSections = currentSection.split('--').slice(0, Math.max(currentLevel - 1, 1)).join('--')
 
   useEffect(() => setIsReady(true), [])
 
-  const parents = nodes.filter(n => n.anchor)
+  const parents = links
     .map(n => n.anchor.split('--')[0])
     .reduce((acc, n) => ({ ...acc, [n]: (acc[n] || 0) + 1}), {})
 
-  return nodes
+  return links
     .filter(({ title, level, anchor }) => {
       return title && (level === 1 || (currentLevel + 1 >= level && anchor.indexOf(visibleSections) === 0))
     })
@@ -110,6 +111,14 @@ const Navigation = ({ nodes, hideSidebar }) => {
   })
 }
 
+const LandscapeLink = ({ landscapeKey, title }) => {
+  const href = assetPath(`/card-mode?category=${landscapeKey}`)
+
+  return <a href={href} target="_blank" className="permalink">
+    <span className="guide-icon" />{title}
+  </a>
+}
+
 const Content = ({ nodes, enhancedEntries }) => {
   return nodes.map((node, idx) => {
     const subcategoryEntries = node.subcategory && enhancedEntries.filter(entry => entry.path.split('/')[1].trim() === node.title)
@@ -117,9 +126,9 @@ const Content = ({ nodes, enhancedEntries }) => {
     return <div key={idx}>
       { node.title && <div className="section-title" id={node.anchor}>
         <Typography variant={`h${node.level + 1}`}>
-          <a href={assetPath(`/card-mode?category=${node.permalink}`)} target="_blank" className="permalink">
-            <span className="guide-icon" />{node.title}
-          </a>
+          { node.landscapeKey ?
+            <LandscapeLink landscapeKey={node.landscapeKey} title={node.title} /> :
+            node.title }
         </Typography>
       </div>}
       { node.content && <div className="guide-content" dangerouslySetInnerHTML={{ __html: node.content }} /> }
