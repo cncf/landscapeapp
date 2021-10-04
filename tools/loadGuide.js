@@ -1,5 +1,6 @@
 import path from 'path'
 import { existsSync, readFileSync } from 'fs'
+import  { pick } from 'lodash'
 import cheerio from 'cheerio'
 import { Converter } from 'showdown'
 import sanitizeHtml from 'sanitize-html'
@@ -76,13 +77,13 @@ const getLandscapeKey = (node, categoryName) => {
   const category = categories.find(category => category.name === categoryName)
 
   if (!category) {
-    throw new Error(`Could not create guide. Category not found: ${node.category}`)
+    throw new GuideError(`<section> has invalid category: ${node.category}`)
   }
 
   const subcategory = node.subcategory ? category.subcategories.find(subcategory => subcategory.name === node.subcategory) : null
 
   if (node.subcategory && !subcategory) {
-    throw new Error(`Could not create guide. Subcategory not found: ${node.subcategory}`)
+    throw new GuideError(`<section> has invalid subcategory: ${node.subcategory}`)
   }
 
   const resource = subcategory || category
@@ -90,13 +91,14 @@ const getLandscapeKey = (node, categoryName) => {
   return saneName(resource.name)
 }
 
+// TODO: validate no H1s
 const parseHtml = html => {
   const $ = cheerio.load(html)
 
   return $('body')[0].children.map(node => {
     const $node = $(node)
     return ({ ...node, text: $node.text().trim(), html: $.html(node) })
-  })
+  }).filter(node => node.text)
 }
 
 const parseSubsections = html => {
@@ -119,33 +121,61 @@ const parseSubsections = html => {
   }, [])
 }
 
+class GuideError extends Error {
+  constructor(message, attributes = {}) {
+    const attributesMessage = Object.entries(attributes).map(entry => entry.join('=')).join(', ')
+    super(`Could not generate Guide. ${message}. ${attributesMessage ? `Values: ${attributesMessage}` : ''}`)
+    this.name = "GuideError"
+  }
+}
+
+const extractDataAttributes = node => {
+  if (node.name !== 'section') {
+    return {}
+  }
+
+  const attributes = node.attribs || {}
+
+  const invalidKeys = Object.keys(attributes)
+    .filter(key => !['data-category', 'data-subcategory', 'data-buzzwords'].includes(key))
+
+  if (invalidKeys.length) {
+    throw new GuideError(`Invalid attribute(s) found on <section>`, pick(attributes, invalidKeys))
+  }
+
+  const category = attributes['data-category']
+  const subcategory = attributes['data-subcategory']
+  const buzzwords = (attributes['data-buzzwords'] || '')
+    .split(',')
+    .filter(_ => _)
+    .map(str => str.trim())
+
+  if (category && subcategory) {
+    throw new GuideError(`<section> Category and Subcategory should not be set simultaneously`, {category, subcategory})
+  }
+
+  if (category && buzzwords.length) {
+    throw new GuideError(`<section> Category should not have buzzwords`, {category, buzzwords})
+  }
+
+  return { category, subcategory, buzzwords }
+}
+
 const parseGuide = () => {
   const content = parseHtml(readFileSync(guidePath))
 
-  const sections = content.flatMap(node => {
-    const attributes = node.attribs || {}
-    const category = attributes['data-category']
-    const subcategory = attributes['data-subcategory']
-    const buzzwords = (attributes['data-buzzwords'] || '')
-      .split(',')
-      .filter(_ => _)
-      .map(str => str.trim())
+  return content.flatMap(node => {
+    const content = markdownToHtml(node.text)
+    const { category, subcategory, buzzwords } = extractDataAttributes(node)
 
-    // TODO: validate only right data attributes are used
-    if (node.text) {
-      const content = markdownToHtml(node.text)
-
-      if (category || subcategory) {
-        const title = category || subcategory
-        const level = category ? 1 : 2
-        return [{ content, title, category, subcategory, buzzwords, level }]
-      }
-
-      return parseSubsections(content)
+    if (category || subcategory) {
+      const title = category || subcategory
+      const level = category ? 1 : 2
+      return [{ content, title, category, subcategory, buzzwords, level }]
     }
-  })
 
-  return sections.filter(_ => _)
+    return parseSubsections(content)
+  })
 }
 
 const loadGuide = () => {
