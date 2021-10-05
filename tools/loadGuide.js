@@ -91,9 +91,12 @@ const getLandscapeKey = (node, categoryName) => {
   return saneName(resource.name)
 }
 
-// TODO: validate no H1s
 const parseHtml = html => {
   const $ = cheerio.load(html)
+
+  if ($('h1').length > 0) {
+    throw new GuideError(`h1 is not allowed in guide.md, use h2-h5`)
+  }
 
   return $('body')[0].children.map(node => {
     const $node = $(node)
