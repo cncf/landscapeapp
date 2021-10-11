@@ -16,9 +16,9 @@ const ResetFilters = _ => {
   }
 
   return (
-    <div className="filters-action" onClick={()=>reset()} aria-label="Reset Filters">
+    <a className="filters-action" onClick={reset} aria-label="Reset Filters">
       <ResetIcon /><span>Reset Filters</span>
-    </div>
+    </a>
   );
 };
 export default pure(ResetFilters);

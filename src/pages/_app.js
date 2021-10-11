@@ -2,6 +2,7 @@ import { CssBaseline, Snackbar } from '@material-ui/core'
 import { Alert } from '@material-ui/lab'
 import Head from 'next/head'
 import '../styles/theme.css'
+import '../styles/guide.css'
 import '../styles/itemModal.css'
 import settings from 'public/settings.json';
 import ReactGA from 'react-ga';

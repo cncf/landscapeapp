@@ -46,7 +46,7 @@ const LandscapeContent = ({zoom, padding = 10 }) => {
     transformOrigin: '0 0'
   }
 
-  return <div style={style}>
+  return <div className="inner-landscape" style={style}>
     <div style={{ position: 'relative' }}>
       {elements}
     </div>

@@ -48,8 +48,8 @@ const ExportCsv = _ => {
     }
   }, [fetched])
 
-  return <div className="filters-action" onClick={onClick} aria-label="Download as CSV">
+  return <a className="filters-action" onClick={onClick} aria-label="Download as CSV">
     <SystemUpdateIcon/><span>Download as CSV</span>
-  </div>
+  </a>
 };
 export default ExportCsv
