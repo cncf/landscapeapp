@@ -5765,6 +5765,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"fontsource-roboto@npm:^4.0.0":
+  version: 4.0.0
+  resolution: "fontsource-roboto@npm:4.0.0"
+  checksum: ca6dcb423a74e909e00b9d34701385431ca51c605697d1cd2edb7d6b8bdbf312fef993c45513c603855e6f0407e43583038ae8f134c87cbcc8000ca889ba28a9
+  languageName: node
+  linkType: hard
+
 "for-in@npm:^0.1.3":
   version: 0.1.8
   resolution: "for-in@npm:0.1.8"
@@ -6772,6 +6779,7 @@ fsevents@~2.3.1:
     extract-zip: 2.0.1
     favicons-webpack-plugin: ^5.0.2
     feed: ^4.2.2
+    fontsource-roboto: ^4.0.0
     format-number: 3.0.0
     git-branch: 2.0.1
     iframe-resizer: ^4.3.2
@@ -6816,7 +6824,6 @@ fsevents@~2.3.1:
     svg-autocrop: ^2.0.40
     swr: ^0.5.6
     traverse: 0.6.6
-    typeface-roboto: ^1.1.13
     yarn: ^1.22.11
   dependenciesMeta:
     open:
@@ -12767,13 +12774,6 @@ resolve@^2.0.0-next.3:
   dependencies:
     is-typedarray: ^1.0.0
   checksum: e6e0e6812acc3496612d81abe026bb6c71bfc0f3daa00716a3236fe37c46a81508de8306df8a29ae81e2a2c4293b6b8067c77b65003e0022134d544902b9acec
-  languageName: node
-  linkType: hard
-
-"typeface-roboto@npm:^1.1.13":
-  version: 1.1.13
-  resolution: "typeface-roboto@npm:1.1.13"
-  checksum: d8f68902575211262605fb50147084b295d410f376314d1b4d55d08e4dbb74339a1817c82a7df051694b3e3663a9d0c0179b728101e8403d906b89735b0e97e0
   languageName: node
   linkType: hard
 
