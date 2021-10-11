@@ -21,6 +21,7 @@ import ItemDialog from '../components/ItemDialog'
 import GuideToggle from '../components/GuideToggle'
 import LandscapeLogo from '../components/LandscapeLogo'
 import OrganizationLogo from '../OrganizationLogo'
+import NotFoundPage from './404'
 
 const scale = 1.8;
 
@@ -143,7 +144,11 @@ const Title = () => {
   </Typography>
 }
 
-const GuidePage = ({ content, title, entries, mainContentMode }) => {
+const GuidePage = ({ content, title, entries, mainContentMode, missing, setNotice }) => {
+  if (missing) {
+    return <NotFoundPage setNotice={setNotice} />
+  }
+
   const router = useRouter()
   const selectedItemId = router.query.selected
 
@@ -221,8 +226,8 @@ export async function getStaticProps() {
   const mainContentMode = 'guide'
   const params = parseParams({ mainContentMode })
   const { entries } = getPrerenderProps(params)
-  const props = { content, mainContentMode, entries, title: settings.global.meta.title }
-  return { props, notFound }
+  const props = { content, mainContentMode, entries, title: settings.global.meta.title, missing: notFound }
+  return { props }
 }
 
 export default GuidePage
