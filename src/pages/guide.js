@@ -26,6 +26,7 @@ import NotFoundPage from './404'
 const scale = 1.8;
 
 const SubcategoryMetadata = ({ node, entries }) => {
+  const projectEntries = entries.filter(entry => entry.project)
   return <>
     <style jsx>{`
       .items {
@@ -38,7 +39,7 @@ const SubcategoryMetadata = ({ node, entries }) => {
         transform: scale(${scale});
       }
     `}</style>
-    <div className="metadata">
+    { (node.buzzwords.length > 0 || projectEntries.length > 0) &&  <div className="metadata">
       <div className="header">
         <div>Buzzwords</div>
         <div>{settings.global.short_name} Projects</div>
@@ -46,17 +47,16 @@ const SubcategoryMetadata = ({ node, entries }) => {
       <div className="body">
         <div>
           <ul>
-            { node.buzzwords && node.buzzwords.map(str => <li key={str}>{str}</li>) }
+            { node.buzzwords.map(str => <li key={str}>{str}</li>) }
           </ul>
         </div>
         <div>
           <ul>
-            { entries.filter(entry => entry.project)
-              .map(entry => <li key={entry.name}>{entry.name} ({entry.project})</li>) }
+            { projectEntries.map(entry => <li key={entry.name}>{entry.name} ({entry.project})</li>) }
           </ul>
         </div>
       </div>
-    </div>
+    </div> }
 
     <div className="items">
       { entries.map(entry => <Item item={entry} key={entry.id} />) }
@@ -122,7 +122,7 @@ const LandscapeLink = ({ landscapeKey, title }) => {
 
 const Content = ({ nodes, enhancedEntries }) => {
   return nodes.map((node, idx) => {
-    const subcategoryEntries = node.subcategory && enhancedEntries.filter(entry => entry.path.split('/')[1].trim() === node.title)
+    const subcategoryEntries = node.subcategory && enhancedEntries.filter(entry => entry.path.split(' / ')[1].trim() === node.title)
 
     return <div key={idx}>
       { node.title && <div className="section-title" id={node.anchor}>

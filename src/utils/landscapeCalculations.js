@@ -149,7 +149,7 @@ export const calculateVerticalCategory = ({ subcategories, fitWidth, width }) =>
   const maxColumns = Math.floor((width - 2 * (categoryBorder + itemMargin)) / (smallItemWidth + itemMargin))
 
   return subcategoriesWithCalculations.map(subcategory => {
-    let columns = Math.min(maxColumns, subcategory.allItems.length)
+    let columns = fitWidth ? Math.min(maxColumns, subcategory.allItems.length) : maxColumns
     if (columns % 2 === 1 && subcategory.largeItemsCount === subcategory.items.length) {
       columns -= 1
     }
