@@ -25,9 +25,10 @@ const Divider = ({ color }) => {
 }
 
 const HorizontalCategory = ({ header, subcategories, width, height, top, left, color, href, fitWidth }) => {
-  const subcategoriesWithCalculations = calculateHorizontalCategory({ height, width, subcategories, fitWidth })
-  const totalRows = Math.max(...subcategoriesWithCalculations.map(({ rows }) => rows))
   const { guideIndex } = useContext(LandscapeContext)
+  const addInfoIcon = Object.keys(guideIndex).length > 0
+  const subcategoriesWithCalculations = calculateHorizontalCategory({ height, width, subcategories, fitWidth, addInfoIcon })
+  const totalRows = Math.max(...subcategoriesWithCalculations.map(({ rows }) => rows))
 
   return (
     <div style={{ width, left, height, top, position: 'absolute' }} className="big-picture-section">
