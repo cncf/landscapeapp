@@ -1,6 +1,6 @@
 {
   "name": "interactive-landscape",
-  "version": "1.0.597",
+  "version": "1.0.598",
   "description": "Visualization tool for building interactive landscapes",
   "engines": {
     "npm": ">=3",
