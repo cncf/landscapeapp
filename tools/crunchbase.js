@@ -25,10 +25,12 @@ const EXCHANGE_SUFFIXES = {
   'krx': 'KS', // South Korea
   'lse': 'L', // London
   'moex': 'ME', // Moscow
+  'mcx': 'ME', // Alternate code for Moscow
   'nse': 'NS', // India
   'sse': 'SS', // Shanghai
   'swx': 'SW', // Zurich
   'szse': 'SZ',  // Shenzhen
+  'tpe': 'TW', // Taipei
   'tyo': 'T', // Tokyo
   'vie': 'VI', // Viena
 }
