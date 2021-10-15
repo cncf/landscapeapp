@@ -9,7 +9,7 @@ import { stringifyParams } from '../utils/routing'
 
 const LandscapeContext = createContext()
 
-export const LandscapeProvider = ({ entries, pageParams, children }) => {
+export const LandscapeProvider = ({ entries, pageParams, guideIndex = {}, children }) => {
   const router = useRouter()
   const params = parseParams({ ...pageParams, ...router.query })
 
@@ -20,10 +20,10 @@ export const LandscapeProvider = ({ entries, pageParams, children }) => {
   const { nextItemId, previousItemId } = selectedItemCalculator(groupedItems, selectedItemId, isBigPicture)
   const size = calculateSize(landscapeSettings)
 
-  const navigate = (newParams = {}) => {
+  const navigate = (newParams = {}, options = {}) => {
     const filters = { ...(params.filters || {}), ...(newParams.filters || {}) }
     const url = stringifyParams({ ...params, ...newParams, filters })
-    router.push(url)
+    router.push(url, null, options)
   }
 
   const baseProps = {
@@ -34,6 +34,7 @@ export const LandscapeProvider = ({ entries, pageParams, children }) => {
     previousItemId,
     params,
     landscapeSettings,
+    guideIndex,
     ...size
   }
 

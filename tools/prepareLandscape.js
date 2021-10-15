@@ -3,6 +3,7 @@ import { load  } from 'js-yaml'
 import { readFileSync, writeFileSync, mkdirSync, existsSync, rmSync } from 'fs'
 import { execSync } from 'child_process'
 import qs from 'query-string'
+import loadGuide from './loadGuide'
 
 const projectPath = process.env.PROJECT_PATH || path.resolve('../..')
 const settingsPath = path.resolve(projectPath, 'settings.yml')
@@ -26,6 +27,12 @@ writeFileSync(`./public/data/items.json`, JSON.stringify(items))
 items.forEach(item => {
   writeFileSync(`./public/data/items/${item.id}.json`, JSON.stringify(item))
 })
+
+const guide = loadGuide()
+
+if (guide) {
+  writeFileSync('./public/guide.json', JSON.stringify(guide))
+}
 
 const afterSettingsSaved = _ => {
   const prepareItemsForExport = require('./prepareItemsForExport').default

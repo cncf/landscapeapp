@@ -2,6 +2,7 @@ const path = require('path')
 const { readFileSync } = require('fs')
 const { load } = require('js-yaml')
 const bundleAnalyzerPlugin = require('@next/bundle-analyzer')
+const getBasePath = require('./tools/getBasePath')
 
 const withBundleAnalyzer = bundleAnalyzerPlugin({ enabled: !!process.env.ANALYZE })
 
@@ -14,10 +15,10 @@ const tweets = (processedLandscape.twitter_options || {}).count || 0
 
 const GA = process.env.GA
 
-const basePath = process.env.PROJECT_NAME ? `/${process.env.PROJECT_NAME}` : ''
+const basePath = getBasePath()
 
 module.exports = withBundleAnalyzer({
-  env: { lastUpdated, tweets, GA, basePath },
+  env: { lastUpdated, tweets, GA, PROJECT_NAME: process.env.PROJECT_NAME },
   basePath,
   webpack: (config, options) => {
     // CAREFUL before adding more presets, next/babel already includes some

@@ -2,6 +2,7 @@ import { CssBaseline, Snackbar } from '@material-ui/core'
 import { Alert } from '@material-ui/lab'
 import Head from 'next/head'
 import '../styles/theme.css'
+import '../styles/guide.css'
 import '../styles/itemModal.css'
 import '../styles/verificationModal.css'
 import settings from 'public/settings.json';
@@ -12,7 +13,7 @@ import { useRouter } from 'next/router'
 import isBrowser from '../utils/isBrowser'
 import useCurrentDevice from '../utils/useCurrentDevice'
 import { parse } from 'query-string'
-import 'typeface-roboto'
+import 'fontsource-roboto/latin.css'
 
 const Notice = ({ onClose, notice }) => {
   const anchorOrigin = { vertical: 'top', horizontal: 'center' }

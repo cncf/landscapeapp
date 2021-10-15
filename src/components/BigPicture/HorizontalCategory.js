@@ -1,5 +1,4 @@
-import React, { Fragment } from "react";
-import { getContrastRatio } from "@material-ui/core/styles";
+import React, { Fragment, useContext } from "react";
 import Item from "./Item";
 import InternalLink from "../InternalLink";
 import {
@@ -13,6 +12,9 @@ import {
   subcategoryMargin,
   subcategoryTitleHeight
 } from "../../utils/landscapeCalculations";
+import LandscapeContext from '../../contexts/LandscapeContext'
+import SubcategoryInfo from '../SubcategoryInfo'
+import CategoryHeader from '../CategoryHeader'
 
 const Divider = ({ color }) => {
   const width = dividerWidth
@@ -23,7 +25,10 @@ const Divider = ({ color }) => {
 }
 
 const HorizontalCategory = ({ header, subcategories, width, height, top, left, color, href, fitWidth }) => {
-  const subcategoriesWithCalculations = calculateHorizontalCategory({ height, width, subcategories, fitWidth })
+  const { guideIndex } = useContext(LandscapeContext)
+  const addInfoIcon = Object.keys(guideIndex).length > 0
+  const subcategoriesWithCalculations = calculateHorizontalCategory({ height, width, subcategories, fitWidth, addInfoIcon })
+  const totalRows = Math.max(...subcategoriesWithCalculations.map(({ rows }) => rows))
 
   return (
     <div style={{ width, left, height, top, position: 'absolute' }} className="big-picture-section">
@@ -40,8 +45,8 @@ const HorizontalCategory = ({ header, subcategories, width, height, top, left, c
         }}
       >
         <div style={{
-          top: 5,
-          bottom: 5,
+          top: 0,
+          bottom: 0,
           left: 0,
           width: categoryTitleHeight,
           position: 'absolute',
@@ -52,13 +57,7 @@ const HorizontalCategory = ({ header, subcategories, width, height, top, left, c
           alignItems: 'center',
           justifyContent: 'center'
         }}>
-          <InternalLink to={href} style={{
-            color: getContrastRatio('#ffffff', color) < 4.5 ? '#282828' : '#ffffff',
-            fontSize: 12,
-            lineHeight: '13px'
-          }}>
-            {header}
-          </InternalLink>
+          <CategoryHeader href={href} label={header} guideAnchor={guideIndex[header]} background={color} rotate={true} />
         </div>
         <div style={{
           marginLeft: 30,
@@ -78,12 +77,12 @@ const HorizontalCategory = ({ header, subcategories, width, height, top, left, c
               gridAutoRows: `${smallItemHeight}px`
             }
             const extraStyle = fitWidth ? { justifyContent: 'space-evenly', alignContent: 'space-evenly' } : { gridGap: itemMargin }
+            const path = [header, name].join(' / ')
 
             return <Fragment key={name}>
               <div style={{
                 width,
                 position: 'relative',
-                fontSize: 10,
                 overflow: 'visible',
                 padding,
                 boxSizing: 'border-box'
@@ -99,12 +98,14 @@ const HorizontalCategory = ({ header, subcategories, width, height, top, left, c
                   justifyContent: 'center',
                   textAlign: 'center'
                 }}>
-                  <InternalLink to={href} style={{ color: 'white', fontSize: 11 }}>{name}</InternalLink>
+                  <InternalLink to={href} className="white-link">{name}</InternalLink>
                 </div>
                 <div style={{...style, ...extraStyle}}>
                   {
                     allItems.map(item => <Item item={item} key={item.name}/>)
                   }
+
+                  { guideIndex[path] && <SubcategoryInfo label={name} anchor={guideIndex[path]} column={columns} row={totalRows}/> }
                 </div>
               </div>
 

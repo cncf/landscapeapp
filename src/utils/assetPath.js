@@ -1,5 +1,7 @@
+import getBasePath from '../../tools/getBasePath'
+
 const assetPath = path => {
-  return `${process.env.basePath}${path[0] === '/' ? '' : '/'}${path}`
+  return `${getBasePath()}${path[0] === '/' ? '' : '/'}${path}`
 }
 
 export default assetPath

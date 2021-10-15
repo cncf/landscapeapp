@@ -35,7 +35,7 @@ const onChange = ts => {
   }, 100)
 }
 
-watch([`${projectPath}/*.yml`, `${projectPath}/cached_logos`])
+watch([`${projectPath}/*.yml`, `${projectPath}/guide.md`, `${projectPath}/cached_logos`])
   .on('all', (event, path) => {
     if (ready) {
       console.log(event, path)
