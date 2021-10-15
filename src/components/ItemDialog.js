@@ -19,7 +19,7 @@ const ItemDialog = _ => {
   const nonoss = selectedItem && selectedItem.oss === false
   const loading = selectedItemId && !selectedItem
   const itemInfo = selectedItem || entries.find(({ id }) => id === selectedItemId)
-  const Component = params.mainContentMode === 'verification' ? VerificationItemDialogContent : ItemDialogContent
+  const Component = itemInfo && itemInfo.tag === 'verification' ? VerificationItemDialogContent : ItemDialogContent
 
   return (
       <Dialog open={!!selectedItemId} onClose={closeDialog} transitionDuration={400}
