@@ -1,12 +1,12 @@
-import rp from 'request-promise';
+import axios from 'axios'
 import chalk from 'chalk'
 
 export default async function check() {
   try {
-    const result = await rp(`https://api.github.com/repos/cncf/landscapeapp/branches/master`, {
-      headers: {'User-Agent': 'curl'},
-      json: true
-    });
+    const { data:result } = await axios({
+      url: `https://api.github.com/repos/cncf/landscapeapp/branches/master`,
+      headers: {'User-Agent': 'curl'}
+    })
     const currentBranch = require('child_process').execSync(`git rev-parse --abbrev-ref HEAD`).toString().trim();
     if (currentBranch !== 'master') {
       return;

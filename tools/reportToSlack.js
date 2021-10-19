@@ -1,5 +1,4 @@
-import rp from 'request-promise';
-import _ from 'lodash';
+import axios from 'axios'
 
 export async function report({ returnCode, reportUrl, messages, slackChannel, icon_url, name, onlyErrors = false }) {
   const url = `https://hooks.slack.com/services/${slackChannel}`;
@@ -12,7 +11,7 @@ export async function report({ returnCode, reportUrl, messages, slackChannel, ic
     return
   }
 
-  const payload = {
+  const data = {
     text: `
       Update from ${new Date().toISOString()} finished with ${errorStatus}
       Full report available at ${reportUrl}
@@ -23,9 +22,5 @@ export async function report({ returnCode, reportUrl, messages, slackChannel, ic
     icon_url
   };
 
-  const result = await rp({
-    method: 'POST',
-    json: payload,
-    url: url
-  });
+  await axios({ method: 'POST', data, url })
 }

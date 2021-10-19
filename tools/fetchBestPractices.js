@@ -1,7 +1,6 @@
 import colors from 'colors';
-import rp from 'request-promise';
 import retry from './retry';
-import rpRetry from './rpRetry';
+import requestWithRetry from './requestWithRetry';
 import Promise from 'bluebird';
 import _ from 'lodash';
 import errorsReporter from './reporter';
@@ -39,8 +38,7 @@ async function getLandscapeItems() {
 async function fetchEntriesNoRetry() {
   const maxNumber = 200;
   const items = await Promise.map(_.range(1, maxNumber), async function(number) {
-    const result = await rpRetry({
-      json: true,
+    const result = await requestWithRetry({
       url: `https://bestpractices.coreinfrastructure.org/en/projects.json?page=${number}`
     });
     return result.map(x => ({
@@ -53,7 +51,7 @@ async function fetchEntriesNoRetry() {
 }
 
 async function fetchEntryNoRetry(url) {
-  let result = await rpRetry({
+  let result = await requestWithRetry({
     json: true,
     url: `https://bestpractices.coreinfrastructure.org/en/projects.json?pq=${encodeURIComponent(url)}`
   });

@@ -23,17 +23,17 @@ const getContributorsCount = async repo => {
   const per_page = 100
   const path = `/repos/${repo}/contributors`
   const request = ({ page = 1 } = {}) => GithubClient.request({ path, params: { page, per_page, anon: 1 }, resolveWithFullResponse: true })
-  const { body, headers } = await request()
+  const { data, headers } = await request()
 
   let totalPages, lastPageContributors
 
   if (headers.link) {
     const lastPageUrl = headers.link.split(',').find(s => s.indexOf('last') > -1).split(';')[0].replace(/[<>]/g, '')
     totalPages = parseInt(parse(lastPageUrl.split('?')[1]).page)
-    lastPageContributors = (await request({ page: totalPages })).body
+    lastPageContributors = (await request({ page: totalPages })).data
   } else {
     totalPages = 1
-    lastPageContributors = body
+    lastPageContributors = data
   }
 
   return (totalPages - 1) * per_page + lastPageContributors.length
