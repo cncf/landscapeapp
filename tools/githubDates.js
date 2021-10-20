@@ -34,7 +34,8 @@ const getUrlFromLinkHeader = (link, rel) => {
 const getCommitsLastPagePath = async (repo, branchSha) => {
   const path = `/repos/${repo}/commits?sha=${branchSha}`;
 
-  const { link } = await GithubClient.request({ path, method: 'HEAD' });
+  const response = await GithubClient.request({ path, method: 'HEAD', resolveWithFullResponse: true });
+  const { link } = response.headers
   const url = getUrlFromLinkHeader(link, 'last');
   if (!url) {
     return path;

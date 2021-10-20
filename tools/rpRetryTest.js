@@ -1,6 +1,6 @@
-import rp from './rpRetry';
+import requestWithRetry from './requestWithRetry';
 async function main() {
-  const result = await rp({
+  const result = await requestWithRetry({
     url: 'http://google.com',
     verbose: true,
     timeout: 30000
