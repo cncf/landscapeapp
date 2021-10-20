@@ -24,7 +24,6 @@ const ToggleItem = ({ isActive, title, to }) => {
       }
 
       a:hover {
-        font-weight: normal;
         color: #2E67BF;
       }
     `}</style>
