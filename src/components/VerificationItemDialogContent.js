@@ -75,6 +75,7 @@ const VerificationItemDialogContent = ({ itemInfo, loading }) => {
   }
 
   const scrollAllContent = innerWidth < 1000 || innerHeight < 630;
+  console.log(itemInfo);
 
   return (
         <div className={classNames("modal-content scroll-all-content", {'scroll-all-content': scrollAllContent})} >
@@ -114,9 +115,9 @@ const VerificationItemDialogContent = ({ itemInfo, loading }) => {
                 </div>
 
                 <div className="verification-mosaic-description" key="v-indication">
-                  Indication of release {itemInfo.extra && itemInfo.extra.version &&
+                  {itemInfo.extra && itemInfo.extra.version &&
                     <span>
-                      ({itemInfo.extra.version})
+                      {itemInfo.extra.version}
                     </span>
                   }
                 </div>
@@ -125,13 +126,9 @@ const VerificationItemDialogContent = ({ itemInfo, loading }) => {
                   {itemCategory(itemInfo.landscape)}
                 </div>
 
-                <div className="verification-mosaic-category" key="v-category2">
-                  Category2
-                </div>
+                <div className="verification-mosaic-category" key="v-category2"></div>
 
-                <div className="verification-mosaic-category" key="v-category3">
-                  Category3
-                </div>
+                <div className="verification-mosaic-category" key="v-category3"></div>
               </div>
             </div>
         </div>
