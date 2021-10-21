@@ -1,8 +1,7 @@
 // locate zoom buttons
-import settings from 'public/settings.json'
+import React, { useEffect, useRef, useState } from 'react'
 import qs from 'query-string';
-
-import React, { useEffect, useState } from 'react';
+import settings from 'public/settings.json'
 
 const bird = ( <svg
   viewBox="0 0 300 244">
@@ -14,10 +13,17 @@ const bird = ( <svg
 
 const TweetButton = function({cls}) {
   const [ready, setReady] = useState(false)
+  const [isHidden, setIsHidden] = useState(false)
+  const tweetRef = useRef()
 
   useEffect(() => {
     setReady(true)
   }, [])
+
+  useEffect(() => {
+    const tweetButtonStyle = tweetRef.current && window.getComputedStyle(tweetRef.current)
+    setIsHidden(tweetRef.current && (tweetButtonStyle.display === 'none' || tweetButtonStyle.visibility === 'hidden'))
+  }, [ready])
 
   if (!ready) {
     return null;
@@ -29,9 +35,11 @@ const TweetButton = function({cls}) {
   const params = qs.stringify({ text, url })
   const twitterUrl = `https://twitter.com/intent/tweet?${params}`
 
-  return <div className={`tweet-button ${cls}`}>
-    <a href={twitterUrl}>{bird}<span>Tweet</span></a>
-    <div className="tweet-count-wrapper"><div className="tweet-count">{process.env.tweets}</div></div>
+  return <div className={`tweet-button ${cls}`} style={{ ...(isHidden ? { display: 'none' } : null)}}>
+    <a ref={tweetRef} href={twitterUrl}>{bird}<span>Tweet</span></a>
+    <div className="tweet-count-wrapper">
+      <div className="tweet-count">{process.env.tweets}</div>
+    </div>
   </div>
 }
 
