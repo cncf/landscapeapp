@@ -1,7 +1,7 @@
-import rp from 'request-promise';
+import axios from 'axios'
 
 const url = `https://hooks.slack.com/services/${process.env.SLACK_CHANNEL}`;
-const payload = {
+const data = {
   text: 'Test',
   attachments: [{
     title: 'Example log file',
@@ -84,11 +84,7 @@ nually a',
 };
 
 async function main() {
-  const result = await rp({
-    method: 'POST',
-    json: payload,
-    url: url
-  });
+  const result = await axios({ method: 'POST', data, url })
   console.info(result);
 
 }
