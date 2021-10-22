@@ -71,11 +71,10 @@ const VerificationItemDialogContent = ({ itemInfo, loading }) => {
     var subcategoryMarkup = (
       <InternalLink key="subcategory" to={closeUrl({ grouping: 'landscape', filters: {landscape: path}})}>{subcategory.label}</InternalLink>
     )
-    return (<span>{[categoryMarkup, separator, subcategoryMarkup]}</span>);
+    return (<span>{[subcategoryMarkup]}</span>);
   }
 
   const scrollAllContent = innerWidth < 1000 || innerHeight < 630;
-  console.log(itemInfo);
 
   return (
         <div className={classNames("modal-content scroll-all-content", {'scroll-all-content': scrollAllContent})} >
@@ -106,12 +105,8 @@ const VerificationItemDialogContent = ({ itemInfo, loading }) => {
                   </div>
                 </div>
 
-                <div className="verification-mosaic-product" key="v-product">
-                  {itemInfo.name}
-                </div>
-
                 <div className="verification-mosaic-description" key="v-description">
-                  {itemInfo.description}
+                  {itemInfo.name}
                 </div>
 
                 <div className="verification-mosaic-description" key="v-indication">
@@ -121,9 +116,12 @@ const VerificationItemDialogContent = ({ itemInfo, loading }) => {
                     </span>
                   }
                 </div>
+                <div className="verification-mosaic-product" key="v-product">
+                  {itemInfo.description}
+                </div>
 
                 <div className="verification-mosaic-category" key="v-category">
-                  {itemCategory(itemInfo.landscape)}
+                  <span>Badge Category &nbsp;</span> { itemCategory(itemInfo.landscape) }
                 </div>
 
                 <div className="verification-mosaic-category" key="v-category2"></div>
