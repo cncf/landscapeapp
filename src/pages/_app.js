@@ -33,6 +33,7 @@ export default function App({ Component, pageProps }) {
   const ready = !isBrowser() || router.isReady
 
   useEffect(() => {
+    window.landscapeRouter = router;
     window.addEventListener('message', function(event) {
       var data = event.data;
       if (data.type === "css") {
@@ -56,6 +57,16 @@ export default function App({ Component, pageProps }) {
       element.setAttribute("rel", "stylesheet");
       element.setAttribute("type", "text/css");
       element.setAttribute("href", params.css);
+      document.getElementsByTagName("head")[0].appendChild(element);
+    }
+    if (params.style) {
+      var element = document.createElement("style");
+      try {
+        params.style = JSON.parse(params.style)
+      } catch(ex) {
+
+      }
+      element.innerHTML = params.style;
       document.getElementsByTagName("head")[0].appendChild(element);
     }
   }, []);

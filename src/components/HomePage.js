@@ -14,7 +14,6 @@ import Footer from './Footer';
 import EmbeddedFooter from './EmbeddedFooter';
 
 import isGoogle from '../utils/isGoogle';
-import bus from '../reducers/bus';
 import settings from 'public/settings.json'
 import useCurrentDevice from '../utils/useCurrentDevice'
 import LandscapeContent from './BigPicture/LandscapeContent'
@@ -30,10 +29,6 @@ import ExportCsv from './ExportCsv'
 import MainContent from './MainContent'
 import Presets from './Presets'
 import GuideToggle from './GuideToggle'
-
-bus.on('scrollToTop', function() {
-  (document.scrollingElement || document.body).scrollTop = 0;
-});
 
 function preventDefault(e){
   const modal = e.srcElement.closest('.modal-body');
