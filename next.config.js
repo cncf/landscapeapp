@@ -28,6 +28,9 @@ module.exports = withBundleAnalyzer({
       ...config.externals,
       { moment: 'moment' }
     ]
+    if (process.env.PREVIEW) {
+      config.optimization.minimize = false;
+    }
 
     return config
   },
