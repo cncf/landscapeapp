@@ -144,10 +144,44 @@ const Title = () => {
   </Typography>
 }
 
+// We need to wait until fonts are loaded before measuring text width
+// In theory document.fonts.ready should work but it does not on Safari
+const waitForFonts = callback => {
+  if (document.fonts.status === 'loaded') {
+    callback()
+  } else {
+    setTimeout(() => waitForFonts(callback), 50)
+  }
+}
+
 const GuidePage = ({ content, title, entries, mainContentMode, missing, setNotice }) => {
   if (missing) {
     return <NotFoundPage setNotice={setNotice} />
   }
+
+  useEffect(() => {
+    // This is a hack to prevent layout shifts when hovering over links,
+    // given links are bold on hover.
+    waitForFonts(() => {
+      const links = document.querySelectorAll('a')
+      const canvas = document.createElement('canvas')
+      const ctx = canvas.getContext('2d')
+
+      const measureTextWidth = (text, font) => {
+        ctx.font = font
+        return ctx.measureText(text).width
+      }
+
+      links.forEach(linkEl => {
+        linkEl.style.letterSpacing = null
+        const { fontSize, fontFamily, letterSpacing } = window.getComputedStyle(linkEl)
+        const textWidth = measureTextWidth(linkEl.text, `${fontSize} ${fontFamily}`)
+        const hoverWidth = measureTextWidth(linkEl.text, `bold ${fontSize} ${fontFamily}`)
+        const letterSpacingNum = parseFloat(letterSpacing) || 0
+        linkEl.style.letterSpacing = `${letterSpacingNum + (hoverWidth - textWidth) / (linkEl.text.length - 1)}px`
+      })
+    })
+  })
 
   const router = useRouter()
   const selectedItemId = router.query.selected

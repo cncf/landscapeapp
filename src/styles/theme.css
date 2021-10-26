@@ -14,8 +14,8 @@ html {-webkit-text-size-adjust: 100%;}
 body.popup {background-color:transparent !important; }
 body.popup .MuiBackdrop-root { display: none }
 
-a {text-decoration: none; transition: all 0.5s; color: $blue;
-  &:hover {transition: all 0.1s; font-weight: bold; }
+a {text-decoration: none; transition: none; color: $blue;
+  &:hover {font-weight: bold; }
 }
 
 a.MuiTab-root:hover {
