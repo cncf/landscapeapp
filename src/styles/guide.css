@@ -68,6 +68,10 @@
     margin: calc($spacing * 1.5) 0;
   }
 
+  a:hover {
+    letter-spacing: inherit !important;
+  }
+
   blockquote {
     margin: calc($spacing * 1.375) 0;
     padding: $spacing;
