@@ -44,6 +44,7 @@ const GuideToggle = ({ active }) => {
     <style jsx>{`
       .guide-toggle {
         border: 2px solid #2E67BF;
+        background: #2E67BF;
         border-radius: 4px;
         max-width: 400px;
         margin: 0;
