@@ -75,7 +75,6 @@ const VerificationItemDialogContent = ({ itemInfo, loading }) => {
   }
 
   const scrollAllContent = innerWidth < 1000 || innerHeight < 630;
-
   return (
         <div className={classNames("modal-content scroll-all-content", {'scroll-all-content': scrollAllContent})} >
           <Head>
@@ -96,7 +95,7 @@ const VerificationItemDialogContent = ({ itemInfo, loading }) => {
                   </div>
                 </div>
                 <div className="verification-mosaic-wrap" key="v-member">
-                  <InternalLink to={linkToOrganization}><span>{itemInfo.organization}</span>{memberTag(itemInfo)}</InternalLink>
+                  <img src={assetPath(settings.global.lfn_logo)} className='verification-product-logo-img'/>
                 </div>
 
                 <div className="verification-mosaic-wrap" key="v-aalogo">
@@ -106,27 +105,26 @@ const VerificationItemDialogContent = ({ itemInfo, loading }) => {
                 </div>
 
                 <div className="verification-mosaic-description" key="v-description">
-                  {itemInfo.name}
+                  <span>Product Name: &nbsp;</span>{itemInfo.name}
                 </div>
 
                 <div className="verification-mosaic-description" key="v-indication">
                   {itemInfo.extra && itemInfo.extra.version &&
                     <span>
+                      <span>Badge Release: &nbsp;</span>
                       {itemInfo.extra.version}
                     </span>
                   }
                 </div>
                 <div className="verification-mosaic-product" key="v-product">
-                  {itemInfo.description}
+                  <span>Product Description: &nbsp;</span>{itemInfo.description}
                 </div>
-
-                <div className="verification-mosaic-category" key="v-category">
+                <div className="verification-mosaic-description" key="v-category">
                   <span>Badge Category &nbsp;</span> { itemCategory(itemInfo.landscape) }
                 </div>
-
-                <div className="verification-mosaic-category" key="v-category2"></div>
-
-                <div className="verification-mosaic-category" key="v-category3"></div>
+                <div className="verification-mosaic-description" key="v-category2">
+                  <span>Type: &nbsp;{`${itemInfo.type}`}</span>
+                </div>
               </div>
             </div>
         </div>

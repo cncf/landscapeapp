@@ -35,7 +35,8 @@ async function main() {
     'organization',
     'joined',
     'extra',
-    'tag'
+    'tag',
+    'type'
   ];
 
   const addKeyError = (title, key) => {
