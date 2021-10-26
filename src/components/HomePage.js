@@ -179,9 +179,9 @@ const HomePage = _ => {
           <div className="cards-section">
             <SwitchButton />
             <div className="right-buttons">
-              <ZoomButtons/>
-              <FullscreenButton/>
               <TweetButton cls="tweet-button-main"/>
+              <FullscreenButton/>
+              <ZoomButtons/>
             </div>
             { isBigPicture &&
               <div className="landscape-flex">
