@@ -17,7 +17,7 @@
     "lint": "esw webpack.config.* src tools --color",
     "lint:watch": "yarn lint -- --watch",
     "update-github-colors": "curl https://raw.githubusercontent.com/Diastro/github-colors/master/github-colors.json > tools/githubColors.json",
-    "fetch": "babel-node tools/migrate.js && babel-node tools/validateLandscape && babel-node tools/checkWrongCharactersInFilenames && babel-node tools/addExternalInfo.js && yarn yaml2json",
+    "fetch": "babel-node tools/migrate.js && babel-node tools/addExternalInfo.js && babel-node tools/validateLandscape && babel-node tools/checkWrongCharactersInFilenames && yarn yaml2json",
     "fetchAll": "LEVEL=complete yarn fetch",
     "update": "(rm /tmp/landscape.json || true) && babel-node tools/migrate.js && babel-node tools/validateLandscape && yarn remove-quotes && LEVEL=medium babel-node tools/addExternalInfo.js && yarn prune && yarn check-links && yarn yaml2json && babel-node tools/calculateNumberOfTweets && babel-node tools/updateTimestamps",
     "yaml2json": "babel-node tools/generateJson.js",
