@@ -17,11 +17,11 @@ const FullscreenButton = _ => {
   }
   return <div className="fullscreen-button">
         { isFullscreen ?
-        <IconButton onClick={_ => navigate({ isFullscreen: false })} title="Exit fullscreen">
+        <IconButton onClick={_ => navigate({ isFullscreen: false })} title="Exit fullscreen" size="small">
           <FullscreenExitIcon />
         </IconButton>
           :
-        <IconButton onClick={_ => navigate({ isFullscreen: true })} title="Enter fullscreen">
+        <IconButton onClick={_ => navigate({ isFullscreen: true })} title="Enter fullscreen" size="small">
           <FullscreenIcon />
         </IconButton>
         }

@@ -14,8 +14,8 @@ html {-webkit-text-size-adjust: 100%;}
 body.popup {background-color:transparent !important; }
 body.popup .MuiBackdrop-root { display: none }
 
-a {text-decoration: none; transition: all 0.5s; color: $blue;
-  &:hover {transition: all 0.1s; font-weight: bold; }
+a {text-decoration: none; transition: none; color: $blue;
+  &:hover {font-weight: bold; }
 }
 
 a.MuiTab-root:hover {
@@ -548,6 +548,7 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='rgb(27,68,108
 
 .tweet-button {
   width: 105px;
+  display: flex;
 
   .tweet-count-wrapper {
     display: inline-block;
@@ -593,24 +594,21 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='rgb(27,68,108
   }
 
   a {
-    display: inline-block;
+    display: flex;
+    align-items: center;
+    justify-content: space-evenly;
     border-radius: 2px;
     width: 60px;
-    height: 19px;
     background: rgb(25,114,230);
     color: white;
     svg {
-      margin-top: 2px;
-      margin-left: 5px;
-      width: 16px;
-      height: 16px;
+      width: 14px;
+      height: 14px;
       fill: white;
     }
     span {
       position: relative;
-      margin-left: 2px;
-      top: -4px;
-      font-size: 10px !important;
+      font-size: 11.5px !important;
       font-weight: bold;
     }
   }
@@ -621,24 +619,12 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='rgb(27,68,108
   top: 10px;
   width: auto;
   right: 0;
-
-  .zoom-buttons,
-  .fullscreen-button,
-  .tweet-button {
-    float: right;
-  }
-
-  .zoom-buttons button,
-  .fullscreen-button button{
-    padding: 4px;
-  }
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
 
   .fullscreen-button {
     margin-left: 2px;
-  }
-
-  .tweet-button {
-    margin-top: 6px;
   }
 }
 

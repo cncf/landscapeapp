@@ -26,11 +26,11 @@ const ZoomButtons = _ => {
   const resetZoom = _ => setZoom()
 
   return <div className="zoom-buttons">
-        <IconButton disabled={!canZoomOut} onClick={zoomOut} className='zoom-change' title="Zoom out">
+        <IconButton disabled={!canZoomOut} onClick={zoomOut} className='zoom-change' title="Zoom out" size="small">
           <RemoveCircleIcon />
         </IconButton>
-        <Button onClick={resetZoom} className='zoom-reset' title="Reset zoom">{zoomText}</Button>
-        <IconButton disabled={!canZoomIn} onClick={zoomIn} className='zoom-change' title="Zoom in">
+        <Button onClick={resetZoom} className='zoom-reset' title="Reset zoom" size="small">{zoomText}</Button>
+        <IconButton disabled={!canZoomIn} onClick={zoomIn} className='zoom-change' title="Zoom in" size="small">
           <AddCircleIcon />
         </IconButton>
   </div>
