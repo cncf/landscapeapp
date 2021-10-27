@@ -118,9 +118,9 @@ const makeLocalBuild = async function() {
       cd package
       cp _yarn.lock yarn.lock
       echo 0
-      nvm install \`cat .nvmrc\`
+      nvm install
       echo 1
-      nvm use \`cat .nvmrc\`
+      nvm use
       echo 2
       npm install -g agentkeepalive --save
       echo 3
@@ -128,11 +128,11 @@ const makeLocalBuild = async function() {
       echo 4
       npm install -g yarn@latest
       echo 5
-      ~/.nvm/versions/node/\`cat .nvmrc\`/bin/yarn >/dev/null
+      yarn >/dev/null
       export NODE_OPTIONS="--unhandled-rejections=strict"
       export JEST_OPTIONS="-i"
       export USE_OLD_PUPPETEER=1
-      PROJECT_PATH=.. ~/.nvm/versions/node/\`cat .nvmrc\`/bin/yarn build
+      PROJECT_PATH=.. yarn build
     `, { assignFn: (x) => localPid = x, showOutputFn: () => remoteFailed });
 
     if (!buildDone) {
