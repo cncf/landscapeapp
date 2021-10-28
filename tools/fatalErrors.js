@@ -40,8 +40,8 @@ export async function reportFatalErrors() {
       'user-agent':'curl'
     },
     auth: {
-        'user': 'CNCF-Bot',
-        'pass': process.env.GITHUB_TOKEN
+        username: 'CNCF-Bot',
+        password: process.env.GITHUB_TOKEN
     },
     data: { body: '<pre>' + _.escape(message) + '</pre>'}
   });
