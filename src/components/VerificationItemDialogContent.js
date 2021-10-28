@@ -89,7 +89,7 @@ const VerificationItemDialogContent = ({ itemInfo, loading }) => {
                 <div className="verification-product-card row">
                   Product Card
                 </div>
-                <div className="verification-mosaic-wrap" key="v-logo">
+                <div className="verification-mosaic-wrap logo" key="v-logo">
                   <div className="verification-product-logo" style={getRelationStyle(itemInfo.relation)}>
                     <img src={assetPath(itemInfo.href)} className='verification-product-logo-img'/>
                   </div>
