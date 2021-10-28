@@ -112,24 +112,22 @@ export default function App({ Component, pageProps }) {
       <script async src="https://platform.twitter.com/widgets.js" charSet="utf-8"></script>
 
       <title>{settings.global.meta.title}</title>
+      <meta name="description" content={ description } />
 
       <meta httpEquiv="X-UA-Compatible" content="IE=edge" />
       <meta charSet="utf-8"/>
       <meta property="og:locale" content="en_US"/>
       <meta property="og:type" content="website"/>
       <meta property="og:title" content={settings.global.meta.title}/>
-      <meta property="og:url" content={settings.global.website}/>
+      <meta property="og:description" content={ description }/>
+      <meta property="og:url" content={[settings.global.website, router.asPath].join('')}/>
       <meta property="og:site_name" content={settings.global.meta.title}/>
       <meta property="fb:admins" content={settings.global.meta.fb_admin}/>
       <meta property="og:image" content={favicon} />
       <meta property="og:image:secure_url" content={favicon} />
       <meta name="twitter:card" content="summary"/>
-      <meta name="twitter:title" content={settings.global.meta.title}/>
-      <meta name="twitter:description" content={ description }/>
-      <meta name="twitter:site" content={settings.global.meta.facebook}/>
-      <meta name="twitter:image" content={favicon} />
-      <meta name="twitter:creator" content={settings.global.meta.facebook}/>
-      <meta name="description" content={ description } />
+      <meta name="twitter:site" content={settings.global.meta.twitter}/>
+      <meta name="twitter:creator" content={settings.global.meta.twitter}/>
       <meta name="google-site-verification" content={settings.global.meta.google_site_verification}/>
       <meta name="msvalidate.01" content={settings.global.meta.ms_validate}/>
 

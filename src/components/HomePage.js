@@ -1,4 +1,5 @@
 import React, { useContext, useEffect, useState } from 'react';
+import Head from 'next/head'
 import { pure } from 'recompose';
 import IconButton from '@material-ui/core/IconButton';
 import CloseIcon from '@material-ui/icons/Close';
@@ -54,7 +55,7 @@ function enableScroll(){
 }
 
 const HomePage = _ => {
-  const { params } = useContext(LandscapeContext)
+  const { params, landscapeSettings } = useContext(LandscapeContext)
   const { mainContentMode, zoom, isFullscreen, isEmbed, onlyModal, selectedItemId } = params
   const isBigPicture = mainContentMode !== 'card-mode';
   const [sidebarVisible, setSidebarVisible] = useState(false)
@@ -143,9 +144,15 @@ const HomePage = _ => {
   }
 
   const isIphone = currentDevice.ios()
+  const titlePrefix = isBigPicture ? (landscapeSettings.isMain ? '' : landscapeSettings.name) : 'Card Mode'
+  const title = [titlePrefix, settings.global.meta.title].filter(_ => _).join(' - ')
 
   return <>
     {selectedItemId && <ItemDialog/>}
+    <Head>
+      <title>{title}</title>
+      <meta property="og:title" content={title}/>
+    </Head>
     <div id="home" className={classNames('app',{'filters-opened' : sidebarVisible, 'big-picture': isBigPicture })}>
       <div style={{marginTop: isIphone && selectedItemId ? -lastScrollPosition : 0}} className={classNames({"iphone-scroller": isIphone && selectedItemId}, 'main-parent')} >
         { !isEmbed && !isFullscreen && <>
