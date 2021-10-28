@@ -20,6 +20,12 @@ $mobilewidth: 1000px;
     @media (max-width: 550px) {width: 100%;}
   }
 }
+.verification-mosaic-wrap.logo {
+  border:none;
+}
+.verification-mosaic-wrap.logo img {
+  background: none;
+}
 .verification-product-logo{padding: 2px; width: 100%; cursor: pointer;
   display: flex; justify-content: center; align-items: center;
   .verification-product-logo-img {width: 250px; height: 100px; max-width: 100%; border-radius: 4px 4px 0 0; }

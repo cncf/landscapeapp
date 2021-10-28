@@ -94,11 +94,11 @@ const VerificationItemDialogContent = ({ itemInfo, loading }) => {
                     <img src={assetPath(itemInfo.href)} className='verification-product-logo-img'/>
                   </div>
                 </div>
-                <div className="verification-mosaic-wrap" key="v-member">
+                <div className="verification-mosaic-wrap logo" key="v-member">
                   <img src={assetPath(settings.global.lfn_logo)} className='verification-product-logo-img'/>
                 </div>
 
-                <div className="verification-mosaic-wrap" key="v-aalogo">
+                <div className="verification-mosaic-wrap logo" key="v-aalogo">
                   <div className="verification-product-logo" style={getRelationStyle(itemInfo.relation)}>
                     <img src={assetPath(settings.global.aa_logo)} className='verification-product-logo-img'/>
                   </div>
