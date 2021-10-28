@@ -209,6 +209,7 @@ const GuidePage = ({ content, title, entries, mainContentMode, missing, setNotic
   return <LandscapeProvider entries={entries} pageParams={{ mainContentMode }}>
     <Head>
       <title>Guide - {title}</title>
+      <meta property="og:title" content={`Guide - ${title}`}/>
     </Head>
 
     {selectedItemId && <ItemDialog/>}
