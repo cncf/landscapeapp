@@ -3,7 +3,7 @@
 $mobilewidth: 1000px;
 
 .verification-product-card {
-  padding: 20px; font-size: 18px; font-weight: bold; width: 93%; display: flex; justify-content: center; align-items: center;margin:10px;
+  padding: 10px; font-size: 18px; font-weight: bold; width: 96.5%; display: flex; justify-content: center; align-items: center;margin:10px;
 }
 .verification-mosaic {
   &-wrap {padding: 20px; width: 266px; display: flex; border:1px solid;justify-content: center; align-items: center;margin:10px;
@@ -12,11 +12,11 @@ $mobilewidth: 1000px;
     @media (max-width: $mobilewidth) {width: 50%;}
     @media (max-width: 550px) {width: 100%;}
   }
-  &-product {padding: 20px; display: flex;width:93%;border:1px solid;justify-content: center; align-items: center;margin:10px;}
-  &-description {padding: 20px; display: flex; width:410px;border:1px solid;justify-content: center; align-items: center;margin:10px;
+  &-product {font-size: 16px; padding: 20px; display: flex;width:96.5%;border:1px solid;justify-content: center; align-items: center;margin:10px;}
+  &-description {font-size: 16px; padding: 20px; display: flex; width:47%;border:1px solid;justify-content: center; align-items: center;margin:10px;
     @media (max-width: 550px) {width: 100%;}
   }
-  &-category {padding: 10px; width: 266px; display: flex; border:1px solid;justify-content: center; align-items: center;margin:10px;
+  &-category {font-size: 16px; padding: 10px; width: 266px; display: flex; border:1px solid;justify-content: center; align-items: center;margin:10px;
     @media (max-width: 550px) {width: 100%;}
   }
 }
@@ -29,4 +29,8 @@ $mobilewidth: 1000px;
 .verification-product-logo{padding: 2px; width: 100%; cursor: pointer;
   display: flex; justify-content: center; align-items: center;
   .verification-product-logo-img {width: 250px; height: 100px; max-width: 100%; border-radius: 4px 4px 0 0; }
+}
+.product_description_label {font-weight: bold;min-width: 160px}
+.product_label {
+  font-weight: bold;
 }

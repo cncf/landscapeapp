@@ -105,16 +105,16 @@ const VerificationItemDialogContent = ({ itemInfo, loading }) => {
                 </div>
 
                 <div className="verification-mosaic-product" key="v-description">
-                  <span>Product Name: &nbsp;</span>{itemInfo.name}
+                  <span className="product_label">Product Name: &nbsp;</span>{itemInfo.name}
                 </div>
                 <div className="verification-mosaic-product" key="v-product">
-                  <span>Product Description: &nbsp;</span>{itemInfo.description}
+                  <span className="product_description_label">Product Description: &nbsp;</span>{itemInfo.description}
                 </div>
                 <div className="verification-mosaic-description" key="v-category">
-                  <span>Badge Category: &nbsp;</span> { itemCategory(itemInfo.landscape) }
+                  <span className="product_label">Badge Category: &nbsp;</span> { itemCategory(itemInfo.landscape) }
                 </div>
                 <div className="verification-mosaic-description" key="v-category2">
-                  <span>Type: &nbsp;{`${itemInfo.type}`}</span>
+                  <span className="product_label">Type: &nbsp;</span><span>{`${itemInfo.type}`}</span>
                 </div>
               </div>
             </div>
