@@ -112,7 +112,11 @@ export async function fetchImageEntries({cache, preferCache}) {
       }
 
       outputExt = '.svg';
-      const fileName = `${saneName(item.id)}${outputExt}`;
+      let fileNamePart = saneName(item.id);
+      if (!fileNamePart) {
+        fileNamePart = require('crypto').createHash('md5').update(item.id).digest('hex');
+      }
+      const fileName = `${fileNamePart}${outputExt}`;
       var response = null;
       if (url.indexOf('http://') !== 0 && url.indexOf('https://') !== 0) {
         if (fs.readdirSync(path.resolve(projectPath, 'hosted_logos')).indexOf(url) === -1) {
