@@ -431,6 +431,33 @@ async function main () {
     require('process').exit(-1);
   }
 
+  var hasBadExtraFields = false;
+  if (settings.validator) {
+    const vm = require('vm');
+    const script = new vm.Script(settings.validator);
+    for (let item of itemsWithExtraFields) {
+      for (let field in item.extra || {}) {
+        const context = {
+          field: field,
+          value: item.extra[field],
+          error: ''
+        }
+        vm.createContext(context);
+        script.runInContext(context);
+        if (context.error) {
+          await failOnMultipleErrors(`${item.name} reports: ${context.error}`);
+          hasBadExtraFields = true;
+        }
+      }
+    }
+  }
+  if (hasBadExtraFields) {
+    await reportFatalErrors();
+    require('process').exit(-1);
+  }
+
+
+
 
   async function removeNonReferencedImages() {
     const fs = require('fs');
