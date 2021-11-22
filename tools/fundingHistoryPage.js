@@ -35,7 +35,7 @@ const page = `
                  <td><a href="${item.link}" target="_blank" rel="noopener noreferrer">${item.name}</a></td>
                  <td>$${millify(item.currentAmount)}</td>
                  <td style="color: ${delta > 0 ? 'green' : 'red'}">$${millify(delta)}</td>
-                 <td>${settings.membership[item.membership].funding}</td>
+                 <td>${(settings.membership[item.membership] || { funding: 'no' }).funding}</td>
                  <td>${item.date}</td>
                  <td><a href="${item.url}" target="_blank" rel="noopener noreferrer">${item.name}</a></td>
                </tr>
