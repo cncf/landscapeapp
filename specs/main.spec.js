@@ -27,7 +27,7 @@ expect.extend({
   },
 })
 
-jest.setTimeout(process.env.SHOW_BROWSER ? 30000 : 20000);
+jest.setTimeout(process.env.SHOW_BROWSER ? 40000 : 30000);
 
 async function makePage(initialUrl) {
   try {
