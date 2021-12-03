@@ -13,13 +13,21 @@ $mobilewidth: 1000px;
     @media (max-width: 550px) {width: 100%;}
   }
   &-product {font-size: 16px; padding: 20px; display: flex;width:96.5%;justify-content: center; align-items: center;margin:10px;}
-  &-description {font-size: 16px; padding: 20px; display: flex; width:47%;justify-content: center; align-items: center;margin:10px;
+  &-description {font-size: 18px; padding: 0px; display: flex; width:47%;justify-content: center; align-items: center;margin:10px;
     @media (max-width: 550px) {width: 100%;}
   }
   &-category {font-size: 16px; padding: 10px; width: 266px; display: flex; border:1px solid;justify-content: center; align-items: center;margin:10px;
     @media (max-width: 550px) {width: 100%;}
   }
 }
+.verification-mosaic-description.type {
+  font-size: 18px;
+}
+.verification-mosaic-description.type:hover{
+  font-weight: bold;
+  cursor: pointer;
+}
+.big-picture-section a.white-link{display: none}
 .verification-mosaic-wrap.logo {
   border:none;
 }
