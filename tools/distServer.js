@@ -2,14 +2,13 @@ import path from 'path';
 import { existsSync, readFileSync } from 'fs'
 import express from 'express'
 import serveStatic from 'serve-static'
-import {chalkProcessing} from './chalkConfig'
 import { projectPath } from './settings'
 import compression from 'compression'
 
 const app = express()
 const distPath = path.resolve(projectPath, 'dist')
 
-console.log(chalkProcessing('running a dist server on http://localhost:4000 ...'));
+console.log('running a dist server on http://localhost:4000 ...');
 
 app.use(compression({ level: 6 }))
 app.use(serveStatic(distPath, { redirect: false, cacheControl: false }));
