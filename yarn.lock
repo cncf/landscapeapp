@@ -3545,13 +3545,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"chalk@npm:^5.0.0":
-  version: 5.0.0
-  resolution: "chalk@npm:5.0.0"
-  checksum: 11db07d2b78399a97023fa39c5fb32e9aa66d6d92bac0fa0b4b61171543f551e16c23e2a18b4bfe0a5d592190d213c19c0ef22c5430de28a1741dbe945ecab37
-  languageName: node
-  linkType: hard
-
 "change-case@npm:^4.1.2":
   version: 4.1.2
   resolution: "change-case@npm:4.1.2"
@@ -7009,7 +7002,7 @@ fsevents@~2.3.1:
     axios: ^0.24.0
     babel-plugin-module-resolver: ^4.1.0
     bluebird: 3.7.2
-    chalk: ^5.0.0
+    chalk: ^4.1.2
     change-case: ^4.1.2
     chart.js: ^3.6.2
     chartjs-adapter-date-fns: ^2.0.0
