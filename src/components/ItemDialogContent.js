@@ -233,7 +233,7 @@ const chart = function(itemInfo) {
 }
 
 const participation = function(itemInfo) {
-  const { innerWidth } = window;
+  const { innerWidth } = useWindowSize();
   const { params } = useContext(LandscapeContext)
   if (params.isEmbed || !itemInfo.github_data || !itemInfo.github_data.contributions) {
     return null;

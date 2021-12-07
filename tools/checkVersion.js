@@ -1,5 +1,4 @@
 import axios from 'axios'
-import chalk from 'chalk'
 
 export default async function check() {
   try {
@@ -20,13 +19,13 @@ export default async function check() {
         return;
       }
       console.error(`
-${chalk.red('!!!Fatal Error!!!')}
+!!!Fatal Error!!!'
 Your copy of cncf/landscapeapp repo is not up to date!
 The latest commit to a master branch occurred at ${new Date(remoteDate).toISOString()}
 Your latest commit is dated ${new Date(localDate).toISOString()}
 If you are sure that is ok, run this command: "export SKIP_VERSION_CHECK=1" and rerun the script again
 You can use the command below to update your landscapeapp repo to the latest master branch:
-    ${chalk.green(`(cd ${process.cwd()} && git pull)`)}
+    (cd ${process.cwd()} && git pull)
 After updating the landscapeapp repo, rerun the script again
 `);
       process.exit(1);
