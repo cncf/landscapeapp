@@ -1,8 +1,13 @@
 import ItemDialogContent from '../../components/ItemDialogContent';
 import { LandscapeProvider } from '../../contexts/LandscapeContext'
-
 const PrerenderedPage = ({ itemId, item }) => {
   return <LandscapeProvider entries={[]} pageParams = {{ mainContentMode: 'card-mode' }}>
+      <style jsx global> {`
+        .product-logo { width: 300px !important; zoom: 0.7; }
+        .product-tags { width: 300px !important; zoom: 0.7; }
+        .product-scroll { left: 380px !important; width: 550px !important; zoom: 0.7; }
+      `}
+      </style>
       <ItemDialogContent loading={false} itemInfo={item}/>
     </LandscapeProvider>
 }
