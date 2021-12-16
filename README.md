@@ -55,7 +55,7 @@ Additional keys that can be set are defined below:
   project_org: 
   # additional repos for the project; will fetch stats if they start with https://github.com/
   additional_repos: 
-  # Stock Ticker for the organization of the project/entry; normally pulls from Crunchbase but can be overridden here. For delisted and many foreign countries, you'll need to add `stock_ticker` with the value to look upon Yahoo Finance to find the market cap.
+  # Stock Ticker for the organization of the project/entry; normally pulls from Crunchbase but can be overridden here. For delisted and many foreign countries, you'll need to add `stock_ticker` with the value to look up on Yahoo Finance to find the market cap.
   stock_ticker: 
   # description of the entry; if not set pulls from the GitHub repo description
   description: 
