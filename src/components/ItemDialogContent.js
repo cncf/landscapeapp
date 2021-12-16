@@ -504,11 +504,10 @@ const ItemDialogContent = ({ itemInfo, loading }) => {
             <div className="product-tags">
               <div className="product-badges" style = {{width: 300}} >
                 <div style={cellStyle}>{projectTag(itemInfo)}</div>
+                <div style={cellStyle}>{licenseTag(itemInfo)}</div>
                 <div style={cellStyle}>{parentTag(itemInfo)}</div>
                 <div style={cellStyle}>{openSourceTag(itemInfo.oss)}</div>
-                <div style={cellStyle}>{licenseTag(itemInfo)}</div>
                 <div style={cellStyle}>{badgeTag(itemInfo)}</div>
-                <div style={cellStyle}><TweetButton/></div>
                 {chart(itemInfo)}
                 {participation(itemInfo)}
               </div>
