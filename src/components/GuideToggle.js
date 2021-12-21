@@ -36,7 +36,7 @@ const ToggleItem = ({ isActive, title, to }) => {
 const GuideToggle = ({ active }) => {
   const { guideIndex } = useContext(LandscapeContext)
 
-  if (active === 'landscape' && Object.keys(guideIndex).length === 0) {
+  if (active === 'landscape' && !guideIndex) {
     return null
   }
 

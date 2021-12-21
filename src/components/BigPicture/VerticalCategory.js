@@ -24,7 +24,7 @@ const VerticalCategory = ({header, subcategories, top, left, width, height, colo
       flexDirection: 'column'
     }} className="big-picture-section">
       <div style={{ height: categoryTitleHeight, width: '100%', display: 'flex' }}>
-        <CategoryHeader href={href} label={header} guideAnchor={guideIndex[header]} background={color} />
+        <CategoryHeader href={href} label={header} guideAnchor={guideIndex && guideIndex[header]} background={color} />
       </div>
       <div style={{ width: '100%', position: 'relative', flex: 1, padding: `${subcategoryMargin}px 0`, display: 'flex', flexDirection: 'column', justifyContent: 'space-between', background: 'white' }}>
         {subcategoriesWithCalculations.map(subcategory => {
@@ -41,7 +41,7 @@ const VerticalCategory = ({header, subcategories, top, left, width, height, colo
             <div style={{width, overflow: 'hidden', margin: '0 auto', ...style, ...extraStyle}}>
               {subcategory.allItems.map(item => <Item item={item} key={item.name} fitWidth={fitWidth} />)}
 
-              { guideIndex[path] && <SubcategoryInfo label={name} anchor={guideIndex[path]} column={columns}/> }
+              { guideIndex && guideIndex[path] && <SubcategoryInfo label={name} anchor={guideIndex && guideIndex[path]} column={columns}/> }
             </div>
           </div>
         })}
