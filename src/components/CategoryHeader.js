@@ -38,6 +38,7 @@ const CategoryHeader = ({ href, label, guideAnchor, background, rotate = false }
       display: flex;
       justify-content: center;
       align-items: center;
+      text-align: center;
       width: 100%;
       flex: 1;
       font-size: 12px;
