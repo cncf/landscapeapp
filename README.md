@@ -55,7 +55,7 @@ Additional keys that can be set are defined below:
   project_org: 
   # additional repos for the project; will fetch stats if they start with https://github.com/
   additional_repos: 
-  # Stock Ticker for the organization of the project/entry; normally pulls from Crunchbase but can be overriden here. For delisted and many foreign countries, you'll need to add `stock_ticker` with the value to look up on Yahoo Finance to find the market cap.
+  # Stock Ticker for the organization of the project/entry; normally pulls from Crunchbase but can be overridden here. For delisted and many foreign countries, you'll need to add `stock_ticker` with the value to look up on Yahoo Finance to find the market cap.
   stock_ticker: 
   # description of the entry; if not set pulls from the GitHub repo description
   description: 
@@ -67,7 +67,7 @@ Additional keys that can be set are defined below:
   url_for_bestpractices: 
   # set to false if a repo_url is given but the entry is a project that isn't open source
   open_source: 
-  # allows mulitple entries with the same repo_url; set for each instance
+  # allows multiple entries with the same repo_url; set for each instance
   allow_duplicate_repo: 
   # set to true if you are using an anonymous organization. You will also need anonymous_organization set in settings.yml
   unnamed_organization: 
@@ -77,7 +77,7 @@ For some of the key, there is some guidance as listed below.
 
 ### Logos
 
-The most challenging part of creating a new landscape is finding SVG images for all projects and companies. These landscapes represent a valuable resource to a community in assembling all related projects, creating a taxonomy, and providing the up-to-date logos, and unfortunately, there are no shortcuts.
+The most challenging part of creating a new landscape is finding SVG images for all projects and companies. These landscapes represent a valuable resource to a community in assembling all related projects, creating a taxonomy, and providing up-to-date logos, and unfortunately, there are no shortcuts.
 
 Do *not* try to convert PNGs to SVGs. You can't automatically go from a low-res to a high-res format, and you'll just waste time and come up with a substandard result. Instead, invest your time finding SVGs and then (when necessary) having a graphic designer recreate images when high res ones are not available.
 
@@ -92,7 +92,7 @@ For new landscapes of any size, you will probably need a graphic artist to rebui
 
 If the project is hosted/sponsored by an organization but doesn't have a logo, best practice is to use that organization's logo with the title of the project underneath ( [example](https://landscape.cncf.io/selected=netflix-eureka) ). You can use a tool such as [Inkscape](https://inkscape.org/) to add the text.
 
-If you get an error with the image that it has a PNG embeded, you will need to find a different SVG that doesn't include a PNG or work with a graphic artist to rebuild the logo.
+If you get an error with the image that it has a PNG embedded, you will need to find a different SVG that doesn't include a PNG or work with a graphic artist to rebuild the logo.
 
 #### SVGs Can't Include Text
 
@@ -158,7 +158,7 @@ The update server enhances the source data with the fetched data and saves the r
 If you want to create an interactive landscape for your project or organization:
 1. Note ahead of time that the hardest part of building a landscape is getting hi-res images for every project. You *cannot* convert from a PNG or JPEG into an SVG. You need to get an SVG, AI, or EPS file. When those aren't available, you will  need a graphic designer to recreate several images. Don't just use an auto-tracer to try to convert PNG to SVG because there is some artistry involved in making it look good. Please review this [primer](https://www.cncf.io/blog/2019/07/17/what-image-formats-should-you-be-using-in-2019/) on image formats. 
 2. Create a repo `youracronym-landscape` so it's distinct from other landscapes stored in the same directory. From inside your new directory, copy over files from a simpler landscape like https://github.com/graphql/graphql-landscape with `cp -r ../graphql-landscape/* ../graphql-landscape/.github ../graphql-landscape/.gitignore ../graphql-landscape/.npmrc ../graphql-landscape/.nvmrc .`.
-3. If you're working with the [LF](https://www.linuxfoundation.org/), give admin privileges to the new repo to [dankohn](https://github.com/dankohn) and write privleges to [AndreyKozlov1984](https://github.com/AndreyKozlov1984), [jordinl83](https://github.com/jordinl83), and [CNCF-Bot](https://github.com/CNCF-Bot) and ping Dan after creating an account at [slack.cncf.io](https://slack.cncf.io). Alex Contini and Dan are available there to help you recreate SVGs based on a PNG of the company's logo, if necessary, and to fix other problems.
+3. If you're working with the [LF](https://www.linuxfoundation.org/), give admin privileges to the new repo to [dankohn](https://github.com/dankohn) and write privileges to [AndreyKozlov1984](https://github.com/AndreyKozlov1984), [jordinl83](https://github.com/jordinl83), and [CNCF-Bot](https://github.com/CNCF-Bot) and ping Dan after creating an account at [slack.cncf.io](https://slack.cncf.io). Alex Contini and Dan are available there to help you recreate SVGs based on a PNG of the company's logo, if necessary, and to fix other problems.
 4. Set the repo to only support merge commits and turn off DCO support, since it doesn't work well with the GitHub web interface:
 ![image](https://user-images.githubusercontent.com/3083270/66166276-dd62ad00-e604-11e9-87db-fd9ae7a80d1a.png)
 5. Edit `settings.yml` and `landscape.yml` for your topic.
@@ -215,8 +215,8 @@ Reload with `. ~/.bash_profile` and then use `yo`, `yf`, etc. to run functions o
   an `html tag verification` option and copy a secret code from it and put it to
   the `settings.yml` of a given landscape project. Then commit the change to the default branch and
   wait till Netlify deploys the default branch. The key is named `google_site_veryfication` and it is
-  somewhere around line 14 in settings.yml. After netlify succesfully deploys
-  that dashbaord, verify the html tag in a google console. Do not forget to add
+  somewhere around line 14 in settings.yml. After netlify successfully deploys
+  that dashboard, verify the html tag in a google console. Do not forget to add
   Dan@linuxfoundation.org as someone who has a full access from a `Settings`
   menu for a given search console.
 
@@ -391,4 +391,4 @@ Don't include a title for the section, level 3 heading will be automatically gen
 
 ### Automatic generation of guide navigation
 
-The guide will include a a side-navigation generated automatically from all the headings levels 2 and 3 found on the guide. Level 3 headings will be nested under the closest level 2 heading above. 
+The guide will include a side-navigation generated automatically from all the headings levels 2 and 3 found on the guide. Level 3 headings will be nested under the closest level 2 heading above. 

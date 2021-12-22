@@ -26,7 +26,7 @@ const Divider = ({ color }) => {
 
 const HorizontalCategory = ({ header, subcategories, width, height, top, left, color, href, fitWidth }) => {
   const { guideIndex } = useContext(LandscapeContext)
-  const addInfoIcon = Object.keys(guideIndex).length > 0
+  const addInfoIcon = guideIndex && Object.keys(guideIndex).length > 0
   const subcategoriesWithCalculations = calculateHorizontalCategory({ height, width, subcategories, fitWidth, addInfoIcon })
   const totalRows = Math.max(...subcategoriesWithCalculations.map(({ rows }) => rows))
 
@@ -57,7 +57,7 @@ const HorizontalCategory = ({ header, subcategories, width, height, top, left, c
           alignItems: 'center',
           justifyContent: 'center'
         }}>
-          <CategoryHeader href={href} label={header} guideAnchor={guideIndex[header]} background={color} rotate={true} />
+          <CategoryHeader href={href} label={header} guideAnchor={guideIndex && guideIndex[header]} background={color} rotate={true} />
         </div>
         <div style={{
           marginLeft: 30,
@@ -105,7 +105,7 @@ const HorizontalCategory = ({ header, subcategories, width, height, top, left, c
                     allItems.map(item => <Item item={item} key={item.name}/>)
                   }
 
-                  { guideIndex[path] && <SubcategoryInfo label={name} anchor={guideIndex[path]} column={columns} row={totalRows}/> }
+                  { guideIndex && guideIndex[path] && <SubcategoryInfo label={name} anchor={guideIndex && guideIndex[path]} column={columns} row={totalRows}/> }
                 </div>
               </div>
 

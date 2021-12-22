@@ -7,7 +7,7 @@ import { getLandscapeSettingsList } from '../utils/landscapeSettings'
 
 const loadGuideIndex = () => {
   if (!existsSync('public/guide.json')) {
-    return {}
+    return null;
   }
 
   const guide = JSON.parse(readFileSync('public/guide.json', 'utf-8'))
