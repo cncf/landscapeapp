@@ -17,6 +17,7 @@ const { addError, addFatal } = errorsReporter('crunchbase');
 const EXCHANGE_SUFFIXES = {
   'ams': 'AS', // Amsterdam
   'bit': 'MI', // Milan
+  'bme': 'MC', // Madrid
   'epa': 'PA', // Paris
   'etr': 'DE', // XETRA
   'fra': 'F',  // Frankfurt
