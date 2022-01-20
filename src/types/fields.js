@@ -211,10 +211,10 @@ const fields = {
         return true;
       }
       if (filter === true) {
-        return !!value;
+        return value === 100;
       }
       if (filter === false) {
-        return !value;
+        return value !== 100;
       }
     },
     values: [{id: true, label: 'Yes', url: 'yes'}, {id: false, label: 'No', url: 'no'}]
