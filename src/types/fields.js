@@ -202,8 +202,8 @@ const fields = {
     label: 'Commits this year',
     url: 'commits'
   },
-  bestPracticeBadgeId: {
-    id: 'bestPracticeBadgeId',
+  bestPracticePercentage: {
+    id: 'bestPracticePercentage',
     label: 'Badge Id',
     url: 'bestpractices',
     filterFn: function(filter, value) {

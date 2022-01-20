@@ -28,7 +28,7 @@ export const getFilteredItems = createSelector(
     var filterByOrganization = filterFn({field: 'organization', filters});
     var filterByHeadquarters = filterFn({field: 'headquarters', filters});
     var filterByLandscape = mainContentMode === 'card-mode' ? filterFn({field: 'landscape', filters}) : _ => true;
-    var filterByBestPractices = filterFn({field: 'bestPracticeBadgeId', filters});
+    var filterByBestPractices = filterFn({field: 'bestPracticePercentage', filters});
     var filterByEnduser = filterFn({field: 'enduser', filters});
     var filterByParent = filterFn({field: 'parents', filters});
     var filterByLanguage = filterFn({field: 'language', filters});
@@ -63,7 +63,7 @@ const getFilteredItemsForBigPicture = createSelector(
     var filterByLicense = filterFn({field: 'license', filters});
     var filterByOrganization = filterFn({field: 'organization', filters});
     var filterByHeadquarters = filterFn({field: 'headquarters', filters});
-    var filterByBestPractices = filterFn({field: 'bestPracticeBadgeId', filters});
+    var filterByBestPractices = filterFn({field: 'bestPracticePercentage', filters});
     var filterByEnduser = filterFn({field: 'enduser', filters});
     var filterByParent = filterFn({field: 'parents', filters});
     var filterByLanguage = filterFn({field: 'language', filters});
