@@ -28,9 +28,9 @@ const LandscapePage = ({ entries, mainContentMode, guideIndex }) => {
 
 export async function getStaticProps(context) {
   const settings = JSON.parse(readFileSync('public/settings.json', 'utf-8'))
-  const guideIndex = loadGuideIndex()
   const defaultContentMode = settings.big_picture.main.url
   const mainContentMode = (context.params.landscape || [])[0] || defaultContentMode
+  const guideIndex = mainContentMode === 'landscape' ? loadGuideIndex() : {}
 
   const params = parseParams({ mainContentMode })
   const props = getPrerenderProps(params)
