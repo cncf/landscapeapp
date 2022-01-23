@@ -1,9 +1,11 @@
 import path from 'path'
-import { load  } from 'js-yaml'
-import { readFileSync, writeFileSync, mkdirSync, existsSync, rmSync } from 'fs'
+import { load } from 'js-yaml'
+import { readFileSync, writeFileSync, mkdirSync, existsSync, rmSync, copyFileSync,readdir,statSync } from 'fs'
 import { execSync } from 'child_process'
 import qs from 'query-string'
 import loadGuide from './loadGuide'
+import fields from '../src/types/fields'
+import { concat } from 'lodash'
 
 const projectPath = process.env.PROJECT_PATH || path.resolve('../..')
 const settingsPath = path.resolve(projectPath, 'settings.yml')
@@ -11,10 +13,39 @@ const settings = load(readFileSync(settingsPath))
 const items = require(path.resolve(projectPath, 'data.json'))
 const { website } = settings.global
 
-rmSync('public', { recursive: true, force: true })
-mkdirSync('public', { recursive: true })
-execSync(`cp -r "${projectPath}/images" public`)
-execSync(`cp -r "${projectPath}/cached_logos" public/logos`)
+rmSync('public', { recursive: true, force: true });
+mkdirSync('public', { recursive: true });
+mkdirSync('public/logos', { recursive: true });
+
+//execSync(`cp -r "${projectPath}/images" public`)
+//execSync(`cp -r "${projectPath}/cached_logos" public/logos`)
+
+readdir(`${projectPath}/images`,(err,fields)=>{
+  if(!err){
+    fields.forEach((item,index)=>{
+      const tempPath = path.join(`${projectPath}/images`,item);
+      const temp = statSync(tempPath);
+      if(temp.isFile){
+        copyFileSync(tempPath,path.join('public',item))
+      }
+    })
+  }
+});
+
+readdir(`${projectPath}/cached_logos`,(err,fields)=>{
+  if(!err){
+    fields.forEach((item,index)=>{
+      const tempPath = path.join(`${projectPath}/cached_logos`,item);
+      const temp = statSync(tempPath);
+      if(temp.isFile){
+        copyFileSync(tempPath,path.join('public/logos',item))
+      }
+    })
+  }
+});
+
+
+
 writeFileSync('./public/settings.json', JSON.stringify(settings))
 
 if (!existsSync('./public/data')) {
@@ -37,7 +68,7 @@ if (guide) {
 const afterSettingsSaved = _ => {
   const prepareItemsForExport = require('./prepareItemsForExport').default
   const { flattenItems } = require('../src/utils/itemsCalculator')
-  const getGroupedItems  = require('../src/utils/itemsCalculator').default
+  const getGroupedItems = require('../src/utils/itemsCalculator').default
   const { parseParams } = require('../src/utils/routing')
 
   const itemsForExport = prepareItemsForExport(items)
