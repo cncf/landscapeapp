@@ -36,7 +36,8 @@ async function main() {
     'joined',
     'extra',
     'tag',
-    'type'
+    'type',
+    'hideLicense'
   ];
 
   const addKeyError = (title, key) => {
