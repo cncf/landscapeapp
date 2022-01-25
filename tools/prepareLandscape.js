@@ -1,6 +1,6 @@
 import path from 'path'
 import { load  } from 'js-yaml'
-import { readFileSync, writeFileSync, mkdirSync, existsSync, rmSync } from 'fs'
+import { readFileSync, writeFileSync, mkdirSync, existsSync, rmSync, copyFileSync,readdir,statSync, readdirSync } from 'fs'
 import { execSync } from 'child_process'
 import qs from 'query-string'
 import loadGuide from './loadGuide'
@@ -12,9 +12,28 @@ const items = require(path.resolve(projectPath, 'data.json'))
 const { website } = settings.global
 
 rmSync('public', { recursive: true, force: true })
-mkdirSync('public', { recursive: true })
-execSync(`cp -r "${projectPath}/images" public`)
-execSync(`cp -r "${projectPath}/cached_logos" public/logos`)
+mkdirSync('public/images', { recursive: true });
+mkdirSync('public/logos', { recursive: true });
+
+// execSync(`cp -r "${projectPath}/images" public`)
+// execSync(`cp -r "${projectPath}/cached_logos" public/logos`)
+readdirSync(`${projectPath}/images`).forEach((item,index)=>{
+    const tempPath = path.join(`${projectPath}/images`,item);
+    const temp = statSync(tempPath);
+    if(temp.isFile){
+      copyFileSync(tempPath,path.join('public/images',item))
+    }
+});
+
+readdirSync(`${projectPath}/cached_logos`).forEach((item,index)=>{
+    const tempPath = path.join(`${projectPath}/cached_logos`,item);
+    const temp = statSync(tempPath);
+    if(temp.isFile){
+      copyFileSync(tempPath,path.join('public/logos',item))
+    }
+});
+
+
 writeFileSync('./public/settings.json', JSON.stringify(settings))
 
 if (!existsSync('./public/data')) {
