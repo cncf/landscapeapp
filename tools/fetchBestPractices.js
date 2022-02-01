@@ -82,7 +82,7 @@ export async function fetchBestPracticeEntriesWithFullScan({cache, preferCache})
     if (!item.repo_url) {
       return null;
     }
-    const cachedEntry = _.find(cache, {repo_url: item.repo_url});
+    const cachedEntry = _.find(cache, (c) => c.repo_url.toLowerCase() === item.repo_url.toLowerCase());
     if (cachedEntry && preferCache) {
       debug(`Full scan: Cache found for ${item.repo_url}`);
       reporter.write('.');
@@ -91,10 +91,15 @@ export async function fetchBestPracticeEntriesWithFullScan({cache, preferCache})
     debug(`Full scan: Cache not found for ${item.repo_url}`);
     try {
       fetchedEntries = fetchedEntries || await fetchEntries();
-      const badge = _.find(fetchedEntries, {repo_url: item.repo_url});
+      let repo_url = item.repo_url;
+      let badge = _.find(fetchedEntries, (x) => x.repo_url.toLowerCase() === item.repo_url.toLowerCase());
+      if (!badge && item.project_org) {
+        repo_url = item.project_org;
+        let badge = _.find(fetchedEntries, (x) => x.repo_url.toLowerCase() === item.project_org.toLowerCase());
+      }
       reporter.write(cacheMiss("*"));
       return ({
-        repo_url: item.repo_url,
+        repo_url: repo_url,
         badge: badge ? badge.id : false,
         percentage: badge ? badge.percentage : null
       });
@@ -120,17 +125,25 @@ export async function fetchBestPracticeEntriesWithIndividualUrls({cache, preferC
     if (!item.repo_url) {
       return null;
     }
-    const cachedEntry = _.find(cache, {repo_url: item.repo_url});
+    let cachedEntry = _.find(cache, (c) => c.repo_url.toLowerCase() === item.repo_url.toLowerCase());
+    if (!cachedEntry && item.project_org) {
+      let cachedEntry = _.find(cache, (c) => c.repo_url.toLowerCase() === item.project_org.toLowerCase());
+    }
     if (cachedEntry && preferCache) {
       reporter.write('.');
       return cachedEntry;
     }
     debug(`Individual scan: Cache not found for ${item.repo_url}`);
     try {
-      const badge = await fetchEntry(item.repo_url);
+      let repo_url = item.repo_url;
+      let badge = await fetchEntry(item.repo_url);
+      if (!badge && item.project_org) {
+        repo_url = item.project_org;
+        badge = await fetchEntry(item.project_org);
+      }
       reporter.write(cacheMiss("*"));
       return ({
-        repo_url: item.repo_url,
+        repo_url: repo_url,
         badge: badge ? badge.id : false,
         percentage: badge ? badge.percentage : null
       });
