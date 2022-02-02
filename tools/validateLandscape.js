@@ -34,7 +34,10 @@ async function main() {
     'unnamed_organization',
     'organization',
     'joined',
-    'extra'
+    'extra',
+    'tag',
+    'type',
+    'hideLicense'
   ];
 
   const addKeyError = (title, key) => {

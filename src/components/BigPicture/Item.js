@@ -9,14 +9,32 @@ import {
 } from "../../utils/landscapeCalculations";
 import LandscapeContext from '../../contexts/LandscapeContext'
 import assetPath from '../../utils/assetPath'
+import {
+  withStyles
+} from "@material-ui/core/styles"
+import Tooltip from "@material-ui/core/Tooltip"
+import useSWR from 'swr'
+
+const BlueOnGreenTooltip = withStyles({
+  tooltip: {
+    color: "white",
+    backgroundColor: "#1b446c"
+  }
+})(Tooltip);
+
+const fetchItem = itemId => useSWR(itemId ? assetPath(`/data/items/${itemId}.json`) : null)
 
 const LargeItem = ({ item, onClick }) => {
+  const { entries } = useContext(LandscapeContext)
   const relationInfo = fields.relation.valuesMap[item.relation]
   const color = relationInfo.big_picture_color;
   const label = relationInfo.big_picture_label;
+  const name = item.name;
   const textHeight = label ? 10 : 0
   const padding = 2
-
+  const selectedItemId = item.id
+  const { data: selectedItem } = fetchItem(selectedItemId)
+  const itemInfo = selectedItem || entries.find(({ id }) => id === selectedItemId)
   return <div className="large-item item" onClick={onClick}>
     <style jsx>{`
       .large-item {
@@ -49,7 +67,14 @@ const LargeItem = ({ item, onClick }) => {
       }
     `}</style>
 
-    <img loading="lazy" src={assetPath(item.href)} data-href={item.id} alt={item.name} />
+    { itemInfo.tag === 'verification' ?
+        <BlueOnGreenTooltip title={name} placement="top">
+          <img loading="lazy" src={assetPath(item.href)} data-href={item.id} alt={item.name} />
+        </BlueOnGreenTooltip>
+      :
+      <img loading="lazy" src={assetPath(item.href)} data-href={item.id} alt={item.name} />
+    }
+
     <div className="label">{label}</div>
   </div>;
 }

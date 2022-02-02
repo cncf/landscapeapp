@@ -4,6 +4,7 @@ import Head from 'next/head'
 import '../styles/theme.css'
 import '../styles/guide.css'
 import '../styles/itemModal.css'
+import '../styles/verificationModal.css'
 import settings from 'public/settings.json';
 import ReactGA from 'react-ga';
 import iframeResizerContentWindow from 'iframe-resizer/js/iframeResizer.contentWindow';

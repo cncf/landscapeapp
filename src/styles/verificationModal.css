@@ -1,0 +1,44 @@
+@import 'colors';
+
+$mobilewidth: 1000px;
+
+.verification-product-card {
+  padding: 10px; font-size: 18px; font-weight: bold; width: 96.5%; display: flex; justify-content: center; align-items: center;margin:10px;
+}
+.verification-mosaic {
+  &-wrap {padding: 20px; width: 295px; display: flex; border:1px solid;justify-content: center; align-items: center;
+    @media (max-width: 1039px) {width: 33.333%;}
+    @media (max-width: 850px) and (max-height: 750px) {width: 25%;}
+    @media (max-width: $mobilewidth) {width: 50%;}
+    @media (max-width: 550px) {width: 100%;}
+  }
+  &-product {font-size: 16px; padding: 20px; display: flex;width:96.5%;justify-content: center; align-items: center;margin:10px;}
+  &-description {font-size: 18px; padding: 0px; display: flex; width:47%;justify-content: center; align-items: center;margin:10px;
+    @media (max-width: 550px) {width: 100%;}
+  }
+  &-category {font-size: 16px; padding: 10px; width: 266px; display: flex; border:1px solid;justify-content: center; align-items: center;margin:10px;
+    @media (max-width: 550px) {width: 100%;}
+  }
+}
+.verification-mosaic-description.type {
+  font-size: 18px;
+}
+.verification-mosaic-description.type:hover{
+  font-weight: bold;
+  cursor: pointer;
+}
+.big-picture-section a.white-link{display: none}
+.verification-mosaic-wrap.logo {
+  border:none;
+}
+.verification-mosaic-wrap.logo img {
+  background: none;
+}
+.verification-product-logo{padding: 2px; width: 100%; cursor: pointer;
+  display: flex; justify-content: center; align-items: center;
+  .verification-product-logo-img {width: 250px; height: 100px; max-width: 100%; border-radius: 4px 4px 0 0; }
+}
+.product_description_label {font-weight: bold;min-width: 160px}
+.product_label {
+  font-weight: bold;
+}

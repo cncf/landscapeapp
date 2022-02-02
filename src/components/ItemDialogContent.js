@@ -126,7 +126,8 @@ const openSourceTag = function(oss) {
 };
 
 const licenseTag = function({relation, license, hideLicense}) {
-  const { label } = _.find(fields.license.values, {id: license});
+  //const { label } = _.find(fields.license.values, {id: license});
+  const label = "Apache 2.0";
   const [width, setWidth] = useState(0)
 
   useEffect(() => {
@@ -339,7 +340,7 @@ const ItemDialogContent = ({ itemInfo, loading }) => {
     var subcategoryMarkup = (
       <InternalLink key="subcategory" to={closeUrl({ grouping: 'landscape', filters: {landscape: path}})}>{subcategory.label}</InternalLink>
     )
-    return (<span>{[categoryMarkup, separator, subcategoryMarkup]}</span>);
+    return (<span>{[categoryMarkup]}</span>);
   }
   const twitterElement = itemInfo.twitter &&
     <div className="product-property row">
@@ -483,11 +484,10 @@ const ItemDialogContent = ({ itemInfo, loading }) => {
             <div className="product-tags">
               <div className="product-badges" style = {{width: Math.min(300, innerWidth - 110)}} >
                 <div style={cellStyle}>{projectTag(itemInfo)}</div>
+                <div style={cellStyle}>{licenseTag(itemInfo)}</div>
                 <div style={cellStyle}>{parentTag(itemInfo)}</div>
                 <div style={cellStyle}>{openSourceTag(itemInfo.oss)}</div>
-                <div style={cellStyle}>{licenseTag(itemInfo)}</div>
                 <div style={cellStyle}>{badgeTag(itemInfo)}</div>
-                <div style={cellStyle}><TweetButton/></div>
               </div>
             </div>
   </Fragment>;
@@ -504,11 +504,10 @@ const ItemDialogContent = ({ itemInfo, loading }) => {
             <div className="product-tags">
               <div className="product-badges" style = {{width: 300}} >
                 <div style={cellStyle}>{projectTag(itemInfo)}</div>
+                <div style={cellStyle}>{licenseTag(itemInfo)}</div>
                 <div style={cellStyle}>{parentTag(itemInfo)}</div>
                 <div style={cellStyle}>{openSourceTag(itemInfo.oss)}</div>
-                <div style={cellStyle}>{licenseTag(itemInfo)}</div>
                 <div style={cellStyle}>{badgeTag(itemInfo)}</div>
-                <div style={cellStyle}><TweetButton/></div>
                 {chart(itemInfo)}
                 {participation(itemInfo)}
               </div>
@@ -606,8 +605,6 @@ const ItemDialogContent = ({ itemInfo, loading }) => {
                     { latestCommitDateElement }
                     { contributorsCountElement }
                     { releaseDateElement }
-                    { headquartersElement }
-                    { crunchbaseEmployeesElement }
                     { amountElement }
                     { tickerElement }
                   </div> }
@@ -615,7 +612,6 @@ const ItemDialogContent = ({ itemInfo, loading }) => {
                     { twitterElement }
                     { firstCommitDateElement }
                     { contributorsCountElement }
-                    { headquartersElement }
                     { amountElement }
                     { tickerElement }
                   </div>
@@ -624,7 +620,6 @@ const ItemDialogContent = ({ itemInfo, loading }) => {
                       { latestTweetDateElement }
                       { latestCommitDateElement }
                       { releaseDateElement }
-                      { crunchbaseEmployeesElement }
                     </div>
                   }
               </div>
