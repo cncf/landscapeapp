@@ -1,6 +1,6 @@
 {
-  "name": "interactive-landscape",
-  "version": "1.0.628",
+  "name": "@lfnetworking/interactive-landscape",
+  "version": "1.0.629",
   "description": "Visualization tool for building interactive landscapes",
   "engines": {
     "npm": ">=3",
