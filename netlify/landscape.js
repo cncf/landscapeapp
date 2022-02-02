@@ -114,7 +114,7 @@ const makeLocalBuild = async function() {
       # cd copy
       . ~/.nvm/nvm.sh
       npm pack @lfnetworking/interactive-landscape@${LANDSCAPEAPP}
-      tar xzf @lfnetworking/interactive*
+      tar xzf lfnetworking-interactive*
       cd package
       cp _yarn.lock yarn.lock
       echo 0
@@ -191,7 +191,7 @@ const makeRemoteBuildWithCache = async function() {
     cd tmpRemote
     rm -rf package || true
     npm pack @lfnetworking/interactive-landscape@${LANDSCAPEAPP}
-    tar xzf @lfnetworking/interactive*.tgz
+    tar xzf lfnetworking-interactive*.tgz
     cd ..
     mv tmpRemote/package packageRemote
     cp packageRemote/_yarn.lock packageRemote/yarn.lock
