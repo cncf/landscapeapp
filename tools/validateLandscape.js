@@ -37,7 +37,8 @@ async function main() {
     'extra',
     'tag',
     'type',
-    'hideLicense'
+    'hideLicense',
+    'hideProjectTag'
   ];
 
   const addKeyError = (title, key) => {

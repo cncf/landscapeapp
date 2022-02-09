@@ -483,7 +483,7 @@ const ItemDialogContent = ({ itemInfo, loading }) => {
             </div>
             <div className="product-tags">
               <div className="product-badges" style = {{width: Math.min(300, innerWidth - 110)}} >
-                <div style={cellStyle}>{projectTag(itemInfo)}</div>
+                {!itemInfo.hideProjectTag ? <div style={cellStyle}>{projectTag(itemInfo)}</div> : null }
                 <div style={cellStyle}>{licenseTag(itemInfo)}</div>
                 <div style={cellStyle}>{parentTag(itemInfo)}</div>
                 <div style={cellStyle}>{openSourceTag(itemInfo.oss)}</div>
@@ -503,7 +503,7 @@ const ItemDialogContent = ({ itemInfo, loading }) => {
             </div>
             <div className="product-tags">
               <div className="product-badges" style = {{width: 300}} >
-                <div style={cellStyle}>{projectTag(itemInfo)}</div>
+                {!itemInfo.hideProjectTag ? <div style={cellStyle}>{projectTag(itemInfo)}</div> : null }
                 <div style={cellStyle}>{licenseTag(itemInfo)}</div>
                 <div style={cellStyle}>{parentTag(itemInfo)}</div>
                 <div style={cellStyle}>{openSourceTag(itemInfo.oss)}</div>
