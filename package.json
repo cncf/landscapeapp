@@ -1,5 +1,5 @@
 {
-  "name": "interactive-landscape",
+  "name": "@lfnetworking/interactive-landscape",
   "version": "1.0.632",
   "description": "Visualization tool for building interactive landscapes",
   "engines": {
