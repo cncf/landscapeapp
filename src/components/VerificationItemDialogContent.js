@@ -105,10 +105,10 @@ const VerificationItemDialogContent = ({ itemInfo, loading }) => {
                 </div>
 
                 <div className="verification-mosaic-product" key="v-description">
-                  <span className="product_label">Product Name: &nbsp;</span>{itemInfo.name}
+                  <span className="product_label">Product Name: &nbsp;</span>Lorem Ipsum
                 </div>
                 <div className="verification-mosaic-product" key="v-product">
-                  <span className="product_description_label">Product Description: &nbsp;</span>{itemInfo.description}
+                  <span className="product_description_label">Product Description: &nbsp;</span>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged.
                 </div>
                 <div className="verification-mosaic-description" key="v-category">
                   <span className="product_label">Badge Category: &nbsp;</span> { itemCategory(itemInfo.landscape) }
