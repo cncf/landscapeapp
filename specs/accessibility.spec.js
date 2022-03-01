@@ -35,11 +35,9 @@ describe("Accessibility", () => {
     await analyzePage(appUrl)
   }, 60 * 1000);
 
-  /* // Skip accessibility tests on card-mode for now
   test("Card Mode", async () => {
     await analyzePage(`${appUrl}/card-mode`)
   }, 60 * 1000);
-  */
 
   if (existsSync(`${projectPath}/guide`)) {
     test("Guide", async () => {
