@@ -78,3 +78,7 @@ landscapes:
     name: ucf
     repo: ucfoundation/ucf-landscape
     hook: 5d96662e28b476477790dd8a
+  - landscape:
+    name: lfn
+    repo: lfnetworking/member_landscape
+    hook: 60788f5fa3cbd68181e3c209
