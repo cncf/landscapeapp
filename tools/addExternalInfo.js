@@ -231,7 +231,7 @@ async function main() {
           node.github_data.latest_commit_link = latest_commit_link
           node.github_data.latest_commit_date = latest_commit_date
           node.github_data.firstWeek = repos[0].firstWeek
-          node.github_data.license = repos[0].license
+          node.github_data.license = node.license || repos[0].license
           node.github_data.contributors_link = repos[0].contributors_link
         }
 

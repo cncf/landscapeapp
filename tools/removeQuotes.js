@@ -28,6 +28,7 @@ const landscapeKeys = [
   'homepage_url',
   'project',
   'repo_url',
+  'license',
   'branch',
   'project_org',
   'url_for_bestpractices',

@@ -21,6 +21,7 @@ async function main() {
     'twitter',
     'crunchbase',
     'repo_url',
+    'license',
     'project_org',
     'additional_repos',
     'stock_ticker',
