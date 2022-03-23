@@ -6505,6 +6505,7 @@ __metadata:
     react-ga: ^3.3.0
     react-hot-loader: ^4.13.0
     react-key-handler: ^1.2.0-beta.3
+    react-svg-piechart: ^2.4.2
     react-test-renderer: ^17.0.2
     react-twitter-widgets: ^1.10.0
     recompose: 0.30.0
@@ -10234,6 +10235,16 @@ __metadata:
   peerDependencies:
     react: ^16.0.0 || ^17.0.0
   checksum: d52cb869e25605b00d4a67ff16598dbbf2826b0f09535de499b2f21a339cabf8b954d4b8855e0e6bdaf0a95603a2b6702e2b47eca8797a7d6bf7e6170ab8b2f3
+  languageName: node
+  linkType: hard
+
+"react-svg-piechart@npm:^2.4.2":
+  version: 2.4.2
+  resolution: "react-svg-piechart@npm:2.4.2"
+  peerDependencies:
+    react: ^16.0.0
+    react-dom: ^16.0.0
+  checksum: ef1ebd9984a34fa43ce1a12d30391a9205cfadabd232b5a84bc1d3e5aad891d0e8f77123be5d1186463e1b200ec74a83f541328184f482e24f076c6e1205d768
   languageName: node
   linkType: hard
 

@@ -15,6 +15,7 @@ import settings from 'public/settings.json';
 import TweetButton from './TweetButton';
 import TwitterTimeline from "./TwitterTimeline";
 import {Bar, Pie, defaults} from 'react-chartjs-2';
+import ReactSvgPieChart from "react-svg-piechart"
 import 'chartjs-adapter-date-fns';
 import classNames from 'classnames'
 import CreateWidthMeasurer from 'measure-text-width';
@@ -168,21 +169,6 @@ const chart = function(itemInfo) {
   if (params.isEmbed || !itemInfo.github_data || !itemInfo.github_data.languages) {
     return null;
   }
-  const callbacks = defaults.plugins.tooltip.callbacks;
-  function percents(v) {
-    const p = Math.round(v / total * 100);
-    if (p === 0) {
-      return '<1%';
-    } else {
-      return p + '%';
-    }
-  }
-  const newCallbacks =  { label: function(tooltipItem) {
-    const v = tooltipItem.dataset.data[tooltipItem.dataIndex];
-    const value =  millify(v, {precision: 1});
-    const language = languages[tooltipItem.dataIndex];
-    return `${language.name} ${percents(language.value)} (${value})`;
-  }};
   const allLanguages = itemInfo.github_data.languages;
   const languages = (function() {
     const maxEntries = 7;
@@ -196,16 +182,16 @@ const chart = function(itemInfo) {
       }]);
     }
   })();
-  const data = {
-    labels: languages.map((x) => x.name),
-    datasets: [{
-      data: languages.map( (x) => x.value),
-      backgroundColor: languages.map( (x) => x.color)
-    }]
-  };
-  const total = _.sumBy(languages, 'value');
-
   function getLegendText(language) {
+    const total = _.sumBy(languages, 'value');
+    function percents(v) {
+      const p = Math.round(v / total * 100);
+      if (p === 0) {
+        return '<1%';
+      } else {
+        return p + '%';
+      }
+    }
     return `${language.name} ${percents(language.value)}`;
   }
 
@@ -226,7 +212,7 @@ const chart = function(itemInfo) {
 
   return <div style={{width: 220, height: 120, position: 'relative'}}>
     <div style={{marginLeft: 170, width: 100, height: 100}}>
-      <Pie height={100} width={100} data={data} options={{plugins: {legend: { display: false}, tooltip: {callbacks: newCallbacks}}}} />
+      <ReactSvgPieChart startAngle={-90} height={100} width={100} data={languages} />
     </div>
     { legend }
   </div>
