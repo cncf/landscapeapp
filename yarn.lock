@@ -3397,22 +3397,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"chart.js@npm:^3.7.1":
-  version: 3.7.1
-  resolution: "chart.js@npm:3.7.1"
-  checksum: 572f4598bea6021b20177e02042aacc0bd740e53f700d99863f65ed49efc4a843c146a4ca987fc97cfc3b132c7e2b990d4a60e29af768e265b43aa0ff33d79f0
-  languageName: node
-  linkType: hard
-
-"chartjs-adapter-date-fns@npm:^2.0.0":
-  version: 2.0.0
-  resolution: "chartjs-adapter-date-fns@npm:2.0.0"
-  peerDependencies:
-    chart.js: ^3.0.0
-  checksum: 993217aa5dbe3e380cf948d364b14b9f6f1a474b98bd9eb1eb25d4d8e3c99b612e81a8b8ab010a7369257d5cdb042981e14b16ff2cc9ad8a1743443f1ccb34ce
-  languageName: node
-  linkType: hard
-
 "cheerio-select@npm:^1.5.0":
   version: 1.5.0
   resolution: "cheerio-select@npm:1.5.0"
@@ -6451,8 +6435,6 @@ __metadata:
     babel-plugin-module-resolver: ^4.1.0
     bluebird: 3.7.2
     change-case: ^4.1.2
-    chart.js: ^3.7.1
-    chartjs-adapter-date-fns: ^2.0.0
     cheerio: ^1.0.0-rc.10
     chokidar: ^3.5.3
     classnames: ^2.3.1
@@ -6500,7 +6482,6 @@ __metadata:
     query-string: ^7.1.1
     raf: 3.4.1
     react: ^17.0.2
-    react-chartjs-2: ^3.0.4
     react-dom: ^17.0.2
     react-ga: ^3.3.0
     react-hot-loader: ^4.13.0
@@ -10126,16 +10107,6 @@ __metadata:
     iconv-lite: 0.4.24
     unpipe: 1.0.0
   checksum: ebee34d0b84162a4888fad15c496f7f717b9dabde20c6b590cb99886cba2e21bfec79b24d5041d53d388a8c3eff3d8bbe852d7061715efb63340a0044dc26700
-  languageName: node
-  linkType: hard
-
-"react-chartjs-2@npm:^3.0.4":
-  version: 3.3.0
-  resolution: "react-chartjs-2@npm:3.3.0"
-  peerDependencies:
-    chart.js: ^3.5.0
-    react: ^16.8.0 || ^17.0.0
-  checksum: 4d7438e6cc6f8cc19fc9c6744c191e2a96a3d72ea6aae5de356987e8ad26f288d47834eaf37df7d47e8139df340089ac3ae9c97dbd2276ccc982f1b91b51e802
   languageName: node
   linkType: hard
 
