@@ -14,7 +14,6 @@ import isGoogle from '../utils/isGoogle';
 import settings from 'public/settings.json';
 import TweetButton from './TweetButton';
 import TwitterTimeline from "./TwitterTimeline";
-import {Bar, Pie, defaults} from 'react-chartjs-2';
 import ReactSvgPieChart from "react-svg-piechart"
 import 'chartjs-adapter-date-fns';
 import classNames from 'classnames'
@@ -224,73 +223,102 @@ const participation = function(itemInfo) {
   if (params.isEmbed || !itemInfo.github_data || !itemInfo.github_data.contributions) {
     return null;
   }
-  let lastMonth = null;
-  let lastWeek = null;
-  const data = {
-    labels: _.range(0, 51).map(function(week) {
+
+
+  // build an Y scale axis
+  // build an X scale axis
+
+
+  const monthText = (function() {
       const firstWeek = new Date(itemInfo.github_data.firstWeek.replace('Z', 'T00:00:00Z'));
-      firstWeek.setDate(firstWeek.getDate() + week * 7);
+      const months = 'Jan Feb Mar Apr May Jun Jul Aug Sep Oct Nov Dec'.split(' ');
+      const result = [];
       const m = firstWeek.getMonth();
-      if (lastMonth === null) {
-        lastMonth = m;
-        lastWeek = week;
+      for (let i = 0; i < 12; i += 2) {
+        const monthName = months[(m + i) % 12];
+        const separator = i === 12 ? null : <span style={{width: 23, display: 'inline-block'}} />;
+        result.push(<span style={{width: 30, display: 'inline-block'}}>{monthName}</span>);
+        result.push(separator);
       }
-      else if (m % 12 === (lastMonth + 2) % 12) {
-        if (week > lastWeek + 6) {
-          lastMonth = m;
-          lastWeek = week;
-        } else {
-          return '';
-        }
-      } else {
-        return '';
-      }
-      const result = 'Jan Feb Mar Apr May Jun Jul Aug Sep Oct Nov Dec'.split(' ')[m];
       return result;
-    }),
-    datasets: [{
-      backgroundColor: 'darkblue',
-      labels: [],
-      data: itemInfo.github_data.contributions.split(';').map( (x)=> +x).slice(-51)
-    }]
-  };
-  const callbacks = defaults.plugins.tooltip.callbacks;
-  const newCallbacks =  { title: function(data) {
-    const firstWeek = new Date(itemInfo.github_data.firstWeek.replace('Z', 'T00:00:00Z'));
-    const week = data[0].dataIndex;
-    firstWeek.setDate(firstWeek.getDate() + week * 7);
-    const s = firstWeek.toISOString().substring(0, 10);
-    return s;
-  }};
-  const options = {
-    plugins: {
-      legend: { display: false },
-      tooltip: {callbacks: newCallbacks}
-    },
-    scales: {
-      x: {
-        grid: { display: false },
-        ticks: {
-          padding: -1,
-          autoSkip: false,
-          minRotation: 0,
-          maxRotation: 0
-        },
-        title: {
-          display: false
-        }
-      },
-      y: {
-        ticks: {
-          beginAtZero: true,
-          callback: function (value) { if (Number.isInteger(value)) { return value; } }
+  })();
+
+  const barValues = itemInfo.github_data.contributions.split(';').map( (x)=> +x).slice(-51)
+  const { maxValue, step } = ( () => {
+    const max = _.max(barValues);
+    let maxValue;
+    let step;
+    for (let pow = 0; pow < 10; pow++) {
+      for (let v of [1, 2, 5]) {
+        const value = v * Math.pow(10, pow);
+        if (value >= max && !maxValue) {
+          maxValue = value;
+          if (pow === 0) {
+            step = v;
+          } else {
+            step = 5;
+          }
         }
       }
     }
-  };
+
+    return {
+      step,
+      maxValue
+    }
+  })();
+  const xyLines = ( () => {
+    const result = []
+    for (let x = 0; x <= step; x += 1) {
+      result.push(<div style={{
+        position: 'absolute',
+        left: 20,
+        right: 0,
+        top: `${(x / step) * 100}%`,
+        height: .5,
+        background: '#777'
+      }}
+      />)
+      result.push(<span style={{
+        display: 'inline-block',
+        position: 'absolute',
+        fontSize: 10,
+        left: 5,
+        right: 0,
+        top: (x / step) * 150 - 7,
+      }}>{(step - x) / step * maxValue}</span>);
+    }
+    result.push(<div style={{
+      position: 'absolute',
+      left: 25,
+      bottom: 0,
+      top: 0,
+      width: .5,
+      background: '#777'
+    }}/>);
+    return result;
+  })();
+  const bars = barValues.map(function(value, index) {
+    if (value === 0) {
+      value === 1;
+    }
+    return <div
+      style={{
+        position: 'absolute',
+        bottom: 0,
+        top: (maxValue - value) / maxValue * 150,
+        left: 24 + index * 5.6,
+        width: 4,
+        background: '#00F',
+        border: '1px solid #777',
+      }} />
+  });
+
+
   const width = Math.min(innerWidth - 110, 300);
   return <div style={{width: width, height: 150, position: 'relative'}}>
-    <Bar height={150} width={width} data={data} options={options} />
+    {xyLines}
+    {bars}
     <div style={{
       transform: 'rotate(-90deg)',
       position: 'absolute',
@@ -298,6 +326,13 @@ const participation = function(itemInfo) {
       fontSize: 10,
       top: 59
     }}>Commits</div>
+    <div style={{
+      fontSize: 10,
+      left: 20,
+      bottom: -16,
+      whiteSpace: 'nowrap',
+      position: 'absolute'
+    }}>{monthText}</div>
   </div>;
 }
 
