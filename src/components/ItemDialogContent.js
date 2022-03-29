@@ -15,7 +15,6 @@ import settings from 'public/settings.json';
 import TweetButton from './TweetButton';
 import TwitterTimeline from "./TwitterTimeline";
 import ReactSvgPieChart from "react-svg-piechart"
-import 'chartjs-adapter-date-fns';
 import classNames from 'classnames'
 import CreateWidthMeasurer from 'measure-text-width';
 import assetPath from '../utils/assetPath'
@@ -33,6 +32,7 @@ const formatDate = function(x) {
   }
   return relativeDate(new Date(x));
 };
+
 const formatTwitter = function(x) {
   const name = x.split('/').slice(-1)[0];
   return '@' + name;
@@ -141,6 +141,7 @@ const licenseTag = function({relation, license, hideLicense}) {
   const url = closeUrl({ grouping: 'license', filters: { license }});
   return linkTag(label, { name: "License", url, color: "purple", multiline: width > 90 });
 }
+
 const badgeTag = function(itemInfo) {
   if (settings.global.hide_best_practices) {
     return null;
