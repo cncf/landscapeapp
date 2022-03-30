@@ -4,7 +4,9 @@ import { render } from '../src/components/ItemDialogContentRenderer.js';
 
 async function main() {
   const item = projects[0];
-  const result = render({settings, itemInfo: item});
-  console.info(result);
+  for (let item of projects) {
+    const result = render({settings, itemInfo: item});
+    require('fs').writeFileSync(`dist/info-${item.id}.html`, result);
+  }
 }
 main();
