@@ -9,6 +9,7 @@ async function main() {
     const result = render({settings, itemInfo: item, tweetsCount: processedLandscape.twitter_options.count});
     console.info(`Rendering ${item.id}`);
     require('fs').writeFileSync(`dist/info-${item.id}.html`, result);
+    require('fs').writeFileSync(`public/data/info-${item.id}.html`, result);
   }
 }
 main();

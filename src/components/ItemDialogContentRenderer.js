@@ -79,7 +79,7 @@ export function render({settings, tweetsCount, itemInfo}) {
     18.38,11.5C18.38,15.32 16.04,16.16 13.81,16.41C14.17,16.72 14.5,17.33 14.5,18.26C14.5,19.6 14.5,20.68
     14.5,21C14.5,21.27 14.66,21.59 15.17,21.5C19.14,20.16 22,16.42 22,12A10,10 0 0,0 12,2Z" />
     </svg>;
-  const iconStar = iconGithub;
+  const iconStar = <svg viewBox="0 0 24 24"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"></path></svg>
 
   const InternalLink = ({to, className, children}) =>
     (<a data-type="internal" data-url={JSON.stringify(to)} href="#" className={className}>{children}</a>)
