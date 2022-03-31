@@ -15,9 +15,8 @@ import formatNumber from '../utils/formatNumber';
 import isParent from '../utils/isParent';
 import fields from '../types/fields';
 import millify from 'millify';
-import ReactSvgPieChart from "react-svg-piechart"
 
-export function render({settings, itemInfo}) {
+export function render({settings, tweetsCount, itemInfo}) {
 
   const closeUrl = (x) => ({
     mainContentMode: 'card-mode',
@@ -47,6 +46,28 @@ export function render({settings, itemInfo}) {
     const name = x.split('/').slice(-1)[0];
     return '@' + name;
   }
+
+  const tweetButton = (function() {
+    // locate zoom buttons
+    const bird = ( <svg
+    viewBox="0 0 300 244">
+    <g transform="translate(-539.17946,-568.85777)" >
+      <path fillOpacity="1" fillRule="nonzero"
+      d="m 633.89823,812.04479 c 112.46038,0 173.95627,-93.16765 173.95627,-173.95625 0,-2.64628 -0.0539,-5.28062 -0.1726,-7.90305 11.93799,-8.63016 22.31446,-19.39999 30.49762,-31.65984 -10.95459,4.86937 -22.74358,8.14741 -35.11071,9.62551 12.62341,-7.56929 22.31446,-19.54304 26.88583,-33.81739 -11.81284,7.00307 -24.89517,12.09297 -38.82383,14.84055 -11.15723,-11.88436 -27.04079,-19.31655 -44.62892,-19.31655 -33.76374,0 -61.14426,27.38052 -61.14426,61.13233 0,4.79784 0.5364,9.46458 1.58538,13.94057 -50.81546,-2.55686 -95.87353,-26.88582 -126.02546,-63.87991 -5.25082,9.03545 -8.27852,19.53111 -8.27852,30.73006 0,21.21186 10.79366,39.93837 27.20766,50.89296 -10.03077,-0.30992 -19.45363,-3.06348 -27.69044,-7.64676 -0.009,0.25652 -0.009,0.50661 -0.009,0.78077 0,29.60957 21.07478,54.3319 49.0513,59.93435 -5.13757,1.40062 -10.54335,2.15158 -16.12196,2.15158 -3.93364,0 -7.76596,-0.38716 -11.49099,-1.1026 7.78383,24.2932 30.35457,41.97073 57.11525,42.46543 -20.92578,16.40207 -47.28712,26.17062 -75.93712,26.17062 -4.92898,0 -9.79834,-0.28036 -14.58427,-0.84634 27.05868,17.34379 59.18936,27.46396 93.72193,27.46396" />
+    </g>
+      </svg>);
+
+  const { text } = settings.twitter
+  const twitterUrl = `https://twitter.com/intent/tweet`
+
+  return <div className="tweet-button">
+    <a data-tweet="true" href={twitterUrl}>{bird}<span>Tweet</span></a>
+      <div className="tweet-count-wrapper">
+        <div className="tweet-count">{tweetsCount}</div>
+    </div>
+  </div>
+
+  })();
 
   const iconGithub = <svg viewBox="0 0 24 24">
     <path d="M12,2A10,10 0 0,0 2,12C2,16.42 4.87,20.17 8.84,21.5C9.34,21.58
@@ -206,9 +227,88 @@ export function render({settings, itemInfo}) {
       })}
     </div>
 
+
+    // a quick 50 lines pie chart implementation is here
+    const Sector = ({
+      path, fill
+    }) => (
+      <path
+        d={path}
+        fill={fill}
+        stroke="#fff"
+        strokeWidth="1"
+        strokeLinejoin="round"
+      ></path>
+    );
+
+    const Circle = ({
+      center, color, radius
+    }) => (
+      <ellipse cx={center} cy={center} fill={color} rx={radius} ry={radius} stroke="#fff" strokeWidth="1" />
+    )
+
+    const Sectors = ({
+      center,
+      data
+    }) => {
+      const total = data.reduce((prev, current) => current.value + prev, 0)
+      let angleStart = -90;
+      let angleEnd = -90;
+      let angleMargin = 0;
+  return total > 0 ? (
+    <g>
+      {data.map((d, i) => {
+        const isLarge = d.value / total > 0.5;
+        const angle = 360 * d.value / total;
+        const radius = center + (d.expanded ? expandSize : 0) - 1 / 2;
+
+        angleStart = angleEnd;
+        angleMargin = angleMargin > angle ? angle : angleMargin;
+        angleEnd = angleStart + angle - angleMargin;
+
+        const x1 = center + radius * Math.cos(Math.PI * angleStart / 180);
+        const y1 = center + radius * Math.sin(Math.PI * angleStart / 180);
+        const x2 = center + radius * Math.cos(Math.PI * angleEnd / 180);
+        const y2 = center + radius * Math.sin(Math.PI * angleEnd / 180);
+        const path = `
+          M${center},${center}
+          L${x1},${y1}
+          A${radius},${radius}
+          0 ${isLarge ? 1 : 0},1
+          ${x2},${y2}
+          z
+        `
+
+        angleEnd += angleMargin;
+
+        return <Sector key={"sector" + i} fill={d.color} path={path} />;
+      })}
+    </g>
+  ) : null
+
+
+    }
+
+    const Pie = ({width, height, data}) => {
+      const viewBoxSize = 100;
+      const center = viewBoxSize / 2;
+      if (!data || data.length === 0) {
+        return null;
+      }
+      return <svg viewBox={`0 0 ${viewBoxSize } ${viewBoxSize}`} >
+        <g>
+          { data.length === 1
+              ? <Circle center={center} radius={center} {...data[0]} />
+              : <Sectors center={center} data={data} />
+          }
+        </g>
+      </svg>
+    }
+
+
       return <div style={{width: 220, height: 120, position: 'relative'}}>
         <div style={{marginLeft: 170, width: 100, height: 100}}>
-          <ReactSvgPieChart startAngle={-90} height={100} width={100} data={languages} />
+          <Pie height={100} width={100} data={languages} />
         </div>
         { legend }
       </div>
@@ -501,7 +601,7 @@ export function render({settings, itemInfo}) {
           <div style={cellStyle}>{openSourceTag(itemInfo.oss)}</div>
           <div style={cellStyle}>{licenseTag(itemInfo)}</div>
           <div style={cellStyle}>{badgeTag(itemInfo)}</div>
-          <div style={cellStyle}>TweetButton</div>
+          <div style={cellStyle}>{tweetButton}</div>
           {chart(itemInfo)}
           {participation(itemInfo)}
         </div>
