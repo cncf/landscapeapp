@@ -703,7 +703,9 @@ export function render({settings, tweetsCount, itemInfo}) {
     {  productLogoAndTagsAndCharts }
     <div className="product-scroll" >
       { productInfo }
-      <div className="twitter-timeline" />
+      { itemInfo.twitter && <div className="twitter-timeline">
+          <a class="twitter-timeline" data-tweet-limit="5" href={itemInfo.twitter}></a>
+        </div> }
     </div>
   </div>
 

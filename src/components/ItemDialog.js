@@ -48,8 +48,19 @@ const ItemDialog = _ => {
     // attach all click handlers
     if (!contentEl.current.handlersAttached) {
       contentEl.current.handlersAttached = true;
-
+      contentEl.current.addEventListener('click', function(e) {
+        const linkEl = e.target.closest('a[data-url]');
+        if (linkEl) {
+          e.preventDefault();
+          e.stopPropagation();
+          const linkElParams = JSON.parse(linkEl.getAttribute('data-url'));
+          navigate(linkElParams);
+        };
+      }, false);
     }
+
+    // unpack twitter
+    twttr.widgets.load();
   });
   const closeDialog = _ => onlyModal ? _ : navigate({ selectedItemId: null }, { scroll: false })
 
