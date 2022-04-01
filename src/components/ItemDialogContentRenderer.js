@@ -585,11 +585,6 @@ export function render({settings, tweetsCount, itemInfo}) {
     overflow: 'hidden'
   };
 
-  const charts = <Fragment>
-    {chart(itemInfo)}
-    {participation(itemInfo)}
-  </Fragment>
-
     const productLogoAndTagsAndCharts = <Fragment>
       <div className="product-logo" style={getRelationStyle(itemInfo.relation)}>
         <img src={itemInfo.href} className='product-logo-img'/>
@@ -602,8 +597,10 @@ export function render({settings, tweetsCount, itemInfo}) {
           <div style={cellStyle}>{licenseTag(itemInfo)}</div>
           <div style={cellStyle}>{badgeTag(itemInfo)}</div>
           <div style={cellStyle}>{tweetButton}</div>
-          {chart(itemInfo)}
-          {participation(itemInfo)}
+          <div className="charts-desktop">
+            {chart(itemInfo)}
+            {participation(itemInfo)}
+          </div>
         </div>
       </div>
       </Fragment>;
@@ -703,6 +700,10 @@ export function render({settings, tweetsCount, itemInfo}) {
     {  productLogoAndTagsAndCharts }
     <div className="product-scroll" >
       { productInfo }
+      <div className="charts-mobile">
+        {chart(itemInfo)}
+        {participation(itemInfo)}
+      </div>
       { itemInfo.twitter && <div className="twitter-timeline">
           <a class="twitter-timeline" data-tweet-limit="5" href={itemInfo.twitter}></a>
         </div> }

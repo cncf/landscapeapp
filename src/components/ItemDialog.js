@@ -1,10 +1,8 @@
 import React, { useContext, useState, useEffect, useRef } from 'react';
 import Dialog from '@material-ui/core/Dialog';
 import classNames from 'classnames'
-import ItemDialogContent from './ItemDialogContent';
 import ItemDialogButtons from './ItemDialogButtons'
 import LandscapeContext from '../contexts/LandscapeContext'
-import useSWR from 'swr'
 import assetPath from '../utils/assetPath'
 import settings from 'public/settings.json';
 import qs from 'query-string';

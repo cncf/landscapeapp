@@ -4243,13 +4243,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"dequal@npm:2.0.2":
-  version: 2.0.2
-  resolution: "dequal@npm:2.0.2"
-  checksum: 3b5b019a873da282a25512c632c077e5e8e2a019e71c5b6968836443b861e44176ee3934facfecdc14994d553c1ff4a6c7232278d6aef87baf65e2413d41760c
-  languageName: node
-  linkType: hard
-
 "destroy@npm:~1.0.4":
   version: 1.0.4
   resolution: "destroy@npm:1.0.4"
@@ -6486,9 +6479,7 @@ __metadata:
     react-ga: ^3.3.0
     react-hot-loader: ^4.13.0
     react-key-handler: ^1.2.0-beta.3
-    react-svg-piechart: ^2.4.2
     react-test-renderer: ^17.0.2
-    react-twitter-widgets: ^1.10.0
     recompose: 0.30.0
     relative-date: 1.1.3
     reselect: ^4.1.5
@@ -6498,7 +6489,6 @@ __metadata:
     showdown: ^2.0.3
     sitemap: ^7.1.1
     svg-autocrop: ^2.0.41
-    swr: ^0.5.6
     traverse: 0.6.6
     yarn: ^1.22.17
   dependenciesMeta:
@@ -8203,13 +8193,6 @@ __metadata:
     emojis-list: ^3.0.0
     json5: ^2.1.2
   checksum: a1c2e48781e1501e126a32c39bc1fb1a7e2f02bd99e5aeb8853ddaf3c121fffefcc4579367f97ca6890b58369e571af1c9ec82e4e20db238d560ab359ff25c33
-  languageName: node
-  linkType: hard
-
-"loadjs@npm:^4.2.0":
-  version: 4.2.0
-  resolution: "loadjs@npm:4.2.0"
-  checksum: 5af364ca6c50be342b90b846d27e1064536ac670723e359038ef7c6e6bc7627ee9a5b40fd75948987be63f5d8c811b3dfbedc338960510d244a2cfd766bc4dfc
   languageName: node
   linkType: hard
 
@@ -10209,16 +10192,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-svg-piechart@npm:^2.4.2":
-  version: 2.4.2
-  resolution: "react-svg-piechart@npm:2.4.2"
-  peerDependencies:
-    react: ^16.0.0
-    react-dom: ^16.0.0
-  checksum: ef1ebd9984a34fa43ce1a12d30391a9205cfadabd232b5a84bc1d3e5aad891d0e8f77123be5d1186463e1b200ec74a83f541328184f482e24f076c6e1205d768
-  languageName: node
-  linkType: hard
-
 "react-test-renderer@npm:^17.0.2":
   version: 17.0.2
   resolution: "react-test-renderer@npm:17.0.2"
@@ -10245,17 +10218,6 @@ __metadata:
     react: ">=16.6.0"
     react-dom: ">=16.6.0"
   checksum: e14446123f820e804335c64be5270333c29e8cfaa43dfc33387e132c5d521cf4a0a7c2408058a147b254ae82a6569f373394d83e977ef340d6937bc2f4ff7d6c
-  languageName: node
-  linkType: hard
-
-"react-twitter-widgets@npm:^1.10.0":
-  version: 1.10.0
-  resolution: "react-twitter-widgets@npm:1.10.0"
-  dependencies:
-    loadjs: ^4.2.0
-  peerDependencies:
-    react: ^16.8.0 || ^17
-  checksum: 763bc60618c21b3693d1f490ef3fbdb132afda8b5c968a9c91eac9f6123852159c41f5b1073ccdb817fd32b94e6cb9d36cf0435d53d60f40ac6205dcefbfb82c
   languageName: node
   linkType: hard
 
@@ -11432,17 +11394,6 @@ resolve@^2.0.0-next.3:
   bin:
     svgo: ./bin/svgo
   checksum: e1659738423f625561fa23769d0a010f5ba08e83926ce697491153fa29a8cb2452fa5abb14c1bb489aa186718856f8768d4da870210a79302d47535c57c30d30
-  languageName: node
-  linkType: hard
-
-"swr@npm:^0.5.6":
-  version: 0.5.7
-  resolution: "swr@npm:0.5.7"
-  dependencies:
-    dequal: 2.0.2
-  peerDependencies:
-    react: ^16.11.0 || ^17.0.0
-  checksum: 6aaeb3ec0093a7ede7ed71fbdbdb966cfad8864ce51f6e53573bf1d731b14e99e5f3f15afa019647d75a6b2e54213f1c044ae0806b15b927021898b99d1d0c0c
   languageName: node
   linkType: hard
 

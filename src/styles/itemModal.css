@@ -1,7 +1,5 @@
 @import 'colors';
 
-$mobilewidth: 1000px;
-
 .modal {
   perspective: 2000px;
   overflow: auto;
@@ -15,6 +13,14 @@ $mobilewidth: 1000px;
   }
   &-prev {left: -60px;}
   &-next {right: -60px;}
+
+  .charts-desktop {
+    display: inherit;
+  }
+  .charts-mobile {
+    display: none;
+  }
+
   @media (max-width: 1000px) {
     &-prev {left: -45px;}
     &-next {right: -45px;}
@@ -44,21 +50,41 @@ $mobilewidth: 1000px;
     &:hover {opacity: 1;}
   }
 }
-.modal .modal-content.scroll-all-content {
-  padding: 50px 20px 20px; width: auto; height: auto;
-  position: absolute; top: 30px; left: 40px; bottom: 30px; right: 40px; margin: 0; max-height: none;
-  &.modal-content {
+
+@media(max-width: 1000px) {
+  .modal-content {
+    .charts-desktop {
+      display: none;
+    }
+    .charts-mobile {
+      display: inherit;
+    }
+    padding: 50px 20px 20px; width: auto; height: auto;
+    position: absolute; top: 30px; left: 40px; bottom: 30px; right: 40px; margin: 0; max-height: none;
     overflow: auto; -webkit-overflow-scrolling: touch; position: absolute; top: 0; left: 0; bottom: 0; right: 0; padding: 20px;
-  }
-  .product-logo {
-    margin: 0 auto 1rem; position: relative; width: auto; max-width: 250px; height: 180px; top: 0; left: 0;
-  }
-  .product-tags {
-    position: static;
-    margin-left: calc(50% - 125px);
-  }
-  .product-scroll {
-    margin: 0; padding: 0; height: auto; overflow: visible; position: static;
+
+    .product-logo {
+      margin: 0 auto 1rem;
+      position: relative;
+      width: auto;
+      max-width: 250px;
+      height: 180px;
+      top: 0;
+      left: 0;
+    }
+
+    .product-tags {
+      position: static;
+      margin-left: calc(50% - 125px);
+    }
+
+    .product-scroll {
+      margin: 0;
+      padding: 0;
+      height: auto;
+      overflow: visible;
+      position: static;
+    }
   }
 }
 

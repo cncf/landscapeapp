@@ -120,9 +120,7 @@
     "react-ga": "^3.3.0",
     "react-hot-loader": "^4.13.0",
     "react-key-handler": "^1.2.0-beta.3",
-    "react-svg-piechart": "^2.4.2",
     "react-test-renderer": "^17.0.2",
-    "react-twitter-widgets": "^1.10.0",
     "recompose": "0.30.0",
     "relative-date": "1.1.3",
     "reselect": "^4.1.5",
@@ -132,7 +130,6 @@
     "showdown": "^2.0.3",
     "sitemap": "^7.1.1",
     "svg-autocrop": "^2.0.41",
-    "swr": "^0.5.6",
     "traverse": "0.6.6",
     "yarn": "^1.22.17"
   },

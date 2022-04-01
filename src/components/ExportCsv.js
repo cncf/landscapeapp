@@ -1,12 +1,9 @@
 import SystemUpdateIcon from '@material-ui/icons/SystemUpdate'
-import useSWR from 'swr'
 import assetPath from '../utils/assetPath'
 import { useContext, useEffect, useState } from 'react'
 import LandscapeContext from '../contexts/LandscapeContext'
 import Parser from 'json2csv/lib/JSON2CSVParser'
 import { flattenItems } from '../utils/itemsCalculator'
-
-const fetchItems = shouldFetch => useSWR(shouldFetch ? assetPath(`/data/items-export.json`) : null)
 
 const _downloadCSV = (allItems, selectedItems) => {
   const fields = allItems[0].map(([label, _]) => label !== 'id' && label).filter(_ => _)
@@ -28,8 +25,26 @@ const _downloadCSV = (allItems, selectedItems) => {
 const ExportCsv = _ => {
   const { groupedItems } = useContext(LandscapeContext)
   const [shouldFetch, setShouldFetch] = useState(false)
-  const { data: itemsForExport } = fetchItems(!!shouldFetch)
+
+  const [itemsForExport, setItemsForExport] = useState(null);
+
   const fetched = !!itemsForExport
+
+  useEffect(async () => {
+    if (!itemsForExport && shouldFetch) {
+      const result = await fetch('data/items-export.json');
+      const json = await result.json();
+      setItemsForExport(json);
+    }
+  });
+
+  useEffect(() => {
+    if (fetched) {
+      downloadCSV()
+    }
+  }, [fetched])
+
+
   const selectedItems = flattenItems(groupedItems)
     .reduce((acc, item) => ({ ...acc, [item.id]: true }), {})
   const downloadCSV = () => _downloadCSV(itemsForExport, selectedItems)
@@ -42,11 +57,6 @@ const ExportCsv = _ => {
     }
   }
 
-  useEffect(() => {
-    if (fetched) {
-      downloadCSV()
-    }
-  }, [fetched])
 
   return <a className="filters-action" onClick={onClick} aria-label="Download as CSV">
     <SystemUpdateIcon/><span>Download as CSV</span>

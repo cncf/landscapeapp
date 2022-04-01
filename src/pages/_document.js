@@ -1,5 +1,6 @@
 import { Children } from 'react'
 import Document, { Html, Head, Main, NextScript } from 'next/document'
+import Script from 'next/script'
 import { ServerStyleSheets } from '@material-ui/core/styles'
 
 // Override Document to set "lang" attribute and pre-render material UI.
@@ -9,6 +10,7 @@ class MyDocument extends Document {
     return (
       <Html lang="en">
         <Head />
+        <Script src="https://platform.twitter.com/widgets.js"></Script>
         <body>
         <Main />
         <NextScript />
