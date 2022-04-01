@@ -5,11 +5,20 @@ import { execSync } from 'child_process'
 import qs from 'query-string'
 import loadGuide from './loadGuide'
 
+
+
+
+
 const projectPath = process.env.PROJECT_PATH || path.resolve('../..')
 const settingsPath = path.resolve(projectPath, 'settings.yml')
 const settings = load(readFileSync(settingsPath))
 const items = require(path.resolve(projectPath, 'data.json'))
 const { website } = settings.global
+
+//render
+
+
+
 
 rmSync('public', { recursive: true, force: true })
 mkdirSync('public', { recursive: true })

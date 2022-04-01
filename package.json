@@ -34,7 +34,7 @@
     "render-landscape": "babel-node tools/renderLandscape",
     "funding": "babel-node tools/fundingForMasterBranch",
     "copy-dist": "cp -r _headers out && ([ -z \"${PROJECT_NAME:-}\" ] || mkdir \"$PROJECT_PATH\"/dist ) && cp -r out/ \"$PROJECT_PATH\"/dist/${PROJECT_NAME:-}",
-    "prepare-landscape": "babel-node tools/prepareLandscape.js",
+    "prepare-landscape": "babel-node tools/prepareLandscape.js && babel-node tools/renderItems.js",
     "watch-landscape": "babel-node tools/watchLandscape.js",
     "setup-robots": "babel-node tools/sitemap && babel-node tools/addRobots",
     "quick-build": "yarn build-next && yarn setup-robots && yarn copy-dist ",
