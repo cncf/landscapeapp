@@ -11,7 +11,8 @@ import { stringifyParams } from '../utils/routing'
 
 const ItemDialog = _ => {
   const [content, setContent] = useState({});
-  const { navigate, params, entries } = useContext(LandscapeContext)
+  const [twitterCounter, setTwitterCounter] = useState(0);
+  const { navigate, params, entries } = useContext(LandscapeContext);
   const contentEl = useRef(null);
   const { onlyModal, selectedItemId } = params
   useEffect(async () => {
@@ -58,7 +59,11 @@ const ItemDialog = _ => {
     }
 
     // unpack twitter
-    twttr.widgets.load();
+    if (window.twttr) {
+      twttr.widgets.load();
+    } else {
+      setTimeout( () => setTwitterCounter(twitterCounter + 1), 1000);
+    }
   });
   const closeDialog = _ => onlyModal ? _ : navigate({ selectedItemId: null }, { scroll: false })
 
