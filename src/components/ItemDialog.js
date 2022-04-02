@@ -17,7 +17,7 @@ const ItemDialog = _ => {
   const { onlyModal, selectedItemId } = params
   useEffect(async () => {
     if (!content[selectedItemId]) {
-      const result = await fetch(`/data/items/info-${selectedItemId}.html`);
+      const result = await fetch(`data/items/info-${selectedItemId}.html`);
       const text = await result.text();
       setContent({...content, [selectedItemId]: text});
     }
