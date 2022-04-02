@@ -32,7 +32,7 @@ const ExportCsv = _ => {
 
   useEffect(async () => {
     if (!itemsForExport && shouldFetch) {
-      const result = await fetch('data/items-export.json');
+      const result = await fetch(assetPath('/data/items-export.json'));
       const json = await result.json();
       setItemsForExport(json);
     }
