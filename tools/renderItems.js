@@ -7,7 +7,7 @@ import { render } from '../src/components/ItemDialogContentRenderer.js';
 async function main() {
   for (let item of projects) {
     const result = render({settings, itemInfo: item, tweetsCount: processedLandscape.twitter_options.count});
-    console.info(`Rendering ${item.id}`);
+    // console.info(`Rendering ${item.id}`);
     require('fs').mkdirSync('public/data/items', { recursive: true});
     require('fs').mkdirSync(path.join(projectPath, 'dist/items'), { recursive: true});
     require('fs').writeFileSync(`public/data/items/info-${item.id}.html`, result);
