@@ -1,6 +1,7 @@
 @import 'colors';
 
 .modal {
+  svg { color: rgb(123,123,123); }
   perspective: 2000px;
   overflow: auto;
   display: block;
