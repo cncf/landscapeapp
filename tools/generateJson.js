@@ -162,6 +162,9 @@ async function main () {
         return null;
       };
       const getLicense = function() {
+        if (node.license) {
+          return node.license;
+        }
         if ((node.hasOwnProperty('open_source') && !node.open_source) || (!node.github_data && !node.other_repo_url)) {
           return 'NotOpenSource';
         }
