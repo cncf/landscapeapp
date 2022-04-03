@@ -1,3 +1,9 @@
+import React from 'react';
+import ReactDOMServer from 'react-dom/server';
+import _ from 'lodash';
+import assetPath from '../utils/assetPath';
+import { millify, iconStar } from '../utils/format';
+import fields from '../types/fields';
 
 function getRelationStyle(relation) {
   const relationInfo = fields.relation.valuesMap[relation]
@@ -10,13 +16,12 @@ function getRelationStyle(relation) {
   }
 }
 
-const DefaultCard = ({item}) => {
-
-  return (
+export function renderDefaultCard({item}) {
+  const card = (
           <div data-id={item.id} className="mosaic-wrap" key={item.id}>
-            <div className={classNames('mosaic', {nonoss : item.oss === false})} style={getRelationStyle(item.relation)}
+            <div className={`mosaic ${item.oss ? '' : 'nonoss' }`} style={getRelationStyle(item.relation)}>
               <div className="logo_wrapper">
-                <img src={item.href} className='logo' max-height='100%' max-width='100%' alt={item.name} />
+                <img src={assetPath(item.href)} className='logo' max-height='100%' max-width='100%' alt={item.name} />
               </div>
               <div className="mosaic-info">
                 <div className="mosaic-title">
@@ -26,7 +31,7 @@ const DefaultCard = ({item}) => {
                 <div className="mosaic-stars">
                   { _.isNumber(item.stars) && item.stars &&
                       <div>
-                        <StarIcon color="disabled" style={{ fontSize: 15 }}/>
+                        {iconStar}
                         <span style={{position: 'relative', top: -3}}>{item.starsAsText}</span>
                       </div>
                   }
@@ -38,4 +43,29 @@ const DefaultCard = ({item}) => {
             </div>
           </div>
   );
+  return ReactDOMServer.renderToStaticMarkup(card);
+}
+
+export function renderFlatCard({item}) {
+  const card = (
+            <div data-id={item.id} className="mosaic-wrap" key={item.id} >
+              <div className="mosaic">
+                <img src={assetPath(item.href)} className='logo' alt={item.name} />
+                <div className="separator"/>
+                <h5>{item.flatName}</h5>
+              </div>
+            </div>
+  );
+  return ReactDOMServer.renderToStaticMarkup(card);
+}
+
+export function renderBorderlessCard({item}) {
+  const card = (
+            <div data-id={item.id} className="mosaic-wrap" key={item.id}>
+              <div className="mosaic">
+                <img src={assetPath(item.href)} className='logo' alt={item.name} />
+              </div>
+            </div>
+  );
+  return ReactDOMServer.renderToStaticMarkup(card);
 }
