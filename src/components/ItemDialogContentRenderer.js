@@ -14,6 +14,7 @@ import relativeDate from 'relative-date';
 import formatNumber from '../utils/formatNumber';
 import isParent from '../utils/isParent';
 import fields from '../types/fields';
+import assetPath from '../utils/assetPath';
 import millify from 'millify';
 
 export function render({settings, tweetsCount, itemInfo}) {
@@ -587,7 +588,7 @@ export function render({settings, tweetsCount, itemInfo}) {
 
     const productLogoAndTagsAndCharts = <Fragment>
       <div className="product-logo" style={getRelationStyle(itemInfo.relation)}>
-        <img src={itemInfo.href} className='product-logo-img'/>
+        <img src={assetPath(itemInfo.href)} className='product-logo-img'/>
       </div>
       <div className="product-tags">
         <div className="product-badges" style = {{width: 300}} >
