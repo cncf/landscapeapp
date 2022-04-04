@@ -27,7 +27,7 @@ async function main() {
     flatCards += flatCard;
   }
 
-  await fs.writeFile(`public/data/items/cards-default.html`, defaultCards);
+  await fs.writeFile(`public/data/items/cards-card.html`, defaultCards);
   await fs.writeFile(`public/data/items/cards-borderless.html`, borderlessCards);
   await fs.writeFile(`public/data/items/cards-flat.html`, flatCards);
 
