@@ -15,7 +15,6 @@ const buildHeader = function({header, count, href}) {
   div.innerHTML = `
       <div style="font-size: 24px; padding-left: 16px; line-height: 48px; font-weight: 500;">
         ${ href ? `<a href=${href}>${header}</a>` : `<span>${header}</span>` }
-        <a href="${href}"></a>
         <span class="items-cont">(${count})</span>
       </div>
   `;
