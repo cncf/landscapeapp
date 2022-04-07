@@ -1,6 +1,9 @@
 import React, { Fragment, useContext } from "react";
 import Item from "./Item";
-import InternalLink from "../InternalLink";
+
+const InternalLink = ({to, className, children}) =>
+  (<a data-type="internal" data-url={JSON.stringify(to)} href="#" className={className}>{children}</a>)
+
 import {
   calculateHorizontalCategory,
   categoryBorder,
@@ -12,7 +15,6 @@ import {
   subcategoryMargin,
   subcategoryTitleHeight
 } from "../../utils/landscapeCalculations";
-import LandscapeContext from '../../contexts/LandscapeContext'
 import SubcategoryInfo from '../SubcategoryInfo'
 import CategoryHeader from '../CategoryHeader'
 
@@ -24,9 +26,8 @@ const Divider = ({ color }) => {
   return <div style={{ width, marginTop, height, borderLeft: `${width}px solid ${color}` }}/>
 }
 
-const HorizontalCategory = ({ header, subcategories, width, height, top, left, color, href, fitWidth }) => {
-  const { guideIndex } = useContext(LandscapeContext)
-  const addInfoIcon = guideIndex && Object.keys(guideIndex).length > 0
+const HorizontalCategory = ({ header, guideInfo, subcategories, width, height, top, left, color, href, fitWidth }) => {
+  const addInfoIcon = !!guideInfo;
   const subcategoriesWithCalculations = calculateHorizontalCategory({ height, width, subcategories, fitWidth, addInfoIcon })
   const totalRows = Math.max(...subcategoriesWithCalculations.map(({ rows }) => rows))
 
@@ -57,7 +58,7 @@ const HorizontalCategory = ({ header, subcategories, width, height, top, left, c
           alignItems: 'center',
           justifyContent: 'center'
         }}>
-          <CategoryHeader href={href} label={header} guideAnchor={guideIndex && guideIndex[header]} background={color} rotate={true} />
+          <CategoryHeader href={href} label={header} guideAnchor={guideInfo} background={color} rotate={true} />
         </div>
         <div style={{
           marginLeft: 30,
@@ -68,7 +69,7 @@ const HorizontalCategory = ({ header, subcategories, width, height, top, left, c
         }}>
           {subcategoriesWithCalculations.map((subcategory, index) => {
             const lastSubcategory = index !== subcategories.length - 1
-            const { allItems, columns, width, name, href } = subcategory
+            const { allItems, guideInfo, columns, width, name, href } = subcategory
             const padding = fitWidth ? 0 : `${subcategoryMargin}px 0`
             const style = {
               display: 'grid',
@@ -105,8 +106,7 @@ const HorizontalCategory = ({ header, subcategories, width, height, top, left, c
                     allItems.map(item => <Item item={item} key={item.name}/>)
                   }
 
-                  { guideIndex && guideIndex[path] && <SubcategoryInfo label={name} anchor={guideIndex && guideIndex[path]} column={columns} row={totalRows}/> }
-                </div>
+                  { guideInfo && <SubcategoryInfo label={name} anchor={guideInfo} column={columns} row={totalRows}/> } </div>
               </div>
 
               {lastSubcategory && <Divider color={color}/>}

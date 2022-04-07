@@ -1,4 +1,3 @@
-import { useContext } from 'react'
 import settings from 'public/settings.json'
 import fields from "../../types/fields";
 import {
@@ -7,7 +6,6 @@ import {
   smallItemHeight,
   smallItemWidth
 } from "../../utils/landscapeCalculations";
-import LandscapeContext from '../../contexts/LandscapeContext'
 import assetPath from '../../utils/assetPath'
 
 const LargeItem = ({ item, onClick }) => {
@@ -17,80 +15,63 @@ const LargeItem = ({ item, onClick }) => {
   const textHeight = label ? 10 : 0
   const padding = 2
 
-  return <div className="large-item item" onClick={onClick}>
-    <style jsx>{`
-      .large-item {
-        cursor: pointer;
-        position: relative;
-        background: ${color};
-        visibility: ${item.isVisible ? 'visible' : 'hidden'};
-        width: ${largeItemWidth}px;
-        height: ${largeItemHeight}px;
-      }
+  return <div className="large-item item" onClick={onClick} style={{
+        cursor: 'pointer',
+        position: 'relative',
+        background: color,
+        visibility: item.isVisible ? 'visible' : 'hidden',
+        width: largeItemWidth,
+        height: largeItemHeight
+    }}>
 
-      .large-item img {
-        width: calc(100% - ${2 * padding}px);
-        height: calc(100% - ${2 * padding + textHeight}px);
-        padding: 5px;
-        margin: ${padding}px ${padding}px 0 ${padding}px;
-      }
-
-      .large-item .label {
-        position: absolute;
-        bottom: 0;
-        width: 100%;
-        height: ${textHeight + padding}px;
-        text-align: center;
-        vertical-align: middle;
-        background: ${color};
-        color: white;
-        font-size: 6.7px;
-        line-height: 13px;
-      }
-    `}</style>
-
-    <img loading="lazy" src={assetPath(item.href)} data-href={item.id} alt={item.name} />
-    <div className="label">{label}</div>
+  <img loading="lazy" src={assetPath(item.href)} data-href={item.id} alt={item.name} style={{
+        width: `calc(100% - ${2 * padding}px)`,
+        height: `calc(100% - ${2 * padding + textHeight}px)`,
+        padding: 5,
+        margin: `${padding}px ${padding}px 0 ${padding}px`
+  }}/>
+  <div className="label" style={{
+        position: 'absolute',
+        bottom: 0,
+        width: '100%',
+        height: `${textHeight + padding}px`,
+        textAlign: 'center',
+        verticalAlign: 'middle',
+        background: color,
+        color: 'white',
+        fontSize: '6.7px',
+        lineHeight: '13px'
+  }}>{label}</div>
   </div>;
 }
 
 const SmallItem = ({ item, onClick }) => {
   const isMember = item.category === settings.global.membership;
   return <>
-    <style jsx>{`
-      img {
-        cursor: pointer;
-        width: ${smallItemWidth}px;
-        height: ${smallItemHeight}px;
-        border: 1px solid ${isMember ? 'white' : 'grey'};
-        border-radius: 2px;
-        padding: 1px;
-        visibility: ${item.isVisible ? 'visible' : 'hidden'};
-      }
-    `}</style>
-    <img data-href={item.id} loading="lazy" className="item" src={assetPath(item.href)} onClick={onClick} alt={item.name} />
+    <img data-href={item.id} loading="lazy" className="item" src={assetPath(item.href)} onClick={onClick} alt={item.name} style={{
+        cursor: 'pointer',
+        width: smallItemWidth,
+        height: smallItemHeight,
+        border: `1px solid ${isMember ? 'white' : 'grey'}`,
+        borderRadius: 2,
+        padding: 1,
+        visibility: item.isVisible ? 'visible' : 'hidden'
+    }}/>
   </>
 }
 
 const Item = props => {
   const { isLarge, category, oss, categoryAttrs } = props.item
   const isMember = category === settings.global.membership;
-  const { navigate } = useContext(LandscapeContext)
-  const onClick = _ => navigate({ selectedItemId: props.item.id }, { scroll: false })
-  const newProps = { ...props, onClick }
 
-  return <div className={isMember || oss || categoryAttrs.isLarge ? 'oss' : 'nonoss'}>
-    <style jsx>{`
-      div {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        grid-column-end: span ${isLarge ? 2 : 1};
-        grid-row-end: span ${isLarge ? 2 : 1};
-      }
-    `}</style>
-
-    {isLarge ? <LargeItem {...newProps} isMember={isMember} /> : <SmallItem {...newProps} />}
+  return <div className={isMember || oss || categoryAttrs.isLarge ? 'oss' : 'nonoss'} style={{
+    display: 'flex',
+    'justifyContent': 'center',
+    'alignItems': 'center',
+    'gridColumnEnd': `span ${isLarge ? 2 : 1}`,
+    'gridRowEnd': `span ${isLarge ? 2 : 1}`
+    }}>
+    {isLarge ? <LargeItem {...props} isMember={isMember} /> : <SmallItem {...props} />}
   </div>
 }
 

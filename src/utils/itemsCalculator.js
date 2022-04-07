@@ -41,16 +41,16 @@ export const getFilteredItems = createSelector(
 );
 
 const addExtraFields = function(data) {
-    return _.map(data, function(data) {
-      const hasStars = data.stars !== 'N/A' && data.stars !== 'Not Entered Yet';
-      const hasMarketCap = data.amount !== 'N/A' && data.amount !== 'Not Entered Yet';
-      return { ...data,
-        starsPresent: hasStars ,
-        starsAsText: hasStars ? formatNumber({integerSeparator: ','})(data.stars) : '',
-        marketCapPresent: hasMarketCap,
-        marketCapAsText: formatAmount(data.amount)
-      };
-    });
+  return _.map(data, function(data) {
+    const hasStars = data.stars !== 'N/A' && data.stars !== 'Not Entered Yet';
+    const hasMarketCap = data.amount !== 'N/A' && data.amount !== 'Not Entered Yet';
+    return { ...data,
+      starsPresent: hasStars ,
+      starsAsText: hasStars ? formatNumber({integerSeparator: ','})(data.stars) : '',
+      marketCapPresent: hasMarketCap,
+      marketCapAsText: formatAmount(data.amount)
+    };
+  });
 }
 
 const getFilteredItemsForBigPicture = createSelector(
@@ -81,9 +81,9 @@ const getExtraFields = createSelector(
 
 const getSortedItems = createSelector(
   [
-  getExtraFields,
-  (params) => params.sortField,
-  (params) => params.sortDirection
+    getExtraFields,
+    (params) => params.sortField,
+    (params) => params.sortDirection
   ],
   function(data, sortField, sortDirection) {
     const fieldInfo = fields[sortField];
@@ -130,10 +130,10 @@ const getSortedItems = createSelector(
 
 const getGroupedItems = createSelector(
   [
-  getSortedItems,
-  (params) => params.grouping,
-  (params) => params.filters,
-  (params) => params.sortField
+    getSortedItems,
+    (params) => params.grouping,
+    (params) => params.filters,
+    (params) => params.sortField
   ],
   function(items, grouping, filters, sortField) {
     if (grouping === 'no') {
@@ -191,6 +191,65 @@ export const getGroupedItemsForContentMode = function(params, entries, landscape
   }
 }
 
+export  function getLandscapeItems({landscapeSettings, items, guideIndex = {}}) {
+  if (landscapeSettings.isMain) {
+    const categories = getLandscapeCategories({landscapeSettings, landscape });
+    const itemsMap = groupAndSort(items, bigPictureSortOrder);
+
+    return categories.map(function(category) {
+      const newFilters = { landscape: category.id };
+      return {
+        key: stringOrSpecial(category.label),
+        header: category.label,
+        guideInfo: guideIndex[category.label],
+        href: stringifyParams({
+          filters: newFilters,
+          grouping: 'landscape',
+          mainContentMode: 'card-mode'
+        }),
+        subcategories: landscape.filter( (l) => l.parentId === category.id).map(function(subcategory) {
+          const newFilters = { landscape: subcategory.id };
+          return {
+            name: subcategory.label,
+            guideInfo: guideIndex[[category.label, subcategory.label].join(' / ')],
+            href: stringifyParams({
+              filters: newFilters,
+              grouping: 'landscape',
+              mainContentMode:
+              'card-mode'}),
+            items: itemsMap[subcategory.id] || [],
+            allItems: itemsMap[subcategory.id] || []
+          };
+        })
+      };
+    });
+  } else {
+    const category = getLandscapeCategories({landscapeSettings, landscape})[0];
+    const subcategories = landscape.filter(({ parentId }) => parentId === category.id);
+
+    const itemsMap = groupAndSort(items, bigPictureSortOrder)
+
+    const result = subcategories.map(function(subcategory) {
+      const newFilters = { landscape: subcategory.id };
+      return {
+        key: stringOrSpecial(subcategory.label),
+        header: subcategory.label,
+        href: stringifyParams({filters: newFilters, grouping: 'landscape', mainContentMode: 'card'}),
+        subcategories: [
+          {
+            name: '',
+            href: '',
+            items: itemsMap[subcategory.id] || [],
+            allItems: itemsMap[subcategory.id]
+          }
+        ]
+      };
+    });
+
+    return result;
+  }
+}
+
 const getGroupedItemsForMainLandscape = createSelector(
   [ getFilteredItemsForBigPicture,
     (_, entries) => entries,
@@ -225,13 +284,13 @@ const getGroupedItemsForMainLandscape = createSelector(
 );
 
 const getGroupedItemsForAdditionalLandscape = createSelector([
-     getFilteredItemsForBigPicture,
-    (_, entries) => entries,
-    (params) => params.grouping,
-    (params) => params.filters,
-    (params) => params.sortField,
-    (params, entries, landscapeSettings) => landscapeSettings
-  ],
+  getFilteredItemsForBigPicture,
+  (_, entries) => entries,
+  (params) => params.grouping,
+  (params) => params.filters,
+  (params) => params.sortField,
+  (params, entries, landscapeSettings) => landscapeSettings
+],
   function(items, allItems, grouping, filters, sortField, landscapeSettings) {
     const category = getLandscapeCategories({landscapeSettings, landscape})[0];
     const subcategories = landscape.filter(({ parentId }) => parentId === category.id);

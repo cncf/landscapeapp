@@ -2,8 +2,10 @@ import React from 'react'
 import css from 'styled-jsx/css'
 import GuideLink from './GuideLink'
 import { categoryTitleHeight } from '../utils/landscapeCalculations'
-import InternalLink from './InternalLink'
 import { getContrastRatio } from '@material-ui/core/styles'
+
+const InternalLink = ({to, className, children}) =>
+  (<a data-type="internal" data-url={JSON.stringify(to)} href="#" className={className}>{children}</a>)
 
 const CategoryHeader = ({ href, label, guideAnchor, background, rotate = false }) => {
   const lowContrast = getContrastRatio('#ffffff', background) < 4.5

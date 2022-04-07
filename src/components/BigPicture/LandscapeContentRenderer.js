@@ -15,6 +15,7 @@ const extractKeys = (obj, keys) => {
   return _.mapKeys(attributes, (value, key) => _.camelCase(key))
 }
 
+
 export function render({landscapeSettings, landscapeItems}) {
   const elements = landscapeSettings.elements.map(element => {
     if (element.type === 'LandscapeLink') {
@@ -39,9 +40,9 @@ export function render({landscapeSettings, landscapeItems}) {
     return <Component {...category} subcategories={subcategories} {...attributes} />
   });
 
-  return <div className="inner-landscape">
+  return ReactDOMServer.renderToStaticMarkup(
     <div style={{ position: 'relative' }}>
       {elements}
     </div>
-  </div>
+  );
 };
