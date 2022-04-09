@@ -12,12 +12,24 @@ async function main() {
   await fs.mkdir('public/data/items', { recursive: true});
   await fs.mkdir(path.join(projectPath, 'dist/items'), { recursive: true});
 
+  let guideIndex = {};
+  try {
+    const guideJson = JSON.parse(await fs.readFile('public/guide.json', 'utf-8'))
+    guideIndex = guideJson.filter(section => section.landscapeKey)
+      .reduce((accumulator, { category, subcategory, anchor }) => {
+        const key = [category, subcategory].filter(_ => _).join(' / ')
+        return { ...accumulator, [key]: anchor }
+      }, {});
+  } catch(ex) {}
+  console.info(Object.keys(guideIndex));
+
   for (let key in settings.big_picture) {
     const landscapeSettings = settings.big_picture[key];
     landscapeSettings.isMain = key === 'main';
     const landscapeItems = getLandscapeItems({
       items: projects,
-      landscapeSettings: landscapeSettings
+      landscapeSettings: landscapeSettings,
+      guideIndex
     });
     const landscapeContent = LandscapeContentRenderer.render({
       landscapeItems: landscapeItems,

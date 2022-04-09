@@ -664,3 +664,17 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='rgb(27,68,108
   padding-bottom: 0 !important;
   min-height: 26px !important;
 }
+
+.landscape-wrapper svg {
+  width: 1em;
+  height: 1em;
+
+  fill: currentColor;
+  width: 1em;
+  height: 1em;
+  display: inline-block;
+  font-size: 1.5rem;
+  flex-shrink: 0;
+  user-select: none;
+
+}
