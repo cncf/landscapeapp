@@ -35,7 +35,7 @@ const cleanupFile = async () => {
           }
           return s.split('/').slice(-1)[0];
         }
-        if (item.hasOwnProperty('twitter') && fn(processed.crunchbase_data.twitter) === fn(item.twitter)) {
+        if (item.hasOwnProperty('twitter') && fn((processed.crunchbase_data || {}).twitter) === fn(item.twitter)) {
           console.info(`Deleted ${item.twitter} twitter for ${item.name} because it is available from ${item.crunchbase}`);
           delete item.twitter;
         }
