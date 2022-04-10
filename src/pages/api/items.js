@@ -6,7 +6,7 @@ import { parseParams } from '../../utils/routing'
 
 const { website } = global
 
-const processRequest = query => {
+export const processRequest = query => {
   const params = parseParams({ mainContentMode: 'card-mode', ...query })
 
   const groupedItems = getGroupedItems(params, items)
@@ -21,7 +21,6 @@ const processRequest = query => {
 // Next.js function
 export default function nextHandler(req, res) {
   const body = processRequest(req.query)
-
   res.status(200).json(body)
 }
 

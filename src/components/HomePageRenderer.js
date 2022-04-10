@@ -1,10 +1,11 @@
 import React from 'react';
+import ReactDOMServer from 'react-dom/server';
 
 const OutboundLink = ({to, className, children}) =>
   (<a data-type="external" href={to} className={className}>{children}</a>)
 
 export function render({settings}) {
-    <div id="home" className="app">
+    const result = <div id="home" className="app">
       <div className="main-parent">
         <div className="sidebar">
           <div className="sidebar-scroll">
@@ -47,4 +48,5 @@ export function render({settings}) {
         </div>
       </div>
     </div>
+    return ReactDOMServer.renderToStaticMarkup(result);
 };
