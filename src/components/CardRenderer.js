@@ -2,7 +2,7 @@ import React from 'react';
 import ReactDOMServer from 'react-dom/server';
 import _ from 'lodash';
 import assetPath from '../utils/assetPath';
-import { millify, iconStar } from '../utils/format';
+import { millify } from '../utils/format';
 import fields from '../types/fields';
 
 function getRelationStyle(relation) {
@@ -31,7 +31,7 @@ export function renderDefaultCard({item}) {
                 <div className="mosaic-stars">
                   { _.isNumber(item.stars) && item.stars &&
                       <div>
-                        {iconStar}
+                        <span>★</span>
                         <span style={{position: 'relative', top: -3}}>{item.starsAsText}</span>
                       </div>
                   }

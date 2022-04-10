@@ -12,6 +12,36 @@ const CncfLandscapeApp = {
     }
 
     CncfLandscapeApp.activateMainMode();
+    document.body.addEventListener('click', function(e) {
+        const cardEl = e.target.closest('[data-id]');
+        if (cardEl) {
+          const selectedItemId = cardEl.getAttribute('data-id');
+          CncfLandscapeApp.showSelectedItem(selectedItemId);
+        }
+    }, false);
+  },
+  showSelectedItem: async function(selectedItemId) {
+    this.state.selectedItemId = selectedItemId;
+    this.selectedItems = this.selectedItems || {};
+    if (!this.selectedItems[selectedItemId]) {
+      const result = await fetch(`/data/items/info-${selectedItemId}.html`);
+      const text = await result.text();
+      this.selectedItems[selectedItemId] = text;
+      this.showSelectedItem(selectedItemId);
+      return;
+    }
+    document.querySelector('.modal').style.display="";
+    document.querySelector('.modal .modal-content').outerHTML = this.selectedItems[selectedItemId];
+    document.querySelector('body').style.overflow = 'hidden';
+
+    if (window.twttr) {
+      twttr.widgets.load();
+    }
+  },
+  hideSelectedItem: function() {
+    this.state.selectedItemId = null;
+    document.querySelector('.modal').style.display="none;";
+    document.querySelector('body').style.overflow = '';
   },
   fetchMainData: async function() {
     const params = '';

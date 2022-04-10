@@ -36,7 +36,7 @@ http.createServer(function (request, response) {
       contentType = 'application/json';
       break;
     case '.svg':
-      contentType = 'image/svg';
+      contentType = 'image/svg+xml';
       break;
     case '.jpg':
       contentType = 'image/jpg';

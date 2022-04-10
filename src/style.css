@@ -1,3 +1,4 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap');
 /* css3 constants */
 :root {
   --navy: #38404a;
@@ -15,6 +16,43 @@
 
   --spacing: 1em;
 }
+
+
+html {
+  box-sizing: border-box;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+*, *::before, *::after {
+  box-sizing: inherit;
+}
+
+strong, b {
+  font-weight: 700;
+}
+
+body {
+  color: rgba(0, 0, 0, 0.87);
+  margin: 0;
+  font-size: 0.875rem;
+  font-family: "Roboto", "Helvetica", "Arial", sans-serif;
+  font-weight: 400;
+  line-height: 1.43;
+  letter-spacing: 0.01071em;
+  background-color: #fafafa;
+}
+
+@media print {
+  body {
+    background-color: #fff;
+  }
+}
+
+body::backdrop {
+  background-color: #fafafa;
+}
+
 
 html, body, main, .app {
   height: 100%;
@@ -153,13 +191,13 @@ a:hover svg {
 }
 
 @media (max-width: var(--lg-screen)) {
-  .landscape-logo {
+  #home .landscape-logo {
     margin-left: 30px;
   }
 }
 
 @media (min-width: var(--lg-screen)) {
-  #home:not(.big-picture) {
+  #home:not(.big-picture) .landscape-logo {
     position: fixed;
   }
 }
@@ -860,4 +898,368 @@ html.ios.has-selected-item, html.ios.has-selected-item body {
   font-size: 1.5rem;
   flex-shrink: 0;
   user-select: none;
+}
+
+.modal {
+  perspective: 2000px;
+  overflow: auto;
+  display: block;
+  position: fixed;
+  z-index: 1300;
+  inset: 0px;
+}
+.modal svg { color: rgb(123,123,123); }
+.modal-shadow {
+  opacity: 1;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  z-index: -1;
+  position: fixed;
+  align-items: center;
+  justify-content: center;
+  background-color: rgba(0, 0, 0, 0.5);
+  -webkit-tap-highlight-color: transparent;
+}
+.modal-container {
+  height: 100%;
+  outline: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.modal-prev, .modal-next {
+  position: absolute;
+  top: 50%;
+  margin-top: -20px;
+  font-size: 2.5rem;
+  color: #fff;
+  cursor: pointer;
+  opacity: 0.6;
+}
+.modal-prev:hover, .modal-next:hover {
+  opacity: 1;
+}
+.modal-prev[disabled], .modal-next[disabled] {
+  cursor: defaut;
+  opacity: 0.1;
+}
+
+.modal-prev { left: -60px; }
+.modal-next { right: -60px;}
+
+.modal .charts-desktop {
+  display: inherit;
+}
+.modal .charts-mobile {
+  display: none;
+}
+
+@media (max-width: 1000px) {
+  .modal-prev {left: -45px;}
+  .modal-next {right: -45px;}
+}
+@media (max-width: 750px) {
+    .modal-prev, .modal-next {
+      width: 40px;
+      height: 100px;
+      line-height: 100px;
+      margin-top: -50px;
+      font-size: 2.5rem;
+      text-align: center;
+      opacity: 1;
+      svg { display: none; }
+    }
+    .modal-prev:before, .modal-next:before {
+      content: "";
+      width: 0;
+      height: 0;
+      border: transparent 20px solid;
+      position: absolute;
+      top: 0; bottom: 0; margin: auto;
+    }
+    .modal-prev {
+      left: -40px;
+      &:before {border-right-color: #fff; border-left-width: 0; right: 5px;}
+    }
+    .modal-next {right: -40px;
+      &:before {border-left-color: #fff; border-right-width: 0; left: 5px;}
+    }
+    .row {display: block;}
+    .col {width: 100% !important;}
+}
+.modal .modal-body {
+  color: rgba(0, 0, 0, 0.87);
+  transition: box-shadow 300ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+  background-color: #fff;
+  box-shadow: 0px 11px 15px -7px rgb(0 0 0 / 20%), 0px 24px 38px 3px rgb(0 0 0 / 14%), 0px 9px 46px 8px rgb(0 0 0 / 12%);
+  display: flex;
+  flex-direction: column;
+  padding: 40px;
+  overflow: visible;
+  max-height: 640px;
+  width: 90%;
+  max-width: 940px;
+  border-radius: 8px;
+  margin: 50px;
+  position: absolute;
+  top: 20px;
+  left: 0;
+  bottom: 20px;
+  right: 0;
+  margin: auto;
+}
+
+.modal .modal-close {
+  cursor: pointer;
+  position: absolute;
+  top: 0;
+  right: 0;
+  font-size: 30px;
+  opacity: 0.4;
+  color: #000;
+  z-index: 3;
+  width: 60px;
+  line-height: 60px;
+  text-align: center;
+}
+.modal .modal-close:hover {
+  opacity: 1;
+}
+
+@media(max-width: 1000px) {
+  .modal-content .charts-desktop {
+    display: none;
+  }
+  .modal-content .charts-mobile {
+    display: inherit;
+  }
+  .modal-content {
+    padding: 50px 20px 20px;
+    width: auto;
+    height: auto;
+    position: absolute;
+    top: 30px;
+    left: 40px;
+    bottom: 30px;
+    right: 40px;
+    margin: 0;
+    max-height: none;
+    overflow: auto;
+    -webkit-overflow-scrolling: touch;
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    padding: 20px;
+  }
+  .modal-content .product-logo {
+    margin: 0 auto 1rem;
+    position: relative;
+    width: auto;
+    max-width: 250px;
+    height: 180px;
+    top: 0;
+    left: 0;
+  }
+
+  .modal-content .product-tags {
+    position: static;
+    margin-left: calc(50% - 125px);
+  }
+
+  .modal-content .product-scroll {
+    margin: 0;
+    padding: 0;
+    height: auto;
+    overflow: visible;
+    position: static;
+  }
+}
+
+
+.embed .modal .modal-body {
+  max-height: 480px;
+}
+
+.popup .modal .modal-body {
+  border: 0;
+  width: 100%;
+  height: 100%;
+  max-height: 100%;
+  max-width: 100%;
+  box-shadow: none;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  padding: 0;
+}
+
+.product-logo {
+  margin-bottom: 2.5rem;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.2);
+  border-radius: 4px;
+  padding: 16px;
+  border: #fff 4px solid;
+  height: 172px;
+  position: absolute;
+  top: 40px;
+  left: 40px;
+  width: 30%;
+}
+.product-logo-img {
+  cursor: pointer;
+  margin: auto;
+  display: block;
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+}
+.nonoss .product {border-color: #E4E4E4;}
+.product-tags {
+    position: absolute;
+    left: 40px;
+    top: 230px;
+    margin-bottom: 1rem;
+}
+.product-main {
+  font-size: 0.8rem;
+  line-height: 130%;
+  color: var(--navy);
+}
+
+.product-scroll {
+    position: absolute;
+    top: 40px;
+    left: calc(40% - 20px);
+    bottom: 40px; right: 20px;
+    padding-right: 20px;
+    overflow: auto;
+  }
+.product-name {
+  font-size: 2rem;
+  line-height: 130%;
+}
+.product-parent {
+  font-weight: bold; margin-bottom: 0.8rem;
+}
+.product-parent .tag {
+  margin-left: 8px;
+  margin-top: 0px;
+  line-height: 16px;
+  height: 22px;
+  font-weight: normal;
+}
+.product-parent a {
+  line-height: 22px;
+}
+.product-category {
+  color: var(--navy-light); margin-bottom: 0.8rem;
+}
+.product-category .product-separator {
+  margin: 0 5px; font-size: 0.6rem;
+}
+.product-description {
+  font-size: 1.1rem;
+  line-height: 130%;
+  margin-bottom: 0.8rem;
+  max-height: 300px;
+}
+.product-properties {
+  font-size: 0.8em;
+  color: var(--navy);
+  margin: 2rem 0;
+}
+.product-property {
+  margin-bottom: 0.5rem;
+}
+.product-property .product-value {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.product-property .product-value a {
+    color: var(--blue);
+}
+@media (max-width: 750px) {
+  .product-name {display: block; width: 100%;}
+  .product-value {display: block; width: 100%;}
+}
+.product-repo a {
+  margin-right: 10px;
+}
+.product-repo .product-stars-label {
+  margin-right: 10px;
+}
+.product-repo .product-stars-label .primary-repo {
+  margin-right: 10px;
+  color: black;
+}
+.product-repo .product-stars {
+  color: var(--navy);
+  font-size: 0.8rem;
+  white-space: nowrap;
+  line-height: 16px;
+  display: inline-block;
+}
+.product-repo-stars svg {
+  width: 16px;
+  height: 16px;
+  display: inline-block;
+  vertical-align: top;
+  fill: currentColor;
+}
+.product-twitter {
+  position: relative;
+}
+.product-twitter:after {
+  position: absolute;
+  content: "";
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  z-index: 100;
+  pointer-events: none;
+}
+
+.multiline {
+  height: 22px !important;
+  width: 146px !important;
+  position: relative !important;
+}
+.multiline .tag-name {
+    position: absolute !important;
+    top: 4px !important;
+    left: 4px !important;
+    padding: 0 !important;
+    margin: 0 !important;
+}
+.multiline .tag-value {
+    font-size: 0.5rem !important;
+    white-space: normal !important;
+    width: 110px !important;
+    padding: 0 2px !important;
+    position: relative !important;
+    display: table-cell !important;
+    vertical-align: middle !important;
+    left: 40px !important;
+    height: 22px;
+}
+
+.modal .single-column .product-property .col:nth-child(1) {
+      display: inline-block;
+      width: 40%;
+}
+.modal .single-column .product-property col:nth-child(2) {
+      display: inline-block;
+      width: 60%
 }
