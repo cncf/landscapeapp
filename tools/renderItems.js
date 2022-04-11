@@ -80,6 +80,7 @@ async function main() {
     <style>
       ${processedCss}
     </style>
+    <script async defer src="//platform.twitter.com/widgets.js" charset="utf-8"></script>
     <script>
       ${js}
     </script>

@@ -13,11 +13,43 @@ const CncfLandscapeApp = {
 
     CncfLandscapeApp.activateMainMode();
     document.body.addEventListener('click', function(e) {
-        const cardEl = e.target.closest('[data-id]');
-        if (cardEl) {
-          const selectedItemId = cardEl.getAttribute('data-id');
-          CncfLandscapeApp.showSelectedItem(selectedItemId);
-        }
+      const cardEl = e.target.closest('[data-id]');
+      if (cardEl) {
+        const selectedItemId = cardEl.getAttribute('data-id');
+        CncfLandscapeApp.showSelectedItem(selectedItemId);
+        e.preventDefault();
+        e.stopPropagation();
+      }
+
+      const modalBodyEl = e.target.closest('.modal-body');
+      const shadowEl = e.target.closest('.modal-container');
+      if (shadowEl && !modalBodyEl) {
+        CncfLandscapeApp.hideSelectedItem();
+        e.preventDefault();
+        e.stopPropagation();
+      }
+
+      const modalClose = e.target.closest('.modal-close');
+      if (modalClose) {
+        CncfLandscapeApp.hideSelectedItem();
+        e.preventDefault();
+        e.stopPropagation();
+      }
+
+      const nextItem = e.target.closest('.modal-next');
+      if (nextItem && CncfLandscapeApp.nextItemId) {
+        CncfLandscapeApp.showSelectedItem(CncfLandscapeApp.nextItemId);
+        e.preventDefault();
+        e.stopPropagation();
+      }
+
+      const prevItem = e.target.closest('.modal-prev');
+      if (prevItem && CncfLandscapeApp.prevItemId) {
+        CncfLandscapeApp.showSelectedItem(CncfLandscapeApp.prevItemId);
+        e.preventDefault();
+        e.stopPropagation();
+      }
+
     }, false);
   },
   showSelectedItem: async function(selectedItemId) {
@@ -35,12 +67,44 @@ const CncfLandscapeApp = {
     document.querySelector('body').style.overflow = 'hidden';
 
     if (window.twttr) {
-      twttr.widgets.load();
+      window.twttr.widgets.load();
+    } else {
+      setTimeout( () => window.twttr && window.twttr.widgets.load(), 1000);
     }
+
+    //calculate previous and next items;
+    let prevItem = null;
+    let nextItem = null;
+    if (this.state.mode === 'main') {
+      const items = this.groupedItems.flatMap( (x) => x.items);
+      for (let i = 0; i < items.length; i++) {
+        if (items[i].id === selectedItemId) {
+          prevItem = (items[i - 1] || {}).id;
+          nextItem = (items[i + 1] || {}).id;
+          break;
+        }
+      }
+    }
+
+    this.nextItemId = nextItem;
+    this.prevItemId = prevItem;
+
+    if (nextItem) {
+      document.querySelector('.modal-next').removeAttribute('disabled');
+    } else {
+      document.querySelector('.modal-next').setAttribute('disabled', '');
+    }
+
+    if (prevItem) {
+      document.querySelector('.modal-prev').removeAttribute('disabled');
+    } else {
+      document.querySelector('.modal-prev').setAttribute('disabled', '');
+    }
+
   },
   hideSelectedItem: function() {
     this.state.selectedItemId = null;
-    document.querySelector('.modal').style.display="none;";
+    document.querySelector('.modal').style.display="none";
     document.querySelector('body').style.overflow = '';
   },
   fetchMainData: async function() {

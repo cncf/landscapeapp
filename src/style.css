@@ -939,6 +939,11 @@ html.ios.has-selected-item, html.ios.has-selected-item body {
   cursor: pointer;
   opacity: 0.6;
 }
+.modal-prev svg, .modal-next svg {
+  width: 64px;
+  height: 64px;
+  fill: white;
+}
 .modal-prev:hover, .modal-next:hover {
   opacity: 1;
 }
@@ -948,6 +953,7 @@ html.ios.has-selected-item, html.ios.has-selected-item body {
 }
 
 .modal-prev { left: -60px; }
+
 .modal-next { right: -60px;}
 
 .modal .charts-desktop {
@@ -1013,6 +1019,7 @@ html.ios.has-selected-item, html.ios.has-selected-item body {
 }
 
 .modal .modal-close {
+  transform: scaleY(0.8);
   cursor: pointer;
   position: absolute;
   top: 0;
@@ -1097,6 +1104,10 @@ html.ios.has-selected-item, html.ios.has-selected-item body {
   right: 0;
   bottom: 0;
   padding: 0;
+}
+
+.product-badges > div {
+  margin-bottom: 5px;
 }
 
 .product-logo {

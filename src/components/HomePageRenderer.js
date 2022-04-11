@@ -11,7 +11,7 @@ export function render({settings}) {
       <div className="modal-container">
         <div className="modal-body">
           <div className="modal-buttons">
-            <a className="modal-close">×</a>
+            <a className="modal-close">x</a>
             <span className="modal-prev"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z"></path></svg></span>
             <span className="modal-next"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"></path></svg></span>
           </div>
@@ -21,6 +21,22 @@ export function render({settings}) {
     </div>
     <div id="home" className="app">
       <div className="main-parent">
+        <div className="header_container">
+          <div  className="header">
+            <span className="landscape-logo">
+              <a className="nav-link" href="/">
+                <img src="/images/left-logo.svg" />
+              </a>
+            </span>
+            <a rel="noopener noreferrer noopener noreferrer"
+            className="landscapeapp-logo"
+            title={settings.global.short_name}
+            target="_blank"
+            href={settings.global.company_url}>
+              <img src="/images/right-logo.svg" title={settings.global.short_name}/>
+            </a>
+          </div>
+        </div>
         <div className="sidebar">
           <div className="sidebar-scroll">
             Filters, Grouping, Examples, CsvExport, AD
