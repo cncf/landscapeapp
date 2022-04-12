@@ -9,7 +9,6 @@ import settings from 'public/settings.json';
 import { stringifyParams } from '../../utils/routing'
 
 const mainCard = [{shortTitle: 'Card', title: 'Card Mode', mode: 'card-mode', tabIndex: 0}]
-
 const landscapes = _.map(settings.big_picture, function(section) {
   return {
     title: section.name,
@@ -42,7 +41,5 @@ const SwitchButton = _ => {
           })}
     </Tabs>
   ]
-
-
 }
 export default pure(SwitchButton);

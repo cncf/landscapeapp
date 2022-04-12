@@ -1,3 +1,4 @@
+import _ from 'lodash';
 import React from 'react';
 import ReactDOMServer from 'react-dom/server';
 
@@ -5,6 +6,20 @@ const OutboundLink = ({to, className, children}) =>
   (<a data-type="external" href={to} className={className}>{children}</a>)
 
 export function render({settings}) {
+
+  const mainCard = [{shortTitle: 'Card', title: 'Card Mode', mode: 'card-mode', url: 'card-mode', tabIndex: 0}]
+  const landscapes = Object.values(settings.big_picture).map(function(section) {
+    return {
+      url: section.url,
+      title: section.name,
+      shortTitle: section.short_name,
+      mode: section.url,
+      tabIndex: section.tab_index
+    }
+  })
+  const tabs = _.orderBy(mainCard.concat(landscapes), 'tabIndex').map( item => _.pick(item, ['title', 'mode', 'shortTitle', 'url']))
+
+
   const result = <>
     <div className="modal" style={{display: "none"}}>
       <div className="modal-shadow" />
@@ -65,7 +80,11 @@ export function render({settings}) {
           </div>
           <div id="summary" />
           <div className="cards-section">
-            <span>Tabs</span>
+
+            <div className="big-picture-switch big-picture-switch-normal">
+              { tabs.map( (tab) => <a href={tab.url} data-mode={tab.mode} key={tab.mode}><div>{tab.title}</div></a> )}
+            </div>
+
             <div className="right-buttons">
 
             </div>

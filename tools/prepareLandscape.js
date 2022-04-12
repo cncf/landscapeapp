@@ -5,37 +5,28 @@ import { execSync } from 'child_process'
 import qs from 'query-string'
 import loadGuide from './loadGuide'
 
-
-
-
-
-const projectPath = process.env.PROJECT_PATH || path.resolve('../..')
+const projectPath = process.env.PROJECT_PATH;
 const settingsPath = path.resolve(projectPath, 'settings.yml')
 const settings = load(readFileSync(settingsPath))
 const items = require(path.resolve(projectPath, 'data.json'))
 const { website } = settings.global
 
 //render
-
-
-
-
 rmSync('public', { recursive: true, force: true })
 mkdirSync('public', { recursive: true })
+mkdirSync('public/logos', { recursive: true })
 execSync(`cp -r "${projectPath}/images" public`)
-execSync(`cp -r "${projectPath}/cached_logos" public/logos`)
+execSync(`cp -r "${projectPath}/cached_logos/" public/logos`)
 writeFileSync('./public/settings.json', JSON.stringify(settings))
-
 mkdirSync('./public/data/exports', { recursive: true })
 mkdirSync('./public/data/items', { recursive: true })
-
 writeFileSync(`./public/data/items.json`, JSON.stringify(items))
 
 items.forEach(item => {
   writeFileSync(`./public/data/items/${item.id}.json`, JSON.stringify(item))
 })
 
-const guide = loadGuide()
+const guide = loadGuide();
 
 if (guide) {
   writeFileSync('./public/guide.json', JSON.stringify(guide))
