@@ -8,7 +8,7 @@ const CncfLandscapeApp = {
       document.querySelector('html').classList.add('embed');
     }
 
-    if (CncfLandscapeApp.state === 'card') {
+    if (CncfLandscapeApp.state.mode === 'card') {
       CncfLandscapeApp.activateCardMode();
     }
 
@@ -72,22 +72,23 @@ const CncfLandscapeApp = {
     });
 
     // support css styles via param
-    const params = parse(window.location.search);
-    if (params.css) {
-      var element = document.createElement("link");
+    const params = new URLSearchParams(window.location.search.substring(1));
+    if (params.get('css')) {
+      const element = document.createElement("link");
       element.setAttribute("rel", "stylesheet");
       element.setAttribute("type", "text/css");
-      element.setAttribute("href", params.css);
+      element.setAttribute("href", params.get('css'));
       document.getElementsByTagName("head")[0].appendChild(element);
     }
-    if (params.style) {
-      var element = document.createElement("style");
+    if (params.get('style')) {
+      const element = document.createElement("style");
+      let style = params.get('style');
       try {
-        params.style = JSON.parse(params.style)
+        style = JSON.parse(style)
       } catch(ex) {
 
       }
-      element.innerHTML = params.style;
+      element.innerHTML = style;
       document.getElementsByTagName("head")[0].appendChild(element);
     }
 
@@ -101,7 +102,7 @@ const CncfLandscapeApp = {
       pathname = pathname.substring(1);
     }
     const params = new URLSearchParams(search);
-    const mode = pathname === '' ? 'main' : pathname;
+    const mode = params.get('mode') || (pathname === '' ? 'main' : pathname);
     const grouping = params.get('grouping') || 'category';
     const sort = params.get('sort') || 'name';
     const filterCategory = params.get('category') || '';

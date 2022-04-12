@@ -11,6 +11,7 @@
     "dev": "yarn yaml2json && yarn watch-landscape",
     "open:src": "yarn dev",
     "open:dist": "yarn stop-old-ci && babel-node tools/distServer.js",
+    "server": "babel-node server.js",
     "get-iframe-resizer-path": "node -e \"console.info(require.resolve('iframe-resizer/js/iframeResizer.min.js'))\" ",
     "landscapes": "babel-node tools/landscapes.js",
     "lint": "esw webpack.config.* src tools --color",
