@@ -1,5 +1,4 @@
 import React from 'react';
-import { pure } from 'recompose';
 import assetPath from '../../utils/assetPath'
 
 const OutboundLink = ({to, className, children}) =>
@@ -75,4 +74,4 @@ const OtherLandscapeLink = function({top, left, height, width, color, title, ima
     </div>;
   }
 }
-export default pure(OtherLandscapeLink);
+export default OtherLandscapeLink;

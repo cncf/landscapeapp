@@ -2,16 +2,16 @@
 // It should always have zero dependencies on any other script or module
 const CncfLandscapeApp = {
   init: function() {
-    CncfLandscapeApp.state = {
-      mode: 'main', // card, guide, other landscape
-      selectedItemId: '', // empty or a selected item id
-      orderBy: '', // how to order by
-      groupBy: '', // how to group by
-      filters: {}, // individual filters by different fields
-      isEmbed: true
+    CncfLandscapeApp.state = CncfLandscapeApp.parseUrl(window.location);
+
+    if (CncfLandscapeApp.state.embed) {
+      document.querySelector('html').classList.add('embed');
     }
 
-    CncfLandscapeApp.activateMainMode();
+    if (CncfLandscapeApp.state === 'card') {
+      CncfLandscapeApp.activateCardMode();
+    }
+
     document.body.addEventListener('click', function(e) {
       const cardEl = e.target.closest('[data-id]');
       if (cardEl) {
@@ -51,6 +51,88 @@ const CncfLandscapeApp = {
       }
 
     }, false);
+
+    // support custom css styles and custom js eval code through iframe
+    window.addEventListener('message', function(event) {
+      var data = event.data;
+      if (data.type === "css") {
+        var styles = data.css;
+        var el = document.createElement('style');
+        el.type = 'text/css';
+        if (el.styleSheet) {
+          el.styleSheet.cssText = styles;
+        } else {
+          el.appendChild(document.createTextNode(styles));
+        }
+        document.getElementsByTagName("head")[0].appendChild(el);
+      }
+      if (data.type === "js") {
+        eval(data.js);
+      }
+    });
+
+    // support css styles via param
+    const params = parse(window.location.search);
+    if (params.css) {
+      var element = document.createElement("link");
+      element.setAttribute("rel", "stylesheet");
+      element.setAttribute("type", "text/css");
+      element.setAttribute("href", params.css);
+      document.getElementsByTagName("head")[0].appendChild(element);
+    }
+    if (params.style) {
+      var element = document.createElement("style");
+      try {
+        params.style = JSON.parse(params.style)
+      } catch(ex) {
+
+      }
+      element.innerHTML = params.style;
+      document.getElementsByTagName("head")[0].appendChild(element);
+    }
+
+  },
+  parseUrl: function({pathname, search }) {
+    search = search || '';
+    if (search.indexOf('?') === 0) {
+      search = search.substring(1);
+    }
+    if (pathname.indexOf('/') === 0) {
+      pathname = pathname.substring(1);
+    }
+    const params = new URLSearchParams(search);
+    const mode = pathname === '' ? 'main' : pathname;
+    const grouping = params.get('grouping') || 'category';
+    const sort = params.get('sort') || 'name';
+    const filterCategory = params.get('category') || '';
+    const filterRelation = params.get('project') || '';
+    const filterLicense = params.get('license') || '';
+    const filterOrganization = params.get('organization') || '';
+    const filterHeadquarters = params.get('headquarters') || '';
+    const filterCompanyType = params.get('company-type') || '';
+    const filterIndustries = params.get('filter-industries') || '';
+    const filterBestPractices = params.get('bestpractices') || '';
+    const filterEndUser = params.get('enduser') || '';
+    const filterLanguage = params.get('language') || '';
+    const selected = params.get('selected') || '';
+    const embed = params.has('embed');
+    return {
+      mode,
+      grouping,
+      sort,
+      selected,
+      embed,
+      filterCategory,
+      filterRelation,
+      filterLicense,
+      filterOrganization,
+      filterHeadquarters,
+      filterCompanyType,
+      filterIndustries,
+      filterBestPractices,
+      filterEndUser,
+      filterLanguage
+    }
   },
   showSelectedItem: async function(selectedItemId) {
     this.state.selectedItemId = selectedItemId;
@@ -107,16 +189,16 @@ const CncfLandscapeApp = {
     document.querySelector('.modal').style.display="none";
     document.querySelector('body').style.overflow = '';
   },
-  fetchMainData: async function() {
+  fetchApiData: async function() {
     const params = '';
     const response = await fetch(`/api/items?${params}`);
     const json = await response.json();
     this.groupedItems = json;
   },
-  activateMainMode: async function() {
+  activateCardMode: async function() {
 
     const cardStyle = 'card';
-    CncfLandscapeApp.state.mode = 'main';
+    CncfLandscapeApp.state.mode = 'card';
 
     document.querySelector('.landscape-flex').style.display="none";
     document.querySelector('.column-content').style.display="";
@@ -132,11 +214,11 @@ const CncfLandscapeApp = {
         result[card.getAttribute('data-id')] = card;
       }
       this.cards = result;
-      this.activateMainMode();
+      this.activateCardMode();
     } else {
       if (!this.groupedItems) {
-        await this.fetchMainData();
-        this.activateMainMode();
+        await this.fetchApiData();
+        this.activateCardMode();
       } else {
       // if we have groupedItems
       const itemsAndHeaders = this.groupedItems.flatMap(groupedItem => {

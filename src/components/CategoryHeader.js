@@ -1,7 +1,7 @@
 import React from 'react'
 import GuideLink from './GuideLink'
 import { categoryTitleHeight } from '../utils/landscapeCalculations'
-import { getContrastRatio } from '@material-ui/core/styles'
+import getContrastRatio from 'get-contrast-ratio'
 
 const InternalLink = ({to, className, children, ...props}) =>
   (<a data-type="internal" data-url={JSON.stringify(to)} href="#" className={className} {...props}>{children}</a>)

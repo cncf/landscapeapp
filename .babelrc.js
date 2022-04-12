@@ -1,11 +1,11 @@
 const path = require('path')
-
-// CAREFUL before adding more presets, next/babel already includes some
-// see https://nextjs.org/docs/advanced-features/customizing-babel-config
 module.exports = {
   ignore: [".yarn", ".pnp.js"],
-  presets: ["next/babel"],
+  presets: ['@babel/preset-env'],
   plugins: [
+    ["@babel/plugin-transform-react-jsx", {
+      "runtime": "automatic"
+    }],
     ["module-resolver", {
       alias: {
         public: path.resolve(__dirname, 'public'),

@@ -18,7 +18,7 @@ http.createServer(function (request, response) {
     response.end(JSON.stringify(output));
     return;
   }
-  let filePath = path.join('public',  request.url);
+  let filePath = path.join('public', request.url.split('?')[0]);
   console.info(filePath);
   if (filePath == 'public/')
     filePath = 'public/index.html';

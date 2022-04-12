@@ -26,10 +26,8 @@ execSync(`cp -r "${projectPath}/images" public`)
 execSync(`cp -r "${projectPath}/cached_logos" public/logos`)
 writeFileSync('./public/settings.json', JSON.stringify(settings))
 
-if (!existsSync('./public/data')) {
-  mkdirSync('./public/data/exports', { recursive: true })
-  mkdirSync('./public/data/items', { recursive: true })
-}
+mkdirSync('./public/data/exports', { recursive: true })
+mkdirSync('./public/data/items', { recursive: true })
 
 writeFileSync(`./public/data/items.json`, JSON.stringify(items))
 
@@ -54,7 +52,7 @@ const afterSettingsSaved = _ => {
 
   Object.entries(settings.export || {}).forEach(([exportPath, query]) => {
     const params = parseParams({ mainContentMode: 'card-mode', ...qs.parse(query) })
-    const groupedItems = getGroupedItems(params, items)
+    const groupedItems = getGroupedItems({data: items, ...params})
       .map(group => {
         const items = group.items.map(({ id, name, href }) => ({ id, name, logo: `${website}/${href}` }))
         return { ...group, items }

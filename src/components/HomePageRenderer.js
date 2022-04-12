@@ -40,6 +40,19 @@ export function render({settings}) {
         <div className="sidebar">
           <div className="sidebar-scroll">
             Filters, Grouping, Examples, CsvExport, AD
+            <div className="sidebar-presets">
+              { (settings.presets || []).map(preset =>
+                <a data-type="internal" className="preset" href={preset.url}>
+                  {preset.label}
+                </a>
+              )}
+              { (settings.ads || []).map( (entry) => (
+                  <OutboundLink className="sidebar-event" key={entry.image} to={entry.url} title={entry.title}>
+                    <img src={entry.image} alt={entry.title} />
+                  </OutboundLink>
+              )) }
+            </div>
+
           </div>
         </div>
         <div className="app-overlay"></div>
