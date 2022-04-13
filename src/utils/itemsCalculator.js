@@ -15,12 +15,12 @@ const groupAndSort = (items, sortCriteria) => {
   return _.groupBy(_.orderBy(items, sortCriteria), 'landscape')
 }
 
-export const getFilteredItems = function({data, filters, mainContentMode}) {
+export const getFilteredItems = function({data, filters}) {
     var filterHostedProject = filterFn({field: 'relation', filters});
     var filterByLicense = filterFn({field: 'license', filters});
     var filterByOrganization = filterFn({field: 'organization', filters});
     var filterByHeadquarters = filterFn({field: 'headquarters', filters});
-    var filterByLandscape = mainContentMode === 'card-mode' ? filterFn({field: 'landscape', filters}) : _ => true;
+    var filterByLandscape = filterFn({field: 'landscape', filters});
     var filterByBestPractices = filterFn({field: 'bestPracticePercentage', filters});
     var filterByEnduser = filterFn({field: 'enduser', filters});
     var filterByParent = filterFn({field: 'parents', filters});
@@ -61,13 +61,13 @@ const getFilteredItemsForBigPicture = function({ data, filters}) {
     }));
 }
 
-const getExtraFields = function({data, filters, mainContentMode }) {
-  const filtered = getFilteredItems({data, filters, mainContentMode });
+const getExtraFields = function({data, filters}) {
+  const filtered = getFilteredItems({data, filters});
   return addExtraFields(filtered);
 }
 
-const getSortedItems = function({data, filters, sortField, sortDirection, mainContentMode}) {
-  data = getExtraFields({data, filters, mainContentMode});
+const getSortedItems = function({data, filters, sortField, sortDirection}) {
+  data = getExtraFields({data, filters });
 
   const fieldInfo = fields[sortField];
   const nonPublic = (x) => (x.name || '').toString().indexOf('Non-Public Organization') === 0;
@@ -110,8 +110,8 @@ const getSortedItems = function({data, filters, sortField, sortDirection, mainCo
   return sortedViaMainSort.concat(sortedViaName1).concat(sortedViaName2).concat(sortedViaName3).concat(sortedViaName4);
 }
 
-const getGroupedItems = function({ data, filters, sortField, sortDirection, mainContentMode, grouping }) {
-  const items = getSortedItems({ data, filters, sortField, sortDirection, mainContentMode });
+const getGroupedItems = function({ data, filters, sortField, sortDirection, grouping }) {
+  const items = getSortedItems({ data, filters, sortField, sortDirection });
 
   if (grouping === 'no') {
     return [{
@@ -178,8 +178,8 @@ export function getLandscapeItems({landscapeSettings, items, guideIndex = {}}) {
             href: stringifyParams({
               filters: newFilters,
               grouping: 'landscape',
-              mainContentMode:
-              'card-mode'}),
+              mainContentMode: 'card-mode'
+            }),
             items: itemsMap[subcategory.id] || [],
             allItems: itemsMap[subcategory.id] || []
           };

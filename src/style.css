@@ -166,6 +166,7 @@ a:hover svg {
   display: none;
 }
 
+
 .fullscreen .summary{
   display: none;
 }
@@ -716,6 +717,10 @@ html.ios.has-selected-item, html.ios.has-selected-item body {
 
 .gradient-bg {
   background: linear-gradient(135deg, rgb(27,68,108) 0%, rgb(92,107,156) 100%);
+}
+
+.big-picture-switch {
+  margin-bottom: 2px;
 }
 
 .big-picture-switch a {

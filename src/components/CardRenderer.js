@@ -50,7 +50,7 @@ export function renderFlatCard({item}) {
   const card = (
             <div data-id={item.id} className="mosaic-wrap" key={item.id} >
               <div className="mosaic">
-                <img src={assetPath(item.href)} className='logo' alt={item.name} />
+                <img loading="lazy" src={assetPath(item.href)} className='logo' alt={item.name} />
                 <div className="separator"/>
                 <h5>{item.flatName}</h5>
               </div>

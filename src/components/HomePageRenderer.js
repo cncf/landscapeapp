@@ -7,13 +7,13 @@ const OutboundLink = ({to, className, children}) =>
 
 export function render({settings}) {
 
-  const mainCard = [{shortTitle: 'Card', title: 'Card Mode', mode: 'card-mode', url: 'card-mode', tabIndex: 0}]
+  const mainCard = [{shortTitle: 'Card', title: 'Card Mode', mode: 'card', url: 'card-mode', tabIndex: 0}]
   const landscapes = Object.values(settings.big_picture).map(function(section) {
     return {
       url: section.url,
       title: section.name,
       shortTitle: section.short_name,
-      mode: section.url,
+      mode: section.url === settings.big_picture.main.url ? 'main' : section.url,
       tabIndex: section.tab_index
     }
   })
@@ -88,11 +88,14 @@ export function render({settings}) {
             <div className="right-buttons">
 
             </div>
-            <div className="landscape-flex">
+
+            { tabs.filter( (x) => x.mode !== 'card').map( (tab) =>
+            <div data-mode={tab.mode} className="landscape-flex">
               <div className="landscape-wrapper">
-                <div className="inner-landscape" />
+                <div className="inner-landscape" style={{padding: 10}} />
               </div>
             </div>
+            )}
 
             <div className="column-content" />
           </div>

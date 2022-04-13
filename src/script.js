@@ -2,6 +2,7 @@
 // It should always have zero dependencies on any other script or module
 const CncfLandscapeApp = {
   init: function() {
+    // get initial state from the url
     CncfLandscapeApp.state = CncfLandscapeApp.parseUrl(window.location);
 
     if (CncfLandscapeApp.state.embed) {
@@ -10,7 +11,15 @@ const CncfLandscapeApp = {
 
     if (CncfLandscapeApp.state.mode === 'card') {
       CncfLandscapeApp.activateCardMode();
+    } else {
+      CncfLandscapeApp.activateBigPictureMode(CncfLandscapeApp.state.mode);
     }
+
+    document.addEventListener('keydown', function(e) {
+      if(e.keyCode == 27) {
+        CncfLandscapeApp.hideSelectedItem();
+      }
+    });
 
     document.body.addEventListener('click', function(e) {
       const cardEl = e.target.closest('[data-id]');
@@ -46,6 +55,19 @@ const CncfLandscapeApp = {
       const prevItem = e.target.closest('.modal-prev');
       if (prevItem && CncfLandscapeApp.prevItemId) {
         CncfLandscapeApp.showSelectedItem(CncfLandscapeApp.prevItemId);
+        e.preventDefault();
+        e.stopPropagation();
+      }
+
+      const tabItem = e.target.closest('a[data-mode]');
+      if (tabItem) {
+        const mode = tabItem.getAttribute('data-mode');
+        if (mode === 'card') {
+          CncfLandscapeApp.activateCardMode()
+        } else {
+          CncfLandscapeApp.activateBigPictureMode(mode);
+        }
+
         e.preventDefault();
         e.stopPropagation();
       }
@@ -102,38 +124,28 @@ const CncfLandscapeApp = {
       pathname = pathname.substring(1);
     }
     const params = new URLSearchParams(search);
-    const mode = params.get('mode') || (pathname === '' ? 'main' : pathname);
-    const grouping = params.get('grouping') || 'category';
-    const sort = params.get('sort') || 'name';
-    const filterCategory = params.get('category') || '';
-    const filterRelation = params.get('project') || '';
-    const filterLicense = params.get('license') || '';
-    const filterOrganization = params.get('organization') || '';
-    const filterHeadquarters = params.get('headquarters') || '';
-    const filterCompanyType = params.get('company-type') || '';
-    const filterIndustries = params.get('filter-industries') || '';
-    const filterBestPractices = params.get('bestpractices') || '';
-    const filterEndUser = params.get('enduser') || '';
-    const filterLanguage = params.get('language') || '';
-    const selected = params.get('selected') || '';
-    const embed = params.has('embed');
     return {
-      mode,
-      grouping,
-      sort,
-      selected,
-      embed,
-      filterCategory,
-      filterRelation,
-      filterLicense,
-      filterOrganization,
-      filterHeadquarters,
-      filterCompanyType,
-      filterIndustries,
-      filterBestPractices,
-      filterEndUser,
-      filterLanguage
-    }
+      mode: params.get('mode') || (pathname === '' ? 'main' : pathname),
+      grouping: params.get('grouping') || 'category',
+      sort: params.get('sort') || 'name',
+      filterCategory: params.get('category') || '',
+      filterRelation: params.get('project') || '',
+      filterLicense: params.get('license') || '',
+      filterOrganization: params.get('organization') || '',
+      filterHeadquarters: params.get('headquarters') || '',
+      filterCompanyType: params.get('company-type') || '',
+      filterIndustries: params.get('filter-industries') || '',
+      filterBestPractices: params.get('bestpractices') || '',
+      filterEndUser: params.get('enduser') || '',
+      filterLanguage: params.get('language') || '',
+      selected: params.get('selected') || '',
+      embed: params.has('embed'),
+    };
+  },
+  stringifyApiUrl: function(state) {
+
+
+
   },
   showSelectedItem: async function(selectedItemId) {
     this.state.selectedItemId = selectedItemId;
@@ -158,7 +170,7 @@ const CncfLandscapeApp = {
     //calculate previous and next items;
     let prevItem = null;
     let nextItem = null;
-    if (this.state.mode === 'main') {
+    if (this.state.mode === 'card') {
       const items = this.groupedItems.flatMap( (x) => x.items);
       for (let i = 0; i < items.length; i++) {
         if (items[i].id === selectedItemId) {
@@ -167,6 +179,13 @@ const CncfLandscapeApp = {
           break;
         }
       }
+    } else {
+      const selectedItemEl = document.querySelector(`.inner-landscape [data-id=${selectedItemId}]`);
+      const parent = selectedItemEl.closest('.big-picture-section');
+      const allItems = parent.querySelectorAll('[data-id]');
+      const index = [].indexOf.call(allItems, selectedItemEl);
+      prevItem = index > 0 ? allItems[index - 1].getAttribute('data-id') : null;
+      nextItem = index < allItems.length - 1 ? allItems[index + 1].getAttribute('data-id') : null;
     }
 
     this.nextItemId = nextItem;
@@ -191,18 +210,77 @@ const CncfLandscapeApp = {
     document.querySelector('body').style.overflow = '';
   },
   fetchApiData: async function() {
-    const params = '';
-    const response = await fetch(`/api/items?${params}`);
+    const params = {};
+    const state = this.state;
+    params.grouping = state.mode === 'card' ? state.grouping : 'no';
+    params.category = state.mode === 'category' ? state.filterCategory : '';
+    params.project = state.filterRelation;
+    params.license = state.filterLicense;
+    params.organization = state.filterOrganization;
+    params.headquarters = state.filterHeadquarters;
+    params['company-type'] = state.filterCompanyType;
+    params['filter-industries'] = state.filterIndustries;
+    params['bestpractices'] = state.filterBestPractices;
+    params['enduser'] = state.filterEndUser;
+    params['language'] = state.filterLanguage;
+
+    const search = new URLSearchParams(params).toString();
+    const url = `api/items?${search}`;
+    const response = await fetch(url);
     const json = await response.json();
-    this.groupedItems = json;
+    return json;
+  },
+  highlightActiveTab: function() {
+    const tabs = document.querySelectorAll('.big-picture-switch a[data-mode]');
+    for (let tab of tabs) {
+      if (tab.getAttribute('data-mode') === CncfLandscapeApp.state.mode) {
+        tab.classList.add('selected');
+      } else {
+        tab.classList.remove('selected');
+      }
+    }
+  },
+
+  activateBigPictureMode: async function(landscape) {
+    CncfLandscapeApp.state.mode = landscape;
+    document.querySelector('.column-content').style.display="none";
+    document.querySelector('#footer').style.display = "none"
+    document.querySelector('#embedded-footer').style.display = "none"
+
+    // visibility
+    const landscapes = document.querySelectorAll('.landscape-flex');
+    for (let l of landscapes) {
+      l.style.display = l.getAttribute('data-mode') === this.state.mode ? '' : 'none';
+    }
+    this.highlightActiveTab();
+
+    const bigPictureItems = await this.fetchApiData();
+    console.info(bigPictureItems);
+
+    const contentEl = document.querySelector(`.landscape-flex[data-mode=${this.state.mode}]`);
+    if (contentEl.querySelector('.inner-landscape').children.length === 0) {
+      const tabEl = document.querySelector(`a[data-mode=${this.state.mode}]`);
+      const url = `data/items/landscape-${tabEl.getAttribute('href')}.html`
+      const result = await fetch(url);
+      const text = await result.text();
+      contentEl.querySelector('.inner-landscape').innerHTML = text;
+    }
+
   },
   activateCardMode: async function() {
-
     const cardStyle = 'card';
     CncfLandscapeApp.state.mode = 'card';
 
-    document.querySelector('.landscape-flex').style.display="none";
-    document.querySelector('.column-content').style.display="";
+    const landscapes = document.querySelectorAll('.landscape-flex');
+    for (let l of landscapes) {
+      l.style.display = "none";
+    }
+    document.querySelector('.column-content').style.display= "";
+
+    const isEmbed = this.state.embed;
+    document.querySelector('#footer').style.display = isEmbed ? "none" : "";
+    document.querySelector('#embedded-footer').style.display = isEmbed ? "" : "none";
+    this.highlightActiveTab();
 
     if (!this.cards) {
       const response = await fetch(`/data/items/cards-${cardStyle}.html`);
@@ -215,42 +293,45 @@ const CncfLandscapeApp = {
         result[card.getAttribute('data-id')] = card;
       }
       this.cards = result;
-      this.activateCardMode();
-    } else {
-      if (!this.groupedItems) {
-        await this.fetchApiData();
-        this.activateCardMode();
-      } else {
-      // if we have groupedItems
-      const itemsAndHeaders = this.groupedItems.flatMap(groupedItem => {
-        const items = groupedItem.items;
-        const cardElements = items.map( (item) => this.cards[item.id].cloneNode(true))
-        const buildHeader = function({ header, count, href }) {
-          const div = document.createElement('div');
-          div.classList.add('sh_wrapper');
-          div.innerHTML = `
+    }
+
+    if (!this.groupedItems) {
+        this.groupedItems = await this.fetchApiData();
+    }
+        // very simple optimization:
+        // do not change anything if we used exactly same groupedItems last time;
+    if (JSON.stringify(this.groupedItems) === this.lastCards) {
+      return;
+    }
+
+    const itemsAndHeaders = this.groupedItems.flatMap(groupedItem => {
+      const items = groupedItem.items;
+      const cardElements = items.map( (item) => this.cards[item.id].cloneNode(true))
+      const buildHeader = function({ header, count, href }) {
+        const div = document.createElement('div');
+        div.classList.add('sh_wrapper');
+        div.innerHTML = `
       <div style="font-size: 24px; padding-left: 16px; line-height: 48px; font-weight: 500;">
         ${ href ? `<a href=${href}>${header}</a>` : `<span>${header}</span>` }
         <span class="items-cont">(${count})</span>
       </div>
   `;
-          return div;
-        };
-        const header = items.length > 0 ? buildHeader({
-          header: groupedItem.header,
-          count: groupedItem.items.length,
-          href: groupedItem.href}) : null;
-        return [ header, ...cardElements];
-      });
-      const fragment = document.createDocumentFragment();
-      for (let item of itemsAndHeaders) {
-        if (item) {
-          fragment.appendChild(item);
-        }
-      }
-      document.querySelector('.column-content').replaceChildren(fragment);
+        return div;
+      };
+      const header = items.length > 0 ? buildHeader({
+        header: groupedItem.header,
+        count: groupedItem.items.length,
+        href: groupedItem.href}) : null;
+      return [ header, ...cardElements];
+    });
+    const fragment = document.createDocumentFragment();
+    for (let item of itemsAndHeaders) {
+      if (item) {
+        fragment.appendChild(item);
       }
     }
+    document.querySelector('.column-content').replaceChildren(fragment);
+    this.lastCards = JSON.stringify(this.groupedItems);
   }
-};
+}
 document.addEventListener('DOMContentLoaded', () => CncfLandscapeApp.init());

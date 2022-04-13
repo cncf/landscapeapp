@@ -15,7 +15,7 @@ const LargeItem = ({ item, onClick }) => {
   const textHeight = label ? 10 : 0
   const padding = 2
 
-  return <div className="large-item item" onClick={onClick} style={{
+  return <div data-id={item.id} className="large-item item" onClick={onClick} style={{
         cursor: 'pointer',
         position: 'relative',
         background: color,
@@ -24,7 +24,7 @@ const LargeItem = ({ item, onClick }) => {
         height: largeItemHeight
     }}>
 
-  <img loading="lazy" src={assetPath(item.href)} data-href={item.id} alt={item.name} style={{
+  <img loading="lazy" src={assetPath(item.href)} alt={item.name} style={{
         width: `calc(100% - ${2 * padding}px)`,
         height: `calc(100% - ${2 * padding + textHeight}px)`,
         padding: 5,
@@ -48,7 +48,7 @@ const LargeItem = ({ item, onClick }) => {
 const SmallItem = ({ item, onClick }) => {
   const isMember = item.category === settings.global.membership;
   return <>
-    <img data-href={item.id} loading="lazy" className="item" src={assetPath(item.href)} onClick={onClick} alt={item.name} style={{
+    <img data-id={item.id} loading="lazy" className="item" src={assetPath(item.href)} onClick={onClick} alt={item.name} style={{
         cursor: 'pointer',
         width: smallItemWidth,
         height: smallItemHeight,
