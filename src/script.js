@@ -5,6 +5,8 @@ const CncfLandscapeApp = {
     // get initial state from the url
     CncfLandscapeApp.state = CncfLandscapeApp.parseUrl(window.location);
 
+    this.manageZoomAndFullscreenButtons();
+
     if (CncfLandscapeApp.state.embed) {
       document.querySelector('html').classList.add('embed');
     }
@@ -16,8 +18,13 @@ const CncfLandscapeApp = {
     }
 
     document.addEventListener('keydown', function(e) {
-      if(e.keyCode == 27) {
-        CncfLandscapeApp.hideSelectedItem();
+      if (e.keyCode === 27) {
+        if (CncfLandscapeApp.state.selectedItemId) {
+          CncfLandscapeApp.hideSelectedItem();
+        } else if (CncfLandscapeApp.state.fullscreen) {
+          CncfLandscapeApp.state.fullscreen = false;
+          CncfLandscapeApp.manageZoomAndFullscreenButtons();
+        }
       }
     });
 
@@ -113,7 +120,78 @@ const CncfLandscapeApp = {
       element.innerHTML = style;
       document.getElementsByTagName("head")[0].appendChild(element);
     }
+  },
+  // everything related to zoom
+  manageZoomAndFullscreenButtons: function() {
+    const zoomLevels = [0.4, 0.6, 0.8, 1.0, 1.2, 1.5, 2.0, 2.5, 4.0];
+    const zoomLevelsReverse = [...zoomLevels].reverse();
+    if (this.state.fullscreen) {
+      document.querySelector('html').classList.add('fullscreen');
+    } else {
+      document.querySelector('html').classList.remove('fullscreen');
+    }
 
+    document.querySelector('.right-buttons').display = this.state.mode === 'card' ? 'none' : '';
+    document.querySelector('.right-buttons .fullscreen-exit').style.display = this.state.fullscreen ? '' : 'none';
+    document.querySelector('.right-buttons .fullscreen-enter').style.display = !this.state.fullscreen ? '' : 'none';
+    document.querySelector('.right-buttons .zoom-reset').innerText = (this.state.zoom * 100) + '%';
+
+    for (let landscapeEl of document.querySelectorAll('.inner-landscape')) {
+      landscapeEl.style.transform = `scale(${this.state.zoom})`;
+    }
+    const nextZoomOut = zoomLevelsReverse.find( (x) => x < this.state.zoom);
+    const nextZoomIn = zoomLevels.find( (x) => x > this.state.zoom);
+    const zoomOutEl = document.querySelector('.right-buttons .zoom-out');
+    const zoomInEl = document.querySelector('.right-buttons .zoom-in');
+    if (nextZoomOut) {
+      zoomOutEl.classList.remove('disabled');
+    } else {
+      zoomOutEl.classList.add('disabled');
+    }
+    if (nextZoomIn) {
+      zoomInEl.classList.remove('disabled');
+    } else {
+      zoomInEl.classList.add('disabled');
+    }
+
+    // manage all related events
+    if (!this.zoomAndFullscreenListenersAttached) {
+      this.zoomAndFullscreenListenersAttached = true;
+
+      document.querySelector('.right-buttons').addEventListener('click', (e) => {
+        const zoomIn = e.target.closest('.zoom-in');
+        if (zoomIn) {
+          const nextZoomIn = zoomLevels.find( (x) => x > this.state.zoom);
+          if (nextZoomIn) {
+            this.state.zoom = nextZoomIn;
+            this.manageZoomAndFullscreenButtons();
+          }
+        }
+        const zoomOut = e.target.closest('.zoom-out');
+        if (zoomOut) {
+          const nextZoomOut = zoomLevelsReverse.find( (x) => x < this.state.zoom);
+          if (nextZoomOut) {
+            this.state.zoom = nextZoomOut;
+            this.manageZoomAndFullscreenButtons();
+          }
+        }
+        const fullscreenEnter = e.target.closest('.fullscreen-enter');
+        if (fullscreenEnter) {
+          this.state.fullscreen = true;
+          this.manageZoomAndFullscreenButtons();
+        }
+        const fullscreenExit = e.target.closest('.fullscreen-exit');
+        if (fullscreenExit) {
+          this.state.fullscreen = false;
+          this.manageZoomAndFullscreenButtons();
+        }
+        const zoomReset = e.target.closest('.zoom-reset');
+        if (zoomReset) {
+          this.state.zoom = 1;
+          this.manageZoomAndFullscreenButtons();
+        }
+      }, false);
+    }
   },
   parseUrl: function({pathname, search }) {
     search = search || '';
@@ -125,6 +203,8 @@ const CncfLandscapeApp = {
     }
     const params = new URLSearchParams(search);
     return {
+      zoom: +params.get('zoom') || 1,
+      fullscreen: params.get('fullscreen') === 'yes',
       mode: params.get('mode') || (pathname === '' ? 'main' : pathname),
       grouping: params.get('grouping') || 'category',
       sort: params.get('sort') || 'name',
@@ -250,16 +330,16 @@ const CncfLandscapeApp = {
     // visibility
     const landscapes = document.querySelectorAll('.landscape-flex');
     for (let l of landscapes) {
-      l.style.display = l.getAttribute('data-mode') === this.state.mode ? '' : 'none';
+      l.style.display = l.getAttribute('data-mode') === landscape ? '' : 'none';
     }
     this.highlightActiveTab();
 
     const bigPictureItems = await this.fetchApiData();
     console.info(bigPictureItems);
 
-    const contentEl = document.querySelector(`.landscape-flex[data-mode=${this.state.mode}]`);
+    const contentEl = document.querySelector(`.landscape-flex[data-mode=${landscape}]`);
     if (contentEl.querySelector('.inner-landscape').children.length === 0) {
-      const tabEl = document.querySelector(`a[data-mode=${this.state.mode}]`);
+      const tabEl = document.querySelector(`a[data-mode=${landscape}]`);
       const url = `data/items/landscape-${tabEl.getAttribute('href')}.html`
       const result = await fetch(url);
       const text = await result.text();

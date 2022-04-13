@@ -173,6 +173,12 @@ a:hover svg {
 .fullscreen .disclaimer{
   display: none;
 }
+.fullscreen .header_container {
+  display: none;
+}
+.fullscreen .sidebar {
+  display: none;
+}
 
 .header_container {
   z-index: 2;
@@ -771,14 +777,24 @@ html.ios.has-selected-item, html.ios.has-selected-item body {
 .inner-landscape {
   font-size: 12px;
   line-height: 1.1;
+  transform-origin: 0px 0px;
 }
 
 .cards-section {
   position: relative;
 }
 
-.zoom-buttons .zoom-reset {
+.right-buttons .zoom-reset {
+  cursor: pointer;
   min-width: 40px;
+  text-align: center;
+}
+.right-buttons .disabled {
+  cursor: default;
+  pointer-events: none;
+}
+.right-buttons .disabled svg {
+  color: rgba(0, 0, 0, 0.26);
 }
 
 .embed .tweet-button {
@@ -861,18 +877,19 @@ html.ios.has-selected-item, html.ios.has-selected-item body {
   display: flex;
   align-items: center;
   justify-content: flex-end;
+}
 
+.right-buttons svg {
+  width: 24px;
+  height: 24px;
+  fill: currentColor;
+  color: rgba(0, 0, 0, 0.54);
+  cursor: pointer;
+  margin: 10px;
 }
 
 .right-buttons .fullscreen-button {
     margin-left: 2px;
-}
-
-.app:not(.big-picture) .right-buttons .zoom-buttons {
-    display: none;
-}
-.app:not(.big-picture) .right-buttons .fullscreen-button {
-    display: none;
 }
 
 @media (max-width: var(--md-screen)) {
@@ -888,7 +905,7 @@ html.ios.has-selected-item, html.ios.has-selected-item body {
 }
 
 @media (max-width: var(--sm-screen)) {
-  .app:not(.big-picture) .right-buttons {
+  .right-buttons {
     position: fixed;
     top: initial;
     bottom: 0;
