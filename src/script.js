@@ -13,6 +13,8 @@ const CncfLandscapeApp = {
 
     if (CncfLandscapeApp.state.mode === 'card') {
       CncfLandscapeApp.activateCardMode();
+    } else if (CncfLandscapeApp.state.mode === 'guide') {
+      CncfLandscapeApp.activateGuideMode();
     } else {
       CncfLandscapeApp.activateBigPictureMode(CncfLandscapeApp.state.mode);
     }
@@ -79,6 +81,24 @@ const CncfLandscapeApp = {
         e.stopPropagation();
       }
 
+      const guideEl = e.target.closest('#home .guide-toggle a');
+      if (guideEl)  {
+        CncfLandscapeApp.activateGuideMode();
+        e.preventDefault();
+        e.stopPropagation();
+      }
+
+      const mainEl = e.target.closest('#guide-page .guide-toggle a');
+      if (mainEl)  {
+        CncfLandscapeApp.activateCardMode();
+        e.preventDefault();
+        e.stopPropagation();
+      }
+
+      const guideNavigationEl = e.target.closest('#guide-page .guide-sidebar a');
+      if (guideNavigationEl) {
+        CncfLandscapeApp.selectGuideSection(guideNavigationEl);
+      }
     }, false);
 
     // support custom css styles and custom js eval code through iframe
@@ -121,6 +141,57 @@ const CncfLandscapeApp = {
       document.getElementsByTagName("head")[0].appendChild(element);
     }
   },
+  selectGuideSection: function(guideNavigationEl) {
+    const allLinks = [...document.querySelectorAll('#guide-page .guide-sidebar a[data-level]')];
+    guideNavigationEl = guideNavigationEl || document.querySelector('#guide-page .guide-sidebar a.active') || allLinks[0];
+    const linkLevel = guideNavigationEl.getAttribute('data-level');
+    const index = allLinks.indexOf(guideNavigationEl);
+    let parentIndex = index;
+    const selectedLinkLevel = linkLevel;
+    if (linkLevel === "2") {
+      for (let i = index - 1; i >= 0; i -= 1) {
+        const prevLink = allLinks[i];
+        if (prevLink.getAttribute('data-level') === "1") {
+          parentIndex = i;
+          break;
+        }
+      }
+    }
+    const hasChildren = linkLevel === "2" || allLinks[index + 1] && allLinks[index + 1].getAttribute('data-level') === "2";
+    let childrenStarted = false;
+    for (let i = 0; i < allLinks.length; i++) {
+      const link = allLinks[i];
+      const linkLevel = link.getAttribute('data-level');
+      if (linkLevel === "2" && i === parentIndex + 1) {
+        childrenStarted = true;
+      }
+      if (childrenStarted && linkLevel === "1") {
+        childrenStarted = false;
+      }
+      link.classList.remove('expanded');
+      link.classList.remove('active');
+      if (hasChildren && selectedLinkLevel === "1" && i === index + 1) {
+        link.classList.add('active')
+      }
+      if (hasChildren && selectedLinkLevel === "2" && i === index) {
+        link.classList.add('active')
+      }
+      if (!hasChildren && i === index) {
+        link.classList.add('active')
+      }
+      if (hasChildren && i === parentIndex) {
+        link.classList.add('expanded');
+      }
+      if (linkLevel === "2") {
+        if (childrenStarted) {
+          link.classList.remove('display-hidden');
+        } else {
+          link.classList.add('display-hidden');
+        }
+      }
+    }
+
+  },
   // everything related to zoom
   manageZoomAndFullscreenButtons: function() {
     const zoomLevels = [0.4, 0.6, 0.8, 1.0, 1.2, 1.5, 2.0, 2.5, 4.0];
@@ -131,7 +202,7 @@ const CncfLandscapeApp = {
       document.querySelector('html').classList.remove('fullscreen');
     }
 
-    document.querySelector('.right-buttons').display = this.state.mode === 'card' ? 'none' : '';
+    document.querySelector('.right-buttons').style.display = this.state.mode === 'card' ? 'none' : '';
     document.querySelector('.right-buttons .fullscreen-exit').style.display = this.state.fullscreen ? '' : 'none';
     document.querySelector('.right-buttons .fullscreen-enter').style.display = !this.state.fullscreen ? '' : 'none';
     document.querySelector('.right-buttons .zoom-reset').innerText = (this.state.zoom * 100) + '%';
@@ -321,8 +392,29 @@ const CncfLandscapeApp = {
     }
   },
 
+  activateGuideMode: async function() {
+    CncfLandscapeApp.state.mode = 'guide';
+
+    document.querySelector('#home').style.display = "none";
+    document.querySelector('#guide-page').style.display = "";
+
+    const contentEl = document.querySelector('#guide-page');
+    if (!contentEl.getAttribute('data-loaded')) {
+      const url = `data/items/guide.html`;
+      const result = await fetch(url);
+      const text = await result.text();
+      contentEl.innerHTML = text;
+      contentEl.setAttribute('data-loaded', true);
+    }
+    CncfLandscapeApp.selectGuideSection();
+  },
+
   activateBigPictureMode: async function(landscape) {
     CncfLandscapeApp.state.mode = landscape;
+
+    document.querySelector('#home').style.display = "";
+    document.querySelector('#guide-page').style.display = "none";
+
     document.querySelector('.column-content').style.display="none";
     document.querySelector('#footer').style.display = "none"
     document.querySelector('#embedded-footer').style.display = "none"
@@ -333,6 +425,7 @@ const CncfLandscapeApp = {
       l.style.display = l.getAttribute('data-mode') === landscape ? '' : 'none';
     }
     this.highlightActiveTab();
+    this.manageZoomAndFullscreenButtons();
 
     const bigPictureItems = await this.fetchApiData();
     console.info(bigPictureItems);
@@ -346,10 +439,14 @@ const CncfLandscapeApp = {
       contentEl.querySelector('.inner-landscape').innerHTML = text;
     }
 
+
   },
   activateCardMode: async function() {
     const cardStyle = 'card';
     CncfLandscapeApp.state.mode = 'card';
+
+    document.querySelector('#home').style.display = "";
+    document.querySelector('#guide-page').style.display = "none";
 
     const landscapes = document.querySelectorAll('.landscape-flex');
     for (let l of landscapes) {
@@ -361,6 +458,7 @@ const CncfLandscapeApp = {
     document.querySelector('#footer').style.display = isEmbed ? "none" : "";
     document.querySelector('#embedded-footer').style.display = isEmbed ? "" : "none";
     this.highlightActiveTab();
+    this.manageZoomAndFullscreenButtons();
 
     if (!this.cards) {
       const response = await fetch(`/data/items/cards-${cardStyle}.html`);

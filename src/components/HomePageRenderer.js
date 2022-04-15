@@ -5,7 +5,7 @@ import ReactDOMServer from 'react-dom/server';
 const OutboundLink = ({to, className, children}) =>
   (<a data-type="external" href={to} className={className}>{children}</a>)
 
-export function render({settings}) {
+export function render({settings, guidePayload}) {
 
   const mainCard = [{shortTitle: 'Card', title: 'Card Mode', mode: 'card', url: 'card-mode', tabIndex: 0}]
   const landscapes = Object.values(settings.big_picture).map(function(section) {
@@ -34,6 +34,24 @@ export function render({settings}) {
         </div>
       </div>
     </div>
+    <div id="guide-page" data-loaded={guidePayload ? "true" : ""}>
+      { !guidePayload && <div className="side-content">
+                            <span className="landscape-logo">
+                              <a className="nav-link" href="/">
+                                <img src="images/left-logo.svg" />
+                              </a>
+                            </span>
+                            <div className="guide-sidebar">
+                              <div className="sidebar-collapse">X</div>
+                              <div className="guide-toggle">
+                                <span className="toggle-item "><a href="./">Landscape</a></span>
+                                <span className="toggle-item active">Guide</span>
+                              </div>
+                            </div>
+                          </div>
+      }
+      { guidePayload && guidePayload }
+    </div>
     <div id="home" className="app">
       <div className="main-parent">
         <div className="header_container">
@@ -54,6 +72,11 @@ export function render({settings}) {
         </div>
         <div className="sidebar">
           <div className="sidebar-scroll">
+            <div className="guide-toggle">
+              <span className="toggle-item active">Landscape</span>
+              <span className="toggle-item "><a href="/guide">Guide</a></span>
+            </div>
+
             Filters, Grouping, Examples, CsvExport, AD
             <div className="sidebar-presets">
               { (settings.presets || []).map(preset =>
