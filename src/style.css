@@ -1308,6 +1308,38 @@ html.ios.has-selected-item, html.ios.has-selected-item body {
   }
 }
 
+.inner-landscape .large-item {
+  cursor: pointer;
+  position: relative;
+  width: 71px;
+  height: 63px;
+}
+
+.inner-landscape .small-item {
+  cursor: pointer;
+  position: relative;
+  width: 34px;
+  height: 30px;
+  border: 1px solid grey;
+  border-radius: 2px;
+  padding: 1px;
+}
+
+.inner-landscape .item-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  grid-column-end: span 1;
+  grid-row-end: span 1;
+}
+
+.inner-landscape .item-wrapper.wrapper-large {
+  grid-column-end: span 2;
+  grid-row-end: span 2;
+}
+
+
+
 @media (max-width: var(--sm-screen)) {
   .right-buttons {
     position: fixed;

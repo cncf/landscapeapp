@@ -15,14 +15,7 @@ const LargeItem = ({ item, onClick }) => {
   const textHeight = label ? 10 : 0
   const padding = 2
 
-  return <div data-id={item.id} className="large-item item" onClick={onClick} style={{
-        cursor: 'pointer',
-        position: 'relative',
-        background: color,
-        visibility: item.isVisible ? 'visible' : 'hidden',
-        width: largeItemWidth,
-        height: largeItemHeight
-    }}>
+  return <div data-id={item.id} className="large-item item" onClick={onClick} style={{ background: color }}>
 
   <img loading="lazy" src={assetPath(item.href)} alt={item.name} style={{
         width: `calc(100% - ${2 * padding}px)`,
@@ -48,14 +41,8 @@ const LargeItem = ({ item, onClick }) => {
 const SmallItem = ({ item, onClick }) => {
   const isMember = item.category === settings.global.membership;
   return <>
-    <img data-id={item.id} loading="lazy" className="item" src={assetPath(item.href)} onClick={onClick} alt={item.name} style={{
-        cursor: 'pointer',
-        width: smallItemWidth,
-        height: smallItemHeight,
-        border: `1px solid ${isMember ? 'white' : 'grey'}`,
-        borderRadius: 2,
-        padding: 1,
-        visibility: item.isVisible ? 'visible' : 'hidden'
+    <img data-id={item.id} loading="lazy" className="item small-item" src={assetPath(item.href)} onClick={onClick} alt={item.name} style={{
+        borderColor: isMember ? 'white' : undefined
     }}/>
   </>
 }
@@ -64,13 +51,10 @@ const Item = props => {
   const { isLarge, category, oss, categoryAttrs } = props.item
   const isMember = category === settings.global.membership;
 
-  return <div className={isMember || oss || categoryAttrs.isLarge ? 'oss' : 'nonoss'} style={{
-    display: 'flex',
-    'justifyContent': 'center',
-    'alignItems': 'center',
-    'gridColumnEnd': `span ${isLarge ? 2 : 1}`,
-    'gridRowEnd': `span ${isLarge ? 2 : 1}`
-    }}>
+  const ossClass = isMember || oss || categoryAttrs.isLarge ? 'oss' : 'nonoss';
+  const isLargeClass = isLarge ? 'wrapper-large' : '';
+
+  return <div className={isLargeClass + ' item-wrapper ' + ossClass}>
     {isLarge ? <LargeItem {...props} isMember={isMember} /> : <SmallItem {...props} />}
   </div>
 }
