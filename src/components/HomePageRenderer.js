@@ -5,7 +5,7 @@ import ReactDOMServer from 'react-dom/server';
 const OutboundLink = ({to, className, children}) =>
   (<a data-type="external" href={to} className={className}>{children}</a>)
 
-export function render({settings, guidePayload}) {
+export function render({settings, guidePayload, bigPictureKey}) {
 
   const mainCard = [{shortTitle: 'Card', title: 'Card Mode', mode: 'card', url: 'card-mode', tabIndex: 0}]
   const landscapes = Object.values(settings.big_picture).map(function(section) {
@@ -34,7 +34,7 @@ export function render({settings, guidePayload}) {
         </div>
       </div>
     </div>
-    <div id="guide-page" data-loaded={guidePayload ? "true" : ""}>
+    <div id="guide-page" style={{display: guidePayload ? "" : "none"}} data-loaded={guidePayload ? "true" : ""}>
       { !guidePayload && <div className="side-content">
                             <span className="landscape-logo">
                               <a className="nav-link" href="/">
@@ -50,9 +50,9 @@ export function render({settings, guidePayload}) {
                             </div>
                           </div>
       }
-      { guidePayload && guidePayload }
+      { guidePayload && "$$guide$$" }
     </div>
-    <div id="home" className="app">
+    <div id="home" style={{display: guidePayload ? "none" : ""}} className="app">
       <div className="main-parent">
         <div className="header_container">
           <div  className="header">
@@ -127,7 +127,9 @@ export function render({settings, guidePayload}) {
             { tabs.filter( (x) => x.mode !== 'card').map( (tab) =>
             <div data-mode={tab.mode} className="landscape-flex">
               <div className="landscape-wrapper">
-                <div className="inner-landscape" style={{padding: 10}} />
+                <div className="inner-landscape" style={{padding: 10}} >
+                  { bigPictureKey === tab.mode && '$$' + bigPictureKey + '$$'}
+                </div>
               </div>
             </div>
             )}

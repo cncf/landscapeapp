@@ -14,6 +14,8 @@ async function main() {
   await fs.mkdir('public/data/items', { recursive: true});
   await fs.mkdir(path.join(projectPath, 'dist/items'), { recursive: true});
 
+  const payload = {};
+
   let guideIndex = {};
   let guideJson = null;
   try {
@@ -39,6 +41,8 @@ async function main() {
     });
     await fs.writeFile(`public/data/items/landscape-${landscapeSettings.url}.html`, landscapeContent);
 
+    payload[ key === 'main' ? 'main' : landscapeSettings.url] = landscapeContent;
+
     // render a guide too
     if (key === 'main') {
       const guideContent = GuideRenderer.render({
@@ -47,6 +51,7 @@ async function main() {
         guide: guideJson,
         entries: projects
       });
+      payload.guide = guideContent;
       await fs.writeFile(`public/data/items/guide.html`, guideContent);
     }
   }
@@ -76,7 +81,6 @@ async function main() {
   await fs.writeFile(`public/data/items/cards-flat.html`, flatCards);
 
   // render an index.html
-  const homePage = HomePageRenderer.render({settings});
   const js = await fs.readFile('src/script.js', 'utf-8');
   const css = await fs.readFile('src/style.css', 'utf-8');
   // preprocess css media queries
@@ -89,20 +93,47 @@ async function main() {
       processedCss = processedCss.replace(`var(${name})`, value);
     }
   }
-  const result = `
-    <style>
+
+  const fonts = await fs.readFile('src/fonts.css', 'utf-8');
+  const renderPage = ({homePage, mode}) => {
+    let result = `<style>
+      ${fonts}
       ${processedCss}
     </style>
     <script async defer src="//platform.twitter.com/widgets.js" charset="utf-8"></script>
     <script>
       ${js}
+      CncfLandscapeApp.initialMode = '${mode}';
     </script>
-    <body>
+    <body style="opacity: 0;">
       ${homePage}
     </body>
-  `;
-  await fs.writeFile('public/index.html', result);
+    `;
+    for(let key in payload) {
+      result = result.replace( '$$' + key + '$$', payload[key]);
+    }
+    return result;
+  }
 
+
+
+
+
+
+  const homePageGuide = HomePageRenderer.render({settings, guidePayload: !!payload.guide });
+  await fs.writeFile('public/guide.html', renderPage({homePage: homePageGuide, mode: 'guide'}));
+
+  const homePage = HomePageRenderer.render({settings, bigPictureKey: 'main'});
+  await fs.writeFile('public/index.html', renderPage({homePage, mode: 'main'}));
+
+  for (let key in settings.big_picture) {
+    const landscapeSettings = settings.big_picture[key];
+    if (key !== 'main') {
+      const homePage = HomePageRenderer.render({settings, bigPictureKey: landscapeSettings.url});
+      await fs.writeFile(`public/${landscapeSettings.url}.html`,
+        renderPage({homePage, mode: landscapeSettings.url }));
+    }
+  }
 
 }
 main();

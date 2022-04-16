@@ -140,6 +140,7 @@ const CncfLandscapeApp = {
       element.innerHTML = style;
       document.getElementsByTagName("head")[0].appendChild(element);
     }
+    document.body.style.opacity = 1;
   },
   selectGuideSection: function(guideNavigationEl) {
     const allLinks = [...document.querySelectorAll('#guide-page .guide-sidebar a[data-level]')];
@@ -276,7 +277,7 @@ const CncfLandscapeApp = {
     return {
       zoom: +params.get('zoom') || 1,
       fullscreen: params.get('fullscreen') === 'yes',
-      mode: params.get('mode') || (pathname === '' ? 'main' : pathname),
+      mode: params.get('mode') || CncfLandscapeApp.initialMode,
       grouping: params.get('grouping') || 'category',
       sort: params.get('sort') || 'name',
       filterCategory: params.get('category') || '',
