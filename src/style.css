@@ -1134,6 +1134,7 @@ html.ios.has-selected-item, html.ios.has-selected-item body {
 }
 
 .big-picture-switch a {
+  min-width: 160px;
   display: inline-block;
   color: var(--blue);
   opacity: 1;
@@ -1737,4 +1738,291 @@ html.ios.has-selected-item, html.ios.has-selected-item body {
 .modal .single-column .product-property col:nth-child(2) {
   display: inline-block;
   width: 60%
+}
+
+
+/* select starting stylings ------------------------------*/
+.select {
+  font-family: 'Roboto','Helvetica','Arial',sans-serif;
+	position: relative;
+	width: 150px;
+  margin-bottom: 10px;
+}
+
+.select-text {
+	position: relative;
+	font-family: inherit;
+	background-color: transparent;
+	width: 100%;
+	padding: 10px 10px 10px 0;
+	font-size: 14px;
+	border-radius: 0;
+	border: none;
+	border-bottom: 1px solid rgba(0,0,0, 0.12);
+}
+
+/* Remove focus */
+.select-text:focus {
+	outline: none;
+	border-bottom: 1px solid rgba(0,0,0, 0);
+}
+
+	/* Use custom arrow */
+.select .select-text {
+	appearance: none;
+	-webkit-appearance:none
+}
+
+.select:after {
+	position: absolute;
+	top: 18px;
+	right: 10px;
+	/* Styling the down arrow */
+	width: 0;
+	height: 0;
+	padding: 0;
+	content: '';
+	border-left: 6px solid transparent;
+	border-right: 6px solid transparent;
+	border-top: 6px solid rgba(0, 0, 0, 0.12);
+	pointer-events: none;
+}
+
+
+/* LABEL ======================================= */
+.select-label {
+	color: rgba(0,0,0, 0.26);
+	font-size: 18px;
+	font-weight: normal;
+	position: absolute;
+	pointer-events: none;
+	left: 0;
+	top: 10px;
+	transition: 0.2s ease all;
+}
+
+/* active state */
+.select-text:focus ~ .select-label, .select-text:valid ~ .select-label {
+	color: #2F80ED;
+	top: -10px;
+	transition: 0.2s ease all;
+	font-size: 14px;
+}
+
+/* BOTTOM BARS ================================= */
+.select-bar {
+	position: relative;
+	display: block;
+	width: 100%;
+}
+
+.select-bar:before, .select-bar:after {
+	content: '';
+	height: 2px;
+	width: 0;
+	bottom: 1px;
+	position: absolute;
+	background: #2F80ED;
+	transition: 0.2s ease all;
+}
+
+.select-bar:before {
+	left: 50%;
+}
+
+.select-bar:after {
+	right: 50%;
+}
+
+/* active state */
+.select-text:focus ~ .select-bar:before, .select-text:focus ~ .select-bar:after {
+	width: 50%;
+}
+
+/* HIGHLIGHTER ================================== */
+.select-highlight {
+	position: absolute;
+	height: 60%;
+	width: 100px;
+	top: 25%;
+	left: 0;
+	pointer-events: none;
+	opacity: 0.5;
+}
+
+.select-popup {
+  perspective: 2000px;
+  overflow: auto;
+  display: block;
+  position: fixed;
+  z-index: 1300;
+  inset: 0px;
+}
+
+.select-popup-body {
+  position: absolute;
+  z-index: 2000;
+  min-width: 200px;
+  min-height: 64px;
+  background: white;
+  border: 1px solid grey;
+  border-radius: 3px;
+  overflow-x: hidden;
+  overflow-y: auto;
+  user-select: none;
+}
+.select-popup-body div {
+  padding: 2px 10px 2px 10px;
+}
+.select-popup-body div[data-level="2"] {
+  padding-left: 50px;
+}
+
+.select-popup-body div:hover {
+  background: #eee;
+}
+
+.select-popup-body div.active {
+  background: #ccc;
+}
+
+.pure-material-checkbox {
+    z-index: 0;
+    position: relative;
+    display: inline-block;
+    color: rgba(var(--pure-material-onsurface-rgb, 0, 0, 0), 0.87);
+    font-family: var(--pure-material-font, "Roboto", "Segoe UI", BlinkMacSystemFont, system-ui, -apple-system);
+    font-size: 16px;
+    line-height: 1.5;
+}
+
+/* Input */
+.pure-material-checkbox > input {
+    appearance: none;
+    -moz-appearance: none;
+    -webkit-appearance: none;
+    z-index: -1;
+    position: absolute;
+    left: -10px;
+    top: -8px;
+    display: block;
+    margin: 0;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    background-color: rgba(var(--pure-material-onsurface-rgb, 0, 0, 0), 0.6);
+    box-shadow: none;
+    outline: none;
+    opacity: 0;
+    transform: scale(1);
+    pointer-events: none;
+    transition: opacity 0.3s, transform 0.2s;
+}
+
+/* Span */
+.pure-material-checkbox > span {
+    display: inline-block;
+    width: 100%;
+    cursor: pointer;
+}
+
+/* Box */
+.pure-material-checkbox > span::before {
+    content: "";
+    display: inline-block;
+    box-sizing: border-box;
+    margin: 3px 11px 3px 1px;
+    border: solid 2px; /* Safari */
+    border-color: rgba(var(--pure-material-onsurface-rgb, 0, 0, 0), 0.6);
+    border-radius: 2px;
+    width: 18px;
+    height: 18px;
+    vertical-align: top;
+    transition: border-color 0.2s, background-color 0.2s;
+}
+
+/* Checkmark */
+.pure-material-checkbox > span::after {
+    content: "";
+    display: block;
+    position: absolute;
+    top: 3px;
+    left: 1px;
+    width: 10px;
+    height: 5px;
+    border: solid 2px transparent;
+    border-right: none;
+    border-top: none;
+    transform: translate(3px, 4px) rotate(-45deg);
+}
+
+/* Checked, Indeterminate */
+.pure-material-checkbox > input:checked,
+.pure-material-checkbox > input:indeterminate {
+    background-color: rgb(var(--pure-material-primary-rgb, 33, 150, 243));
+}
+
+.pure-material-checkbox > input:checked + span::before,
+.pure-material-checkbox > input:indeterminate + span::before {
+    border-color: rgb(var(--pure-material-primary-rgb, 33, 150, 243));
+    background-color: rgb(var(--pure-material-primary-rgb, 33, 150, 243));
+}
+
+.pure-material-checkbox > input:checked + span::after,
+.pure-material-checkbox > input:indeterminate + span::after {
+    border-color: rgb(var(--pure-material-onprimary-rgb, 255, 255, 255));
+}
+
+.pure-material-checkbox > input:indeterminate + span::after {
+    border-left: none;
+    transform: translate(4px, 3px);
+}
+
+/* Hover, Focus */
+.pure-material-checkbox:hover > input {
+    opacity: 0.04;
+}
+
+.pure-material-checkbox > input:focus {
+    opacity: 0.12;
+}
+
+.pure-material-checkbox:hover > input:focus {
+    opacity: 0.16;
+}
+
+/* Active */
+.pure-material-checkbox > input:active {
+    opacity: 1;
+    transform: scale(0);
+    transition: transform 0s, opacity 0s;
+}
+
+.pure-material-checkbox > input:active + span::before {
+    border-color: rgb(var(--pure-material-primary-rgb, 33, 150, 243));
+}
+
+.pure-material-checkbox > input:checked:active + span::before {
+    border-color: transparent;
+    background-color: rgba(var(--pure-material-onsurface-rgb, 0, 0, 0), 0.6);
+}
+
+/* Disabled */
+.pure-material-checkbox > input:disabled {
+    opacity: 0;
+}
+
+.pure-material-checkbox > input:disabled + span {
+    color: rgba(var(--pure-material-onsurface-rgb, 0, 0, 0), 0.38);
+    cursor: initial;
+}
+
+.pure-material-checkbox > input:disabled + span::before {
+    border-color: currentColor;
+}
+
+.pure-material-checkbox > input:checked:disabled + span::before,
+.pure-material-checkbox > input:indeterminate:disabled + span::before {
+    border-color: transparent;
+    background-color: currentColor;
 }

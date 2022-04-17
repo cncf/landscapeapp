@@ -1,12 +1,12 @@
 import settings from 'public/settings.json'
-import fields from "../../types/fields";
+import fields from "../types/fields";
 import {
   largeItemHeight,
   largeItemWidth,
   smallItemHeight,
   smallItemWidth
-} from "../../utils/landscapeCalculations";
-import assetPath from '../../utils/assetPath'
+} from "../utils/landscapeCalculations";
+import assetPath from '../utils/assetPath'
 
 const LargeItem = ({ item, onClick }) => {
   const relationInfo = fields.relation.valuesMap[item.relation]

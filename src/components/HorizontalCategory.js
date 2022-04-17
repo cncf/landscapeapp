@@ -14,9 +14,9 @@ import {
   smallItemHeight,
   subcategoryMargin,
   subcategoryTitleHeight
-} from "../../utils/landscapeCalculations";
-import SubcategoryInfo from '../SubcategoryInfo'
-import CategoryHeader from '../CategoryHeader'
+} from "../utils/landscapeCalculations";
+import SubcategoryInfo from './SubcategoryInfo'
+import CategoryHeader from './CategoryHeader'
 
 const Divider = ({ color }) => {
   const width = dividerWidth

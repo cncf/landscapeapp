@@ -8,9 +8,9 @@ import {
   categoryTitleHeight,
   itemMargin, smallItemWidth,
   subcategoryMargin
-} from "../../utils/landscapeCalculations";
-import SubcategoryInfo from '../SubcategoryInfo'
-import CategoryHeader from '../CategoryHeader'
+} from "../utils/landscapeCalculations";
+import SubcategoryInfo from './SubcategoryInfo'
+import CategoryHeader from './CategoryHeader'
 
 const VerticalCategory = ({header, guideInfo, subcategories, top, left, width, height, color, href, fitWidth}) => {
   const subcategoriesWithCalculations = calculateVerticalCategory({ subcategories, fitWidth, width })

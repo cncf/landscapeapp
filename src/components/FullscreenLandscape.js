@@ -1,9 +1,9 @@
 import React, { useContext, useEffect, useState } from 'react';
 import LandscapeContent from './LandscapeContent';
-import useCurrentDevice from '../../utils/useCurrentDevice'
+import useCurrentDevice from '../utils/useCurrentDevice'
 import { useRouter } from 'next/router'
-import LandscapeContext from '../../contexts/LandscapeContext'
-import { headerHeight} from '../../utils/landscapeCalculations'
+import LandscapeContext from '../contexts/LandscapeContext'
+import { headerHeight} from '../utils/landscapeCalculations'
 
 const _calculateZoom = (fullscreenWidth, fullscreenHeight, zoomedIn, currentDevice) => {
   const isFirefox = navigator.userAgent.indexOf('Firefox') > -1

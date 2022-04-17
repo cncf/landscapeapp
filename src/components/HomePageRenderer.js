@@ -1,9 +1,75 @@
 import _ from 'lodash';
+import fields, { sortOptions, options } from '../types/fields'
 import React from 'react';
 import ReactDOMServer from 'react-dom/server';
 
 const OutboundLink = ({to, className, children}) =>
   (<a data-type="external" href={to} className={className}>{children}</a>)
+
+const SingleSelect = ({name, options, title}) => (
+            <div className="select" data-type="single" data-name={name} data-options={JSON.stringify(options)}>
+              <select className="select-text" required>
+                <option value="1" selected>Value</option>
+              </select>
+              <span className="select-highlight"></span>
+              <span className="select-bar"></span>
+              <label className="select-label">{title}</label>
+            </div>
+)
+const MultiSelect = ({name, options, title}) => (
+            <div className="select" data-type="multi" data-name={name} data-options={JSON.stringify(options)}>
+              <select className="select-text" required>
+                <option value="1" selected>Value</option>
+              </select>
+              <span className="select-highlight"></span>
+              <span className="select-bar"></span>
+              <label className="select-label">{title}</label>
+            </div>
+)
+
+const GroupingSelect = function() {
+  const groupingFields = ['landscape', 'relation', 'license', 'organization', 'headquarters'];
+  const options = [{
+    id: 'no',
+    label: 'No Grouping',
+  }].concat(groupingFields.map(id => ({ id, label: fields[id].groupingLabel })))
+  return <SingleSelect name="grouping" options={options} title="Grouping" />
+}
+
+const SortBySelect = function() {
+  const options = sortOptions.filter( (x) => !x.disabled).map( (x) => ({id: x.id, label: x.label }))
+  return <SingleSelect name="sort" options={sortOptions} title="Sort By" />
+}
+
+const FilterCategory = function() {
+  return <MultiSelect name="category" options={options('landscape')} title="Category" />;
+}
+
+const FilterProject = function() {
+  return <MultiSelect name="project" options={options('relation')} title="Project" />;
+}
+
+const FilterLicense = function() {
+  return <MultiSelect name="license" options={options('license')} title="License" />;
+}
+
+const FilterOrganization = function() {
+  return <MultiSelect name="organization" options={options('organization')} title="Organization" />;
+}
+
+const FilterHeadquarters = function() {
+  return <MultiSelect name="headquarters" options={options('headquarters')} title="Headquarters" />;
+}
+
+const FilterCompanyType = function() {
+  return <MultiSelect name="company-type" options={options('companyType')} title="Company Type" />;
+}
+
+const FilterIndustries = function() {
+  return <MultiSelect name="industry" options={options('industries')} title="Industry" />;
+}
+
+
 
 export function render({settings, guidePayload, bigPictureKey}) {
 
@@ -21,6 +87,9 @@ export function render({settings, guidePayload, bigPictureKey}) {
 
 
   const result = <>
+    <div className="select-popup" style={{display: "none"}}>
+      <div className="select-popup-body"/>
+    </div>
     <div className="modal" style={{display: "none"}}>
       <div className="modal-shadow" />
       <div className="modal-container">
@@ -77,7 +146,17 @@ export function render({settings, guidePayload, bigPictureKey}) {
               <span className="toggle-item "><a href="/guide">Guide</a></span>
             </div>
 
-            Filters, Grouping, Examples, CsvExport, AD
+            <GroupingSelect />
+            <SortBySelect />
+            <FilterCategory />
+            <FilterProject />
+            <FilterLicense />
+            <FilterOrganization />
+            <FilterHeadquarters />
+            <FilterCompanyType />
+            <FilterIndustries />
+
+            Filters, CsvExport
             <div className="sidebar-presets">
               { (settings.presets || []).map(preset =>
                 <a data-type="internal" className="preset" href={preset.url}>

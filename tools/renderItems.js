@@ -4,7 +4,7 @@ import  { projects } from './loadData.js';
 import { processedLandscape } from './processedLandscape.js';
 import { render } from '../src/components/ItemDialogContentRenderer.js';
 import * as CardRenderer from '../src/components/CardRenderer.js';
-import * as LandscapeContentRenderer from '../src/components/BigPicture/LandscapeContentRenderer.js';
+import * as LandscapeContentRenderer from '../src/components/LandscapeContentRenderer.js';
 import * as HomePageRenderer from '../src/components/HomePageRenderer.js';
 import * as GuideRenderer from '../src/components/GuideRenderer.js';
 import { getLandscapeItems } from '../src/utils/itemsCalculator.js';

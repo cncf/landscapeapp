@@ -1,13 +1,12 @@
 import React from 'react';
-import assetPath from '../../utils/assetPath'
 
 const OutboundLink = ({to, className, children}) =>
     (<a data-type="external" href={to} className={className}>{children}</a>)
 const InternalLink = ({to, className, children}) =>
   (<a data-type="internal" data-url={JSON.stringify(to)} href="#" className={className}>{children}</a>)
 
-import { stringifyParams } from '../../utils/routing'
-import { categoryBorder, categoryTitleHeight, subcategoryTitleHeight } from '../../utils/landscapeCalculations'
+import { stringifyParams } from '../utils/routing'
+import { categoryBorder, categoryTitleHeight, subcategoryTitleHeight } from '../utils/landscapeCalculations'
 
 const CardLink = ({ url, children }) => {
   const Component = url.indexOf('http') === 0 ? OutboundLink : InternalLink
@@ -17,7 +16,7 @@ const CardLink = ({ url, children }) => {
 }
 
 const OtherLandscapeLink = function({top, left, height, width, color, title, image, url, layout}) {
-  const imageSrc = image || assetPath(`/images/${url}_preview.png`)
+  const imageSrc = image || `images/${url}_preview.png`;
   if (layout === 'category') {
     return <div style={{
       position: 'absolute', top, left, height, width, background: color,

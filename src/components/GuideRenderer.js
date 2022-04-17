@@ -2,7 +2,7 @@ import React from 'react';
 import ReactDOMServer from 'react-dom/server';
 
 import { isLargeFn } from '../utils/landscapeCalculations'
-import Item from './BigPicture/Item.js'
+import Item from './Item.js'
 
 
 

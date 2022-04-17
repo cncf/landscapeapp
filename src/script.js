@@ -26,6 +26,8 @@ const CncfLandscapeApp = {
         } else if (CncfLandscapeApp.state.fullscreen) {
           CncfLandscapeApp.state.fullscreen = false;
           CncfLandscapeApp.manageZoomAndFullscreenButtons();
+        } else if (document.querySelector('.select-popup').style.display === '') {
+          document.querySelector('.select-popup').style.display = "none";
         }
       }
     });
@@ -98,6 +100,27 @@ const CncfLandscapeApp = {
       const guideNavigationEl = e.target.closest('#guide-page .guide-sidebar a');
       if (guideNavigationEl) {
         CncfLandscapeApp.selectGuideSection(guideNavigationEl);
+      }
+
+      const selectPopupItemEl = e.target.closest('.select-popup-body div');
+      const selectPopupShadowEl = e.target.closest('.select-popup');
+      if (selectPopupShadowEl && !selectPopupItemEl) {
+        selectPopupShadowEl.style.display = "none";
+      }
+
+      if (selectPopupItemEl) {
+        CncfLandscapeApp.handlePopupItemClick(selectPopupItemEl);
+        e.preventDefault();
+        e.stopPropagation();
+      }
+    }, false);
+
+    document.addEventListener('mousedown', function(e) {
+      const selectEl = e.target.closest('select');
+      if (selectEl) {
+        e.preventDefault();
+        e.stopPropagation();
+        CncfLandscapeApp.openSelectPopup(selectEl);
       }
     }, false);
 
@@ -191,7 +214,123 @@ const CncfLandscapeApp = {
         }
       }
     }
+  },
+  openSelectPopup: function(selectEl) {
+    const wrapperEl = selectEl.closest('[data-name]');
+    let items = [];
+    if (wrapperEl.getAttribute('data-options')) {
+      items = JSON.parse(wrapperEl.getAttribute('data-options'));
+    }
+    const kind = wrapperEl.getAttribute('data-type');
+    let content;
+    if (kind === 'single') {
+      const currentValue = wrapperEl.getAttribute('data-value');
+      content = items.map( (item) => `
+        <div data-option-id="${item.id}" ${item.id === currentValue ? "class=active" : ""}>${item.label}</div>
+      `).join('');
+    } else {
+      const currentValues = (wrapperEl.getAttribute('data-value') || '').split(',');
+      content = items.map( (item) => {
+        const isActive = currentValues.includes(item.id);
+        return `
+        <div data-option-id="${item.id}" data-level=${item.level} ${isActive ? "class=active" : ""}>
+          <label class="pure-material-checkbox">
+            <input type="checkbox" ${isActive ? " checked " : ""}>
+            <span>${item.label}</span>
+          </label>
+        </div>
+       `
+      }).join('');
+    }
 
+    const popupRoot = document.querySelector('.select-popup');
+    const popupBody = document.querySelector('.select-popup-body');
+    const box = selectEl.getBoundingClientRect();
+    popupBody.setAttribute('data-name', wrapperEl.getAttribute('data-name'));
+    popupBody.setAttribute('data-type', wrapperEl.getAttribute('data-type'));
+    popupBody.innerHTML = content;
+    popupRoot.style.display = "";
+    popupBody.style.left = box.left + "px";
+    const realHeight = items.length * 24;
+    const maxHeight = document.body.clientHeight - 20;
+    const height = Math.min(maxHeight, realHeight);
+    const top = Math.min(box.top, document.body.clientHeight - 10 - height);
+
+    popupBody.style.top = top + "px";
+    popupBody.style.height = height + "px";
+  },
+  handlePopupItemClick(itemEl) {
+    const popupBody = document.querySelector('.select-popup-body');
+    const popupRoot = document.querySelector('.select-popup');
+    const mode = popupBody.getAttribute('data-type');
+    const optionId = itemEl.getAttribute('data-option-id');
+    const wrapper = document.querySelector(`.select[data-name=${popupBody.getAttribute('data-name')}`);
+    if (mode === 'single') {
+      wrapper.setAttribute('data-value', optionId);
+      wrapper.querySelector('option').innerText = itemEl.innerText;
+      popupRoot.style.display = "none";
+    } else {
+      // toggle
+      const isItemSelected = itemEl.querySelector('input').checked;
+      const newValue = !isItemSelected;
+      itemEl.querySelector('input').checked = newValue;
+      itemEl.classList.remove('active');
+      if (newValue) {
+        itemEl.classList.add('active');
+      }
+      //now recalculate parent
+      const allItems = [...popupBody.querySelectorAll('div')];
+      const currentIndex = allItems.indexOf(itemEl);
+      if (itemEl.getAttribute('data-level') === "1") {
+        for (let i = currentIndex + 1; i < allItems.length; i++) {
+          const childEl = allItems[i];
+          if (childEl.getAttribute('data-level') === "1") {
+            break;
+          }
+          childEl.querySelector('input').checked = newValue;
+          childEl.classList.remove('active');
+          if (newValue) {
+            childEl.classList.add('active');
+          }
+        }
+      } else {
+        // or recalculate children
+        let parentIndex = null;
+        for (let i = currentIndex - 1; i >=0; i -= 1) {
+          if (allItems[i].getAttribute('data-level') === "1") {
+            parentIndex = i;
+            break;
+          }
+        }
+        let hasTrue = false;
+        let hasChildren = false;
+        let children = [];
+        for (let i = parentIndex + 1; i < allItems.length; i++) {
+          const childEl = allItems[i];
+          if (childEl.getAttribute('data-level') === "1") {
+            break;
+          }
+          hasChildren = true;
+          const value = childEl.classList.contains('active');
+          if (value) {
+            hasTrue = true;
+          }
+        }
+        if (hasChildren && hasTrue) {
+            allItems[parentIndex].querySelector('input').checked = true;
+            allItems[parentIndex].classList.add('active');
+        } else if (hasChildren && !hasTrue) {
+            allItems[parentIndex].querySelector('input').checked = false;
+            allItems[parentIndex].classList.remove('active');
+        }
+      }
+
+
+      const selected = allItems.filter( (x) => x.classList.contains('active'));
+      const selectedIds = selected.map( (x) => x.getAttribute('data-option-id'));
+      wrapper.setAttribute('data-value', selectedIds.join(','));
+      wrapper.querySelector('option').innerText = selected.map( (x) => x.innerText).join(', ');
+    }
   },
   // everything related to zoom
   manageZoomAndFullscreenButtons: function() {
