@@ -223,13 +223,16 @@ const CncfLandscapeApp = {
     }
     const kind = wrapperEl.getAttribute('data-type');
     let content;
+    let firstSelected = null;
     if (kind === 'single') {
       const currentValue = wrapperEl.getAttribute('data-value');
+      firstSelected = currentValue;
       content = items.map( (item) => `
         <div data-option-id="${item.id}" ${item.id === currentValue ? "class=active" : ""}>${item.label}</div>
       `).join('');
     } else {
       const currentValues = (wrapperEl.getAttribute('data-value') || '').split(',');
+      firstSelected = currentValues[0];
       content = items.map( (item) => {
         const isActive = currentValues.includes(item.id);
         return `
@@ -251,13 +254,17 @@ const CncfLandscapeApp = {
     popupBody.innerHTML = content;
     popupRoot.style.display = "";
     popupBody.style.left = box.left + "px";
-    const realHeight = items.length * 24;
+    const realHeight = items.length * 19 + 10;
     const maxHeight = document.body.clientHeight - 20;
     const height = Math.min(maxHeight, realHeight);
     const top = Math.min(box.top, document.body.clientHeight - 10 - height);
 
     popupBody.style.top = top + "px";
     popupBody.style.height = height + "px";
+    if (firstSelected) {
+      const itemEl = popupBody.querySelector(`[data-option-id=${firstSelected}]`);
+      itemEl.scrollIntoView();
+    }
   },
   handlePopupItemClick(itemEl) {
     const popupBody = document.querySelector('.select-popup-body');
@@ -325,11 +332,11 @@ const CncfLandscapeApp = {
         }
       }
 
-
       const selected = allItems.filter( (x) => x.classList.contains('active'));
       const selectedIds = selected.map( (x) => x.getAttribute('data-option-id'));
+      const text = selectedIds.length === allItems.length || selectedIds.length === 0 ? 'Any' : selected.map( (x) => x.innerText).join(', ');
       wrapper.setAttribute('data-value', selectedIds.join(','));
-      wrapper.querySelector('option').innerText = selected.map( (x) => x.innerText).join(', ');
+      wrapper.querySelector('option').innerText = text;
     }
   },
   // everything related to zoom

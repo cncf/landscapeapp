@@ -1743,10 +1743,11 @@ html.ios.has-selected-item, html.ios.has-selected-item body {
 
 /* select starting stylings ------------------------------*/
 .select {
-  font-family: 'Roboto','Helvetica','Arial',sans-serif;
+  font-family: 'Roboto';
 	position: relative;
 	width: 150px;
   margin-bottom: 10px;
+  font-size: 11px;
 }
 
 .select-text {
@@ -1755,7 +1756,6 @@ html.ios.has-selected-item, html.ios.has-selected-item body {
 	background-color: transparent;
 	width: 100%;
 	padding: 10px 10px 10px 0;
-	font-size: 14px;
 	border-radius: 0;
 	border: none;
 	border-bottom: 1px solid rgba(0,0,0, 0.12);
@@ -1799,6 +1799,7 @@ html.ios.has-selected-item, html.ios.has-selected-item body {
 	left: 0;
 	top: 10px;
 	transition: 0.2s ease all;
+  font-size: 10px;
 }
 
 /* active state */
@@ -1839,7 +1840,6 @@ html.ios.has-selected-item, html.ios.has-selected-item body {
 	width: 50%;
 }
 
-/* HIGHLIGHTER ================================== */
 .select-highlight {
 	position: absolute;
 	height: 60%;
@@ -1872,10 +1872,12 @@ html.ios.has-selected-item, html.ios.has-selected-item body {
   user-select: none;
 }
 .select-popup-body div {
-  padding: 2px 10px 2px 10px;
+  padding: 0px 10px 2px 10px;
+  height: 19px;
+  font-size: 13px;
 }
 .select-popup-body div[data-level="2"] {
-  padding-left: 50px;
+  padding-left: 30px;
 }
 
 .select-popup-body div:hover {
@@ -1892,8 +1894,9 @@ html.ios.has-selected-item, html.ios.has-selected-item body {
     display: inline-block;
     color: rgba(var(--pure-material-onsurface-rgb, 0, 0, 0), 0.87);
     font-family: var(--pure-material-font, "Roboto", "Segoe UI", BlinkMacSystemFont, system-ui, -apple-system);
-    font-size: 16px;
+    font-size: 13px;
     line-height: 1.5;
+    top: -1.5px;
 }
 
 /* Input */
@@ -1931,12 +1934,12 @@ html.ios.has-selected-item, html.ios.has-selected-item body {
     content: "";
     display: inline-block;
     box-sizing: border-box;
-    margin: 3px 11px 3px 1px;
+    margin: 3px 6px 3px 1px;
     border: solid 2px; /* Safari */
     border-color: rgba(var(--pure-material-onsurface-rgb, 0, 0, 0), 0.6);
     border-radius: 2px;
-    width: 18px;
-    height: 18px;
+    width: 15px;
+    height: 15px;
     vertical-align: top;
     transition: border-color 0.2s, background-color 0.2s;
 }

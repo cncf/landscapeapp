@@ -334,17 +334,17 @@ const processValuesBeforeSaving = function({options, values}) {
   });
 };
 
+// passed to the client
 export function options(field) {
   return fields[field].values.map(function(values) {
     return {
-      id: values.id,
+      id: values.url,
       label: values.label,
-      level: values.level,
-      children: values.children,
-      parentId: values.parentId
+      level: values.level || 1,
     };
   });
 }
+
 export function filterFn({field, filters}) {
   const fieldInfo = fields[field];
   const filter = filters[field];
