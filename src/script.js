@@ -13,14 +13,6 @@ const CncfLandscapeApp = {
 
     this.propagateStateToFiltersAndUrl();
 
-    // if (CncfLandscapeApp.state.mode === 'card') {
-      // CncfLandscapeApp.activateCardMode();
-    // } else if (CncfLandscapeApp.state.mode === 'guide') {
-      // CncfLandscapeApp.activateGuideMode();
-    // } else {
-      // CncfLandscapeApp.activateBigPictureMode(CncfLandscapeApp.state.mode);
-    // }
-
     document.addEventListener('keydown', function(e) {
       if (e.keyCode === 27) {
         if (CncfLandscapeApp.state.selectedItemId) {
@@ -74,13 +66,8 @@ const CncfLandscapeApp = {
 
       const tabItem = e.target.closest('a[data-mode]');
       if (tabItem) {
-        const mode = tabItem.getAttribute('data-mode');
-        if (mode === 'card') {
-          CncfLandscapeApp.activateCardMode()
-        } else {
-          CncfLandscapeApp.activateBigPictureMode(mode);
-        }
-
+        CncfLandscapeApp.state.mode = tabItem.getAttribute('data-mode');
+        CncfLandscapeApp.propagateStateToFiltersAndUrl();
         e.preventDefault();
         e.stopPropagation();
       }
@@ -485,6 +472,15 @@ const CncfLandscapeApp = {
     assignMultiSelect('headquarters');
     assignMultiSelect('company-type');
     assignMultiSelect('industries');
+
+    if (CncfLandscapeApp.state.mode === 'card') {
+      CncfLandscapeApp.activateCardMode();
+    } else if (CncfLandscapeApp.state.mode === 'guide') {
+      CncfLandscapeApp.activateGuideMode();
+    } else {
+      CncfLandscapeApp.activateBigPictureMode(CncfLandscapeApp.state.mode);
+    }
+
   },
   // for a given select give an url and a text
   calculateShortSelection: function() {
