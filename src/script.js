@@ -4,6 +4,7 @@ const CncfLandscapeApp = {
   init: function() {
     // get initial state from the url
     CncfLandscapeApp.state = CncfLandscapeApp.parseUrl(window.location);
+    CncfLandscapeApp.initialState = {...CncfLandscapeApp.state};
 
     this.manageZoomAndFullscreenButtons();
 
@@ -447,6 +448,7 @@ const CncfLandscapeApp = {
       el.querySelector('option').innerText = selectedItem.label;
     }
     const assignMultiSelect = (name) => {
+
       const value = this.state[name];
       const el = document.querySelector(`.select[data-name=${name}]`);
       el.selectData = el.selectData || JSON.parse(el.getAttribute('data-options'));
@@ -481,6 +483,9 @@ const CncfLandscapeApp = {
       CncfLandscapeApp.activateBigPictureMode(CncfLandscapeApp.state.mode);
     }
 
+    const newUrl = CncfLandscapeApp.stringifyBrowserUrl(CncfLandscapeApp.state);
+    history.pushState({}, '', newUrl);
+
   },
   // for a given select give an url and a text
   calculateShortSelection: function() {
@@ -493,7 +498,32 @@ const CncfLandscapeApp = {
   },
   // update a browser url, should be later compatible with a parseUrl call
   stringifyBrowserUrl: function(state) {
+    const base = CncfLandscapeApp.state.mode + '?';
+    const params = {};
 
+    const initialState = CncfLandscapeApp.initialState;
+
+    params.grouping = state.grouping;
+    params.category = state.category;
+    params.project = state.project;
+    params.license = state.license;
+    params.organization = state.organization;
+    params.headquarters = state.headquarters;
+    params['company-type'] = state['company-type'];
+    params['industries'] = state['industries'];
+    params['bestpractices'] = state.bestpractices;
+    params['enduser'] = state.enduser;
+    params['language'] = state.language;
+
+    for (let k in params) {
+      if (params[k] === initialState[k]) {
+        delete params[k];
+      }
+    }
+
+    const search = new URLSearchParams(params).toString();
+    const url = base + search;
+    return url;
   },
   showSelectedItem: async function(selectedItemId) {
     this.state.selectedItemId = selectedItemId;
