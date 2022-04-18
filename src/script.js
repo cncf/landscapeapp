@@ -11,13 +11,15 @@ const CncfLandscapeApp = {
       document.querySelector('html').classList.add('embed');
     }
 
-    if (CncfLandscapeApp.state.mode === 'card') {
-      CncfLandscapeApp.activateCardMode();
-    } else if (CncfLandscapeApp.state.mode === 'guide') {
-      CncfLandscapeApp.activateGuideMode();
-    } else {
-      CncfLandscapeApp.activateBigPictureMode(CncfLandscapeApp.state.mode);
-    }
+    this.propagateStateToFiltersAndUrl();
+
+    // if (CncfLandscapeApp.state.mode === 'card') {
+      // CncfLandscapeApp.activateCardMode();
+    // } else if (CncfLandscapeApp.state.mode === 'guide') {
+      // CncfLandscapeApp.activateGuideMode();
+    // } else {
+      // CncfLandscapeApp.activateBigPictureMode(CncfLandscapeApp.state.mode);
+    // }
 
     document.addEventListener('keydown', function(e) {
       if (e.keyCode === 27) {
@@ -165,6 +167,7 @@ const CncfLandscapeApp = {
     }
     document.body.style.opacity = 1;
   },
+
   selectGuideSection: function(guideNavigationEl) {
     const allLinks = [...document.querySelectorAll('#guide-page .guide-sidebar a[data-level]')];
     guideNavigationEl = guideNavigationEl || document.querySelector('#guide-page .guide-sidebar a.active') || allLinks[0];
@@ -215,6 +218,7 @@ const CncfLandscapeApp = {
       }
     }
   },
+
   openSelectPopup: function(selectEl) {
     const wrapperEl = selectEl.closest('[data-name]');
     let items = [];
@@ -266,16 +270,18 @@ const CncfLandscapeApp = {
       itemEl.scrollIntoView();
     }
   },
+
   handlePopupItemClick(itemEl) {
     const popupBody = document.querySelector('.select-popup-body');
     const popupRoot = document.querySelector('.select-popup');
     const mode = popupBody.getAttribute('data-type');
     const optionId = itemEl.getAttribute('data-option-id');
     const wrapper = document.querySelector(`.select[data-name=${popupBody.getAttribute('data-name')}`);
+    const name = wrapper.getAttribute('data-name');
     if (mode === 'single') {
-      wrapper.setAttribute('data-value', optionId);
-      wrapper.querySelector('option').innerText = itemEl.innerText;
       popupRoot.style.display = "none";
+      CncfLandscapeApp.state[name] = optionId;
+      CncfLandscapeApp.propagateStateToFiltersAndUrl();
     } else {
       // toggle
       const isItemSelected = itemEl.querySelector('input').checked;
@@ -334,9 +340,8 @@ const CncfLandscapeApp = {
 
       const selected = allItems.filter( (x) => x.classList.contains('active'));
       const selectedIds = selected.map( (x) => x.getAttribute('data-option-id'));
-      const text = selectedIds.length === allItems.length || selectedIds.length === 0 ? 'Any' : selected.map( (x) => x.innerText).join(', ');
-      wrapper.setAttribute('data-value', selectedIds.join(','));
-      wrapper.querySelector('option').innerText = text;
+      CncfLandscapeApp.state[name] = selectedIds.join(',');
+      CncfLandscapeApp.propagateStateToFiltersAndUrl();
     }
   },
   // everything related to zoom
@@ -423,26 +428,75 @@ const CncfLandscapeApp = {
     return {
       zoom: +params.get('zoom') || 1,
       fullscreen: params.get('fullscreen') === 'yes',
+
       mode: params.get('mode') || CncfLandscapeApp.initialMode,
+
       grouping: params.get('grouping') || 'category',
       sort: params.get('sort') || 'name',
-      filterCategory: params.get('category') || '',
-      filterRelation: params.get('project') || '',
-      filterLicense: params.get('license') || '',
-      filterOrganization: params.get('organization') || '',
-      filterHeadquarters: params.get('headquarters') || '',
-      filterCompanyType: params.get('company-type') || '',
-      filterIndustries: params.get('filter-industries') || '',
-      filterBestPractices: params.get('bestpractices') || '',
-      filterEndUser: params.get('enduser') || '',
-      filterLanguage: params.get('language') || '',
+
+      category: params.get('category') || '',
+      project: params.get('project') || '',
+      license: params.get('license') || '',
+      organization: params.get('organization') || '',
+      headquarters: params.get('headquarters') || '',
+      ['company-type']: params.get('company-type') || '',
+      industries: params.get('industries') || '',
+      bestpractices: params.get('bestpractices') || '',
+      enduser: params.get('enduser') || '',
+      language: params.get('language') || '',
+
       selected: params.get('selected') || '',
       embed: params.has('embed'),
     };
   },
+  // take a current state, based on it update active tab, filters, and fetch data
+  propagateStateToFiltersAndUrl: function() {
+    const assignSingleSelect = (name) => {
+      const value = this.state[name];
+      const el = document.querySelector(`.select[data-name=${name}]`);
+      el.selectData = el.selectData || JSON.parse(el.getAttribute('data-options'));
+      const selectedItem = el.selectData.find( (x) => x.id === value);
+      el.setAttribute('data-value', selectedItem.id);
+      el.querySelector('option').innerText = selectedItem.label;
+    }
+    const assignMultiSelect = (name) => {
+      const value = this.state[name];
+      const el = document.querySelector(`.select[data-name=${name}]`);
+      el.selectData = el.selectData || JSON.parse(el.getAttribute('data-options'));
+      const selectedIds = value.split(',');
+      const selectedItems = el.selectData.filter( (x) => selectedIds.includes(x.id));
+      const isEmpty = selectedItems.length === 0 || selectedItems.length === el.selectData.length;
+      if (isEmpty) {
+        el.setAttribute('data-value', '');
+        el.querySelector('option').innerText = 'Any';
+      } else {
+        const value = selectedItems.map( (x) => x.id).join(',');
+        const text = selectedItems.map( (x) => x.label).join(', ');
+        el.setAttribute('data-value', value);
+        el.querySelector('option').innerText = text;
+      }
+    }
+    assignSingleSelect('sort');
+    assignSingleSelect('grouping');
+    assignMultiSelect('category');
+    assignMultiSelect('project');
+    assignMultiSelect('license');
+    assignMultiSelect('organization');
+    assignMultiSelect('headquarters');
+    assignMultiSelect('company-type');
+    assignMultiSelect('industries');
+  },
+  // for a given select give an url and a text
+  calculateShortSelection: function() {
+
+  },
+  // which api to call to fetch actual data
   stringifyApiUrl: function(state) {
 
 
+  },
+  // update a browser url, should be later compatible with a parseUrl call
+  stringifyBrowserUrl: function(state) {
 
   },
   showSelectedItem: async function(selectedItemId) {
@@ -511,16 +565,16 @@ const CncfLandscapeApp = {
     const params = {};
     const state = this.state;
     params.grouping = state.mode === 'card' ? state.grouping : 'no';
-    params.category = state.mode === 'category' ? state.filterCategory : '';
-    params.project = state.filterRelation;
-    params.license = state.filterLicense;
-    params.organization = state.filterOrganization;
-    params.headquarters = state.filterHeadquarters;
-    params['company-type'] = state.filterCompanyType;
-    params['filter-industries'] = state.filterIndustries;
-    params['bestpractices'] = state.filterBestPractices;
-    params['enduser'] = state.filterEndUser;
-    params['language'] = state.filterLanguage;
+    params.category = state.mode === 'category' ? state.category : '';
+    params.project = state.project;
+    params.license = state.license;
+    params.organization = state.organization;
+    params.headquarters = state.headquarters;
+    params['company-type'] = state['company-type'];
+    params['industries'] = state['industries'];
+    params['bestpractices'] = state.bestpractices;
+    params['enduser'] = state.enduser;
+    params['language'] = state.language;
 
     const search = new URLSearchParams(params).toString();
     const url = `api/items?${search}`;
@@ -620,9 +674,7 @@ const CncfLandscapeApp = {
       this.cards = result;
     }
 
-    if (!this.groupedItems) {
-        this.groupedItems = await this.fetchApiData();
-    }
+    this.groupedItems = await this.fetchApiData();
         // very simple optimization:
         // do not change anything if we used exactly same groupedItems last time;
     if (JSON.stringify(this.groupedItems) === this.lastCards) {

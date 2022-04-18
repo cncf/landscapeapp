@@ -32,7 +32,7 @@ const GroupingSelect = function() {
   const options = [{
     id: 'no',
     label: 'No Grouping',
-  }].concat(groupingFields.map(id => ({ id, label: fields[id].groupingLabel })))
+  }].concat(groupingFields.map(id => ({ id: fields[id].url, label: fields[id].groupingLabel })))
   return <SingleSelect name="grouping" options={options} title="Grouping" />
 }
 
@@ -66,7 +66,7 @@ const FilterCompanyType = function() {
 }
 
 const FilterIndustries = function() {
-  return <MultiSelect name="industry" options={options('industries')} title="Industry" />;
+  return <MultiSelect name="industries" options={options('industries')} title="Industry" />;
 }
 
 
