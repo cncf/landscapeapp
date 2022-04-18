@@ -1309,14 +1309,14 @@ html.ios.has-selected-item, html.ios.has-selected-item body {
   }
 }
 
-.inner-landscape .large-item {
+.inner-landscape .large-item, .items .large-item {
   cursor: pointer;
   position: relative;
   width: 71px;
   height: 63px;
 }
 
-.inner-landscape .small-item {
+.inner-landscape .small-item, .items .small-item {
   cursor: pointer;
   position: relative;
   width: 34px;
@@ -1326,7 +1326,7 @@ html.ios.has-selected-item, html.ios.has-selected-item body {
   padding: 1px;
 }
 
-.inner-landscape .item-wrapper {
+.inner-landscape .item-wrapper, .items .item-wrapper {
   display: flex;
   justify-content: center;
   align-items: center;
@@ -1334,7 +1334,7 @@ html.ios.has-selected-item, html.ios.has-selected-item body {
   grid-row-end: span 1;
 }
 
-.inner-landscape .item-wrapper.wrapper-large {
+.inner-landscape .item-wrapper.wrapper-large, .items .item-wrapper.wrapper-large {
   grid-column-end: span 2;
   grid-row-end: span 2;
 }
@@ -1745,9 +1745,8 @@ html.ios.has-selected-item, html.ios.has-selected-item body {
 .select {
   font-family: 'Roboto';
 	position: relative;
-	width: 150px;
+	width: 180px;
   margin-bottom: 10px;
-  font-size: 11px;
 }
 
 .select-text {
@@ -1755,7 +1754,8 @@ html.ios.has-selected-item, html.ios.has-selected-item body {
 	font-family: inherit;
 	background-color: transparent;
 	width: 100%;
-	padding: 10px 10px 10px 0;
+  font-size: 11px;
+	padding: 10px 22px 10px 0;
 	border-radius: 0;
 	border: none;
 	border-bottom: 1px solid rgba(0,0,0, 0.12);
@@ -1791,23 +1791,21 @@ html.ios.has-selected-item, html.ios.has-selected-item body {
 
 /* LABEL ======================================= */
 .select-label {
-	color: rgba(0,0,0, 0.26);
-	font-size: 18px;
+	color: rgb(105, 109, 112);
+	font-size: 10px;
 	font-weight: normal;
 	position: absolute;
 	pointer-events: none;
 	left: 0;
 	top: 10px;
 	transition: 0.2s ease all;
-  font-size: 10px;
 }
 
 /* active state */
 .select-text:focus ~ .select-label, .select-text:valid ~ .select-label {
-	color: #2F80ED;
 	top: -10px;
 	transition: 0.2s ease all;
-	font-size: 14px;
+	font-size: 11px;
 }
 
 /* BOTTOM BARS ================================= */
@@ -1872,9 +1870,10 @@ html.ios.has-selected-item, html.ios.has-selected-item body {
   user-select: none;
 }
 .select-popup-body div {
-  padding: 0px 10px 2px 10px;
-  height: 19px;
-  font-size: 13px;
+  color: rgba(0,0,0, 0.87);
+  padding: 4px 10px 2px 10px;
+  height: 26px;
+  font-size: 12px;
 }
 .select-popup-body div[data-level="2"] {
   padding-left: 30px;
@@ -1934,7 +1933,7 @@ html.ios.has-selected-item, html.ios.has-selected-item body {
     content: "";
     display: inline-block;
     box-sizing: border-box;
-    margin: 3px 6px 3px 1px;
+    margin: 4px 6px 3px 1px;
     border: solid 2px; /* Safari */
     border-color: rgba(var(--pure-material-onsurface-rgb, 0, 0, 0), 0.6);
     border-radius: 2px;
