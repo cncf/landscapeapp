@@ -448,22 +448,12 @@ const CncfLandscapeApp = {
       el.querySelector('option').innerText = selectedItem.label;
     }
     const assignMultiSelect = (name) => {
-
       const value = this.state[name];
       const el = document.querySelector(`.select[data-name=${name}]`);
       el.selectData = el.selectData || JSON.parse(el.getAttribute('data-options'));
-      const selectedIds = value.split(',');
-      const selectedItems = el.selectData.filter( (x) => selectedIds.includes(x.id));
-      const isEmpty = selectedItems.length === 0 || selectedItems.length === el.selectData.length;
-      if (isEmpty) {
-        el.setAttribute('data-value', '');
-        el.querySelector('option').innerText = 'Any';
-      } else {
-        const value = selectedItems.map( (x) => x.id).join(',');
-        const text = selectedItems.map( (x) => x.label).join(', ');
-        el.setAttribute('data-value', value);
-        el.querySelector('option').innerText = text;
-      }
+      el.setAttribute('data-value', value);
+      const valueInfo = this.calculateShortSelection(el);
+      el.querySelector('option').innerText = valueInfo.text;
     }
     assignSingleSelect('sort');
     assignSingleSelect('grouping');
@@ -488,8 +478,48 @@ const CncfLandscapeApp = {
 
   },
   // for a given select give an url and a text
-  calculateShortSelection: function() {
-
+  calculateShortSelection: function(wrapper) {
+    if (typeof wrapper === 'string') {
+      wrapper = document.querySelector(`.select[data-name=${wrapper}]`);
+    }
+    wrapper = wrapper.closest('.select[data-name]');
+    wrapper.selectData = wrapper.selectData || JSON.parse(wrapper.getAttribute('data-options'));
+    const value = wrapper.getAttribute('data-value') || '';
+    const selectedIds = value.split(',');
+    let items = [];
+    for (let i = 0; i < wrapper.selectData.length; i ++) {
+      let item = wrapper.selectData[i];
+      if (item.level === 1 && selectedIds.includes(item.id)) {
+        let children = [];
+        let totalChildren = 0;
+        for (j = i + 1; j < wrapper.selectData.length; j++) {
+          let childItem = wrapper.selectData[j];
+          if (childItem.level === 1) {
+            break;
+          }
+          if (selectedIds.includes(childItem.id)) {
+            children.push(childItem);
+          }
+          totalChildren += 1;
+        }
+        if (totalChildren === 0 || children.length === totalChildren) {
+          items.push(item);
+        } else {
+          items.push(...children);
+        }
+      }
+    }
+    if (items.length === wrapper.selectData.length || items.length === 0) {
+      return {
+        url: '',
+        text: 'Any'
+      }
+    } else {
+      return {
+        url: items.map( (x) => x.id).join(','),
+        text: items.map( (x) => x.label).join(',')
+      }
+    }
   },
   // which api to call to fetch actual data
   stringifyApiUrl: function(state) {
@@ -504,13 +534,11 @@ const CncfLandscapeApp = {
     const initialState = CncfLandscapeApp.initialState;
 
     params.grouping = state.grouping;
-    params.category = state.category;
-    params.project = state.project;
-    params.license = state.license;
-    params.organization = state.organization;
-    params.headquarters = state.headquarters;
-    params['company-type'] = state['company-type'];
-    params['industries'] = state['industries'];
+    params.sort = state.sort;
+
+    for (let field of ['category', 'project', 'license', 'organization', 'headquarters', 'company-type', 'industries']) {
+      params[field] = CncfLandscapeApp.calculateShortSelection(field).url
+    }
     params['bestpractices'] = state.bestpractices;
     params['enduser'] = state.enduser;
     params['language'] = state.language;
@@ -521,7 +549,7 @@ const CncfLandscapeApp = {
       }
     }
 
-    const search = new URLSearchParams(params).toString();
+    const search = new URLSearchParams(params).toString().replace(/%2C/g, ',');
     const url = base + search;
     return url;
   },
