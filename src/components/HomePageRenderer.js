@@ -158,6 +158,7 @@ export function render({settings, guidePayload, bigPictureKey}) {
 
             Filters, CsvExport
             <div className="sidebar-presets">
+              <h4>Example filters</h4>
               { (settings.presets || []).map(preset =>
                 <a data-type="internal" className="preset" href={preset.url}>
                   {preset.label}

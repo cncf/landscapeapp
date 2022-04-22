@@ -4,7 +4,10 @@ const CncfLandscapeApp = {
   init: function() {
     // get initial state from the url
     CncfLandscapeApp.state = CncfLandscapeApp.parseUrl(window.location);
-    CncfLandscapeApp.initialState = {...CncfLandscapeApp.state};
+    CncfLandscapeApp.initialState = {
+      ...CncfLandscapeApp.parseUrl({pathname: '', search: ''}),
+      mode: CncfLandscapeApp.initialMode
+    };
 
     this.manageZoomAndFullscreenButtons();
 
@@ -13,10 +16,13 @@ const CncfLandscapeApp = {
     }
 
     this.propagateStateToFiltersAndUrl();
+    if (CncfLandscapeApp.state.selected) {
+      CncfLandscapeApp.showSelectedItem(CncfLandscapeApp.state.selected);
+    }
 
     document.addEventListener('keydown', function(e) {
       if (e.keyCode === 27) {
-        if (CncfLandscapeApp.state.selectedItemId) {
+        if (CncfLandscapeApp.state.selected) {
           CncfLandscapeApp.hideSelectedItem();
         } else if (CncfLandscapeApp.state.fullscreen) {
           CncfLandscapeApp.state.fullscreen = false;
@@ -102,6 +108,13 @@ const CncfLandscapeApp = {
         CncfLandscapeApp.handlePopupItemClick(selectPopupItemEl);
         e.preventDefault();
         e.stopPropagation();
+      }
+
+      const presetEl = e.target.closest('.sidebar-presets a');
+      if (presetEl) {
+        const href = presetEl.getAttribute('href');
+        const newState = CncfLandscapeApp.parseUrl();
+
       }
     }, false);
 
@@ -376,6 +389,7 @@ const CncfLandscapeApp = {
           if (nextZoomIn) {
             this.state.zoom = nextZoomIn;
             this.manageZoomAndFullscreenButtons();
+            this.updateUrl();
           }
         }
         const zoomOut = e.target.closest('.zoom-out');
@@ -384,22 +398,26 @@ const CncfLandscapeApp = {
           if (nextZoomOut) {
             this.state.zoom = nextZoomOut;
             this.manageZoomAndFullscreenButtons();
+            this.updateUrl();
           }
         }
         const fullscreenEnter = e.target.closest('.fullscreen-enter');
         if (fullscreenEnter) {
           this.state.fullscreen = true;
           this.manageZoomAndFullscreenButtons();
+          this.updateUrl();
         }
         const fullscreenExit = e.target.closest('.fullscreen-exit');
         if (fullscreenExit) {
           this.state.fullscreen = false;
           this.manageZoomAndFullscreenButtons();
+          this.updateUrl();
         }
         const zoomReset = e.target.closest('.zoom-reset');
         if (zoomReset) {
           this.state.zoom = 1;
           this.manageZoomAndFullscreenButtons();
+          this.updateUrl();
         }
       }, false);
     }
@@ -414,10 +432,10 @@ const CncfLandscapeApp = {
     }
     const params = new URLSearchParams(search);
     return {
-      zoom: +params.get('zoom') || 1,
+      zoom: +params.get('zoom') / 100 || 1,
       fullscreen: params.get('fullscreen') === 'yes',
 
-      mode: params.get('mode') || CncfLandscapeApp.initialMode,
+      mode: params.get('mode') || params.get('format') || CncfLandscapeApp.initialMode,
 
       grouping: params.get('grouping') || 'category',
       sort: params.get('sort') || 'name',
@@ -431,9 +449,10 @@ const CncfLandscapeApp = {
       industries: params.get('industries') || '',
       bestpractices: params.get('bestpractices') || '',
       enduser: params.get('enduser') || '',
+      parent: params.get('parent') || '',
       language: params.get('language') || '',
 
-      selected: params.get('selected') || '',
+      selected: params.get('selected') || null,
       embed: params.has('embed'),
     };
   },
@@ -473,9 +492,7 @@ const CncfLandscapeApp = {
       CncfLandscapeApp.activateBigPictureMode(CncfLandscapeApp.state.mode);
     }
 
-    const newUrl = CncfLandscapeApp.stringifyBrowserUrl(CncfLandscapeApp.state);
-    history.pushState({}, '', newUrl);
-
+    this.updateUrl();
   },
   // for a given select give an url and a text
   calculateShortSelection: function(wrapper) {
@@ -528,33 +545,46 @@ const CncfLandscapeApp = {
   },
   // update a browser url, should be later compatible with a parseUrl call
   stringifyBrowserUrl: function(state) {
-    const base = CncfLandscapeApp.state.mode + '?';
+    let url = "./";
+    if (CncfLandscapeApp.state.mode !== 'main') {
+      url = CncfLandscapeApp.state.mode;
+    }
     const params = {};
 
     const initialState = CncfLandscapeApp.initialState;
 
-    params.grouping = state.grouping;
-    params.sort = state.sort;
 
     for (let field of ['category', 'project', 'license', 'organization', 'headquarters', 'company-type', 'industries']) {
-      params[field] = CncfLandscapeApp.calculateShortSelection(field).url
+      if (state[field] !== initialState[field]) {
+        params[field] = CncfLandscapeApp.calculateShortSelection(field).url
+      }
     }
-    params['bestpractices'] = state.bestpractices;
-    params['enduser'] = state.enduser;
-    params['language'] = state.language;
+    // no fields for certain filters yet
+    for (let field of ['grouping', 'sort', 'selected', 'bestpractices', 'enduser', 'parent', 'language',
+      'fullscreen', 'embed']) {
+      if (state[field] !== initialState[field]) {
+        params[field] = state[field]
+      }
+    }
+    if (state.zoom !== initialState.zoom) {
+      params.zoom = (state.zoom * 100).toFixed(0);;
+    }
+
 
     for (let k in params) {
-      if (params[k] === initialState[k]) {
-        delete params[k];
+      if (params[k] === true) {
+        params[k] = 'yes';
       }
     }
 
     const search = new URLSearchParams(params).toString().replace(/%2C/g, ',');
-    const url = base + search;
+    if (search) {
+      url = url + '?' + search;
+    }
     return url;
   },
   showSelectedItem: async function(selectedItemId) {
-    this.state.selectedItemId = selectedItemId;
+    this.state.selected = selectedItemId;
     this.selectedItems = this.selectedItems || {};
     if (!this.selectedItems[selectedItemId]) {
       const result = await fetch(`/data/items/info-${selectedItemId}.html`);
@@ -608,12 +638,21 @@ const CncfLandscapeApp = {
     } else {
       document.querySelector('.modal-prev').setAttribute('disabled', '');
     }
-
+    this.updateUrl();
+  },
+  updateUrl: function() {
+    const newUrl = CncfLandscapeApp.stringifyBrowserUrl(CncfLandscapeApp.state);
+    if (newUrl !== this.previousUrl) {
+      history.pushState({}, '', newUrl);
+      this.previousUrl = newUrl;
+    }
   },
   hideSelectedItem: function() {
-    this.state.selectedItemId = null;
+    this.state.selected = null;
     document.querySelector('.modal').style.display="none";
     document.querySelector('body').style.overflow = '';
+
+    this.updateUrl();
   },
   fetchApiData: async function() {
     const params = {};
@@ -628,6 +667,7 @@ const CncfLandscapeApp = {
     params['industries'] = state['industries'];
     params['bestpractices'] = state.bestpractices;
     params['enduser'] = state.enduser;
+    params['parent'] = state.parent;
     params['language'] = state.language;
 
     const search = new URLSearchParams(params).toString();
