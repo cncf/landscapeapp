@@ -112,9 +112,20 @@ const CncfLandscapeApp = {
 
       const presetEl = e.target.closest('.sidebar-presets a');
       if (presetEl) {
-        const href = presetEl.getAttribute('href');
-        const newState = CncfLandscapeApp.parseUrl();
-
+        e.preventDefault();
+        e.stopPropagation();
+        let href = presetEl.getAttribute('href');
+        let pathname;
+        let search;
+        if (href.indexOf('?') === -1) {
+          pathname = '/';
+          search = href;
+        } else {
+          [pathname, search] = href.split('?');
+        }
+        const newState = CncfLandscapeApp.parseUrl({pathname, search});
+        CncfLandscapeApp.state = newState;
+        CncfLandscapeApp.propagateStateToFiltersAndUrl();
       }
     }, false);
 

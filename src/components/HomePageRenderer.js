@@ -37,8 +37,10 @@ const GroupingSelect = function() {
 }
 
 const SortBySelect = function() {
-  const options = sortOptions.filter( (x) => !x.disabled).map( (x) => ({id: x.id, label: x.label }))
-  return <SingleSelect name="sort" options={sortOptions} title="Sort By" />
+  const options = sortOptions.filter( (x) => !x.disabled).map( (x) => ({
+    id: (fields[x.id] || { url: x.id}).url || x.id, label: x.label
+  }))
+  return <SingleSelect name="sort" options={options} title="Sort By" />
 }
 
 const FilterCategory = function() {
