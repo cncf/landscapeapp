@@ -289,7 +289,7 @@ a:hover svg {
 
 #guide-page blockquote {
   margin: calc(var(--spacing) * 1.375) 0;
-  padding: $spacing;
+  padding: var(--spacing);
   background: #ebebeb;
   font-size: 0.9em;
 }
@@ -319,7 +319,7 @@ a:hover svg {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 0 $spacing;
+    padding: 0 var(--spacing);
   }
 
   #guide-page .content {
@@ -361,31 +361,61 @@ a:hover svg {
 
 #guide-page .sidebar-show {
   display: none;
+
+  border: 0;
+  cursor: pointer;
+  user-select: none;
+  background-color: transparent;
+
+  color: rgba(0, 0, 0, 0.54);
+  padding: 12px;
+  border-radius: 50%;
 }
 
 @media (max-width: var(--lg-screen)) {
   #guide-page .sidebar-show {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    width: calc(var(--spacing) * 2);
-    height: calc(var(--spacing) * 2);
-    margin-right: 0.5em;
-    position: relative;
-    top: initial;
-    left: initial;
+    display: block;
+    position: absolute;
+    top: 7px;
+    left: 0;
+    z-index: 3;
   }
+  #guide-page .sidebar-show svg {
+    fill: currentColor;
+    width: 1em;
+    height: 1em;
+    display: inline-block;
+    font-size: 1.5rem;
+    transition: fill 200ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+    flex-shrink: 0;
+    user-select: none;
+  }
+
 }
 
 #guide-page .sidebar-collapse {
   display: none;
+
+  position: absolute;
+  top: 1px;
+  right: 1px;
+  z-index: 3;
+  width: 24px;
+  height: 24px;
+  font-size: 32px;
+  border-radius: 16px;
+  line-height: 24px;
+  background: transparent;
+  user-select: none;
+  cursor: pointer;
+  text-align: center;
+  vertical-align: middle;
+  transform: rotate(45deg);
+  color: rgba(0, 0, 0, 0.54);
 }
 @media (max-width: var(--lg-screen)) {
   #guide-page .sidebar-collapse {
     display: block;
-    position: absolute;
-    top: 10px;
-    right: 10px;
   }
 }
 
@@ -407,6 +437,7 @@ a:hover svg {
 @media (max-width: var(--lg-screen)) {
   #guide-page .guide-header .landscape-logo {
     display: block;
+    padding-left: 44px;
   }
 }
 
@@ -419,10 +450,10 @@ a:hover svg {
     display: none;
   }
 
-  #guide-page .sidebar-open .side-content {
+  #guide-page.sidebar-open .side-content {
     display: block;
     position: fixed;
-    padding: $spacing;
+    padding: var(--spacing);
     inset: 0;
     width: 100%;
     overflow-y: auto;
@@ -668,12 +699,25 @@ a:hover svg {
     padding-top: 10px;
   }
 }
-.sidebar-collapse {
-  position: absolute;
-  top: 2px;
-  right: 2px;
+.app .sidebar-collapse {
   display: none;
+
+  position: absolute;
+  top: 1px;
+  right: 1px;
   z-index: 3;
+  width: 24px;
+  height: 24px;
+  font-size: 32px;
+  border-radius: 16px;
+  line-height: 24px;
+  background: transparent;
+  user-select: none;
+  cursor: pointer;
+  text-align: center;
+  vertical-align: middle;
+  transform: rotate(45deg);
+  color: rgba(0, 0, 0, 0.54);
 }
 @media (max-width: var(--lg-screen)) {
   .sidebar {
@@ -688,8 +732,12 @@ a:hover svg {
     padding-top: 12px;
     overflow: auto;
   }
-  .sidebar-collapse {display: block;}
-  .filters-opened {transform: none;}
+  .app .sidebar-collapse {
+    display: block;
+  }
+  .filters-opened .sidebar {
+    transform: none;
+  }
 }
 .sidebar fieldset {
   margin-top: 5px;
@@ -785,14 +833,35 @@ a:hover svg {
 }
 .app .sidebar-show {
   display: none;
+
+  border: 0;
+  cursor: pointer;
+  user-select: none;
+  background-color: transparent;
+
+  color: rgba(0, 0, 0, 0.54);
+  padding: 12px;
+  border-radius: 50%;
 }
 @media (max-width: var(--lg-screen)) {
-  .sidebar-show {
+  .app .sidebar-show {
+
     display: block;
     position: absolute;
     top: 7px;
     left: 0;
     z-index: 3;
+  }
+
+  .app .sidebar-show svg {
+    fill: currentColor;
+    width: 1em;
+    height: 1em;
+    display: inline-block;
+    font-size: 1.5rem;
+    transition: fill 200ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+    flex-shrink: 0;
+    user-select: none;
   }
 }
 

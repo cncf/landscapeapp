@@ -124,7 +124,11 @@ export function render({settings, guidePayload, bigPictureKey}) {
       { guidePayload && "$$guide$$" }
     </div>
     <div id="home" style={{display: guidePayload ? "none" : ""}} className="app">
+      <div className="app-overlay" />
       <div className="main-parent">
+        <button className="sidebar-show">
+          <svg viewBox="0 0 24 24"><path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"></path></svg>
+        </button>
         <div className="header_container">
           <div  className="header">
             <span className="landscape-logo">
@@ -143,7 +147,7 @@ export function render({settings, guidePayload, bigPictureKey}) {
         </div>
         <div className="sidebar">
           <div className="sidebar-scroll">
-            <div className="sidebar-collapse">X</div>
+            <div className="sidebar-collapse">+</div>
             <div className="guide-toggle">
               <span className="toggle-item active">Landscape</span>
               <span className="toggle-item "><a href="/guide">Guide</a></span>

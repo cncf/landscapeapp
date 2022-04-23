@@ -88,12 +88,14 @@ const CncfLandscapeApp = {
 
       const mainEl = e.target.closest('#guide-page .guide-toggle a');
       if (mainEl)  {
-        CncfLandscapeApp.activateCardMode();
+        CncfLandscapeApp.guideScrollTop = document.body.scrollTop;
+        CncfLandscapeApp.state.mode = CncfLandscapeApp.previousMode || 'main';
+        CncfLandscapeApp.propagateStateToFiltersAndUrl();
         e.preventDefault();
         e.stopPropagation();
       }
 
-      const guideNavigationEl = e.target.closest('#guide-page .guide-sidebar a');
+      const guideNavigationEl = e.target.closest('#guide-page .guide-sidebar a[data-level]');
       if (guideNavigationEl) {
         CncfLandscapeApp.selectGuideSection(guideNavigationEl);
       }
@@ -127,6 +129,33 @@ const CncfLandscapeApp = {
         CncfLandscapeApp.state = newState;
         CncfLandscapeApp.propagateStateToFiltersAndUrl();
       }
+
+      const expandFilters = e.target.closest('#home .sidebar-show');
+      if (expandFilters) {
+        document.querySelector('#home').classList.add('filters-opened');
+      }
+
+      const collapseFilters = e.target.closest('#home .sidebar-collapse');
+      if (collapseFilters) {
+        document.querySelector('#home').classList.remove('filters-opened');
+      }
+
+      const appOverlay = e.target.closest('#home .app-overlay');
+      if (appOverlay) {
+        document.querySelector('#home').classList.remove('filters-opened');
+      }
+
+      const expandGuideFilters = e.target.closest('#guide-page .sidebar-show');
+      if (expandGuideFilters) {
+        document.querySelector('#guide-page').classList.add('sidebar-open');
+      }
+
+      const closeGuideFilters = e.target.closest('#guide-page .sidebar-collapse');
+      if (closeGuideFilters) {
+        document.querySelector('#guide-page').classList.remove('sidebar-open');
+      }
+
+
     }, false);
 
     document.addEventListener('mousedown', function(e) {
@@ -182,7 +211,22 @@ const CncfLandscapeApp = {
 
   selectGuideSection: function(guideNavigationEl) {
     const allLinks = [...document.querySelectorAll('#guide-page .guide-sidebar a[data-level]')];
-    guideNavigationEl = guideNavigationEl || document.querySelector('#guide-page .guide-sidebar a.active') || allLinks[0];
+    if (!guideNavigationEl) {
+      guideNavigationEl = allLinks.find( (x) => x.getAttribute('href') === this.state.activeSection);
+    }
+    if (!guideNavigationEl) {
+      for (let i = 0; i < allLinks.length; i++) {
+        const link = allLinks[i];
+        const linkLevel = link.getAttribute('data-level');
+        link.classList.remove('expanded');
+        link.classList.remove('active');
+        if (linkLevel === "2") {
+          link.classList.add('display-hidden');
+        }
+      }
+      return;
+    }
+
     const linkLevel = guideNavigationEl.getAttribute('data-level');
     const index = allLinks.indexOf(guideNavigationEl);
     let parentIndex = index;
@@ -229,6 +273,15 @@ const CncfLandscapeApp = {
         }
       }
     }
+    this.state.activeSection = guideNavigationEl.getAttribute('href');
+    if (!this.hadGuideNavigation) {
+      this.hadGuideNavigation = true;
+      document.querySelector(this.state.activeSection).scrollIntoView();
+    }
+    if (this.guideScrollTop) {
+      document.body.scrollTop = this.guideScrollTop;
+    }
+
   },
 
   openSelectPopup: function(selectEl) {
@@ -433,7 +486,7 @@ const CncfLandscapeApp = {
       }, false);
     }
   },
-  parseUrl: function({pathname, search }) {
+  parseUrl: function({pathname, search, hash }) {
     search = search || '';
     if (search.indexOf('?') === 0) {
       search = search.substring(1);
@@ -446,6 +499,8 @@ const CncfLandscapeApp = {
     return {
       zoom: +params.get('zoom') / 100 || 1,
       fullscreen: params.get('fullscreen') === 'yes',
+
+      activeSection: hash,
 
       mode: (params.get('mode') || params.get('format') || CncfLandscapeApp.initialMode).replace('-mode', ''),
 
@@ -597,6 +652,9 @@ const CncfLandscapeApp = {
   // update a browser url, should be later compatible with a parseUrl call
   stringifyBrowserUrl: function(state) {
     let url = "./";
+    if (CncfLandscapeApp.state.mode === 'guide') {
+      return './guide' + (CncfLandscapeApp.state.activeSection ? CncfLandscapeApp.state.activeSection : '') ;
+    }
     if (CncfLandscapeApp.state.mode !== 'main') {
       url = CncfLandscapeApp.state.mode;
     }
@@ -739,6 +797,9 @@ const CncfLandscapeApp = {
   },
 
   activateGuideMode: async function() {
+    if (CncfLandscapeApp.state.mode !== 'guide') {
+      CncfLandscapeApp.previousMode = CncfLandscapeApp.state.mode;
+    }
     CncfLandscapeApp.state.mode = 'guide';
 
     document.querySelector('#home').style.display = "none";
@@ -753,6 +814,7 @@ const CncfLandscapeApp = {
       contentEl.setAttribute('data-loaded', true);
     }
     CncfLandscapeApp.selectGuideSection();
+    CncfLandscapeApp.updateUrl();
   },
 
   activateBigPictureMode: async function(landscape) {
