@@ -1,7 +1,7 @@
 const http = require('http');
 const fs = require('fs');
 const path = require('path');
-const api = require('./src/pages/api/items');
+const api = require('./src/pages/api/ids');
 
 
 // a simple server. Serves files from public/

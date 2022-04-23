@@ -124,7 +124,10 @@ async function main() {
   await fs.writeFile('public/guide.html', renderPage({homePage: homePageGuide, mode: 'guide'}));
 
   const homePage = HomePageRenderer.render({settings, bigPictureKey: 'main'});
-  await fs.writeFile('public/index.html', renderPage({homePage, mode: 'main'}));
+  await fs.writeFile('public/index.html', renderPage({homePage: homePage, mode: 'main'}));
+
+  const cardsPage = HomePageRenderer.render({settings});
+  await fs.writeFile('public/card.html', renderPage({homePage: cardsPage, mode: 'card'}));
 
   for (let key in settings.big_picture) {
     const landscapeSettings = settings.big_picture[key];

@@ -119,7 +119,7 @@ const CncfLandscapeApp = {
         let search;
         if (href.indexOf('?') === -1) {
           pathname = '/';
-          search = href;
+          search = href.replace('/', '');
         } else {
           [pathname, search] = href.split('?');
         }
@@ -442,22 +442,24 @@ const CncfLandscapeApp = {
       pathname = pathname.substring(1);
     }
     const params = new URLSearchParams(search);
+    const f = (name, x) => this.calculateFullSelection(name, x);
     return {
       zoom: +params.get('zoom') / 100 || 1,
       fullscreen: params.get('fullscreen') === 'yes',
 
-      mode: params.get('mode') || params.get('format') || CncfLandscapeApp.initialMode,
+      mode: (params.get('mode') || params.get('format') || CncfLandscapeApp.initialMode).replace('-mode', ''),
 
       grouping: params.get('grouping') || 'category',
       sort: params.get('sort') || 'name',
 
-      category: params.get('category') || '',
-      project: params.get('project') || '',
-      license: params.get('license') || '',
-      organization: params.get('organization') || '',
-      headquarters: params.get('headquarters') || '',
-      ['company-type']: params.get('company-type') || '',
-      industries: params.get('industries') || '',
+      category: f('category', params.get('category') || ''),
+      project: f('project', params.get('project') || ''),
+      license: f('license', params.get('license') || ''),
+      organization: f('organization', params.get('organization') || ''),
+      headquarters: f('headquarters', params.get('headquarters') || ''),
+      ['company-type']: f('company-type', params.get('company-type') || ''),
+      industries: f('industries', params.get('industries') || ''),
+
       bestpractices: params.get('bestpractices') || '',
       enduser: params.get('enduser') || '',
       parent: params.get('parent') || '',
@@ -505,6 +507,44 @@ const CncfLandscapeApp = {
 
     this.updateUrl();
   },
+  calculateFullSelection: function(name, value) {
+    const wrapper = document.querySelector(`.select[data-name=${name}]`);
+    wrapper.selectData = wrapper.selectData || JSON.parse(wrapper.getAttribute('data-options'));
+    const selectedIds = value.split(',');
+    const result = [];
+    // parent selected, all children not - make all children selected
+    // parent not selected, some children are - make a parent selected
+    for (let i = 0; i < wrapper.selectData.length; i ++) {
+      let item = wrapper.selectData[i];
+      if (item.level === 1) {
+        let allChildren = [];
+        let selectedChildren = [];
+        for (j = i + 1; j < wrapper.selectData.length; j++) {
+          let childItem = wrapper.selectData[j];
+          if (childItem.level === 1) {
+            break;
+          }
+          if (selectedIds.includes(childItem.id)) {
+            selectedChildren.push(childItem.id);
+          }
+          allChildren.push(childItem.id)
+        }
+        if (selectedChildren.length > 0) {
+          result.push(item.id);
+          result.push(...selectedChildren);
+        }
+        if (allChildren.length > 0 && selectedChildren.length === 0 && selectedIds.includes(item.id)) {
+          result.push(item.id);
+          result.push(...allChildren);
+        }
+        if (allChildren.length === 0 && selectedIds.includes(item.id)) {
+          result.push(item.id);
+        }
+      }
+    }
+    console.info(name, result);
+    return result.join(',');
+  },
   // for a given select give an url and a text
   calculateShortSelection: function(wrapper) {
     if (typeof wrapper === 'string') {
@@ -530,7 +570,7 @@ const CncfLandscapeApp = {
           }
           totalChildren += 1;
         }
-        if (totalChildren === 0 || children.length === totalChildren) {
+        if (totalChildren === 0 || children.length === 0 || children.length === totalChildren) {
           items.push(item);
         } else {
           items.push(...children);
