@@ -601,13 +601,11 @@ a:hover svg {
 }
 
 #guide-page .guide-icon {
-  background: url(../images/guide.svg);
-  width: 0.7em;
-  height: 0.95em;
-  display: inline-block;
-  background-repeat: no-repeat;
+  width: 30px;
+  height: 33px;
+  fill: currentColor;
+  margin-top: -3px;
   vertical-align: middle;
-  margin-right: 0.25em;
 }
 #guide-page .items {
   grid-template-columns: repeat(auto-fill, 60px);
