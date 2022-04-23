@@ -143,6 +143,7 @@ export function render({settings, guidePayload, bigPictureKey}) {
         </div>
         <div className="sidebar">
           <div className="sidebar-scroll">
+            <div className="sidebar-collapse">X</div>
             <div className="guide-toggle">
               <span className="toggle-item active">Landscape</span>
               <span className="toggle-item "><a href="/guide">Guide</a></span>
