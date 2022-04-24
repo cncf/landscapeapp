@@ -537,7 +537,7 @@ const CncfLandscapeApp = {
   propagateStateToUiAndUrl: function() {
     this.propagateStateToUi();
     this.updateUrl();
-  }
+  },
   // take a current state, based on it update active tab, filters, and fetch data
   propagateStateToUi: function() {
     const assignSingleSelect = (name) => {
