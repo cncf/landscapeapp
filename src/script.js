@@ -3,6 +3,7 @@
 const CncfLandscapeApp = {
   init: function() {
     // get initial state from the url
+    this.filterProps = '';
     CncfLandscapeApp.state = CncfLandscapeApp.parseUrl(window.location);
     CncfLandscapeApp.initialState = {
       ...CncfLandscapeApp.parseUrl({pathname: '', search: ''}),
@@ -16,14 +17,12 @@ const CncfLandscapeApp = {
     }
 
     this.propagateStateToUiAndUrl();
-    if (CncfLandscapeApp.state.selected) {
-      CncfLandscapeApp.showSelectedItem(CncfLandscapeApp.state.selected);
-    }
 
-    document.addEventListener('keydown', function(e) {
+    document.addEventListener('keydown', (e) => {
       if (e.keyCode === 27) {
         if (CncfLandscapeApp.state.selected) {
-          CncfLandscapeApp.hideSelectedItem();
+          this.state.selected = null;
+          this.propagateStateToUiAndUrl();
         } else if (CncfLandscapeApp.state.fullscreen) {
           CncfLandscapeApp.state.fullscreen = false;
           CncfLandscapeApp.manageZoomAndFullscreenButtons();
@@ -33,11 +32,12 @@ const CncfLandscapeApp = {
       }
     });
 
-    document.body.addEventListener('click', function(e) {
+    document.body.addEventListener('click', (e) => {
       const cardEl = e.target.closest('[data-id]');
       if (cardEl) {
         const selectedItemId = cardEl.getAttribute('data-id');
-        CncfLandscapeApp.showSelectedItem(selectedItemId);
+        CncfLandscapeApp.state.selected = selectedItemId;
+        this.propagateStateToUiAndUrl();
         e.preventDefault();
         e.stopPropagation();
       }
@@ -45,28 +45,32 @@ const CncfLandscapeApp = {
       const modalBodyEl = e.target.closest('.modal-body');
       const shadowEl = e.target.closest('.modal-container');
       if (shadowEl && !modalBodyEl) {
-        CncfLandscapeApp.hideSelectedItem();
+        this.state.selected = null;
+        this.propagateStateToUiAndUrl();
         e.preventDefault();
         e.stopPropagation();
       }
 
       const modalClose = e.target.closest('.modal-close');
       if (modalClose) {
-        CncfLandscapeApp.hideSelectedItem();
+        this.state.selected = null;
+        this.propagateStateToUiAndUrl();
         e.preventDefault();
         e.stopPropagation();
       }
 
       const nextItem = e.target.closest('.modal-next');
       if (nextItem && CncfLandscapeApp.nextItemId) {
-        CncfLandscapeApp.showSelectedItem(CncfLandscapeApp.nextItemId);
+        CncfLandscapeApp.state.selected = CncfLandscapeApp.nextItemId;
+        this.propagateStateToUiAndUrl();
         e.preventDefault();
         e.stopPropagation();
       }
 
       const prevItem = e.target.closest('.modal-prev');
       if (prevItem && CncfLandscapeApp.prevItemId) {
-        CncfLandscapeApp.showSelectedItem(CncfLandscapeApp.prevItemId);
+        CncfLandscapeApp.state.selected = CncfLandscapeApp.prevItemId;
+        this.propagateStateToUiAndUrl();
         e.preventDefault();
         e.stopPropagation();
       }
@@ -130,6 +134,32 @@ const CncfLandscapeApp = {
         CncfLandscapeApp.propagateStateToUiAndUrl();
       }
 
+      const selectedItemInternalLinkEl = e.target.closest('.modal-body a[data-type]')
+      if (selectedItemInternalLinkEl) {
+        e.preventDefault();
+        e.stopPropagation();
+        const newState = {...CncfLandscapeApp.state };
+        const linkState = this.parseUrl({search: selectedItemInternalLinkEl.getAttribute('href'), pathname: '', hash: ''});
+        // Hide dialog, switch to a card mode
+        newState.selected = null;
+        newState.mode = 'card';
+
+        // Only set certain properties: filterable + invisible filters
+        // for visible filter we need to always expand a current selection
+        const f = (name, x) => this.calculateFullSelection(name, x);
+        const allowedProps = ['grouping', 'sort', 'bestpractices', 'enduser', 'parent', 'language'];
+        const otherProps = ['category', 'project', 'license', 'organization', 'headquarters', 'company-type', 'industries']
+        for (let key of allowedProps) {
+          newState[key] = linkState[key] || CncfLandscapeApp.initialState[key];
+        }
+        for (let key of otherProps) {
+          newState[key] = f(key, linkState[key] || CncfLandscapeApp.initialState[key]);
+        }
+
+        CncfLandscapeApp.state = newState;
+        CncfLandscapeApp.propagateStateToUiAndUrl();
+      }
+
       const expandFilters = e.target.closest('#home .sidebar-show');
       if (expandFilters) {
         document.querySelector('#home').classList.add('filters-opened');
@@ -158,7 +188,7 @@ const CncfLandscapeApp = {
 
     }, false);
 
-    document.addEventListener('mousedown', function(e) {
+    document.addEventListener('mousedown', (e) => {
       const selectEl = e.target.closest('select');
       if (selectEl) {
         e.preventDefault();
@@ -168,7 +198,7 @@ const CncfLandscapeApp = {
     }, false);
 
     // support custom css styles and custom js eval code through iframe
-    window.addEventListener('message', function(event) {
+    window.addEventListener('message', (event) => {
       var data = event.data;
       if (data.type === "css") {
         var styles = data.css;
@@ -208,7 +238,9 @@ const CncfLandscapeApp = {
     }
     window.addEventListener('popstate', (e) => {
       CncfLandscapeApp.state = e.state;
-      CncfLandscapeApp.propagateStateToUi();
+      if (e.state) {
+        CncfLandscapeApp.propagateStateToUi();
+      }
     });
 
     document.body.style.opacity = 1;
@@ -493,7 +525,7 @@ const CncfLandscapeApp = {
   },
   parseUrl: function({pathname, search, hash }) {
     search = search || '';
-    if (search.indexOf('?') === 0) {
+    if (search.indexOf('?') !== -1) {
       search = search.substring(1);
     }
     if (pathname.indexOf('/') === 0) {
@@ -572,6 +604,12 @@ const CncfLandscapeApp = {
       CncfLandscapeApp.activateGuideMode();
     } else {
       CncfLandscapeApp.activateBigPictureMode(CncfLandscapeApp.state.mode);
+    }
+
+    if (CncfLandscapeApp.state.selected) {
+      CncfLandscapeApp.showSelectedItem(CncfLandscapeApp.state.selected);
+    } else {
+      CncfLandscapeApp.hideSelectedItem();
     }
 
   },
@@ -707,14 +745,11 @@ const CncfLandscapeApp = {
     return url;
   },
   showSelectedItem: async function(selectedItemId) {
-    this.state.selected = selectedItemId;
     this.selectedItems = this.selectedItems || {};
     if (!this.selectedItems[selectedItemId]) {
       const result = await fetch(`/data/items/info-${selectedItemId}.html`);
       const text = await result.text();
       this.selectedItems[selectedItemId] = text;
-      this.showSelectedItem(selectedItemId);
-      return;
     }
     document.querySelector('.modal').style.display="";
     document.querySelector('.modal .modal-content').outerHTML = this.selectedItems[selectedItemId];
@@ -761,7 +796,6 @@ const CncfLandscapeApp = {
     } else {
       document.querySelector('.modal-prev').setAttribute('disabled', '');
     }
-    this.updateUrl();
   },
   updateUrl: function() {
     const newUrl = CncfLandscapeApp.stringifyBrowserUrl(CncfLandscapeApp.state);
@@ -771,7 +805,6 @@ const CncfLandscapeApp = {
     }
   },
   hideSelectedItem: function() {
-    this.state.selected = null;
     document.querySelector('.modal').style.display="none";
     document.querySelector('body').style.overflow = '';
 
@@ -780,8 +813,9 @@ const CncfLandscapeApp = {
   fetchApiData: async function() {
     const params = {};
     const state = this.state;
+
     params.grouping = state.mode === 'card' ? state.grouping : 'no';
-    params.category = state.mode === 'category' ? state.category : '';
+    params.category = state.mode === 'card' ? state.category : '';
     params.project = state.project;
     params.license = state.license;
     params.organization = state.organization;
@@ -794,7 +828,7 @@ const CncfLandscapeApp = {
     params['language'] = state.language;
 
     const search = new URLSearchParams(params).toString();
-    const url = `api/items?${search}`;
+    const url = `api/ids?${search}`;
     const response = await fetch(url);
     const json = await response.json();
     return json;
@@ -850,7 +884,7 @@ const CncfLandscapeApp = {
     this.manageZoomAndFullscreenButtons();
 
     const bigPictureItems = await this.fetchApiData();
-    console.info(bigPictureItems);
+    const ids = bigPictureItems[0].items.map( (x) => x.id);
 
     const contentEl = document.querySelector(`.landscape-flex[data-mode=${landscape}]`);
     if (contentEl.querySelector('.inner-landscape').children.length === 0) {
@@ -859,6 +893,11 @@ const CncfLandscapeApp = {
       const result = await fetch(url);
       const text = await result.text();
       contentEl.querySelector('.inner-landscape').innerHTML = text;
+    }
+
+    const itemElements = [...contentEl.querySelectorAll('[data-id]')];
+    for (let itemEl of itemElements) {
+      itemEl.style.visibility = ids.includes(itemEl.getAttribute('data-id')) ? '' : 'hidden';
     }
 
 

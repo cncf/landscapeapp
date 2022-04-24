@@ -15,15 +15,12 @@ import formatNumber from '../utils/formatNumber';
 import isParent from '../utils/isParent';
 import fields from '../types/fields';
 import assetPath from '../utils/assetPath';
+import { stringifyParams } from '../utils/routing';
 import { millify, iconStar, iconGithub } from '../utils/format';
 
 export function render({settings, tweetsCount, itemInfo}) {
 
-  const closeUrl = (x) => ({
-    mainContentMode: 'card-mode',
-    selectedItemId: null,
-    ...x
-  })
+  const closeUrl = stringifyParams;
 
   const formatDate = function(x) {
     if (x.text) {
@@ -72,7 +69,7 @@ export function render({settings, tweetsCount, itemInfo}) {
 
 
   const InternalLink = ({to, className, children}) =>
-    (<a data-type="internal" data-url={JSON.stringify(to)} href="#" className={className}>{children}</a>)
+    (<a data-type="internal" href={to} className={className}>{children}</a>)
 
   const OutboundLink = ({to, className, children}) =>
     (<a data-type="external" href={to} className={className}>{children}</a>)
@@ -109,7 +106,7 @@ export function render({settings, tweetsCount, itemInfo}) {
     }
 
     if (isSubsidiaryProject) {
-      const url = closeUrl({ mainContentMode: 'card-mode', filters: { relation: 'member', organization: item.organization }})
+      const url = closeUrl({ filters: { relation: 'member', organization: item.organization }})
       return linkTag("Subsidiary Project", { name: settings.global.short_name, url });
     }
     return null;

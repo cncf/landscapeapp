@@ -1,7 +1,8 @@
 const http = require('http');
 const fs = require('fs');
 const path = require('path');
-const api = require('./src/pages/api/ids');
+
+const apiIds = require('./src/pages/api/ids');
 
 
 // a simple server. Serves files from public/
@@ -11,9 +12,10 @@ const api = require('./src/pages/api/ids');
 
 http.createServer(function (request, response) {
   console.log('request starting...', request.url);
-  if (request.url.indexOf('/api/items') !== -1) {
+
+  if (request.url.indexOf('/api/ids') !== -1) {
     const query = request.url.split('?')[1] || '';
-    const output = api.processRequest(query);
+    const output = apiIds.processRequest(query);
     response.writeHead(200, { 'Content-Type': 'application/json' });
     response.end(JSON.stringify(output));
     return;
