@@ -15,7 +15,7 @@ const CncfLandscapeApp = {
       document.querySelector('html').classList.add('embed');
     }
 
-    this.propagateStateToFiltersAndUrl();
+    this.propagateStateToUiAndUrl();
     if (CncfLandscapeApp.state.selected) {
       CncfLandscapeApp.showSelectedItem(CncfLandscapeApp.state.selected);
     }
@@ -74,7 +74,7 @@ const CncfLandscapeApp = {
       const tabItem = e.target.closest('a[data-mode]');
       if (tabItem) {
         CncfLandscapeApp.state.mode = tabItem.getAttribute('data-mode');
-        CncfLandscapeApp.propagateStateToFiltersAndUrl();
+        CncfLandscapeApp.propagateStateToUiAndUrl();
         e.preventDefault();
         e.stopPropagation();
       }
@@ -90,7 +90,7 @@ const CncfLandscapeApp = {
       if (mainEl)  {
         CncfLandscapeApp.guideScrollTop = document.body.scrollTop;
         CncfLandscapeApp.state.mode = CncfLandscapeApp.previousMode || 'main';
-        CncfLandscapeApp.propagateStateToFiltersAndUrl();
+        CncfLandscapeApp.propagateStateToUiAndUrl();
         e.preventDefault();
         e.stopPropagation();
       }
@@ -127,7 +127,7 @@ const CncfLandscapeApp = {
         }
         const newState = CncfLandscapeApp.parseUrl({pathname, search});
         CncfLandscapeApp.state = newState;
-        CncfLandscapeApp.propagateStateToFiltersAndUrl();
+        CncfLandscapeApp.propagateStateToUiAndUrl();
       }
 
       const expandFilters = e.target.closest('#home .sidebar-show');
@@ -206,6 +206,11 @@ const CncfLandscapeApp = {
       element.innerHTML = style;
       document.getElementsByTagName("head")[0].appendChild(element);
     }
+    window.addEventListener('popstate', (e) => {
+      CncfLandscapeApp.state = e.state;
+      CncfLandscapeApp.propagateStateToUi();
+    });
+
     document.body.style.opacity = 1;
   },
 
@@ -346,7 +351,7 @@ const CncfLandscapeApp = {
     if (mode === 'single') {
       popupRoot.style.display = "none";
       CncfLandscapeApp.state[name] = optionId;
-      CncfLandscapeApp.propagateStateToFiltersAndUrl();
+      CncfLandscapeApp.propagateStateToUiAndUrl();
     } else {
       // toggle
       const isItemSelected = itemEl.querySelector('input').checked;
@@ -406,7 +411,7 @@ const CncfLandscapeApp = {
       const selected = allItems.filter( (x) => x.classList.contains('active'));
       const selectedIds = selected.map( (x) => x.getAttribute('data-option-id'));
       CncfLandscapeApp.state[name] = selectedIds.join(',');
-      CncfLandscapeApp.propagateStateToFiltersAndUrl();
+      CncfLandscapeApp.propagateStateToUiAndUrl();
     }
   },
   // everything related to zoom
@@ -496,13 +501,18 @@ const CncfLandscapeApp = {
     }
     const params = new URLSearchParams(search);
     const f = (name, x) => this.calculateFullSelection(name, x);
+
+    const parseMode = (x) => (x || '').indexOf('-mode') !== -1 ? 'card' : (x || CncfLandscapeApp.initialMode);
+    const parseCardStyle = (x) => (x || '').indexOf('-mode') !== -1 ? x.replace('-mode', '') : 'card';
+
     return {
       zoom: +params.get('zoom') / 100 || 1,
       fullscreen: params.get('fullscreen') === 'yes',
 
       activeSection: hash,
 
-      mode: (params.get('mode') || params.get('format') || CncfLandscapeApp.initialMode).replace('-mode', ''),
+      mode: parseMode(params.get('mode') || params.get('format')) || CncfLandscapeApp.initialMode,
+      cardStyle: parseCardStyle(params.get('mode') || params.get('format')),
 
       grouping: params.get('grouping') || 'category',
       sort: params.get('sort') || 'name',
@@ -524,8 +534,12 @@ const CncfLandscapeApp = {
       embed: params.has('embed'),
     };
   },
+  propagateStateToUiAndUrl: function() {
+    this.propagateStateToUi();
+    this.updateUrl();
+  }
   // take a current state, based on it update active tab, filters, and fetch data
-  propagateStateToFiltersAndUrl: function() {
+  propagateStateToUi: function() {
     const assignSingleSelect = (name) => {
       const value = this.state[name];
       const el = document.querySelector(`.select[data-name=${name}]`);
@@ -560,7 +574,6 @@ const CncfLandscapeApp = {
       CncfLandscapeApp.activateBigPictureMode(CncfLandscapeApp.state.mode);
     }
 
-    this.updateUrl();
   },
   calculateFullSelection: function(name, value) {
     const wrapper = document.querySelector(`.select[data-name=${name}]`);
@@ -654,9 +667,10 @@ const CncfLandscapeApp = {
     let url = "./";
     if (CncfLandscapeApp.state.mode === 'guide') {
       return './guide' + (CncfLandscapeApp.state.activeSection ? CncfLandscapeApp.state.activeSection : '') ;
-    }
-    if (CncfLandscapeApp.state.mode !== 'main') {
-      url = CncfLandscapeApp.state.mode;
+    } else if (CncfLandscapeApp.state.mode === 'card') {
+      url = './' + CncfLandscapeApp.state.cardStyle + '-mode';
+    } else if (CncfLandscapeApp.state.mode !== 'main') {
+      url = './' + CncfLandscapeApp.state.mode;
     }
     const params = {};
 
@@ -752,7 +766,7 @@ const CncfLandscapeApp = {
   updateUrl: function() {
     const newUrl = CncfLandscapeApp.stringifyBrowserUrl(CncfLandscapeApp.state);
     if (newUrl !== this.previousUrl) {
-      history.pushState({}, '', newUrl);
+      history.pushState(CncfLandscapeApp.state, '', newUrl);
       this.previousUrl = newUrl;
     }
   },
@@ -850,7 +864,7 @@ const CncfLandscapeApp = {
 
   },
   activateCardMode: async function() {
-    const cardStyle = 'card';
+    const cardStyle = CncfLandscapeApp.state.cardStyle;
     CncfLandscapeApp.state.mode = 'card';
 
     document.querySelector('#home').style.display = "";
