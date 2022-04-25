@@ -41,7 +41,7 @@ const DefaultCard = ({item, handler, itemRef, ...props}) => {
             <div className={classNames('mosaic', {nonoss : item.oss === false})} style={getRelationStyle(item.relation)}
               onClick={() => handler(item.id)} >
               <div className="logo_wrapper">
-                <img src={assetPath(item.href)} className='logo' max-height='100%' max-width='100%' alt={item.name} />
+                <img loading="lazy" src={assetPath(item.href)} className='logo' max-height='100%' max-width='100%' alt={item.name} />
               </div>
               <div className="mosaic-info">
                 <div className="mosaic-title">
@@ -69,7 +69,7 @@ const FlatCard = function({item, handler, itemRef, ...props}) {
   return (
             <div ref={itemRef} className="mosaic-wrap" key={item.id} {...props}>
               <div className="mosaic" onClick={() => handler(item.id)} >
-                <img src={assetPath(item.href)} className='logo' alt={item.name} />
+                <img loading="lazy" src={assetPath(item.href)} className='logo' alt={item.name} />
                 <div className="separator"/>
                 <h5>{item.flatName}</h5>
               </div>
@@ -81,7 +81,7 @@ const BorderlessCard = function({item, handler, itemRef, ...props}) {
   return (
             <div className="mosaic-wrap" key={item.id} {...props}>
               <div className="mosaic" onClick={() => handler(item.id)} >
-                <img src={assetPath(item.href)} className='logo' alt={item.name} />
+                <img loading="lazy" src={assetPath(item.href)} className='logo' alt={item.name} />
               </div>
             </div>
   );
