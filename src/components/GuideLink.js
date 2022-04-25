@@ -1,7 +1,7 @@
 import React from 'react'
 
 const OutboundLink = ({to, className, children, ...props}) =>
-  (<a data-type="external" href={to} className={className} {...props}>{children}</a>)
+  (<a data-type="external" target="_blank" href={to} className={className} {...props}>{children}</a>)
 
 const GuideLink = ({ anchor, label, className="", ...props }) => {
   const svg = <svg viewBox="0 0 24 24" aria-hidden="true">
