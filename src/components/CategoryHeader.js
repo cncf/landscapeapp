@@ -4,7 +4,7 @@ import { categoryTitleHeight } from '../utils/landscapeCalculations'
 import getContrastRatio from 'get-contrast-ratio'
 
 const InternalLink = ({to, className, children, ...props}) =>
-  (<a data-type="internal" data-url={JSON.stringify(to)} href="#" className={className} {...props}>{children}</a>)
+  (<a data-type="internal" href={to} className={className} {...props}>{children}</a>)
 
 const CategoryHeader = ({ href, label, guideAnchor, background, rotate = false }) => {
   const lowContrast = getContrastRatio('#ffffff', background) < 4.5

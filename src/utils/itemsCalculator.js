@@ -45,22 +45,6 @@ const addExtraFields = function(data) {
   });
 }
 
-const getFilteredItemsForBigPicture = function({ data, filters}) {
-    var filterHostedProject = filterFn({field: 'relation', filters});
-    var filterByLicense = filterFn({field: 'license', filters});
-    var filterByOrganization = filterFn({field: 'organization', filters});
-    var filterByHeadquarters = filterFn({field: 'headquarters', filters});
-    var filterByBestPractices = filterFn({field: 'bestPracticePercentage', filters});
-    var filterByEnduser = filterFn({field: 'enduser', filters});
-    var filterByParent = filterFn({field: 'parents', filters});
-    var filterByLanguage = filterFn({field: 'language', filters});
-    var filterByCompanyType = filterFn({field: 'companyType', filters});
-    var filterByIndustries = filterFn({field: 'industries', filters});
-    return addExtraFields(data.filter(function(x) {
-      return filterHostedProject(x) && filterByLicense(x) && filterByOrganization(x) && filterByHeadquarters(x) && filterByBestPractices(x) && filterByEnduser(x) && filterByParent(x) && filterByLanguage(x) && filterByCompanyType(x) && filterByIndustries(x);
-    }));
-}
-
 const getExtraFields = function({data, filters}) {
   const filtered = getFilteredItems({data, filters});
   return addExtraFields(filtered);
@@ -221,6 +205,7 @@ export const flattenItems = groupedItems => {
 }
 
 export function getItemsForExport(params) {
+  console.info(params.format);
   return _.flatten(getGroupedItems(params).map((x) => x.items));
 }
 

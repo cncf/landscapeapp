@@ -2,7 +2,7 @@ import React, { Fragment, useContext } from "react";
 import Item from "./Item";
 
 const InternalLink = ({to, className, children}) =>
-  (<a data-type="internal" data-url={JSON.stringify(to)} href="#" className={className}>{children}</a>)
+  (<a data-type="internal" href={to} className={className}>{children}</a>)
 
 import {
   calculateHorizontalCategory,

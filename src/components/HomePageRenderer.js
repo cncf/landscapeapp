@@ -188,7 +188,7 @@ export function render({settings, guidePayload, bigPictureKey}) {
             Please <OutboundLink to={`https://github.com/${settings.global.repo}`}>open</OutboundLink> a pull request to
             correct any issues. Greyed logos are not open source. Last Updated: {process.env.lastUpdated}
           </div>
-          <div id="summary" />
+          <h4 className="summary" />
           <div className="cards-section">
 
             <div className="big-picture-switch big-picture-switch-normal">

@@ -3,7 +3,7 @@ import React from 'react';
 const OutboundLink = ({to, className, children}) =>
     (<a data-type="external" href={to} className={className}>{children}</a>)
 const InternalLink = ({to, className, children}) =>
-  (<a data-type="internal" data-url={JSON.stringify(to)} href="#" className={className}>{children}</a>)
+  (<a data-type="tab" href={to} className={className}>{children}</a>)
 
 import { stringifyParams } from '../utils/routing'
 import { categoryBorder, categoryTitleHeight, subcategoryTitleHeight } from '../utils/landscapeCalculations'

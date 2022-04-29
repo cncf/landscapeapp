@@ -160,6 +160,29 @@ const CncfLandscapeApp = {
         CncfLandscapeApp.propagateStateToUiAndUrl();
       }
 
+      const categoryLink = e.target.closest('.inner-landscape a[data-type=internal]');
+      if (categoryLink) {
+        e.preventDefault();
+        e.stopPropagation();
+        const newState = {...CncfLandscapeApp.state };
+        const linkState = this.parseUrl({search: categoryLink.getAttribute('href'), pathname: '', hash: ''});
+        // Hide dialog, switch to a card mode
+        newState.mode = 'card';
+        newState.category = linkState.category;
+        newState.grouping = 'category';
+
+        CncfLandscapeApp.state = newState;
+        CncfLandscapeApp.propagateStateToUiAndUrl();
+      }
+
+      const otherLandscapeLink = e.target.closest('.inner-landscape a[data-type=tab]');
+      if (otherLandscapeLink) {
+        e.preventDefault();
+        e.stopPropagation();
+        const tab = otherLandscapeLink.getAttribute('href').split('/').slice(-1)[0] || "main";
+        this.activateBigPictureMode(tab);
+      }
+
       const expandFilters = e.target.closest('#home .sidebar-show');
       if (expandFilters) {
         document.querySelector('#home').classList.add('filters-opened');
@@ -526,7 +549,7 @@ const CncfLandscapeApp = {
   parseUrl: function({pathname, search, hash }) {
     search = search || '';
     if (search.indexOf('?') !== -1) {
-      search = search.substring(1);
+      search = search.split('?')[1];
     }
     if (pathname.indexOf('/') === 0) {
       pathname = pathname.substring(1);
@@ -814,18 +837,19 @@ const CncfLandscapeApp = {
     const params = {};
     const state = this.state;
 
-    params.grouping = state.mode === 'card' ? state.grouping : 'no';
-    params.category = state.mode === 'card' ? state.category : '';
-    params.project = state.project;
-    params.license = state.license;
-    params.organization = state.organization;
-    params.headquarters = state.headquarters;
-    params['company-type'] = state['company-type'];
-    params['industries'] = state['industries'];
-    params['bestpractices'] = state.bestpractices;
-    params['enduser'] = state.enduser;
-    params['parent'] = state.parent;
-    params['language'] = state.language;
+    for (let field of ['category', 'project', 'license', 'organization', 'headquarters', 'company-type', 'industries']) {
+      params[field] = CncfLandscapeApp.calculateShortSelection(field).url
+    }
+    // no fields for certain filters yet
+    for (let field of ['sort', 'grouping', 'bestpractices', 'enduser', 'parent', 'language']) {
+      params[field] = state[field]
+    }
+
+    if (state.mode !== 'card') {
+      params.grouping = 'no';
+      params.category = '';
+    }
+    params.format = state.mode;
 
     const search = new URLSearchParams(params).toString();
     const url = `api/ids?${search}`;
@@ -833,6 +857,7 @@ const CncfLandscapeApp = {
     const json = await response.json();
     return json;
   },
+
   highlightActiveTab: function() {
     const tabs = document.querySelectorAll('.big-picture-switch a[data-mode]');
     for (let tab of tabs) {
@@ -883,7 +908,10 @@ const CncfLandscapeApp = {
     this.highlightActiveTab();
     this.manageZoomAndFullscreenButtons();
 
-    const bigPictureItems = await this.fetchApiData();
+    const apiData = await this.fetchApiData();
+    const bigPictureItems = apiData.items;
+    document.querySelector('h4.summary').innerText = apiData.summaryText;
+
     const ids = bigPictureItems[0].items.map( (x) => x.id);
 
     const contentEl = document.querySelector(`.landscape-flex[data-mode=${landscape}]`);
@@ -934,7 +962,9 @@ const CncfLandscapeApp = {
       this.cards = result;
     }
 
-    this.groupedItems = await this.fetchApiData();
+    const apiData = await this.fetchApiData();
+    this.groupedItems = apiData.items;
+    document.querySelector('h4.summary').innerText = apiData.summaryText;
         // very simple optimization:
         // do not change anything if we used exactly same groupedItems last time;
     if (JSON.stringify(this.groupedItems) === this.lastCards) {

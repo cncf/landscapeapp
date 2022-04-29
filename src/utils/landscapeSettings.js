@@ -19,6 +19,9 @@ const landscapeSettingsDict = landscapeSettingsList.reduce((dict, landscapeSetti
 }, {})
 
 export const findLandscapeSettings = (url) => {
+  if (url === 'main') {
+    url = 'landscape';
+  }
   return landscapeSettingsDict[['card-mode', 'guide'].includes(url) ? 'landscape' : url]
 }
 
