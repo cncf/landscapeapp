@@ -747,9 +747,10 @@ a:hover svg {
 }
 .sidebar .filters-action {
   height: 25px;
-  margin-bottom: 5px;
+  margin-bottom: 10px;
   font-size: 20px;
   cursor: pointer;
+  display: inline-block;
 }
 .sidebar .filters-action span {
   font-size: 14px;
@@ -758,6 +759,9 @@ a:hover svg {
 }
 .sidebar .filters-action svg {
   font-size: 16px;
+  width: 16px;
+  height: 16px;
+  fill: currentColor;
 }
 @media (max-width: var(--lg-screen)) {
   .sidebar .filters-action {

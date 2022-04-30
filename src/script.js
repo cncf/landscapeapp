@@ -208,6 +208,14 @@ const CncfLandscapeApp = {
         document.querySelector('#guide-page').classList.remove('sidebar-open');
       }
 
+      const resetFiltersEl = e.target.closest('.sidebar .reset-filters');
+      if (resetFiltersEl) {
+        e.preventDefault();
+        e.stopPropagation();
+        CncfLandscapeApp.state = {...CncfLandscapeApp.initialState};
+        CncfLandscapeApp.propagateStateToUiAndUrl();
+      }
+
 
     }, false);
 
