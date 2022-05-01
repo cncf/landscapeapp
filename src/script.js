@@ -14,6 +14,15 @@ const CncfLandscapeApp = {
 
     if (CncfLandscapeApp.state.embed) {
       document.querySelector('html').classList.add('embed');
+      setInterval(function() {
+        document.body.style.height = document.querySelector('.column-content').scrollHeight;
+      }, 1000);
+    }
+    if (CncfLandscapeApp.state.cardStyle === 'borderless') {
+      document.querySelector('html').classList.add('borderless-mode');
+    }
+    if (CncfLandscapeApp.state.cardStyle === 'flat') {
+      document.querySelector('html').classList.add('flat-mode');
     }
 
     this.propagateStateToUiAndUrl();
@@ -907,25 +916,16 @@ const CncfLandscapeApp = {
       document.querySelector('.modal-prev').setAttribute('disabled', '');
     }
 
-    if (window.parentIFrame && this.state.embed) {
+    if (window.parentIFrame) {
       window.parentIFrame.sendMessage({type: 'showModal'});
       window.parentIFrame.getPageInfo(function(info) {
         var offset = info.scrollTop - info.offsetTop;
-        var height = info.iframeHeight - info.clientHeight;
         var maxHeight = info.clientHeight * 0.9;
-        if (maxHeight > 480) {
-          maxHeight = 480;
+        if (maxHeight > 640) {
+          maxHeight = 640;
         }
-        var t = function(x1, y1, x2, y2, x3) {
-          if (x3 < x1 - 50) {
-            x3 = x1 - 50;
-          }
-          if (x3 > x2 + 50) {
-            x3 = x2 + 50;
-          }
-          return y1 + (x3 - x1) / (x2 - x1) * (y2 - y1);
-        }
-        var top = t(0, -height, height, height, offset);
+        var defaultTop = (info.windowHeight - maxHeight) / 2;
+        var top = defaultTop + offset;
         if (top < 0 && info.iframeHeight <= 600) {
           top = 10;
         }
@@ -933,11 +933,15 @@ const CncfLandscapeApp = {
           const modal = document.querySelector('.modal-body');
           if (modal) {
             modal.style.top = top + 'px';
+            modal.style.marginTop = 0;
+            modal.style.marginBottom = 0;
+            modal.style.bottom = '';
             modal.style.maxHeight = maxHeight + 'px';
           }
         }, 10);
       });
     }
+
   },
   updateUrl: function() {
     const newUrl = CncfLandscapeApp.stringifyBrowserUrl(CncfLandscapeApp.state);
