@@ -1033,7 +1033,7 @@ const CncfLandscapeApp = {
       itemEl.style.visibility = ids.includes(itemEl.getAttribute('data-id')) ? '' : 'hidden';
     }
 
-    contentEl.querySelector('.inner-landscape').style.opacity = 1;
+    contentEl.querySelector('.inner-landscape').style.display = "";
   },
   activateCardMode: async function() {
     const cardStyle = CncfLandscapeApp.state.cardStyle;

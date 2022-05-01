@@ -221,7 +221,7 @@ export function render({settings, guidePayload, bigPictureKey}) {
             { tabs.filter( (x) => x.mode !== 'card').map( (tab) =>
             <div data-mode={tab.mode} className="landscape-flex">
               <div className="landscape-wrapper">
-                <div className="inner-landscape" style={{padding: 10, opacity: 0}} >
+                <div className="inner-landscape" style={{padding: 10, display: "none"}} >
                   { bigPictureKey === tab.mode && '$$' + bigPictureKey + '$$'}
                 </div>
               </div>
