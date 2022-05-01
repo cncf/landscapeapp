@@ -95,12 +95,16 @@ async function main() {
   }
 
   const fonts = await fs.readFile('src/fonts.css', 'utf-8');
+  const resizerScript = await fs.readFile(require.resolve('iframe-resizer/js/iframeResizer.contentWindow.min.js'));
   const renderPage = ({homePage, mode}) => {
     let result = `<style>
       ${fonts}
       ${processedCss}
     </style>
     <script async defer src="//platform.twitter.com/widgets.js" charset="utf-8"></script>
+    <script>
+      ${resizerScript}
+    </script>
     <script>
       ${js}
       CncfLandscapeApp.initialMode = '${mode}';
@@ -115,11 +119,6 @@ async function main() {
     return result;
   }
 
-
-
-
-
-
   const homePageGuide = HomePageRenderer.render({settings, guidePayload: !!payload.guide });
   await fs.writeFile('public/guide.html', renderPage({homePage: homePageGuide, mode: 'guide'}));
 
@@ -128,6 +127,8 @@ async function main() {
 
   const cardsPage = HomePageRenderer.render({settings});
   await fs.writeFile('public/card-mode.html', renderPage({homePage: cardsPage, mode: 'card'}));
+  await fs.writeFile('public/flat-mode.html', renderPage({homePage: cardsPage, mode: 'card'}));
+  await fs.writeFile('public/borderless-mode.html', renderPage({homePage: cardsPage, mode: 'card'}));
 
   for (let key in settings.big_picture) {
     const landscapeSettings = settings.big_picture[key];
@@ -137,6 +138,23 @@ async function main() {
         renderPage({homePage, mode: landscapeSettings.url }));
     }
   }
+
+  // embed
+  const resizerHostJs = await fs.readFile(require.resolve('iframe-resizer/js/iframeResizer.min.js'), 'utf-8');
+  const resizerConfig = await fs.readFile('src/iframeResizer.js');
+  await fs.writeFile('public/iframeResizer.js', resizerHostJs + "\n" + resizerConfig);
+  const embed = `
+    <div>
+      <h1>Testing how great is that embed </h1>
+      <iframe frameBorder="0" id="landscape" scrolling="no" style="width: 1px; min-width: 100%;"
+        src="/card-mode?style=borderless&grouping=license&license=mit-license&embed=yes">
+      </iframe>
+      <script src="/iframeResizer.js"></script>
+      <h2>Wow, that was a cool embed.</h2>
+    </div>
+  `
+  await fs.writeFile('public/embed.html', embed);
+
 
 }
 main();

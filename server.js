@@ -2,7 +2,8 @@ const http = require('http');
 const fs = require('fs');
 const path = require('path');
 
-const apiIds = require('./src/pages/api/ids');
+const apiIds = require('./src/api/ids');
+const apiExport = require('./src/api/export');
 
 
 // a simple server. Serves files from public/
@@ -18,6 +19,16 @@ http.createServer(function (request, response) {
     const output = apiIds.processRequest(query);
     response.writeHead(200, { 'Content-Type': 'application/json' });
     response.end(JSON.stringify(output));
+    return;
+  }
+  if (request.url.indexOf('/api/export') !== -1) {
+    const query = request.url.split('?')[1] || '';
+    const output = apiExport.processRequest(query);
+    response.writeHead(200, {
+      'Content-Type': 'text/css',
+      'Content-Disposition': 'attachment; filename=interactive-landscape.csv'
+    });
+    response.end(output);
     return;
   }
   let filePath = path.join('public', request.url.split('?')[0]);

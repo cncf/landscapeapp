@@ -153,7 +153,7 @@ export function render({settings, guidePayload, bigPictureKey}) {
               <span className="toggle-item "><a href="/guide">Guide</a></span>
             </div>
             <a className="filters-action reset-filters">
-              <svg viewBox="0 0 24 24"><path d="M14 12c0-1.1-.9-2-2-2s-2 .9-2 2 .9 2 2 2 2-.9 2-2zm-2-9c-4.97 0-9 4.03-9 9H0l4 4 4-4H5c0-3.87 3.13-7 7-7s7 3.13 7 7-3.13 7-7 7c-1.51 0-2.91-.49-4.06-1.3l-1.42 1.44C8.04 20.3 9.94 21 12 21c4.97 0 9-4.03 9-9s-4.03-9-9-9z"></path></svg>
+              <svg viewBox="0 0 24 24"><path d="M14 12c0-1.1-.9-2-2-2s-2 .9-2 2 .9 2 2 2 2-.9 2-2zm-2-9c-4.97 0-9 4.03-9 9H0l4 4 4-4H5c0-3.87 3.13-7 7-7s7 3.13 7 7-3.13 7-7 7c-1.51 0-2.91-.49-4.06-1.3l-1.42 1.44C8.04 20.3 9.94 21 12 21c4.97 0 9-4.03 9-9s-4.03-9-9-9z"/></svg>
               <span>Reset Filters</span>
             </a>
             <GroupingSelect />
@@ -165,8 +165,12 @@ export function render({settings, guidePayload, bigPictureKey}) {
             <FilterHeadquarters />
             <FilterCompanyType />
             <FilterIndustries />
-
-            Filters, CsvExport
+            <a className="filters-action export">
+              <svg viewBox="0 0 24 24">
+                <path d="M17 1.01L7 1c-1.1 0-2 .9-2 2v18c0 1.1.9 2 2 2h10c1.1 0 2-.9 2-2V3c0-1.1-.9-1.99-2-1.99zM17 19H7V5h10v14zm-1-6h-3V8h-2v5H8l4 4 4-4z" />
+              </svg>
+              <span>Download as CSV</span>
+            </a>
             <div className="sidebar-presets">
               <h4>Example filters</h4>
               { (settings.presets || []).map(preset =>
@@ -217,7 +221,7 @@ export function render({settings, guidePayload, bigPictureKey}) {
             { tabs.filter( (x) => x.mode !== 'card').map( (tab) =>
             <div data-mode={tab.mode} className="landscape-flex">
               <div className="landscape-wrapper">
-                <div className="inner-landscape" style={{padding: 10}} >
+                <div className="inner-landscape" style={{padding: 10, opacity: 0}} >
                   { bigPictureKey === tab.mode && '$$' + bigPictureKey + '$$'}
                 </div>
               </div>

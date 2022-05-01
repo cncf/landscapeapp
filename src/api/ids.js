@@ -1,9 +1,9 @@
 import items from 'project/data'
 import { global } from 'public/settings'
-import { flattenItems } from '../../utils/itemsCalculator'
-import getGroupedItems  from '../../utils/itemsCalculator'
-import getSummary, { getSummaryText } from '../../utils/summaryCalculator';
-import { parseParams } from '../../utils/routing'
+import { flattenItems } from '../utils/itemsCalculator'
+import getGroupedItems  from '../utils/itemsCalculator'
+import getSummary, { getSummaryText } from '../utils/summaryCalculator';
+import { parseParams } from '../utils/routing'
 
 const { website } = global
 

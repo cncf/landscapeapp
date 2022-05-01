@@ -150,6 +150,7 @@ a:hover svg {
   margin: 0 5px 14px;
   color: var(--navy);
   font-size: 0.8rem;
+  height: 18px;
 }
 
 @media (max-width: var(--lg-screen)) {
@@ -159,10 +160,37 @@ a:hover svg {
 }
 
 .embed .summary {
-  display: none;
+  display: none !important;
 }
 .embed .disclaimer {
-  display: none;
+  display: none !important;
+}
+
+.embed .sidebar {
+  display: none !important;
+}
+.embed .sidebar-show {
+  display: none !important;
+}
+.embed .header_container {
+  display: none !important;
+}
+.embed .big-picture-switch {
+  display: none !important;
+}
+.embed .main {
+  margin-left: 0px !important;
+}
+.embed .charts-desktop {
+  display: none !important;
+}
+.embed .charts-mobile {
+  display: none !important;
+}
+.embed a[data-type=internal] {
+  color: currentColor;
+  cursor: inherit;
+  pointer-events: none;
 }
 
 
@@ -1711,7 +1739,7 @@ html.ios.has-selected-item, html.ios.has-selected-item body {
 .product-category {
   color: var(--navy-light); margin-bottom: 0.8rem;
 }
-.product-category .product-separator {
+.product-category .product-category-separator {
   margin: 0 5px; font-size: 0.6rem;
 }
 .product-description {

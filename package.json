@@ -38,9 +38,8 @@
     "prepare-landscape": "babel-node tools/prepareLandscape.js && babel-node tools/renderItems.js",
     "watch-landscape": "babel-node tools/watchLandscape.js",
     "setup-robots": "babel-node tools/sitemap && babel-node tools/addRobots",
-    "quick-build": "yarn build-next && yarn setup-robots && yarn copy-dist ",
-    "build": "yarn fetch && yarn prepare-landscape && yarn build-next && yarn setup-robots && yarn remove-dist && yarn copy-dist && yarn export-functions && yarn stop-old-ci && yarn start-ci && babel-node tools/parallelWithRetry integration-test check-landscape render-landscape funding && yarn stop-ci",
-    "build-next": "next build && next export",
+    "quick-build": "yarn setup-robots && yarn copy-dist ",
+    "build": "yarn fetch && yarn prepare-landscape && && yarn setup-robots && yarn remove-dist && yarn copy-dist && yarn export-functions && yarn stop-old-ci && yarn start-ci && babel-node tools/parallelWithRetry integration-test check-landscape render-landscape funding && yarn stop-ci",
     "export-functions": "babel-node ./tools/exportFunctions",
     "show-report": "open dist/report.html",
     "analyze-bundle": "babel-node ./tools/analyzeBundle.js",
@@ -48,7 +47,7 @@
     "reset-tweet-count": "babel-node tools/resetTweetCount.js",
     "prepublish": "cp yarn.lock _yarn.lock",
     "postpublish": "rm _yarn.lock || true",
-    "preview": "yarn fetch && yarn prepare-landscape && yarn build-next"
+    "preview": "yarn fetch && yarn prepare-landscape"
   },
   "author": "CNCF",
   "license": "Apache-2.0",

@@ -134,10 +134,36 @@ const CncfLandscapeApp = {
         CncfLandscapeApp.propagateStateToUiAndUrl();
       }
 
-      const selectedItemInternalLinkEl = e.target.closest('.modal-body a[data-type]')
+      const groupingInternalLinkEl = e.target.closest('.sh_wrapper a[data-type=internal]');
+      if (groupingInternalLinkEl) {
+        e.preventDefault();
+        e.stopPropagation();
+        if (CncfLandscapeApp.state.embed) {
+          return;
+        }
+        const newState = {...CncfLandscapeApp.state };
+        const linkState = this.parseUrl({search: groupingInternalLinkEl.getAttribute('href'), pathname: '', hash: ''});
+
+        const f = (name, x) => this.calculateFullSelection(name, x);
+        const allowedProps = ['grouping', 'sort', 'bestpractices', 'enduser', 'parent', 'language'];
+        const otherProps = ['category', 'project', 'license', 'organization', 'headquarters', 'company-type', 'industries']
+        for (let key of allowedProps) {
+          newState[key] = linkState[key] || CncfLandscapeApp.initialState[key];
+        }
+        for (let key of otherProps) {
+          newState[key] = f(key, linkState[key] || CncfLandscapeApp.initialState[key]);
+        }
+
+        CncfLandscapeApp.state = newState;
+        CncfLandscapeApp.propagateStateToUiAndUrl();
+      }
+      const selectedItemInternalLinkEl = e.target.closest('.modal-body a[data-type=internal]')
       if (selectedItemInternalLinkEl) {
         e.preventDefault();
         e.stopPropagation();
+        if (CncfLandscapeApp.state.embed) {
+          return;
+        }
         const newState = {...CncfLandscapeApp.state };
         const linkState = this.parseUrl({search: selectedItemInternalLinkEl.getAttribute('href'), pathname: '', hash: ''});
         // Hide dialog, switch to a card mode
@@ -208,12 +234,50 @@ const CncfLandscapeApp = {
         document.querySelector('#guide-page').classList.remove('sidebar-open');
       }
 
-      const resetFiltersEl = e.target.closest('.sidebar .reset-filters');
-      if (resetFiltersEl) {
+      const resetAllEl = e.target.closest('#home .landscape-logo a');
+      if (resetAllEl) {
         e.preventDefault();
         e.stopPropagation();
         CncfLandscapeApp.state = {...CncfLandscapeApp.initialState};
         CncfLandscapeApp.propagateStateToUiAndUrl();
+      }
+
+      const resetFiltersEl = e.target.closest('.sidebar .reset-filters');
+      if (resetFiltersEl) {
+        e.preventDefault();
+        e.stopPropagation();
+
+        const newState = {...CncfLandscapeApp.state };
+
+        const f = (name, x) => this.calculateFullSelection(name, x);
+        const allowedProps = ['bestpractices', 'enduser', 'parent', 'language'];
+        const otherProps = ['category', 'project', 'license', 'organization', 'headquarters', 'company-type', 'industries']
+        for (let key of allowedProps) {
+          newState[key] = CncfLandscapeApp.initialState[key];
+        }
+        for (let key of otherProps) {
+          newState[key] = f(key, CncfLandscapeApp.initialState[key]);
+        }
+
+        CncfLandscapeApp.state = newState;
+        CncfLandscapeApp.propagateStateToUiAndUrl();
+      }
+
+      const exportEl = e.target.closest('.sidebar .export');
+      if (exportEl) {
+        e.preventDefault();
+        e.stopPropagation();
+        const search = CncfLandscapeApp.stringifyApiUrl();
+        const url = `/api/export?${search}`;
+
+        // now open a download
+        const link = document.createElement('a');
+        link.style.display = "none";
+        link.href = url;
+        link.setAttribute('download', '');
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
       }
 
 
@@ -575,7 +639,7 @@ const CncfLandscapeApp = {
       activeSection: hash,
 
       mode: parseMode(params.get('mode') || params.get('format')) || CncfLandscapeApp.initialMode,
-      cardStyle: parseCardStyle(params.get('mode') || params.get('format')),
+      cardStyle: params.get('style') || parseCardStyle(params.get('mode')),
 
       grouping: params.get('grouping') || 'category',
       sort: params.get('sort') || 'name',
@@ -727,9 +791,24 @@ const CncfLandscapeApp = {
     }
   },
   // which api to call to fetch actual data
-  stringifyApiUrl: function(state) {
+  stringifyApiUrl: function() {
+    const params = {};
+    const state = this.state;
+    for (let field of ['category', 'project', 'license', 'organization', 'headquarters', 'company-type', 'industries']) {
+      params[field] = CncfLandscapeApp.calculateShortSelection(field).url
+    }
+    // no fields for certain filters yet
+    for (let field of ['sort', 'grouping', 'bestpractices', 'enduser', 'parent', 'language']) {
+      params[field] = state[field]
+    }
 
-
+    if (state.mode !== 'card') {
+      params.grouping = 'no';
+      params.category = '';
+    }
+    params.format = state.mode;
+    const search = new URLSearchParams(params).toString();
+    return search;
   },
   // update a browser url, should be later compatible with a parseUrl call
   stringifyBrowserUrl: function(state) {
@@ -827,6 +906,38 @@ const CncfLandscapeApp = {
     } else {
       document.querySelector('.modal-prev').setAttribute('disabled', '');
     }
+
+    if (window.parentIFrame && this.state.embed) {
+      window.parentIFrame.sendMessage({type: 'showModal'});
+      window.parentIFrame.getPageInfo(function(info) {
+        var offset = info.scrollTop - info.offsetTop;
+        var height = info.iframeHeight - info.clientHeight;
+        var maxHeight = info.clientHeight * 0.9;
+        if (maxHeight > 480) {
+          maxHeight = 480;
+        }
+        var t = function(x1, y1, x2, y2, x3) {
+          if (x3 < x1 - 50) {
+            x3 = x1 - 50;
+          }
+          if (x3 > x2 + 50) {
+            x3 = x2 + 50;
+          }
+          return y1 + (x3 - x1) / (x2 - x1) * (y2 - y1);
+        }
+        var top = t(0, -height, height, height, offset);
+        if (top < 0 && info.iframeHeight <= 600) {
+          top = 10;
+        }
+        setTimeout(function() {
+          const modal = document.querySelector('.modal-body');
+          if (modal) {
+            modal.style.top = top + 'px';
+            modal.style.maxHeight = maxHeight + 'px';
+          }
+        }, 10);
+      });
+    }
   },
   updateUrl: function() {
     const newUrl = CncfLandscapeApp.stringifyBrowserUrl(CncfLandscapeApp.state);
@@ -838,28 +949,14 @@ const CncfLandscapeApp = {
   hideSelectedItem: function() {
     document.querySelector('.modal').style.display="none";
     document.querySelector('body').style.overflow = '';
+    if (window.parentIFrame && this.state.embed) {
+      window.parentIFrame.sendMessage({type: 'hideModal'})
+    }
 
     this.updateUrl();
   },
   fetchApiData: async function() {
-    const params = {};
-    const state = this.state;
-
-    for (let field of ['category', 'project', 'license', 'organization', 'headquarters', 'company-type', 'industries']) {
-      params[field] = CncfLandscapeApp.calculateShortSelection(field).url
-    }
-    // no fields for certain filters yet
-    for (let field of ['sort', 'grouping', 'bestpractices', 'enduser', 'parent', 'language']) {
-      params[field] = state[field]
-    }
-
-    if (state.mode !== 'card') {
-      params.grouping = 'no';
-      params.category = '';
-    }
-    params.format = state.mode;
-
-    const search = new URLSearchParams(params).toString();
+    const search = this.stringifyApiUrl();
     const url = `api/ids?${search}`;
     const response = await fetch(url);
     const json = await response.json();
@@ -936,7 +1033,7 @@ const CncfLandscapeApp = {
       itemEl.style.visibility = ids.includes(itemEl.getAttribute('data-id')) ? '' : 'hidden';
     }
 
-
+    contentEl.querySelector('.inner-landscape').style.opacity = 1;
   },
   activateCardMode: async function() {
     const cardStyle = CncfLandscapeApp.state.cardStyle;
@@ -987,7 +1084,7 @@ const CncfLandscapeApp = {
         div.classList.add('sh_wrapper');
         div.innerHTML = `
       <div style="font-size: 24px; padding-left: 16px; line-height: 48px; font-weight: 500;">
-        ${ href ? `<a href=${href}>${header}</a>` : `<span>${header}</span>` }
+        ${ href ? `<a data-type="internal" href=${href}>${header}</a>` : `<span>${header}</span>` }
         <span class="items-cont">(${count})</span>
       </div>
   `;
