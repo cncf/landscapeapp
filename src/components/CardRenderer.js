@@ -17,6 +17,10 @@ function getRelationStyle(relation) {
 }
 
 export function renderDefaultCard({item}) {
+  return ReactDOMServer.renderToStaticMarkup(getDefaultCard({item}));
+}
+
+export function getDefaultCard({item}) {
   const card = (
           <div data-id={item.id} className="mosaic-wrap" key={item.id}>
             <div className={`mosaic ${item.oss ? '' : 'nonoss' }`} style={getRelationStyle(item.relation)}>
@@ -43,10 +47,14 @@ export function renderDefaultCard({item}) {
             </div>
           </div>
   );
-  return ReactDOMServer.renderToStaticMarkup(card);
+  return card;
 }
 
 export function renderFlatCard({item}) {
+  return ReactDOMServer.renderToStaticMarkup(getFlatCard({item}));
+}
+
+export function getFlatCard({item}) {
   const card = (
             <div data-id={item.id} className="mosaic-wrap" key={item.id} >
               <div className="mosaic">
@@ -56,10 +64,14 @@ export function renderFlatCard({item}) {
               </div>
             </div>
   );
-  return ReactDOMServer.renderToStaticMarkup(card);
+  return card;
 }
 
 export function renderBorderlessCard({item}) {
+  return ReactDOMServer.renderToStaticMarkup(getBorderlessCard({item}));
+}
+
+export function getBorderlessCard({item}) {
   const card = (
             <div data-id={item.id} className="mosaic-wrap" key={item.id}>
               <div className="mosaic">
@@ -67,5 +79,5 @@ export function renderBorderlessCard({item}) {
               </div>
             </div>
   );
-  return ReactDOMServer.renderToStaticMarkup(card);
+  return card;
 }

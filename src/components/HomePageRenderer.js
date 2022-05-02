@@ -4,7 +4,7 @@ import React from 'react';
 import ReactDOMServer from 'react-dom/server';
 
 const OutboundLink = ({to, className, children}) =>
-  (<a data-type="external" href={to} className={className}>{children}</a>)
+  (<a data-type="external" target="_blank" href={to} className={className}>{children}</a>)
 
 const SingleSelect = ({name, options, title}) => (
             <div className="select" data-type="single" data-name={name} data-options={JSON.stringify(options)}>

@@ -7,6 +7,7 @@ import * as CardRenderer from '../src/components/CardRenderer.js';
 import * as LandscapeContentRenderer from '../src/components/LandscapeContentRenderer.js';
 import * as HomePageRenderer from '../src/components/HomePageRenderer.js';
 import * as GuideRenderer from '../src/components/GuideRenderer.js';
+import * as EmbedPageRenderer from '../src/components/EmbedPageRenderer.js';
 import { getLandscapeItems } from '../src/utils/itemsCalculator.js';
 import fs from 'fs/promises';
 
@@ -154,6 +155,33 @@ async function main() {
     </div>
   `
   await fs.writeFile('public/embed.html', embed);
+
+  // embed page renderer
+  const embeddedJs = await fs.readFile('src/embedded-script.js', 'utf-8');
+  const renderEmbedPage = (page) => {
+    let result = `<style>
+      ${fonts}
+      ${processedCss}
+    </style>
+    <script async defer src="//platform.twitter.com/widgets.js" charset="utf-8"></script>
+    <script>
+      ${resizerScript}
+    </script>
+    <script>
+      ${embeddedJs}
+    </script>
+    <body class="embed">
+      ${page}
+    </body>
+    `;
+    return result;
+  }
+  for (let key in settings.prerender) {
+    const url = settings.prerender[key];
+    const embedded = EmbedPageRenderer.render({settings, items: projects, exportUrl: url });
+    await fs.mkdir(`public/pages`, { recursive: true });
+    await fs.writeFile(`public/pages/${key}.html`, renderEmbedPage(embedded));
+  }
 
 
 }

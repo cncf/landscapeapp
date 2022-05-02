@@ -17,6 +17,7 @@ const CncfLandscapeApp = {
       setInterval(function() {
         document.body.style.height = document.querySelector('.column-content').scrollHeight;
       }, 1000);
+      document.querySelector('#embedded-footer a').href = this.stringifyBrowserUrl({...this.state, embed: false});
     }
     if (CncfLandscapeApp.state.cardStyle === 'borderless') {
       document.querySelector('html').classList.add('borderless-mode');
