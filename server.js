@@ -37,29 +37,31 @@ http.createServer(function (request, response) {
     filePath = 'public/index.html';
 
   const extname = path.extname(filePath);
-  var contentType = 'text/html';
+  let encoding = 'utf-8';
+  var contentType = 'text/html; charset=utf-8';
   switch (extname) {
     case '.js':
-      contentType = 'text/javascript';
+      contentType = 'text/javascript; charset=utf-8';
       break;
     case '.css':
-      contentType = 'text/css';
+      contentType = 'text/css; charset=utf-8';
       break;
     case '.json':
-      contentType = 'application/json';
+      contentType = 'application/json; charset=utf-8';
       break;
     case '.svg':
-      contentType = 'image/svg+xml';
+      contentType = 'image/svg+xml; charset=utf-8';
       break;
     case '.jpg':
       contentType = 'image/jpg';
+      encoding = undefined;
       break;
   }
 
-  fs.readFile(filePath, function(error, content) {
+  fs.readFile(filePath, encoding, function(error, content) {
     if (error) {
       const extraPath = filePath + '.html';
-      fs.readFile(extraPath, function(error, content) {
+      fs.readFile(extraPath, encoding, function(error, content) {
         if (error) {
           if(error.code == 'ENOENT') {
             response.writeHead(200, { 'Content-Type': contentType });

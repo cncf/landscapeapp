@@ -78,6 +78,7 @@ async function main() {
   }
 
   await fs.writeFile(`public/data/items/cards-card.html`, defaultCards);
+  await fs.writeFile(`public/data/items/cards-logo.html`, defaultCards);
   await fs.writeFile(`public/data/items/cards-borderless.html`, borderlessCards);
   await fs.writeFile(`public/data/items/cards-flat.html`, flatCards);
 
@@ -128,6 +129,7 @@ async function main() {
 
   const cardsPage = HomePageRenderer.render({settings});
   await fs.writeFile('public/card-mode.html', renderPage({homePage: cardsPage, mode: 'card'}));
+  await fs.writeFile('public/logo-mode.html', renderPage({homePage: cardsPage, mode: 'card'}));
   await fs.writeFile('public/flat-mode.html', renderPage({homePage: cardsPage, mode: 'card'}));
   await fs.writeFile('public/borderless-mode.html', renderPage({homePage: cardsPage, mode: 'card'}));
 

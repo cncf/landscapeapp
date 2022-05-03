@@ -28,7 +28,7 @@ export function render({settings, items, exportUrl}) {
         </div>
       </div>
     </div>
-    <div id="home" className="app">
+    <div id="home" className={"app " + cardStyle + "-mode" }>
       <div className="app-overlay" />
       <div className="main-parent">
         <div className="app-overlay"></div>

@@ -25,6 +25,9 @@ const CncfLandscapeApp = {
     if (CncfLandscapeApp.state.cardStyle === 'flat') {
       document.querySelector('html').classList.add('flat-mode');
     }
+    if (CncfLandscapeApp.state.cardStyle === 'logo') {
+      document.querySelector('html').classList.add('logo-mode');
+    }
 
     this.propagateStateToUiAndUrl();
 
@@ -648,8 +651,8 @@ const CncfLandscapeApp = {
 
       activeSection: hash,
 
-      mode: parseMode(params.get('mode') || params.get('format')) || CncfLandscapeApp.initialMode,
-      cardStyle: params.get('style') || parseCardStyle(params.get('mode')),
+      mode: parseMode(params.get('format') || pathname) || CncfLandscapeApp.initialMode,
+      cardStyle: params.get('style') || parseCardStyle(pathname),
 
       grouping: params.get('grouping') || 'category',
       sort: params.get('sort') || 'name',

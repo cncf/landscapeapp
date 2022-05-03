@@ -74,7 +74,6 @@ const FilterIndustries = function() {
 
 
 export function render({settings, guidePayload, bigPictureKey}) {
-
   const mainCard = [{shortTitle: 'Card', title: 'Card Mode', mode: 'card', url: 'card-mode', tabIndex: 0}]
   const landscapes = Object.values(settings.big_picture).map(function(section) {
     return {
