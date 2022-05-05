@@ -9,10 +9,12 @@
 //     url(id by default): how the value is stored in the url
 //     sortOrder(element index by default): sort order when grouping
 //     match: function
+import path from 'path';
+import fs from 'fs';
 import _ from 'lodash';
-import lookups from 'project/lookup.json';
+const lookups = JSON.parse(fs.readFileSync(path.resolve(process.env.PROJECT_PATH, 'lookup.json'), 'utf-8'));
 import unpack from '../utils/unpackArray';
-import settings from 'public/settings.json';
+const settings = JSON.parse(fs.readFileSync(path.resolve(process.env.PROJECT_PATH, 'dist', 'settings.json'), 'utf-8'));
 import isParent from '../utils/isParent';
 
 const relationField = (function() {

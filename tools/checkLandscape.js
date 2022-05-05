@@ -6,7 +6,6 @@ import { appUrl } from './distSettings'
 
 async function main() {
   const puppeteer = require('puppeteer');
-  console.info('go!');
   const browser = await puppeteer.launch({args: ['--no-sandbox', '--disable-setuid-sandbox']});
   const page = await browser.newPage();
   var hasErrors = false;

@@ -1,4 +1,6 @@
-import settings from 'public/settings.json';
+import path from 'path';
+import fs from 'fs';
+const settings = JSON.parse(fs.readFileSync(path.resolve(process.env.PROJECT_PATH, 'dist', 'settings.json'), 'utf-8'));
 
 function calcLandscapeSettingsList(settingsObj) {
   return Object.values(settingsObj.big_picture)

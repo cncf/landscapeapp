@@ -8,7 +8,6 @@ module.exports = {
     }],
     ["module-resolver", {
       alias: {
-        public: path.resolve(__dirname, 'public'),
         project: process.env.PROJECT_PATH
       }
     }]

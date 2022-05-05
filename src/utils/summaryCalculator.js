@@ -1,9 +1,12 @@
-import settings from 'public/settings.json';
 import _ from 'lodash';
 import { getItemsForExport, getLandscapeItems } from './itemsCalculator';
 import { millify } from '../utils/format';
 import formatNumber from '../utils/formatNumber';
 import { findLandscapeSettings } from "./landscapeSettings";
+
+import path from 'path';
+import fs from 'fs';
+const settings = JSON.parse(fs.readFileSync(path.resolve(process.env.PROJECT_PATH, 'dist', 'settings.json'), 'utf-8'));
 
 const getOrganizations = function(params) {
   const filteredItems = getItemsForExport(params);

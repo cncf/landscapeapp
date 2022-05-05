@@ -1,13 +1,17 @@
-import allItems from 'public/data/items-export';
-import items from 'project/data';
-import { global } from 'public/settings';
+import path from 'path';
+import fs from 'fs';
+
+const projectPath = process.env.PROJECT_PATH;
+const allItems = JSON.parse(fs.readFileSync(path.resolve(projectPath, 'dist/data/items-export.json'), 'utf-8'));
+const items = JSON.parse(fs.readFileSync(path.resolve(projectPath, 'dist/data/items.json'), 'utf-8'));
+const settings = JSON.parse(fs.readFileSync(path.resolve(projectPath, 'dist/settings.json')));
+
 import { flattenItems } from '../utils/itemsCalculator';
 import getGroupedItems  from '../utils/itemsCalculator';
 import getSummary, { getSummaryText } from '../utils/summaryCalculator';
 import { parseParams } from '../utils/routing';
 import Parser from 'json2csv/lib/JSON2CSVParser';
 
-const { website } = global
 export const processRequest = query => {
   const params = parseParams(query);
   const p = new URLSearchParams(query);
@@ -29,6 +33,9 @@ export const processRequest = query => {
 // Netlify function
 export async function handler(event, context) {
   const body = processRequest(event.queryStringParameters)
-  const headers = { 'Content-Type': 'application/json' }
-  return { statusCode: 200, body: JSON.stringify(body), headers }
+  const headers = {
+      'Content-Type': 'text/css',
+      'Content-Disposition': 'attachment; filename=interactive-landscape.csv'
+  };
+  return { statusCode: 200, body: body, headers }
 }

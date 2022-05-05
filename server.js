@@ -1,3 +1,7 @@
+// this server is usually used locally
+
+const projectPath = process.env.PROJECT_PATH;
+
 const http = require('http');
 const fs = require('fs');
 const path = require('path');
@@ -6,8 +10,6 @@ const apiIds = require('./src/api/ids');
 const apiExport = require('./src/api/export');
 
 
-// a simple server. Serves files from public/
-//
 //
 
 
@@ -31,10 +33,11 @@ http.createServer(function (request, response) {
     response.end(output);
     return;
   }
-  let filePath = path.join('public', request.url.split('?')[0]);
+  let filePath = path.join(process.env.PROJECT_PATH, 'dist', request.url.split('?')[0]);
   console.info(filePath);
-  if (filePath == 'public/')
-    filePath = 'public/index.html';
+  if (filePath == `${process.env.PROJECT_PATH}/dist/`) {
+    filePath = `${process.env.PROJECT_PATH}/dist/index.html`;
+  }
 
   const extname = path.extname(filePath);
   let encoding = 'utf-8';
@@ -81,5 +84,5 @@ http.createServer(function (request, response) {
       response.end(content, 'utf-8');
     }
   });
-}).listen(8001);
+}).listen(process.env.PORT || 8001);
 console.log('Development server running at http://127.0.0.1:8001/');

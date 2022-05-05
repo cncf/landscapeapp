@@ -12,15 +12,13 @@ import { getLandscapeItems } from '../src/utils/itemsCalculator.js';
 import fs from 'fs/promises';
 
 async function main() {
-  await fs.mkdir('public/data/items', { recursive: true});
-  await fs.mkdir(path.join(projectPath, 'dist/items'), { recursive: true});
-
+  await fs.mkdir(path.resolve(projectPath, 'dist/data/items'), { recursive: true});
   const payload = {};
 
   let guideIndex = {};
   let guideJson = null;
   try {
-    guideJson = JSON.parse(await fs.readFile('public/guide.json', 'utf-8'))
+    guideJson = JSON.parse(await fs.readFile(path.resolve(projectPath, 'dist/guide.json'), 'utf-8'));
     guideIndex = guideJson.filter(section => section.landscapeKey)
       .reduce((accumulator, { category, subcategory, anchor }) => {
         const key = [category, subcategory].filter(_ => _).join(' / ')
@@ -40,7 +38,7 @@ async function main() {
       landscapeItems: landscapeItems,
       landscapeSettings: landscapeSettings
     });
-    await fs.writeFile(`public/data/items/landscape-${landscapeSettings.url}.html`, landscapeContent);
+    await fs.writeFile(path.resolve(projectPath, `dist/data/items/landscape-${landscapeSettings.url}.html`), landscapeContent);
 
     payload[ key === 'main' ? 'main' : landscapeSettings.url] = landscapeContent;
 
@@ -53,7 +51,7 @@ async function main() {
         entries: projects
       });
       payload.guide = guideContent;
-      await fs.writeFile(`public/data/items/guide.html`, guideContent);
+      await fs.writeFile(path.resolve(projectPath, `dist/data/items/guide.html`), guideContent);
     }
   }
 
@@ -62,7 +60,7 @@ async function main() {
   for (let item of projects) {
     const result = render({settings, itemInfo: item, tweetsCount: processedLandscape.twitter_options.count});
     // console.info(`Rendering ${item.id}`);
-    await fs.writeFile(`public/data/items/info-${item.id}.html`, result);
+    await fs.writeFile(path.resolve(projectPath, `dist/data/items/info-${item.id}.html`), result);
   }
 
   let defaultCards = '';
@@ -77,10 +75,10 @@ async function main() {
     flatCards += flatCard;
   }
 
-  await fs.writeFile(`public/data/items/cards-card.html`, defaultCards);
-  await fs.writeFile(`public/data/items/cards-logo.html`, defaultCards);
-  await fs.writeFile(`public/data/items/cards-borderless.html`, borderlessCards);
-  await fs.writeFile(`public/data/items/cards-flat.html`, flatCards);
+  await fs.writeFile(path.resolve(projectPath, `dist/data/items/cards-card.html`), defaultCards);
+  await fs.writeFile(path.resolve(projectPath, `dist/data/items/cards-logo.html`), defaultCards);
+  await fs.writeFile(path.resolve(projectPath, `dist/data/items/cards-borderless.html`), borderlessCards);
+  await fs.writeFile(path.resolve(projectPath, `dist/data/items/cards-flat.html`), flatCards);
 
   // render an index.html
   const js = await fs.readFile('src/script.js', 'utf-8');
@@ -97,7 +95,7 @@ async function main() {
   }
 
   const fonts = await fs.readFile('src/fonts.css', 'utf-8');
-  const resizerScript = await fs.readFile(require.resolve('iframe-resizer/js/iframeResizer.contentWindow.min.js'));
+  const resizerScript = await fs.readFile(require.resolve('iframe-resizer/js/iframeResizer.contentWindow.min.js'), 'utf-8');
   const renderPage = ({homePage, mode}) => {
     let result = `<style>
       ${fonts}
@@ -122,22 +120,22 @@ async function main() {
   }
 
   const homePageGuide = HomePageRenderer.render({settings, guidePayload: !!payload.guide });
-  await fs.writeFile('public/guide.html', renderPage({homePage: homePageGuide, mode: 'guide'}));
+  await fs.writeFile(path.resolve(projectPath, 'dist/guide.html'), renderPage({homePage: homePageGuide, mode: 'guide'}));
 
   const homePage = HomePageRenderer.render({settings, bigPictureKey: 'main'});
-  await fs.writeFile('public/index.html', renderPage({homePage: homePage, mode: 'main'}));
+  await fs.writeFile(path.resolve(projectPath, 'dist/index.html'), renderPage({homePage: homePage, mode: 'main'}));
 
   const cardsPage = HomePageRenderer.render({settings});
-  await fs.writeFile('public/card-mode.html', renderPage({homePage: cardsPage, mode: 'card'}));
-  await fs.writeFile('public/logo-mode.html', renderPage({homePage: cardsPage, mode: 'card'}));
-  await fs.writeFile('public/flat-mode.html', renderPage({homePage: cardsPage, mode: 'card'}));
-  await fs.writeFile('public/borderless-mode.html', renderPage({homePage: cardsPage, mode: 'card'}));
+  await fs.writeFile(path.resolve(projectPath, 'dist/card-mode.html'), renderPage({homePage: cardsPage, mode: 'card'}));
+  await fs.writeFile(path.resolve(projectPath, 'dist/logo-mode.html'), renderPage({homePage: cardsPage, mode: 'card'}));
+  await fs.writeFile(path.resolve(projectPath, 'dist/flat-mode.html'), renderPage({homePage: cardsPage, mode: 'card'}));
+  await fs.writeFile(path.resolve(projectPath, 'dist/borderless-mode.html'), renderPage({homePage: cardsPage, mode: 'card'}));
 
   for (let key in settings.big_picture) {
     const landscapeSettings = settings.big_picture[key];
     if (key !== 'main') {
       const homePage = HomePageRenderer.render({settings, bigPictureKey: landscapeSettings.url});
-      await fs.writeFile(`public/${landscapeSettings.url}.html`,
+      await fs.writeFile(path.resolve(projectPath, `dist/${landscapeSettings.url}.html`),
         renderPage({homePage, mode: landscapeSettings.url }));
     }
   }
@@ -145,7 +143,7 @@ async function main() {
   // embed
   const resizerHostJs = await fs.readFile(require.resolve('iframe-resizer/js/iframeResizer.min.js'), 'utf-8');
   const resizerConfig = await fs.readFile('src/iframeResizer.js');
-  await fs.writeFile('public/iframeResizer.js', resizerHostJs + "\n" + resizerConfig);
+  await fs.writeFile(path.resolve(projectPath, 'dist/iframeResizer.js'), resizerHostJs + "\n" + resizerConfig);
   const embed = `
     <div>
       <h1>Testing how great is that embed </h1>
@@ -156,7 +154,7 @@ async function main() {
       <h2>Wow, that was a cool embed.</h2>
     </div>
   `
-  await fs.writeFile('public/embed.html', embed);
+  await fs.writeFile(path.resolve(projectPath, 'dist/embed.html'), embed);
 
   // embed page renderer
   const embeddedJs = await fs.readFile('src/embedded-script.js', 'utf-8');
@@ -181,8 +179,8 @@ async function main() {
   for (let key in settings.prerender) {
     const url = settings.prerender[key];
     const embedded = EmbedPageRenderer.render({settings, items: projects, exportUrl: url });
-    await fs.mkdir(`public/pages`, { recursive: true });
-    await fs.writeFile(`public/pages/${key}.html`, renderEmbedPage(embedded));
+    await fs.mkdir(path.resolve(projectPath, `dist/pages`), { recursive: true });
+    await fs.writeFile(path.resolve(projectPath, `dist/pages/${key}.html`), renderEmbedPage(embedded));
   }
 
 

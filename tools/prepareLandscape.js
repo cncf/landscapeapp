@@ -12,34 +12,33 @@ const items = require(path.resolve(projectPath, 'data.json'))
 const { website } = settings.global
 
 //render
-rmSync('public', { recursive: true, force: true })
-mkdirSync('public', { recursive: true })
-mkdirSync('public/logos', { recursive: true })
-execSync(`cp -r "${projectPath}/images" public`)
-execSync(`cp -r "${projectPath}/cached_logos/" public/logos`)
-writeFileSync('./public/settings.json', JSON.stringify(settings))
-mkdirSync('./public/data/exports', { recursive: true })
-mkdirSync('./public/data/items', { recursive: true })
-writeFileSync(`./public/data/items.json`, JSON.stringify(items))
+rmSync(path.resolve(projectPath, 'dist'), { recursive: true, force: true });
+mkdirSync(path.resolve(projectPath, 'dist', 'logos'), { recursive: true });
+execSync(`cp -r "${projectPath}/images" "${projectPath}/dist"`);
+execSync(`cp -r "${projectPath}/cached_logos/" "${projectPath}/dist/logos"`);
+writeFileSync(path.resolve(projectPath, 'dist', 'settings.json'), JSON.stringify(settings));
+mkdirSync(path.resolve(projectPath, 'dist', 'data', 'exports'), { recursive: true });
+mkdirSync(path.resolve(projectPath, 'dist', 'data', 'items'), { recursive: true });
+writeFileSync(path.resolve(projectPath, 'dist', 'data', 'items.json'), JSON.stringify(items))
 
 items.forEach(item => {
-  writeFileSync(`./public/data/items/${item.id}.json`, JSON.stringify(item))
-})
+  writeFileSync(path.resolve(projectPath, 'dist', 'data', 'items', `${item.id}.json`), JSON.stringify(item))
+});
 
 const guide = loadGuide();
 
 if (guide) {
-  writeFileSync('./public/guide.json', JSON.stringify(guide))
+  writeFileSync(path.resolve(projectPath, 'dist', 'guide.json'), JSON.stringify(guide))
 }
 
-const afterSettingsSaved = _ => {
+{
   const prepareItemsForExport = require('./prepareItemsForExport').default
   const { flattenItems } = require('../src/utils/itemsCalculator')
   const getGroupedItems  = require('../src/utils/itemsCalculator').default
   const { parseParams } = require('../src/utils/routing')
 
   const itemsForExport = prepareItemsForExport(items)
-  writeFileSync(`./public/data/items-export.json`, JSON.stringify(itemsForExport))
+  writeFileSync(path.resolve(projectPath, 'dist', 'data', 'items-export.json'), JSON.stringify(itemsForExport))
 
   Object.entries(settings.export || {}).forEach(([exportPath, query]) => {
     const params = parseParams({ mainContentMode: 'card-mode', ...qs.parse(query) })
@@ -50,8 +49,7 @@ const afterSettingsSaved = _ => {
       })
 
     const exportItems = params.grouping === 'no' ? flattenItems(groupedItems) : groupedItems
-    writeFileSync(`./public/data/exports/${exportPath}.json`, JSON.stringify(exportItems))
+    console.info({exportItems});
+    writeFileSync(path.resolve(projectPath, 'dist', 'data', 'exports',  `${exportPath}.json`), JSON.stringify(exportItems));
   })
 }
-
-afterSettingsSaved()
