@@ -3,6 +3,7 @@ import ReactDOMServer from 'react-dom/server';
 
 import { isLargeFn } from '../utils/landscapeCalculations'
 import Item from './Item.js'
+import _ from 'lodash';
 
 
 
@@ -11,6 +12,7 @@ import Item from './Item.js'
 export function render({settings, landscapeSettings, guide, entries }) {
   const Title = () => <h1 className="title">{settings.global.short_name} Landscape Guide</h1>;
   const SubcategoryMetadata = ({ node, entries }) => {
+    const orderedEntries = _.orderBy(entries,  (x) => !x.isLarge);
     const projectEntries = entries.filter(entry => entry.project)
     return <>
       { (node.buzzwords.length > 0 || projectEntries.length > 0) &&  <div className="metadata">
@@ -33,7 +35,7 @@ export function render({settings, landscapeSettings, guide, entries }) {
         </div> }
 
       <div className="items">
-        { entries.map(entry => <Item item={entry} key={entry.id} />) }
+        { orderedEntries.map(entry => <Item item={entry} key={entry.id} />) }
       </div>
       </>
   }
@@ -82,7 +84,7 @@ export function render({settings, landscapeSettings, guide, entries }) {
 
   const Content = ({ nodes, enhancedEntries }) => {
     return nodes.map((node, idx) => {
-      const subcategoryEntries = node.subcategory && enhancedEntries.filter(entry => entry.path.split(' / ')[1].trim() === node.title)
+      const subcategoryEntries = node.subcategory && enhancedEntries.filter(entry => entry.path.split(' / ')[1].trim() === node.title) || []
 
       return <div key={idx}>
         { node.title && <div className="section-title" id={node.anchor}>

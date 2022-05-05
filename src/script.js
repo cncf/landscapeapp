@@ -115,6 +115,7 @@ const CncfLandscapeApp = {
       const guideNavigationEl = e.target.closest('#guide-page .guide-sidebar a[data-level]');
       if (guideNavigationEl) {
         CncfLandscapeApp.selectGuideSection(guideNavigationEl);
+        document.querySelector('#guide-page').classList.remove('sidebar-open');
       }
 
       const selectPopupItemEl = e.target.closest('.select-popup-body div');
@@ -345,8 +346,8 @@ const CncfLandscapeApp = {
       document.getElementsByTagName("head")[0].appendChild(element);
     }
     window.addEventListener('popstate', (e) => {
-      CncfLandscapeApp.state = e.state;
       if (e.state) {
+        CncfLandscapeApp.state = e.state;
         CncfLandscapeApp.propagateStateToUi();
       }
     });
@@ -999,6 +1000,25 @@ const CncfLandscapeApp = {
       contentEl.innerHTML = text;
       contentEl.setAttribute('data-loaded', true);
     }
+
+    const links = contentEl.querySelectorAll('a')
+    const canvas = document.createElement('canvas')
+    const ctx = canvas.getContext('2d')
+
+    const measureTextWidth = (text, font) => {
+        ctx.font = font
+        return ctx.measureText(text).width
+    }
+
+    links.forEach(linkEl => {
+        linkEl.style.letterSpacing = null
+        const { fontSize, fontFamily, letterSpacing } = window.getComputedStyle(linkEl)
+        const textWidth = measureTextWidth(linkEl.text, `${fontSize} ${fontFamily}`)
+        const hoverWidth = measureTextWidth(linkEl.text, `bold ${fontSize} ${fontFamily}`)
+        const letterSpacingNum = parseFloat(letterSpacing) || 0
+        linkEl.style.letterSpacing = `${letterSpacingNum + (hoverWidth - textWidth) / (linkEl.text.length - 1)}px`
+    })
+
     CncfLandscapeApp.selectGuideSection();
     CncfLandscapeApp.updateUrl();
   },

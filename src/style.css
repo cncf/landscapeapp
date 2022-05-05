@@ -349,11 +349,6 @@ a:hover svg {
     justify-content: space-between;
     padding: 0 var(--spacing);
   }
-
-  #guide-page .content {
-    display: flex;
-    align-items: center;
-  }
 }
 
 #guide-page .guide-header .container {
