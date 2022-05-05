@@ -4,7 +4,6 @@ import { flattenItems } from '../utils/itemsCalculator'
 import getGroupedItems  from '../utils/itemsCalculator'
 import getSummary, { getSummaryText } from '../utils/summaryCalculator';
 import { parseParams } from '../utils/routing'
-
 const { website } = global
 
 export const processRequest = query => {

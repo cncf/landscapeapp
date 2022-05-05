@@ -17,7 +17,10 @@ const files = readdirSync(srcFolder)
 
 files.forEach(file => {
   const destFile = [PROJECT_NAME, file].filter(_ => _).join('--')
+  console.info("Processing: file", file);
   ncc(`${srcFolder}/${file}`).then(({ code}) => {
     writeFileSync(`${destFolder}/${destFile}`, code)
+  }).catch(function(ex) {
+    console.info(ex);
   })
 })

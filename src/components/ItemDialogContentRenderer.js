@@ -16,7 +16,8 @@ import isParent from '../utils/isParent';
 import fields from '../types/fields';
 import assetPath from '../utils/assetPath';
 import { stringifyParams } from '../utils/routing';
-import { millify, iconStar, iconGithub } from '../utils/format';
+import { millify } from '../utils/format';
+import { iconStar, iconGithub } from '../icons';
 
 export function render({settings, tweetsCount, itemInfo}) {
 
