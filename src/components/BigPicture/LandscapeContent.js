@@ -23,7 +23,7 @@ const LandscapeContent = ({zoom, padding = 10 }) => {
     }
     if (element.type === 'LandscapeInfo') {
       return <LandscapeInfo {..._.pick(element, ['width', 'height', 'top', 'left']) } childrenInfo={element.children}
-                            key='landscape-info'
+                            key={element.key ? element.key : 'landscape-info'}
       />
     }
 

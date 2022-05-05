@@ -19,7 +19,7 @@ const LandscapeInfo = ({width, height, top, left, childrenInfo}) => {
     if (info.type === 'text') {
       // pdf requires a normal version without a zoom trick
       if (query.hasOwnProperty('pdf')) {
-        return <div key='text' style={{
+        return <div key={info.key ? info.key : 'text'} style={{
           ...positionProps,
           fontSize: info.font_size,
           fontStyle: 'italic',
@@ -29,7 +29,7 @@ const LandscapeInfo = ({width, height, top, left, childrenInfo}) => {
       // while in a browser we use a special version which renders fonts
       // properly on a small zoom
       } else {
-        return <div key='text' style={{
+        return <div key={info.key ? info.key : 'text'} style={{
           ...positionProps,
           fontSize: info.font_size * 4,
           fontStyle: 'italic',
@@ -49,7 +49,7 @@ const LandscapeInfo = ({width, height, top, left, childrenInfo}) => {
       }
     }
     if (info.type === 'title') {
-      return <div key='title' style= {{
+      return <div key={info.key ? info.key : 'title'} style= {{
         ...positionProps,
         fontSize: info.font_size,
         color: '#666'
