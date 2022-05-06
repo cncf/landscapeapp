@@ -5,6 +5,7 @@ import { isLargeFn } from '../utils/landscapeCalculations'
 import Item from './Item.js'
 import _ from 'lodash';
 import { guideIcon } from '../icons';
+import assetPath from '../utils/assetPath';
 
 
 
@@ -113,7 +114,7 @@ export function render({settings, landscapeSettings, guide, entries }) {
       <div className="side-content">
         <span className="landscape-logo">
           <a className="nav-link" href="/">
-            <img src="images/left-logo.svg" />
+            <img src={assetPath("images/left-logo.svg")} />
           </a>
         </span>
         <div className="guide-sidebar">
@@ -134,7 +135,7 @@ export function render({settings, landscapeSettings, guide, entries }) {
             </button>
             <span className="landscape-logo">
               <a className="nav-link" href="/">
-                <img src="/images/left-logo.svg" />
+                <img src={assetPath("/images/left-logo.svg")} />
               </a>
             </span>
             <Title />
@@ -145,7 +146,7 @@ export function render({settings, landscapeSettings, guide, entries }) {
           title={settings.global.short_name}
           target="_blank"
           href={settings.global.company_url}>
-          <img src="images/right-logo.svg" title={settings.global.short_name}/>
+          <img src={assetPath("images/right-logo.svg")} title={settings.global.short_name}/>
         </a>
       </div>
 

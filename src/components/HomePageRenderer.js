@@ -1,7 +1,8 @@
 import _ from 'lodash';
-import fields, { sortOptions, options } from '../types/fields'
 import React from 'react';
 import ReactDOMServer from 'react-dom/server';
+import fields, { sortOptions, options } from '../types/fields'
+import assetPath from '../utils/assetPath';
 
 const OutboundLink = ({to, className, children}) =>
   (<a data-type="external" target="_blank" href={to} className={className}>{children}</a>)
@@ -108,7 +109,7 @@ export function render({settings, guidePayload, bigPictureKey}) {
       { !guidePayload && <div className="side-content">
                             <span className="landscape-logo">
                               <a className="nav-link" href="/">
-                                <img src="images/left-logo.svg" />
+                                <img src={assetPath("images/left-logo.svg")} />
                               </a>
                             </span>
                             <div className="guide-sidebar">
@@ -132,7 +133,7 @@ export function render({settings, guidePayload, bigPictureKey}) {
           <div  className="header">
             <span className="landscape-logo">
               <a className="nav-link" href="/">
-                <img src="/images/left-logo.svg" />
+                <img src={assetPath("images/left-logo.svg")} />
               </a>
             </span>
             <a rel="noopener noreferrer noopener noreferrer"

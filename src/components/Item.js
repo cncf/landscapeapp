@@ -1,6 +1,6 @@
 import path from 'path';
 import fs from 'fs';
-const settings = JSON.parse(fs.readFileSync(path.resolve(process.env.PROJECT_PATH, 'dist', 'settings.json'), 'utf-8'));
+import settings from 'project/dist/settings';
 import fields from "../types/fields";
 import {
   largeItemHeight,

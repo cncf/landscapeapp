@@ -6,7 +6,7 @@ import { findLandscapeSettings } from "./landscapeSettings";
 
 import path from 'path';
 import fs from 'fs';
-const settings = JSON.parse(fs.readFileSync(path.resolve(process.env.PROJECT_PATH, 'dist', 'settings.json'), 'utf-8'));
+import settings from 'project/dist/settings';
 
 const getOrganizations = function(params) {
   const filteredItems = getItemsForExport(params);
@@ -27,7 +27,6 @@ const getSummary = function(params) {
   const filteredItems = getItemsForExport(params);
   let filteredItemsByTab;
   if (params.format !== 'card') {
-    console.info(params.format);
     const landscapeSettings = findLandscapeSettings(params.format);
     const landscapeItems = getLandscapeItems({
       items: filteredItems,

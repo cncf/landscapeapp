@@ -1,3 +1,4 @@
+import 'regenerator-runtime/runtime';
 import { existsSync } from 'fs'
 import puppeteer from "puppeteer";
 const { AxePuppeteer } = require('axe-puppeteer');

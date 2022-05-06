@@ -1,7 +1,7 @@
 import path from 'path';
 import fs from 'fs';
-const items = JSON.parse(fs.readFileSync(path.resolve(projectPath, 'dist/data/items.json'), 'utf-8'));
-const settings = JSON.parse(fs.readFileSync(path.resolve(projectPath, 'dist/settings.json')));
+import items from 'project/dist/data/items';
+import settings from 'project/dist/settings'
 
 import { flattenItems } from '../utils/itemsCalculator'
 import getGroupedItems  from '../utils/itemsCalculator'

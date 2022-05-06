@@ -205,7 +205,6 @@ export const flattenItems = groupedItems => {
 }
 
 export function getItemsForExport(params) {
-  console.info(params.format);
   return _.flatten(getGroupedItems(params).map((x) => x.items));
 }
 

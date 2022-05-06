@@ -8,12 +8,16 @@ import * as LandscapeContentRenderer from '../src/components/LandscapeContentRen
 import * as HomePageRenderer from '../src/components/HomePageRenderer.js';
 import * as GuideRenderer from '../src/components/GuideRenderer.js';
 import * as EmbedPageRenderer from '../src/components/EmbedPageRenderer.js';
+import * as FullscreenLandscapeRenderer from '../src/components/FullscreenLandscapeRenderer';
 import { getLandscapeItems } from '../src/utils/itemsCalculator.js';
+import { findLandscapeSettings } from '../src/utils/landscapeSettings'
 import fs from 'fs/promises';
 
 async function main() {
   await fs.mkdir(path.resolve(projectPath, 'dist/data/items'), { recursive: true});
+  await fs.mkdir(path.resolve(projectPath, 'dist/fullscreen'), { recursive: true});
   const payload = {};
+  const fullscreen = {};
 
   let guideIndex = {};
   let guideJson = null;
@@ -27,8 +31,8 @@ async function main() {
   } catch(ex) {}
 
   for (let key in settings.big_picture) {
-    const landscapeSettings = settings.big_picture[key];
-    landscapeSettings.isMain = key === 'main';
+    const landscapeSettingsEntry = settings.big_picture[key];
+    const landscapeSettings = findLandscapeSettings(landscapeSettingsEntry.url);
     const landscapeItems = getLandscapeItems({
       items: projects,
       landscapeSettings: landscapeSettings,
@@ -38,6 +42,20 @@ async function main() {
       landscapeItems: landscapeItems,
       landscapeSettings: landscapeSettings
     });
+
+    const landscapeContentElement = LandscapeContentRenderer.getElement({
+      landscapeItems: landscapeItems,
+      landscapeSettings: landscapeSettings
+    });
+
+    const fullscreenContent = FullscreenLandscapeRenderer.render({
+      landscapeSettings: landscapeSettings,
+      landscapeContent: landscapeContentElement,
+      version: '1.0'
+    });
+
+    fullscreen[key] = fullscreenContent;
+
     await fs.writeFile(path.resolve(projectPath, `dist/data/items/landscape-${landscapeSettings.url}.html`), landscapeContent);
 
     payload[ key === 'main' ? 'main' : landscapeSettings.url] = landscapeContent;
@@ -132,12 +150,22 @@ async function main() {
   await fs.writeFile(path.resolve(projectPath, 'dist/borderless-mode.html'), renderPage({homePage: cardsPage, mode: 'card'}));
 
   for (let key in settings.big_picture) {
-    const landscapeSettings = settings.big_picture[key];
+    const landscapeSettingsEntry = settings.big_picture[key];
     if (key !== 'main') {
-      const homePage = HomePageRenderer.render({settings, bigPictureKey: landscapeSettings.url});
-      await fs.writeFile(path.resolve(projectPath, `dist/${landscapeSettings.url}.html`),
-        renderPage({homePage, mode: landscapeSettings.url }));
+      const homePage = HomePageRenderer.render({settings, bigPictureKey: landscapeSettingsEntry.url});
+      await fs.writeFile(path.resolve(projectPath, `dist/${landscapeSettingsEntry.url}.html`),
+        renderPage({homePage, mode: landscapeSettingsEntry.url }));
     }
+    const fullscreenPage = `<style>
+      ${fonts}
+      ${processedCss}
+    </style>
+    <body>
+      ${fullscreen[key]}
+    </body>
+    `;
+    const fullscreenFile = key === 'main' ? 'index' : landscapeSettingsEntry.url;
+    await fs.writeFile(path.resolve(projectPath, `dist/fullscreen/${fullscreenFile}.html`), fullscreenPage );
   }
 
   // embed

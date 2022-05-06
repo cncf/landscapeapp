@@ -1,3 +1,4 @@
+import 'regenerator-runtime/runtime';
 import puppeteer from "puppeteer";
 require('expect-puppeteer');
 import { paramCase } from 'change-case';

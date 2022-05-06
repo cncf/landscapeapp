@@ -1,8 +1,7 @@
 import path from 'path';
 import fs from 'fs';
-const projectPath = process.env.PROJECT_PATH;
-const items = JSON.parse(fs.readFileSync(path.resolve(projectPath, 'dist/data/items.json'), 'utf-8'));
-const settings = JSON.parse(fs.readFileSync(path.resolve(projectPath, 'dist/settings.json')));
+import items from 'project/dist/data/items';
+import settings from 'project/dist/settings'
 
 import { flattenItems } from '../utils/itemsCalculator'
 import getGroupedItems  from '../utils/itemsCalculator'
@@ -31,4 +30,8 @@ export async function handler(event, context) {
   const body = processRequest(event.queryStringParameters)
   const headers = { 'Content-Type': 'application/json' }
   return { statusCode: 200, body: JSON.stringify(body), headers }
+}
+
+if (__filename === process.argv[1]) {
+  console.info(JSON.stringify(processRequest(process.argv[2]), null, 4));
 }

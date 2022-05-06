@@ -1,3 +1,4 @@
+import 'regenerator-runtime/runtime';
 import actualTwitter from '../../tools/actualTwitter';
 
 describe('Twitter URL', () => {

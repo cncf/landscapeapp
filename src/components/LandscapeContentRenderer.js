@@ -16,7 +16,7 @@ const extractKeys = (obj, keys) => {
 }
 
 
-export function render({landscapeSettings, landscapeItems}) {
+export function getElement({landscapeSettings, landscapeItems}) {
   const elements = landscapeSettings.elements.map(element => {
     if (element.type === 'LandscapeLink') {
       return <OtherLandscapeLink {..._.pick(element, ['width','height','top','left','color', 'layout', 'title', 'url', 'image']) }
@@ -40,9 +40,10 @@ export function render({landscapeSettings, landscapeItems}) {
     return <Component {...category} subcategories={subcategories} {...attributes} />
   });
 
-  return ReactDOMServer.renderToStaticMarkup(
-    <div style={{ position: 'relative' }}>
+  return <div style={{ position: 'relative' }}>
       {elements}
     </div>
-  );
 };
+export function render() {
+  return ReactDOMServer.renderToStaticMarkup(getElement.apply(this, arguments));
+}

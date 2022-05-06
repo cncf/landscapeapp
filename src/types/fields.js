@@ -12,9 +12,9 @@
 import path from 'path';
 import fs from 'fs';
 import _ from 'lodash';
-const lookups = JSON.parse(fs.readFileSync(path.resolve(process.env.PROJECT_PATH, 'lookup.json'), 'utf-8'));
+import lookups from  'project/lookup'
 import unpack from '../utils/unpackArray';
-const settings = JSON.parse(fs.readFileSync(path.resolve(process.env.PROJECT_PATH, 'dist', 'settings.json'), 'utf-8'));
+import settings from 'project/dist/settings'
 import isParent from '../utils/isParent';
 
 const relationField = (function() {

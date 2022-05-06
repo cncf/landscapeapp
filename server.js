@@ -6,38 +6,40 @@ const http = require('http');
 const fs = require('fs');
 const path = require('path');
 
-const apiIds = require('./src/api/ids');
-const apiExport = require('./src/api/export');
-
-
-//
-
-
 http.createServer(function (request, response) {
   console.log('request starting...', request.url);
 
   if (request.url.indexOf('/api/ids') !== -1) {
     const query = request.url.split('?')[1] || '';
-    const output = apiIds.processRequest(query);
-    response.writeHead(200, { 'Content-Type': 'application/json' });
-    response.end(JSON.stringify(output));
+
+    require('child_process').exec(`babel-node src/api/ids.js '${query}'`, {}, function(e, output, err) {
+      response.writeHead(200, { 'Content-Type': 'application/json' });
+      response.end(output);
+    });
+
     return;
   }
   if (request.url.indexOf('/api/export') !== -1) {
     const query = request.url.split('?')[1] || '';
-    const output = apiExport.processRequest(query);
-    response.writeHead(200, {
-      'Content-Type': 'text/css',
-      'Content-Disposition': 'attachment; filename=interactive-landscape.csv'
+
+    require('child_process').exec(`babel-node src/api/export.js '${query}'`, {}, function(e, output, err) {
+      response.writeHead(200, {
+        'Content-Type': 'text/css',
+        'Content-Disposition': 'attachment; filename=interactive-landscape.csv'
+      });
+      response.end(output);
     });
-    response.end(output);
+
     return;
   }
   let filePath = path.join(process.env.PROJECT_PATH, 'dist', request.url.split('?')[0]);
-  console.info(filePath);
   if (filePath == `${process.env.PROJECT_PATH}/dist/`) {
     filePath = `${process.env.PROJECT_PATH}/dist/index.html`;
   }
+  if (filePath == `${process.env.PROJECT_PATH}/dist/fullscreen`) {
+    filePath = `${process.env.PROJECT_PATH}/dist/fullscreen/index.html`;
+  }
+  console.info(filePath);
 
   const extname = path.extname(filePath);
   let encoding = 'utf-8';
@@ -57,6 +59,14 @@ http.createServer(function (request, response) {
       break;
     case '.jpg':
       contentType = 'image/jpg';
+      encoding = undefined;
+      break;
+    case '.png':
+      contentType = 'image/png';
+      encoding = undefined;
+      break;
+    case '.pdf':
+      contentType = 'application/pdf';
       encoding = undefined;
       break;
   }

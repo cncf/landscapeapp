@@ -1,4 +1,5 @@
 import React from 'react';
+import assetPath from '../utils/assetPath';
 
 const OutboundLink = ({to, className, children}) =>
     (<a data-type="external" href={to} className={className}>{children}</a>)
@@ -16,7 +17,7 @@ const CardLink = ({ url, children }) => {
 }
 
 const OtherLandscapeLink = function({top, left, height, width, color, title, image, url, layout}) {
-  const imageSrc = image || `images/${url}_preview.png`;
+  const imageSrc = image || assetPath(`images/${url}_preview.png`);
   if (layout === 'category') {
     return <div style={{
       position: 'absolute', top, left, height, width, background: color,

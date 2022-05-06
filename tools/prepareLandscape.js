@@ -20,6 +20,8 @@ writeFileSync(path.resolve(projectPath, 'dist', 'settings.json'), JSON.stringify
 mkdirSync(path.resolve(projectPath, 'dist', 'data', 'exports'), { recursive: true });
 mkdirSync(path.resolve(projectPath, 'dist', 'data', 'items'), { recursive: true });
 writeFileSync(path.resolve(projectPath, 'dist', 'data', 'items.json'), JSON.stringify(items))
+writeFileSync(path.resolve(projectPath, 'dist', process.env.PROJECT_NAME || '', '_headers'),
+  readFileSync('_headers', 'utf-8'));
 
 items.forEach(item => {
   writeFileSync(path.resolve(projectPath, 'dist', 'data', 'items', `${item.id}.json`), JSON.stringify(item))
