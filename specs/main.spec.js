@@ -28,7 +28,7 @@ expect.extend({
   },
 })
 
-jest.setTimeout(process.env.SHOW_BROWSER ? 40000 : 30000);
+jest.setTimeout(process.env.SHOW_BROWSER ? 30000 : 30000);
 
 async function makePage(initialUrl) {
   try {
@@ -46,6 +46,10 @@ async function makePage(initialUrl) {
     }
     return await makePage(initialUrl);
   }
+}
+
+async function waitForSelector(page, selector) {
+  await page.waitForFunction(`document.querySelector('${selector}') && document.querySelector('${selector}').clientHeight != 0`);
 }
 
 function embedTest() {
@@ -67,7 +71,7 @@ function embedTest() {
       test('I can click on a tile in a frame and I get a modal after that', async function() {
         await expect(frame).toHaveElement(`.mosaic img`);
         await frame.click(`.mosaic img`);
-        await frame.waitForSelector(".modal-content");
+        await waitForSelector(frame, ".modal-content .product-logo");
       });
       close();
     }, 6 * 60 * 1000); //give it up to 1 min to execute
@@ -97,7 +101,7 @@ function mainTest() {
       });
       test(`If I click on a card, I see a modal dialog`, async function() {
         await page.click(`.mosaic img[src='${pathPrefix}/logos/${settings.test.logo}']`);
-        await page.waitForSelector(".modal-content");
+        await waitForSelector(page, ".modal-content .product-logo");
       });
       close();
     }, 6 * 60 * 1000); //give it up to 1 min to execute
@@ -109,29 +113,29 @@ function landscapeTest() {
     describe("I visit a main landscape page and have all required elements", () => {
       test('I open a landscape page and wait for it to load', async function() {
         page = await makePage(appUrl);
-        await page.waitForSelector('.big-picture-section');
+        await page.waitForSelector('.cards-section [data-mode=main]');
       });
       test('When I click on an item the modal is open', async function() {
-        await page.click('.big-picture-section img[src]');
-        await page.waitForSelector(".modal-content");
+        await waitForSelector(page, '.cards-section [data-mode=main] img[src]');
+        await page.click('.cards-section [data-mode=main] img[src]');
+        await waitForSelector(page, ".modal-content .product-logo");
       });
 
-      // and check that without redirect it works too
       test('If I would straight open the url with a selected id, a modal appears', async function() {
         await page.goto(appUrl);
-        await page.waitForSelector('.big-picture-section');
-        await page.click('.big-picture-section img[src]');
-        await page.waitForSelector(".modal-content");
+        await waitForSelector(page, '.cards-section [data-mode=main] img[src]');
+        await page.click('.cards-section [data-mode=main] img[src]');
+        await waitForSelector(page, ".modal-content .product-logo");
       });
       close();
     }, 6 * 60 * 1000); //give it up to 1 min to execute
   });
-  landscapeSettingsList.slice(1).forEach(({ name, basePath }) => {
+  landscapeSettingsList.slice(1).forEach(({ name, basePath, url }) => {
     test(`I visit ${name} landscape page and have all required elements, elements are clickable`, async () => {
       const page = await makePage(`${appUrl}/${basePath}`);
-      await page.waitForSelector('.big-picture-section');
-      await page.click('.big-picture-section img[src]');
-      await page.waitForSelector(".modal-content");
+      await waitForSelector(page, `.cards-section [data-mode=${url}] img[src]`);
+      await page.click(`.cards-section [data-mode=${url}] img[src]`);
+      await waitForSelector(page, ".modal-content .product-logo");
     }, 6 * 60 * 1000); //give it up to 1 min to execute
     close();
   })

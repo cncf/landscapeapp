@@ -655,7 +655,7 @@ const CncfLandscapeApp = {
       mode: parseMode(params.get('format') || pathname) || CncfLandscapeApp.initialMode,
       cardStyle: params.get('style') || parseCardStyle(pathname),
 
-      grouping: params.get('grouping') || 'category',
+      grouping: params.get('grouping') || 'project',
       sort: params.get('sort') || 'name',
 
       category: f('category', params.get('category') || ''),
