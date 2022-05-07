@@ -61,7 +61,7 @@ async function main() {
     payload[ key === 'main' ? 'main' : landscapeSettings.url] = landscapeContent;
 
     // render a guide too
-    if (key === 'main') {
+    if (key === 'main' && guideJson) {
       const guideContent = GuideRenderer.render({
         settings,
         landscapeSettings,
@@ -138,13 +138,13 @@ async function main() {
     return result;
   }
 
-  const homePageGuide = HomePageRenderer.render({settings, guidePayload: !!payload.guide });
+  const homePageGuide = HomePageRenderer.render({settings, guidePayload: !!payload.guide, hasGuide: guideJson });
   await fs.writeFile(path.resolve(distPath, 'guide.html'), renderPage({homePage: homePageGuide, mode: 'guide'}));
 
-  const homePage = HomePageRenderer.render({settings, bigPictureKey: 'main'});
+  const homePage = HomePageRenderer.render({settings, bigPictureKey: 'main', hasGuide: guideJson});
   await fs.writeFile(path.resolve(distPath, 'index.html'), renderPage({homePage: homePage, mode: 'main'}));
 
-  const cardsPage = HomePageRenderer.render({settings});
+  const cardsPage = HomePageRenderer.render({settings, hasGuide: guideJson});
   await fs.writeFile(path.resolve(distPath, 'card-mode.html'), renderPage({homePage: cardsPage, mode: 'card'}));
   await fs.writeFile(path.resolve(distPath, 'logo-mode.html'), renderPage({homePage: cardsPage, mode: 'card'}));
   await fs.writeFile(path.resolve(distPath, 'flat-mode.html'), renderPage({homePage: cardsPage, mode: 'card'}));
@@ -153,7 +153,7 @@ async function main() {
   for (let key in settings.big_picture) {
     const landscapeSettingsEntry = settings.big_picture[key];
     if (key !== 'main') {
-      const homePage = HomePageRenderer.render({settings, bigPictureKey: landscapeSettingsEntry.url});
+      const homePage = HomePageRenderer.render({settings, bigPictureKey: landscapeSettingsEntry.url, hasGuide: guideJson});
       await fs.writeFile(path.resolve(distPath, `${landscapeSettingsEntry.url}.html`),
         renderPage({homePage, mode: landscapeSettingsEntry.url }));
     }
