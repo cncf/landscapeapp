@@ -1,5 +1,5 @@
 import path from 'path';
-import  { settings, projectPath } from './settings.js';
+import  { settings, projectPath, distPath, basePath } from './settings.js';
 import  { projects } from './loadData.js';
 import { processedLandscape } from './processedLandscape.js';
 import { render } from '../src/components/ItemDialogContentRenderer.js';
@@ -14,15 +14,15 @@ import { findLandscapeSettings } from '../src/utils/landscapeSettings'
 import fs from 'fs/promises';
 
 async function main() {
-  await fs.mkdir(path.resolve(projectPath, 'dist/data/items'), { recursive: true});
-  await fs.mkdir(path.resolve(projectPath, 'dist/fullscreen'), { recursive: true});
+  await fs.mkdir(path.resolve(distPath, 'data/items'), { recursive: true});
+  await fs.mkdir(path.resolve(distPath, 'fullscreen'), { recursive: true});
   const payload = {};
   const fullscreen = {};
 
   let guideIndex = {};
   let guideJson = null;
   try {
-    guideJson = JSON.parse(await fs.readFile(path.resolve(projectPath, 'dist/guide.json'), 'utf-8'));
+    guideJson = JSON.parse(await fs.readFile(path.resolve(distPath, 'guide.json'), 'utf-8'));
     guideIndex = guideJson.filter(section => section.landscapeKey)
       .reduce((accumulator, { category, subcategory, anchor }) => {
         const key = [category, subcategory].filter(_ => _).join(' / ')
@@ -56,7 +56,7 @@ async function main() {
 
     fullscreen[key] = fullscreenContent;
 
-    await fs.writeFile(path.resolve(projectPath, `dist/data/items/landscape-${landscapeSettings.url}.html`), landscapeContent);
+    await fs.writeFile(path.resolve(distPath, `data/items/landscape-${landscapeSettings.url}.html`), landscapeContent);
 
     payload[ key === 'main' ? 'main' : landscapeSettings.url] = landscapeContent;
 
@@ -69,7 +69,7 @@ async function main() {
         entries: projects
       });
       payload.guide = guideContent;
-      await fs.writeFile(path.resolve(projectPath, `dist/data/items/guide.html`), guideContent);
+      await fs.writeFile(path.resolve(distPath, `data/items/guide.html`), guideContent);
     }
   }
 
@@ -78,7 +78,7 @@ async function main() {
   for (let item of projects) {
     const result = render({settings, itemInfo: item, tweetsCount: processedLandscape.twitter_options.count});
     // console.info(`Rendering ${item.id}`);
-    await fs.writeFile(path.resolve(projectPath, `dist/data/items/info-${item.id}.html`), result);
+    await fs.writeFile(path.resolve(distPath, `data/items/info-${item.id}.html`), result);
   }
 
   let defaultCards = '';
@@ -93,10 +93,10 @@ async function main() {
     flatCards += flatCard;
   }
 
-  await fs.writeFile(path.resolve(projectPath, `dist/data/items/cards-card.html`), defaultCards);
-  await fs.writeFile(path.resolve(projectPath, `dist/data/items/cards-logo.html`), defaultCards);
-  await fs.writeFile(path.resolve(projectPath, `dist/data/items/cards-borderless.html`), borderlessCards);
-  await fs.writeFile(path.resolve(projectPath, `dist/data/items/cards-flat.html`), flatCards);
+  await fs.writeFile(path.resolve(distPath, `data/items/cards-card.html`), defaultCards);
+  await fs.writeFile(path.resolve(distPath, `data/items/cards-logo.html`), defaultCards);
+  await fs.writeFile(path.resolve(distPath, `data/items/cards-borderless.html`), borderlessCards);
+  await fs.writeFile(path.resolve(distPath, `data/items/cards-flat.html`), flatCards);
 
   // render an index.html
   const js = await fs.readFile('src/script.js', 'utf-8');
@@ -126,6 +126,7 @@ async function main() {
     <script>
       ${js}
       CncfLandscapeApp.initialMode = '${mode}';
+      CncfLandscapeApp.basePath = '${basePath}';
     </script>
     <body style="opacity: 0;">
       ${homePage}
@@ -138,22 +139,22 @@ async function main() {
   }
 
   const homePageGuide = HomePageRenderer.render({settings, guidePayload: !!payload.guide });
-  await fs.writeFile(path.resolve(projectPath, 'dist/guide.html'), renderPage({homePage: homePageGuide, mode: 'guide'}));
+  await fs.writeFile(path.resolve(distPath, 'guide.html'), renderPage({homePage: homePageGuide, mode: 'guide'}));
 
   const homePage = HomePageRenderer.render({settings, bigPictureKey: 'main'});
-  await fs.writeFile(path.resolve(projectPath, 'dist/index.html'), renderPage({homePage: homePage, mode: 'main'}));
+  await fs.writeFile(path.resolve(distPath, 'index.html'), renderPage({homePage: homePage, mode: 'main'}));
 
   const cardsPage = HomePageRenderer.render({settings});
-  await fs.writeFile(path.resolve(projectPath, 'dist/card-mode.html'), renderPage({homePage: cardsPage, mode: 'card'}));
-  await fs.writeFile(path.resolve(projectPath, 'dist/logo-mode.html'), renderPage({homePage: cardsPage, mode: 'card'}));
-  await fs.writeFile(path.resolve(projectPath, 'dist/flat-mode.html'), renderPage({homePage: cardsPage, mode: 'card'}));
-  await fs.writeFile(path.resolve(projectPath, 'dist/borderless-mode.html'), renderPage({homePage: cardsPage, mode: 'card'}));
+  await fs.writeFile(path.resolve(distPath, 'card-mode.html'), renderPage({homePage: cardsPage, mode: 'card'}));
+  await fs.writeFile(path.resolve(distPath, 'logo-mode.html'), renderPage({homePage: cardsPage, mode: 'card'}));
+  await fs.writeFile(path.resolve(distPath, 'flat-mode.html'), renderPage({homePage: cardsPage, mode: 'card'}));
+  await fs.writeFile(path.resolve(distPath, 'borderless-mode.html'), renderPage({homePage: cardsPage, mode: 'card'}));
 
   for (let key in settings.big_picture) {
     const landscapeSettingsEntry = settings.big_picture[key];
     if (key !== 'main') {
       const homePage = HomePageRenderer.render({settings, bigPictureKey: landscapeSettingsEntry.url});
-      await fs.writeFile(path.resolve(projectPath, `dist/${landscapeSettingsEntry.url}.html`),
+      await fs.writeFile(path.resolve(distPath, `${landscapeSettingsEntry.url}.html`),
         renderPage({homePage, mode: landscapeSettingsEntry.url }));
     }
     const fullscreenPage = `<style>
@@ -165,13 +166,13 @@ async function main() {
     </body>
     `;
     const fullscreenFile = key === 'main' ? 'index' : landscapeSettingsEntry.url;
-    await fs.writeFile(path.resolve(projectPath, `dist/fullscreen/${fullscreenFile}.html`), fullscreenPage );
+    await fs.writeFile(path.resolve(distPath, `fullscreen/${fullscreenFile}.html`), fullscreenPage );
   }
 
   // embed
   const resizerHostJs = await fs.readFile(require.resolve('iframe-resizer/js/iframeResizer.min.js'), 'utf-8');
   const resizerConfig = await fs.readFile('src/iframeResizer.js');
-  await fs.writeFile(path.resolve(projectPath, 'dist/iframeResizer.js'), resizerHostJs + "\n" + resizerConfig);
+  await fs.writeFile(path.resolve(distPath, 'iframeResizer.js'), resizerHostJs + "\n" + resizerConfig);
   const embed = `
     <div>
       <h1>Testing how great is that embed </h1>
@@ -182,7 +183,7 @@ async function main() {
       <h2>Wow, that was a cool embed.</h2>
     </div>
   `
-  await fs.writeFile(path.resolve(projectPath, 'dist/embed.html'), embed);
+  await fs.writeFile(path.resolve(distPath, 'embed.html'), embed);
 
   // embed page renderer
   const embeddedJs = await fs.readFile('src/embedded-script.js', 'utf-8');
@@ -207,8 +208,8 @@ async function main() {
   for (let key in settings.prerender) {
     const url = settings.prerender[key];
     const embedded = EmbedPageRenderer.render({settings, items: projects, exportUrl: url });
-    await fs.mkdir(path.resolve(projectPath, `dist/pages`), { recursive: true });
-    await fs.writeFile(path.resolve(projectPath, `dist/pages/${key}.html`), renderEmbedPage(embedded));
+    await fs.mkdir(path.resolve(distPath, `pages`), { recursive: true });
+    await fs.writeFile(path.resolve(distPath, `pages/${key}.html`), renderEmbedPage(embedded));
   }
 
 

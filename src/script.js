@@ -282,7 +282,7 @@ const CncfLandscapeApp = {
         e.preventDefault();
         e.stopPropagation();
         const search = CncfLandscapeApp.stringifyApiUrl();
-        const url = `/api/export?${search}`;
+        const url = `${this.basePath}/api/export?${search}`;
 
         // now open a download
         const link = document.createElement('a');
@@ -634,6 +634,7 @@ const CncfLandscapeApp = {
   },
   parseUrl: function({pathname, search, hash }) {
     search = search || '';
+    pathname = pathname.replace(this.basePath, '');
     if (search.indexOf('?') !== -1) {
       search = search.split('?')[1];
     }
@@ -826,13 +827,13 @@ const CncfLandscapeApp = {
   },
   // update a browser url, should be later compatible with a parseUrl call
   stringifyBrowserUrl: function(state) {
-    let url = "./";
+    let url = `${this.basePath}/`;
     if (CncfLandscapeApp.state.mode === 'guide') {
-      return './guide' + (CncfLandscapeApp.state.activeSection ? CncfLandscapeApp.state.activeSection : '') ;
+      return `${this.basePath}/guide` + (CncfLandscapeApp.state.activeSection ? CncfLandscapeApp.state.activeSection : '') ;
     } else if (CncfLandscapeApp.state.mode === 'card') {
-      url = './' + CncfLandscapeApp.state.cardStyle + '-mode';
+      url = `${this.basePath}/` + CncfLandscapeApp.state.cardStyle + '-mode';
     } else if (CncfLandscapeApp.state.mode !== 'main') {
-      url = './' + CncfLandscapeApp.state.mode;
+      url = `${this.basePath}/` + CncfLandscapeApp.state.mode;
     }
     const params = {};
 
@@ -871,7 +872,7 @@ const CncfLandscapeApp = {
   showSelectedItem: async function(selectedItemId) {
     this.selectedItems = this.selectedItems || {};
     if (!this.selectedItems[selectedItemId]) {
-      const result = await fetch(`/data/items/info-${selectedItemId}.html`);
+      const result = await fetch(`${this.basePath}/data/items/info-${selectedItemId}.html`);
       const text = await result.text();
       this.selectedItems[selectedItemId] = text;
     }
@@ -966,7 +967,7 @@ const CncfLandscapeApp = {
   },
   fetchApiData: async function() {
     const search = this.stringifyApiUrl();
-    const url = `api/ids?${search}`;
+    const url = `${this.basePath}/api/ids?${search}`;
     const response = await fetch(url);
     const json = await response.json();
     return json;
@@ -994,7 +995,7 @@ const CncfLandscapeApp = {
 
     const contentEl = document.querySelector('#guide-page');
     if (!contentEl.getAttribute('data-loaded')) {
-      const url = `data/items/guide.html`;
+      const url = `${this.basePath}/data/items/guide.html`;
       const result = await fetch(url);
       const text = await result.text();
       contentEl.innerHTML = text;
@@ -1050,7 +1051,7 @@ const CncfLandscapeApp = {
     const contentEl = document.querySelector(`.landscape-flex[data-mode=${landscape}]`);
     if (contentEl.querySelector('.inner-landscape').children.length === 0) {
       const tabEl = document.querySelector(`a[data-mode=${landscape}]`);
-      const url = `data/items/landscape-${tabEl.getAttribute('href')}.html`
+      const url = `${this.basePath}/data/items/landscape-${tabEl.getAttribute('href')}.html`
       const result = await fetch(url);
       const text = await result.text();
       contentEl.querySelector('.inner-landscape').innerHTML = text;
@@ -1083,7 +1084,7 @@ const CncfLandscapeApp = {
     this.manageZoomAndFullscreenButtons();
 
     if (!this.cards) {
-      const response = await fetch(`/data/items/cards-${cardStyle}.html`);
+      const response = await fetch(`${this.basePath}/data/items/cards-${cardStyle}.html`);
       const allCards = await response.text();
       const container = document.createElement('div');
       container.innerHTML = allCards;

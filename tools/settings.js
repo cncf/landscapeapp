@@ -6,8 +6,10 @@ if (!process.env.PROJECT_PATH) {
   process.exit(1);
 }
 export const projectPath = process.env.PROJECT_PATH;
-const settingsPath = path.resolve(projectPath, 'settings.yml');
+export const distPath = path.resolve(projectPath, 'dist', process.env.PROJECT_NAME || '');
+export const settingsPath = path.resolve(projectPath, 'settings.yml');
 export const settings = require('js-yaml').load(readFileSync(settingsPath));
+export const basePath = process.env.PROJECT_NAME ? '/' + process.env.PROJECT_NAME : '';
 
 export const saveSettings = (newSettings) => {
   writeFileSync(settingsPath, dump(newSettings));

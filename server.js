@@ -1,4 +1,5 @@
-// this server is usually used locally
+// acts as a dev server and a dist server
+// netlify does not use this
 
 const projectPath = process.env.PROJECT_PATH;
 
@@ -33,13 +34,11 @@ http.createServer(function (request, response) {
     return;
   }
   let filePath = path.join(process.env.PROJECT_PATH, 'dist', request.url.split('?')[0]);
-  if (filePath == `${process.env.PROJECT_PATH}/dist/`) {
-    filePath = `${process.env.PROJECT_PATH}/dist/index.html`;
+  if (fs.existsSync(path.resolve(filePath, 'index.html'))) {
+    filePath = path.resolve(filePath, 'index.html');
+  } else if (fs.existsSync(filePath + '.html')) {
+    filePath = filePath + '.html'
   }
-  if (filePath == `${process.env.PROJECT_PATH}/dist/fullscreen`) {
-    filePath = `${process.env.PROJECT_PATH}/dist/fullscreen/index.html`;
-  }
-  console.info(filePath);
 
   const extname = path.extname(filePath);
   let encoding = 'utf-8';

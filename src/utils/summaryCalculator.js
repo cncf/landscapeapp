@@ -6,7 +6,7 @@ import { findLandscapeSettings } from "./landscapeSettings";
 
 import path from 'path';
 import fs from 'fs';
-import settings from 'project/dist/settings';
+import settings from 'dist/settings';
 
 const getOrganizations = function(params) {
   const filteredItems = getItemsForExport(params);

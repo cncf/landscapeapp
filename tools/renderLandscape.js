@@ -1,5 +1,5 @@
 import Promise from 'bluebird';
-import { projectPath } from './settings';
+import { projectPath, distPath } from './settings';
 import { resolve } from 'path';
 import { landscapeSettingsList } from '../src/utils/landscapeSettings'
 import { calculateSize } from "../src/utils/landscapeCalculations";
@@ -49,7 +49,7 @@ async function main() {
       const fullUrl = `${baseUrl}?version=${version}&scale=false&pdf`
       console.info(`visiting ${fullUrl}`);
       await page.goto(fullUrl, { waitUntil: 'networkidle0'});
-      const imagesPath = [projectPath, 'dist', process.env.PROJECT_NAME, 'images'].filter(_ => _)
+      const imagesPath = path.resolve(distPath, 'images');
       await page.screenshot({ path: resolve(...imagesPath, fileName), fullPage: false });
       if (pdfFileName) {
         await page.emulateMediaType('screen');

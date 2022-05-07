@@ -4,33 +4,31 @@ import { readFileSync, writeFileSync, mkdirSync, existsSync, rmSync } from 'fs'
 import { execSync } from 'child_process'
 import qs from 'query-string'
 import loadGuide from './loadGuide'
+import { projectPath, settings, distPath } from './settings';
 
-const projectPath = process.env.PROJECT_PATH;
-const settingsPath = path.resolve(projectPath, 'settings.yml')
-const settings = load(readFileSync(settingsPath))
 const items = require(path.resolve(projectPath, 'data.json'))
 const { website } = settings.global
 
 //render
-rmSync(path.resolve(projectPath, 'dist'), { recursive: true, force: true });
-mkdirSync(path.resolve(projectPath, 'dist', 'logos'), { recursive: true });
-execSync(`cp -r "${projectPath}/images" "${projectPath}/dist"`);
-execSync(`cp -r "${projectPath}/cached_logos/" "${projectPath}/dist/logos"`);
-writeFileSync(path.resolve(projectPath, 'dist', 'settings.json'), JSON.stringify(settings));
-mkdirSync(path.resolve(projectPath, 'dist', 'data', 'exports'), { recursive: true });
-mkdirSync(path.resolve(projectPath, 'dist', 'data', 'items'), { recursive: true });
-writeFileSync(path.resolve(projectPath, 'dist', 'data', 'items.json'), JSON.stringify(items))
-writeFileSync(path.resolve(projectPath, 'dist', process.env.PROJECT_NAME || '', '_headers'),
+rmSync(distPath, { recursive: true, force: true });
+mkdirSync(path.resolve(distPath, 'logos'), { recursive: true });
+execSync(`cp -r "${projectPath}/images" "${distPath}"`);
+execSync(`cp -r "${projectPath}/cached_logos/" "${distPath}/logos"`);
+writeFileSync(path.resolve(distPath, 'settings.json'), JSON.stringify(settings));
+mkdirSync(path.resolve(distPath, 'data', 'exports'), { recursive: true });
+mkdirSync(path.resolve(distPath, 'data', 'items'), { recursive: true });
+writeFileSync(path.resolve(distPath, 'data', 'items.json'), JSON.stringify(items))
+writeFileSync(path.resolve(distPath, '_headers'),
   readFileSync('_headers', 'utf-8'));
 
 items.forEach(item => {
-  writeFileSync(path.resolve(projectPath, 'dist', 'data', 'items', `${item.id}.json`), JSON.stringify(item))
+  writeFileSync(path.resolve(distPath, 'data', 'items', `${item.id}.json`), JSON.stringify(item))
 });
 
 const guide = loadGuide();
 
 if (guide) {
-  writeFileSync(path.resolve(projectPath, 'dist', 'guide.json'), JSON.stringify(guide))
+  writeFileSync(path.resolve(distPath, 'guide.json'), JSON.stringify(guide))
 }
 
 {
@@ -40,7 +38,7 @@ if (guide) {
   const { parseParams } = require('../src/utils/routing')
 
   const itemsForExport = prepareItemsForExport(items)
-  writeFileSync(path.resolve(projectPath, 'dist', 'data', 'items-export.json'), JSON.stringify(itemsForExport))
+  writeFileSync(path.resolve(distPath, 'data', 'items-export.json'), JSON.stringify(itemsForExport))
 
   Object.entries(settings.export || {}).forEach(([exportPath, query]) => {
     const params = parseParams({ mainContentMode: 'card-mode', ...qs.parse(query) })
@@ -52,6 +50,6 @@ if (guide) {
 
     const exportItems = params.grouping === 'no' ? flattenItems(groupedItems) : groupedItems
     console.info({exportItems});
-    writeFileSync(path.resolve(projectPath, 'dist', 'data', 'exports',  `${exportPath}.json`), JSON.stringify(exportItems));
+    writeFileSync(path.resolve(distPath, 'data', 'exports',  `${exportPath}.json`), JSON.stringify(exportItems));
   })
 }

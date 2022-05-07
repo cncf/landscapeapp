@@ -2,13 +2,15 @@
 // Netlify does not allow nested directories for functions
 // so if we're building the preview for landscapeapp we will prefix function names with `$landscapeName--`
 
+import path from 'path';
+import { distPath } from './settings';
 import { mkdirSync, rmSync, readdirSync, writeFileSync } from 'fs'
 import ncc from '@vercel/ncc'
 
 const { PROJECT_NAME, PROJECT_PATH } = process.env
 
-const destFolder = [PROJECT_PATH, 'dist', PROJECT_NAME, 'functions'].filter(_ => _).join('/')
-const srcFolder = `${process.env.PWD}/src/api`
+const destFolder = path.resolve(distPath, 'functions');
+const srcFolder = `${process.env.PWD}/src/api`;
 
 rmSync(destFolder, { recursive: true, force: true })
 mkdirSync(destFolder, { recursive: true })

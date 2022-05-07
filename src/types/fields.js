@@ -14,7 +14,7 @@ import fs from 'fs';
 import _ from 'lodash';
 import lookups from  'project/lookup'
 import unpack from '../utils/unpackArray';
-import settings from 'project/dist/settings'
+import settings from 'dist/settings'
 import isParent from '../utils/isParent';
 
 const relationField = (function() {

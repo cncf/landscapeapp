@@ -1,7 +1,7 @@
 import path from 'path';
 import fs from 'fs';
-import items from 'project/dist/data/items';
-import settings from 'project/dist/settings'
+import items from 'dist/data/items';
+import settings from 'dist/settings'
 
 import { flattenItems } from '../utils/itemsCalculator'
 import getGroupedItems  from '../utils/itemsCalculator'

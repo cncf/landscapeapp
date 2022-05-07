@@ -141,7 +141,7 @@ export function render({settings, guidePayload, bigPictureKey}) {
             title={settings.global.short_name}
             target="_blank"
             href={settings.global.company_url}>
-              <img src="/images/right-logo.svg" title={settings.global.short_name}/>
+              <img src={assetPath("/images/right-logo.svg")} title={settings.global.short_name}/>
             </a>
           </div>
         </div>
@@ -180,7 +180,7 @@ export function render({settings, guidePayload, bigPictureKey}) {
               )}
               { (settings.ads || []).map( (entry) => (
                   <OutboundLink className="sidebar-event" key={entry.image} to={entry.url} title={entry.title}>
-                    <img src={entry.image} alt={entry.title} />
+                    <img src={assetPath(entry.image)} alt={entry.title} />
                   </OutboundLink>
               )) }
             </div>

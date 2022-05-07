@@ -1,6 +1,6 @@
 import path from 'path';
 import fs from 'fs';
-import settings from 'project/dist/settings';
+import settings from 'dist/settings';
 import fields from "../types/fields";
 
 export const itemMargin = 3
