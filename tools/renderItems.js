@@ -177,9 +177,9 @@ async function main() {
     <div>
       <h1>Testing how great is that embed </h1>
       <iframe frameBorder="0" id="landscape" scrolling="no" style="width: 1px; min-width: 100%;"
-        src="/card-mode?style=borderless&grouping=license&license=mit-license&embed=yes">
+        src="${basePath}/card-mode?style=borderless&grouping=license&license=mit-license&embed=yes">
       </iframe>
-      <script src="/iframeResizer.js"></script>
+      <script src="${basePath}/iframeResizer.js"></script>
       <h2>Wow, that was a cool embed.</h2>
     </div>
   `
