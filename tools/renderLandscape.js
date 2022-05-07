@@ -50,11 +50,10 @@ async function main() {
       const fullUrl = `${baseUrl}?version=${version}&scale=false&pdf`
       console.info(`visiting ${fullUrl}`);
       await page.goto(fullUrl, { waitUntil: 'networkidle0'});
-      const imagesPath = path.resolve(distPath, 'images');
-      await page.screenshot({ path: resolve(...imagesPath, fileName), fullPage: false });
+      await page.screenshot({ path: resolve(distPath, 'images', fileName), fullPage: false });
       if (pdfFileName) {
         await page.emulateMediaType('screen');
-        const pdfPath = resolve(...imagesPath, pdfFileName);
+        const pdfPath = resolve(distPath, 'images', pdfFileName);
         const pdfData = await page.pdf({width, height, printBackground: true, pageRanges: '1' });
         require('fs').writeFileSync(pdfPath, pdfData);
       }
