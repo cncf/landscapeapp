@@ -8,9 +8,9 @@ const fs = require('fs');
 const path = require('path');
 
 http.createServer(function (request, response) {
-  console.log('request starting...', request.url);
 
   if (request.url.indexOf('/api/ids') !== -1) {
+    console.log('api request starting...', request.url);
     const query = request.url.split('?')[1] || '';
 
     require('child_process').exec(`babel-node src/api/ids.js '${query}'`, {}, function(e, output, err) {
@@ -21,6 +21,7 @@ http.createServer(function (request, response) {
     return;
   }
   if (request.url.indexOf('/api/export') !== -1) {
+    console.log('api request starting...', request.url);
     const query = request.url.split('?')[1] || '';
 
     require('child_process').exec(`babel-node src/api/export.js '${query}'`, {}, function(e, output, err) {
