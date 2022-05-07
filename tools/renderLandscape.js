@@ -1,3 +1,4 @@
+import path from 'path';
 import Promise from 'bluebird';
 import { projectPath, distPath } from './settings';
 import { resolve } from 'path';
