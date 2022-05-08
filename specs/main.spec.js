@@ -28,7 +28,7 @@ expect.extend({
   },
 })
 
-jest.setTimeout(process.env.SHOW_BROWSER ? 10000 : 10000);
+jest.setTimeout(process.env.SHOW_BROWSER ? 30000 : 30000);
 
 async function makePage(initialUrl) {
   try {
@@ -79,9 +79,8 @@ function embedTest() {
 
       // ensure that it is clickable
       test('I can click on a tile in a frame and I get a modal after that', async function() {
-        await expect(frame).toHaveElement(`.mosaic img`);
+        await waitForSelector(frame, ".cards-section .mosaic img");
         await frame.click(`.mosaic img`);
-        await waitForSelector(frame, ".modal-content .product-logo");
       });
       close();
     }, 6 * 60 * 1000); //give it up to 1 min to execute
