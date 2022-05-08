@@ -57,7 +57,7 @@ async function waitForSummaryText(page, text) {
 }
 
 async function waitForHeaderText(page, text) {
-  await page.waitForFunction(`document.querySelector('.sh_wrapper') && document.querySelector('.sh_wrapper').innerText.includes('${text}')`);
+  await page.waitForFunction(`[...document.querySelectorAll('.sh_wrapper')].find( (x) => x.innerText.includes('${text}'))`);
 }
 
 
