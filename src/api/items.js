@@ -9,7 +9,7 @@ import { parseParams } from '../utils/routing'
 
 export const processRequest = query => {
   const params = parseParams({ mainContentMode: 'card-mode', ...query })
-  const groupedItems = getGroupedItems({items: data.items, ...params})
+  const groupedItems = getGroupedItems({items: items, ...params})
     .map(group => {
       const items = group.items.map(({ id, name, href }) => ({ id, name, logo: `${settings.global.website}/${href}` }))
       return { ...group, items }
