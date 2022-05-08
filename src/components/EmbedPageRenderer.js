@@ -8,7 +8,6 @@ import { getDefaultCard, getBorderlessCard, getFlatCard } from './CardRenderer';
 
 export function render({settings, items, exportUrl}) {
   const params = parseParams(exportUrl.split('?').slice(-1)[0]);
-  console.info(params);
   const groupedItems = getGroupedItems({data: items, ...params})
   const cardStyle = params.cardStyle || 'default';
   const cardFn = cardStyle === 'borderless' ? getBorderlessCard : cardStyle === 'flat' ? getFlatCard : getDefaultCard;

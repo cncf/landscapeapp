@@ -24,7 +24,6 @@ const files = fs.readdirSync(srcFolder)
 async function main() {
   for (let file of files) {
     const destFile = [PROJECT_NAME, file].filter(_ => _).join('--')
-    console.info("Processing: file", file);
     const { code } = await ncc(`${srcFolder}/${file}`);
 
     code = code.replace(
