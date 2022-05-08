@@ -1,6 +1,6 @@
 import 'regenerator-runtime/runtime';
 import puppeteer from "puppeteer";
-require('expect-puppeteer');
+import 'expect-puppeteer';
 import { paramCase } from 'change-case';
 import { settings } from '../tools/settings';
 import { projects } from '../tools/loadData';
@@ -10,6 +10,8 @@ import { appUrl, pathPrefix } from '../tools/distSettings'
 const devicesMap = puppeteer.devices;
 const width = 1920;
 const height = 1080;
+
+console.info('hi');
 
 let setup;
 let browser;
