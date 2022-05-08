@@ -16,7 +16,7 @@ const pause = function(i) {
   })
 };
 
-const yaml = require('./js-yaml');
+const yaml = require('./jsyaml');
 process.chdir('..');
 const landscapesInfo = yaml.load(require('fs').readFileSync('landscapes.yml'));
 
