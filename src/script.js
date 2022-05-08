@@ -1042,6 +1042,26 @@ const CncfLandscapeApp = {
     this.highlightActiveTab();
     this.manageZoomAndFullscreenButtons();
 
+    // edge case: we just opened a tab without filters - then just display everything!
+    if (this.state.mode === this.initialMode) {
+      const allowedProps = ['grouping', 'sort', 'bestpractices', 'enduser', 'parent', 'language'];
+      const otherProps = ['category', 'project', 'license', 'organization', 'headquarters', 'company-type', 'industries']
+      let same = true;
+      for (let key of [...allowedProps, ...otherProps]) {
+        if (this.state[key] !== this.initialState[key]) {
+          same = false;
+        }
+      }
+      if (same) {
+        const contentEl = document.querySelector(`.landscape-flex[data-mode=${landscape}]`);
+        const itemElements = [...contentEl.querySelectorAll('[data-id]')];
+        for (let itemEl of itemElements) {
+          itemEl.style.visibility = '';
+        }
+        contentEl.querySelector('.inner-landscape').style.display = "";
+      }
+    }
+
     const apiData = await this.fetchApiData();
     const bigPictureItems = apiData.items;
     document.querySelector('h4.summary').innerText = apiData.summaryText;
