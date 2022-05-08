@@ -16,13 +16,8 @@ const pause = function(i) {
   })
 };
 
-console.info('starting', process.cwd());
-run('npm init -y');
-console.info('installing js-yaml', process.cwd());
-run('npm install js-yaml@4.0.0');
-const yaml = require('js-yaml');
+const yaml = require('./js-yaml');
 process.chdir('..');
-console.info('starting real script', process.cwd());
 const landscapesInfo = yaml.load(require('fs').readFileSync('landscapes.yml'));
 
 const dockerImage = 'netlify/build:xenial';
