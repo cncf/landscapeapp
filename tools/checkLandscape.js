@@ -15,7 +15,7 @@ async function main() {
     if (response.status() !== 200) {
       throw `[yarn check-landscape]: cannot load URL "${path}"`
     }
-    await Promise.delay(10000);
+    await Promise.delay(20000);
     const errors = await page.evaluate( function() {
       var result = [];
       var sections = document.querySelectorAll('.big-picture-section');
