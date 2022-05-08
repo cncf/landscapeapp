@@ -13,7 +13,7 @@ const { website } = settings.global
 rmSync(distPath, { recursive: true, force: true });
 mkdirSync(path.resolve(distPath, 'logos'), { recursive: true });
 execSync(`cp -r "${projectPath}/images" "${distPath}"`);
-execSync(`cp "${projectPath}/cached_logos/*" "${distPath}/logos"`);
+execSync(`cp ${projectPath}/cached_logos/* "${distPath}/logos"`);
 writeFileSync(path.resolve(distPath, 'settings.json'), JSON.stringify(settings));
 mkdirSync(path.resolve(distPath, 'data', 'exports'), { recursive: true });
 mkdirSync(path.resolve(distPath, 'data', 'items'), { recursive: true });
