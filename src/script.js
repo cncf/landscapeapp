@@ -1044,8 +1044,8 @@ const CncfLandscapeApp = {
 
     // edge case: we just opened a tab without filters - then just display everything!
     if (this.state.mode === this.initialMode) {
-      const allowedProps = ['grouping', 'sort', 'bestpractices', 'enduser', 'parent', 'language'];
-      const otherProps = ['category', 'project', 'license', 'organization', 'headquarters', 'company-type', 'industries']
+      const allowedProps = ['bestpractices', 'enduser', 'parent', 'language'];
+      const otherProps = ['project', 'license', 'organization', 'headquarters', 'company-type', 'industries']
       let same = true;
       for (let key of [...allowedProps, ...otherProps]) {
         if (this.state[key] !== this.initialState[key]) {
