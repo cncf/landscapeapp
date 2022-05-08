@@ -3,8 +3,8 @@
 // so if we're building the preview for landscapeapp we will prefix function names with `$landscapeName--`
 
 import path from 'path';
-import { distPath } from './settings';
-import { mkdirSync, rmSync, readdirSync, writeFileSync } from 'fs'
+import { distPath, projectPath } from './settings';
+import fs from 'fs'
 import ncc from '@vercel/ncc'
 
 const { PROJECT_NAME, PROJECT_PATH } = process.env
@@ -12,17 +12,36 @@ const { PROJECT_NAME, PROJECT_PATH } = process.env
 const destFolder = path.resolve(distPath, 'functions');
 const srcFolder = `${process.env.PWD}/src/api`;
 
-rmSync(destFolder, { recursive: true, force: true })
-mkdirSync(destFolder, { recursive: true })
+fs.rmSync(destFolder, { recursive: true, force: true })
+fs.mkdirSync(destFolder, { recursive: true })
 
-const files = readdirSync(srcFolder)
+const files = fs.readdirSync(srcFolder)
 
-files.forEach(file => {
-  const destFile = [PROJECT_NAME, file].filter(_ => _).join('--')
-  console.info("Processing: file", file);
-  ncc(`${srcFolder}/${file}`).then(({ code}) => {
-    writeFileSync(`${destFolder}/${destFile}`, code)
-  }).catch(function(ex) {
-    console.info(ex);
-  })
-})
+async function main() {
+  for (let file of files) {
+    const destFile = [PROJECT_NAME, file].filter(_ => _).join('--')
+    console.info("Processing: file", file);
+    const { code } = await ncc(`${srcFolder}/${file}`);
+
+    const f = (x) => fs.readFileSync(path.resolve(projectPath, x), 'utf-8');
+
+    code = code.replace(
+      'module.exports = eval("require")("dist/data/items");',
+      `module.exports = ${f('dist/data/items.json')};`
+    )
+    code = code.replace(
+      'module.exports = eval("require")("dist/settings");',
+      `module.exports = ${f('dist/settings.json')};`
+    )
+    code = code.replace(
+      'module.exports = eval("require")("project/lookup");',
+      `module.exports = ${f('lookup.json')};`
+    )
+
+    fs.writeFileSync(`${destFolder}/${destFile}`, code)
+  }
+}
+main().catch(function(ex) {
+  console.info(ex);
+  process.exit(1);
+});
