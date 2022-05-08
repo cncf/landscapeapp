@@ -74,7 +74,6 @@
     "iframe-resizer": "^4.3.2",
     "jest": "^28.1.0",
     "jest-cli": "^28.1.0",
-    "jest-puppeteer": "^6.1.0",
     "jest-standard-reporter": "^2.0.0",
     "js-yaml": "^4.1.0",
     "json2csv": "^5.0.7",
