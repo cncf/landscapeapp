@@ -52,6 +52,15 @@ async function waitForSelector(page, selector) {
   await page.waitForFunction(`document.querySelector('${selector}') && document.querySelector('${selector}').clientHeight != 0`);
 }
 
+async function waitForSummaryText(page, text) {
+  await page.waitForFunction(`document.querySelector('.summary') && document.querySelector('.summary').innerText.includes('${text}')`);
+}
+
+async function waitForHeaderText(page, text) {
+  await page.waitForFunction(`document.querySelector('.sh_wrapper') && document.querySelector('.sh_wrapper').innerText.includes('${text}')`);
+}
+
+
 function embedTest() {
   describe("Embed test", () => {
     describe("I visit an example embed page", () => {
@@ -59,6 +68,7 @@ function embedTest() {
       test('page is open and has a frame', async function(){
         page = await makePage(appUrl + '/embed');
         frame = await page.frames()[1];
+        await frame.waitForSelector('.cards-section .mosaic');
         await frame.waitForXPath(`//h1[contains(text(), 'full interactive landscape')]`);
       });
 
@@ -83,7 +93,7 @@ function mainTest() {
     describe("I visit a main page and have all required elements", () => {
       test('I can open a page', async function() {
         page = await makePage(appUrl + '/card-mode');
-        await page.waitForSelector('.cards-section');
+        await page.waitForSelector('.cards-section .mosaic');
       });
 
       //header
@@ -91,10 +101,10 @@ function mainTest() {
         await expect(page).toHaveElement(`//h1[text() = '${settings.test.header}']`);
       });
       test('Group headers are ok', async function() {
-        await expect(page).toHaveElement(`//a[contains(text(), '${settings.test.section}')]`);
+        await waitForHeaderText(page, settings.test.section);
       });
       test('I see a You are viewing text', async function() {
-        await expect(page).toHaveElement(`//*[contains(text(), 'You are viewing ')]`);
+        await waitForSummaryText(page, 'You are viewing ');
       });
       test(`A proper card is present`, async function() {
         await expect(page).toHaveElement(`.mosaic img[src='${pathPrefix}/logos/${settings.test.logo}']`);
@@ -158,10 +168,12 @@ describe("Normal browser", function() {
 
       test(`Checking we see ${project.name} when filtering by organization ${project.organization}`, async function() {
         page = await makePage(`${appUrl}/card-mode?organization=${organizationSlug}`);
+        await page.waitForSelector('.cards-section .mosaic');
         await expect(page).toHaveElement(`//div[contains(@class, 'mosaic')]//*[text()='${project.name}']`);
       });
       test(`Checking we don't see ${project.name} when filtering by organization ${otherProject.organization}`, async function() {
-        await page.goto(`${appUrl}/card-mode/organization=${otherOrganizationSlug}`);
+        await page.goto(`${appUrl}/card-mode?organization=${otherOrganizationSlug}`);
+        await page.waitForSelector('.cards-section .mosaic');
         await expect(page).not.toHaveElement(`//div[contains(@class, 'mosaic')]//*[text()='${project.name}']`);
       });
     }

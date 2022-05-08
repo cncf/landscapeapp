@@ -5,7 +5,7 @@ landscapes:
   # netlify: full | skip - do we build it on a netlify build or not
   # hook: - id for a build hook, so it will be triggered after a default branch build
   - landscape:
-    name: aswf-landscape
-    repo: AcademySoftwareFoundation/aswf-landscape
-    hook: 608aa68eb6e5723d5d8a7e00
+    name: lfai
+    repo: lfai/landscape
+    hook: 60648e5b74c76017210a2f53
     required: true
