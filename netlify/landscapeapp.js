@@ -86,6 +86,9 @@ EOSSH
       if (l.match(/Resolving deltas: /)) {
         continue;
       }
+      if (l.match(/Could not resolve ".*?" in file/)) {
+        continue;
+      }
       newOutput.push(l);
       if (l.includes('mesg: ttyname failed: Inappropriate ioctl for device')) {
         newOutput = [];
