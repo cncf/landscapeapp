@@ -296,6 +296,9 @@ EOSSH
 
   await runLocalWithoutErrors('cp -r dist netlify');
 
+  const outputFiles = await runLocal('ls -la netlify/* netlify/dist/*');
+  console.info(outputFiles);
+
   if (process.env.BRANCH === 'master') {
     await runLocalWithoutErrors(`
       git config --global user.email "info@cncf.io"
