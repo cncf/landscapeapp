@@ -1,6 +1,6 @@
 import path from 'path'
 import { load  } from 'js-yaml'
-import { readFileSync, writeFileSync, mkdirSync, existsSync, rmSync } from 'fs'
+import { readFileSync, writeFileSync, mkdirSync, existsSync, rmSync, copyFileSync } from 'fs'
 import { execSync } from 'child_process'
 import qs from 'query-string'
 import loadGuide from './loadGuide'
@@ -20,9 +20,7 @@ mkdirSync(path.resolve(distPath, 'data', 'items'), { recursive: true });
 writeFileSync(path.resolve(distPath, 'data', 'items.json'), JSON.stringify(items))
 writeFileSync(path.resolve(distPath, '_headers'),
   readFileSync('_headers', 'utf-8'));
-copyFileSync(path.resolve(distPath, 'favicon.png'),
-  path.resolve(projectPath, 'images', 'favicon.png')),
-
+copyFileSync( path.resolve(projectPath, 'images', 'favicon.png'), path.resolve(distPath, 'favicon.png'));
 items.forEach(item => {
   writeFileSync(path.resolve(distPath, 'data', 'items', `${item.id}.json`), JSON.stringify(item))
 });
