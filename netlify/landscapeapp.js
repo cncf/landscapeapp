@@ -74,6 +74,15 @@ EOSSH
     const result = await runLocal(bashCommand);
     let newOutput = [];
     for (var l of result.text.split('\n')) {
+      if (l.match(/Counting objects: /)) {
+        continue;
+      }
+      if (l.match(/Compressing objects: /)) {
+        continue;
+      }
+      if (l.match(/Receiving objects: /)) {
+        continue;
+      }
       newOutput.push(l);
       if (l.includes('mesg: ttyname failed: Inappropriate ioctl for device')) {
         newOutput = [];
