@@ -13,25 +13,38 @@ http.createServer(function (request, response) {
     console.log('api request starting...', request.url);
     const query = request.url.split('?')[1] || '';
 
-    require('child_process').exec(`babel-node src/api/ids.js '${query}'`, {}, function(e, output, err) {
+    if (!process.env.INLINE_API) {
+      require('child_process').exec(`babel-node src/api/ids.js '${query}'`, {}, function(e, output, err) {
+        response.writeHead(200, { 'Content-Type': 'application/json' });
+        response.end(output);
+      });
+    } else {
+      const output = require('./src/api/ids.js').processRequest(query);
       response.writeHead(200, { 'Content-Type': 'application/json' });
-      response.end(output);
-    });
-
+      response.end(JSON.stringify(output));
+    }
     return;
   }
   if (request.url.indexOf('/api/export') !== -1) {
     console.log('api request starting...', request.url);
     const query = request.url.split('?')[1] || '';
 
-    require('child_process').exec(`babel-node src/api/export.js '${query}'`, {}, function(e, output, err) {
+    if (!process.env.INLINE_API) {
+      require('child_process').exec(`babel-node src/api/export.js '${query}'`, {}, function(e, output, err) {
+        response.writeHead(200, {
+          'Content-Type': 'text/css',
+          'Content-Disposition': 'attachment; filename=interactive-landscape.csv'
+        });
+        response.end(output);
+      });
+    } else {
+      const output = require('./src/api/export.js').processRequest(query);
       response.writeHead(200, {
         'Content-Type': 'text/css',
         'Content-Disposition': 'attachment; filename=interactive-landscape.csv'
       });
       response.end(output);
-    });
-
+    }
     return;
   }
   let filePath = path.join(process.env.PROJECT_PATH, 'dist', request.url.split('?')[0]);
@@ -95,4 +108,4 @@ http.createServer(function (request, response) {
     }
   });
 }).listen(process.env.PORT || 8001);
-console.log('Development server running at http://127.0.0.1:8001/');
+console.log(`Development server running at http://127.0.0.1:${process.env.PORT || 8001}/`);

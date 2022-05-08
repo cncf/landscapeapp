@@ -49,7 +49,6 @@ if (guide) {
       })
 
     const exportItems = params.grouping === 'no' ? flattenItems(groupedItems) : groupedItems
-    console.info({exportItems});
     writeFileSync(path.resolve(distPath, 'data', 'exports',  `${exportPath}.json`), JSON.stringify(exportItems));
   })
 }
