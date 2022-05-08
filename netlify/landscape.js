@@ -131,7 +131,6 @@ const makeLocalBuild = async function() {
       yarn >/dev/null
       export NODE_OPTIONS="--unhandled-rejections=strict"
       export JEST_OPTIONS="-i"
-      export USE_OLD_PUPPETEER=1
       PROJECT_PATH=.. yarn build
     `, { assignFn: (x) => localPid = x, showOutputFn: () => remoteFailed });
 

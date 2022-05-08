@@ -20,6 +20,8 @@ mkdirSync(path.resolve(distPath, 'data', 'items'), { recursive: true });
 writeFileSync(path.resolve(distPath, 'data', 'items.json'), JSON.stringify(items))
 writeFileSync(path.resolve(distPath, '_headers'),
   readFileSync('_headers', 'utf-8'));
+copyFileSync(path.resolve(distPath, 'favicon.png'),
+  path.resolve(projectPath, 'images', 'favicon.png')),
 
 items.forEach(item => {
   writeFileSync(path.resolve(distPath, 'data', 'items', `${item.id}.json`), JSON.stringify(item))
