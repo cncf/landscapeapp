@@ -7,6 +7,10 @@ import { distPath, projectPath } from './settings';
 import fs from 'fs'
 import ncc from '@vercel/ncc'
 
+import items from 'dist/data/items';
+import settings from 'dist/settings';
+import lookup from 'project/lookup';
+
 const { PROJECT_NAME, PROJECT_PATH } = process.env
 
 const destFolder = path.resolve(distPath, 'functions');
@@ -23,19 +27,17 @@ async function main() {
     console.info("Processing: file", file);
     const { code } = await ncc(`${srcFolder}/${file}`);
 
-    const f = (x) => fs.readFileSync(path.resolve(projectPath, x), 'utf-8');
-
     code = code.replace(
       'module.exports = eval("require")("dist/data/items");',
-      `module.exports = ${f('dist/data/items.json')};`
+      `module.exports = ${JSON.stringify(items)};`
     )
     code = code.replace(
       'module.exports = eval("require")("dist/settings");',
-      `module.exports = ${f('dist/settings.json')};`
+      `module.exports = ${JSON.stringify(settings)};`
     )
     code = code.replace(
       'module.exports = eval("require")("project/lookup");',
-      `module.exports = ${f('lookup.json')};`
+      `module.exports = ${JSON.stringify(lookup)};`
     )
 
     fs.writeFileSync(`${destFolder}/${destFile}`, code)
