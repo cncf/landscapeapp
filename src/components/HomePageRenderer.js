@@ -182,7 +182,7 @@ export function render({settings, guidePayload, hasGuide, bigPictureKey}) {
               )}
               { (settings.ads || []).map( (entry) => (
                   <OutboundLink className="sidebar-event" key={entry.image} to={entry.url} title={entry.title}>
-                    <img src={entry.image} alt={entry.title} />
+                    <img src={assetPath(entry.image)} alt={entry.title} />
                   </OutboundLink>
               )) }
             </div>
