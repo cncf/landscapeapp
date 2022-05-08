@@ -83,6 +83,9 @@ EOSSH
       if (l.match(/Receiving objects: /)) {
         continue;
       }
+      if (l.match(/Resolving deltas: /)) {
+        continue;
+      }
       newOutput.push(l);
       if (l.includes('mesg: ttyname failed: Inappropriate ioctl for device')) {
         newOutput = [];

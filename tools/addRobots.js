@@ -1,6 +1,6 @@
 import path from 'path';
 import { writeFileSync } from 'fs'
-import { projectPath, settings } from './settings';
+import { distPath, settings } from './settings';
 
 const isMainBranch = process.env.PULL_REQUEST !== 'true'
 
@@ -18,5 +18,5 @@ Disallow: /
   `
 ;
 
-const fileName = path.resolve(projectPath, 'robots.txt');
+const fileName = path.resolve(distPath, 'robots.txt');
 writeFileSync(fileName, content);
