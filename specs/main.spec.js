@@ -11,8 +11,6 @@ const devicesMap = puppeteer.devices;
 const width = 1920;
 const height = 1080;
 
-console.info('hi');
-
 let setup;
 let browser;
 let page;
