@@ -43,6 +43,10 @@ async function main() {
       'module.exports = eval("require")("project/lookup");',
       `module.exports = ${JSON.stringify(lookup)};`
     )
+    if (code.indexOf('eval("')) {
+      console.info('forgot to embed a module');
+      process.exit(1);
+    }
 
     fs.writeFileSync(`${destFolder}/${destFile}`, code)
   }
