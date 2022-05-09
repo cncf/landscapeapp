@@ -21,6 +21,7 @@ const OtherLandscapeLink = function({top, left, height, width, color, title, ima
   if (layout === 'category') {
     return <div style={{
       position: 'absolute', top, left, height, width, background: color,
+      overflow: 'hidden',
       cursor: 'pointer',
       boxShadow: `0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19)`,
       padding: 1,
@@ -36,7 +37,7 @@ const OtherLandscapeLink = function({top, left, height, width, color, title, ima
   </div>
   }
   if (layout === 'subcategory') {
-    return <div style={{ width, left, height, top, position: 'absolute' }}>
+    return <div style={{ width, left, height, top, position: 'absolute', overflow: 'hidden' }}>
       <CardLink url={url}>
         <div
           style={{
