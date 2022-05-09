@@ -18,12 +18,12 @@ const LandscapeContent = ({zoom, padding = 10 }) => {
   const elements = landscapeSettings.elements.map(element => {
     if (element.type === 'LandscapeLink') {
       return <OtherLandscapeLink {..._.pick(element, ['width','height','top','left','color', 'layout', 'title', 'url', 'image']) }
-                                 key={element.url}
+                                 key={JSON.stringify(element)}
       />
     }
     if (element.type === 'LandscapeInfo') {
       return <LandscapeInfo {..._.pick(element, ['width', 'height', 'top', 'left']) } childrenInfo={element.children}
-                            key='landscape-info'
+                            key={JSON.stringify(element)}
       />
     }
 
