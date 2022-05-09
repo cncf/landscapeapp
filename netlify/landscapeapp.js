@@ -20,7 +20,7 @@ const yaml = require('./jsyaml');
 process.chdir('..');
 const landscapesInfo = yaml.load(require('fs').readFileSync('landscapes.yml'));
 
-const dockerImage = 'netlify/build:xenial';
+const dockerImage = 'netlify/build:focal';
 const dockerHome = '/opt/buildhome';
 
 async function main() {
