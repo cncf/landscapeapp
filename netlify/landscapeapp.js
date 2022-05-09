@@ -244,8 +244,12 @@ EOSSH
 
     output  = await runRemote(dockerCommand);
     output.landscape = landscape;
-    console.info(`Output from: ${output.landscape.name}, exit code: ${output.exitCode}`);
-    console.info(output.text);
+    if (output.exitCode) {
+      console.info(`Output from: ${output.landscape.name}, exit code: ${output.exitCode}`);
+      console.info(output.text);
+    } else {
+      console.info(`Done: ${output.landscape.name}`);
+    }
     if (output.exitCode === 255) { // a single ssh failure
       output  = await runRemote(dockerCommand);
       output.landscape = landscape;
