@@ -43,12 +43,12 @@ async function main() {
       'module.exports = eval("require")("project/lookup");',
       `module.exports = ${JSON.stringify(lookup)};`
     )
-    if (code.indexOf('eval("')) {
+
+    fs.writeFileSync(`${destFolder}/${destFile}`, code)
+    if (code.includes('eval("')) {
       console.info('forgot to embed a module');
       process.exit(1);
     }
-
-    fs.writeFileSync(`${destFolder}/${destFile}`, code)
   }
 }
 main().catch(function(ex) {
