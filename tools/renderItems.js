@@ -116,6 +116,16 @@ async function main() {
   const resizerScript = await fs.readFile(require.resolve('iframe-resizer/js/iframeResizer.contentWindow.min.js'), 'utf-8');
   const description = `${settings.global.meta.description}. Updated: ${process.env.lastUpdated}`;
   const favicon = '/favicon.png';
+
+  const ga = `
+   (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+           (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+             m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+         })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+         ga('create', '${process.env.GA}', 'auto');
+         ga('send', 'pageview');
+  `
+
   const headers = `
       <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
       <title>${settings.global.meta.title}</title>
@@ -139,6 +149,7 @@ async function main() {
   const renderPage = ({homePage, mode}) => {
     let result = `
     ${headers}
+    <script>${ga}</script>
     <style>
       ${fonts}
       ${processedCss}
@@ -214,6 +225,7 @@ async function main() {
   const renderEmbedPage = (page) => {
     let result = `
     ${headers}
+    <script>${ga}</script>
     <style>
       ${fonts}
       ${processedCss}
