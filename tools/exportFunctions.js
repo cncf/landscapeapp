@@ -8,6 +8,7 @@ import fs from 'fs'
 import ncc from '@vercel/ncc'
 
 import items from 'dist/data/items';
+import itemsExport from 'dist/data/items-export';
 import settings from 'dist/settings';
 import lookup from 'project/lookup';
 
@@ -29,6 +30,10 @@ async function main() {
     code = code.replace(
       'module.exports = eval("require")("dist/data/items");',
       `module.exports = ${JSON.stringify(items)};`
+    )
+    code = code.replace(
+      'module.exports = eval("require")("dist/data/items-export");',
+      `module.exports = ${JSON.stringify(itemsExport)};`
     )
     code = code.replace(
       'module.exports = eval("require")("dist/settings");',
