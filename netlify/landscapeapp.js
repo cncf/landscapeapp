@@ -72,6 +72,9 @@ EOSSH
       if (l.match(/Counting objects: /)) {
         continue;
       }
+      if (l.match(/ExperimentalWarning: Custom ESM Loaders is an experimental feature./)) {
+        continue
+      }
       if (l.match(/Compressing objects: /)) {
         continue;
       }
