@@ -1514,10 +1514,10 @@ html.ios.has-selected-item, html.ios.has-selected-item body {
 
 .modal-next { right: -60px;}
 
-.modal .charts-desktop {
+.modal-content .charts-desktop {
   display: inherit;
 }
-.modal .charts-mobile {
+.modal-content .charts-mobile {
   display: none;
 }
 
@@ -1824,11 +1824,11 @@ html.ios.has-selected-item, html.ios.has-selected-item body {
   height: 22px;
 }
 
-.modal .single-column .product-property .col:nth-child(1) {
+.modal-content .single-column .product-property .col:nth-child(1) {
   display: inline-block;
   width: 40%;
 }
-.modal .single-column .product-property col:nth-child(2) {
+.modal-content .single-column .product-property col:nth-child(2) {
   display: inline-block;
   width: 60%
 }

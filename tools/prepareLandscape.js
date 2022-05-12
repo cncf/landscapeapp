@@ -1,6 +1,6 @@
 import path from 'path'
 import { load  } from 'js-yaml'
-import { readFileSync, writeFileSync, mkdirSync, existsSync, rmSync, copyFileSync } from 'fs'
+import fs from 'fs/promises';
 import { execSync } from 'child_process'
 import qs from 'query-string'
 import loadGuide from './loadGuide'
@@ -10,37 +10,37 @@ const items = require(path.resolve(projectPath, 'data.json'))
 const { website } = settings.global
 
 //render
-rmSync(distPath, { recursive: true, force: true });
-mkdirSync(path.resolve(distPath, 'logos'), { recursive: true });
-execSync(`cp -r "${projectPath}/images" "${distPath}"`);
-execSync(`cp ${projectPath}/cached_logos/* "${distPath}/logos"`);
-writeFileSync(path.resolve(distPath, 'settings.json'), JSON.stringify(settings));
-mkdirSync(path.resolve(distPath, 'data', 'exports'), { recursive: true });
-mkdirSync(path.resolve(distPath, 'data', 'items'), { recursive: true });
-writeFileSync(path.resolve(distPath, 'data', 'items.json'), JSON.stringify(items))
-writeFileSync(path.resolve(distPath, '_headers'),
-  readFileSync('_headers', 'utf-8'));
-copyFileSync( path.resolve(projectPath, 'images', 'favicon.png'), path.resolve(distPath, 'favicon.png'));
-items.forEach(item => {
-  writeFileSync(path.resolve(distPath, 'data', 'items', `${item.id}.json`), JSON.stringify(item))
-});
+async function main() {
+  await fs.rm(distPath, { recursive: true, force: true });
+  await fs.mkdir(path.resolve(distPath, 'logos'), { recursive: true });
+  execSync(`cp -r "${projectPath}/images" "${distPath}"`);
+  execSync(`cp ${projectPath}/cached_logos/* "${distPath}/logos"`);
+  await fs.writeFile(path.resolve(distPath, 'settings.json'), JSON.stringify(settings));
+  await fs.mkdir(path.resolve(distPath, 'data', 'exports'), { recursive: true });
+  await fs.mkdir(path.resolve(distPath, 'data', 'items'), { recursive: true });
+  await fs.writeFile(path.resolve(distPath, 'data', 'items.json'), JSON.stringify(items))
+  await fs.writeFile(path.resolve(distPath, '_headers'),
+    await fs.readFile('_headers', 'utf-8'));
+  await fs.copyFile( path.resolve(projectPath, 'images', 'favicon.png'), path.resolve(distPath, 'favicon.png'));
+  for (let item of items) {
+    await fs.writeFile(path.resolve(distPath, 'data', 'items', `${item.id}.json`), JSON.stringify(item))
+  };
 
-const guide = loadGuide();
+  const guide = loadGuide();
+  if (guide) {
+    writeFileSync(path.resolve(distPath, 'guide.json'), JSON.stringify(guide))
+  }
 
-if (guide) {
-  writeFileSync(path.resolve(distPath, 'guide.json'), JSON.stringify(guide))
-}
-
-{
   const prepareItemsForExport = require('./prepareItemsForExport').default
   const { flattenItems } = require('../src/utils/itemsCalculator')
   const getGroupedItems  = require('../src/utils/itemsCalculator').default
   const { parseParams } = require('../src/utils/routing')
 
   const itemsForExport = prepareItemsForExport(items)
-  writeFileSync(path.resolve(distPath, 'data', 'items-export.json'), JSON.stringify(itemsForExport))
+  await fs.writeFile(path.resolve(distPath, 'data', 'items-export.json'), JSON.stringify(itemsForExport))
 
-  Object.entries(settings.export || {}).forEach(([exportPath, query]) => {
+  for ( let element of Object.entries(settings.export || {})) {
+    let [exportPath, query] = element;
     const params = parseParams({ mainContentMode: 'card-mode', ...qs.parse(query) })
     const groupedItems = getGroupedItems({data: items, ...params})
       .map(group => {
@@ -49,6 +49,10 @@ if (guide) {
       })
 
     const exportItems = params.grouping === 'no' ? flattenItems(groupedItems) : groupedItems
-    writeFileSync(path.resolve(distPath, 'data', 'exports',  `${exportPath}.json`), JSON.stringify(exportItems));
-  })
+    await fs.writeFile(path.resolve(distPath, 'data', 'exports',  `${exportPath}.json`), JSON.stringify(exportItems));
+  }
 }
+main().catch(function(ex) {
+  console.info(ex);
+  process.exit(1);
+});
