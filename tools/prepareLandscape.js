@@ -28,7 +28,7 @@ async function main() {
 
   const guide = loadGuide();
   if (guide) {
-    writeFileSync(path.resolve(distPath, 'guide.json'), JSON.stringify(guide))
+    await fs.writeFile(path.resolve(distPath, 'guide.json'), JSON.stringify(guide))
   }
 
   const prepareItemsForExport = require('./prepareItemsForExport').default
