@@ -85,11 +85,6 @@ const runLocalWithoutErrors = async function(command) {
   return result.text.trim();
 }
 
-let buildDone = false;
-let localPid;
-let remoteFailed = false;
-let localFailed = false;
-
 const key = `
 -----BEGIN OPENSSH PRIVATE KEY-----
 ${(process.env.BUILDBOT_KEY || '').replace(/\s/g,'\n')}
@@ -123,8 +118,8 @@ const makeRemoteBuildWithCache = async function() {
     mkdir tmpRemote
     cd tmpRemote
     rm -rf package || true
-    npm pack github:cncf/landscapeapp#vanilla
-    # npm pack interactive-landscape${LANDSCAPEAPP}
+    # npm pack github:cncf/landscapeapp#vanilla
+    npm pack interactive-landscape${LANDSCAPEAPP}
     tar xzf interactive*.tgz
     cd ..
     mv tmpRemote/package packageRemote
