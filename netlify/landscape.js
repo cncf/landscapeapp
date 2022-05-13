@@ -46,6 +46,7 @@ const runLocal = function(command, options = {}) {
       };
     }
   }
+
   return new Promise(function(resolve) {
     var spawn = require('child_process').spawn;
     var child = spawn('bash', ['-lc',`set -e \n${command}`]);
@@ -122,7 +123,8 @@ const makeRemoteBuildWithCache = async function() {
     mkdir tmpRemote
     cd tmpRemote
     rm -rf package || true
-    npm pack interactive-landscape${LANDSCAPEAPP}
+    npm pack github:cncf/landscapeapp#vanilla
+    # npm pack interactive-landscape${LANDSCAPEAPP}
     tar xzf interactive*.tgz
     cd ..
     mv tmpRemote/package packageRemote
