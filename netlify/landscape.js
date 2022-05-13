@@ -1,18 +1,10 @@
 // We will execute this script from a landscape build,
 // "prepublish": "cp yarn.lock _yarn.lock",
 // "postpublish": "rm _yarn.lock || true"
-const LANDSCAPEAPP = process.env.LANDSCAPEAPP || "latest"
+const LANDSCAPEAPP = process.env.LANDSCAPEAPP || "@latest"
 const remote = `root@${process.env.BUILD_SERVER}`;
-const dockerImage = 'netlify/build:xenial';
+const dockerImage = 'netlify/build:focal';
 const dockerHome = '/opt/buildhome';
-
-const systemName = require('child_process').execSync('lsb_release -a').toString();
-const is1604 = systemName.indexOf('16.04');
-console.info(systemName, is1604);
-if (!is1604) {
-  console.info('Please ensure that you have a 16.04 ubuntu image for this netlify project, current lsb_release -a', systemName);
-  process.exit(1);
-}
 
 const secrets = [
   process.env.CRUNCHBASE_KEY_4, process.env.TWITTER_KEYS, process.env.GITHUB_TOKEN, process.env.GITHUB_USER, process.env.GITHUB_KEY
@@ -97,66 +89,6 @@ let localPid;
 let remoteFailed = false;
 let localFailed = false;
 
-async function getPids() {
-  const result = await runLocalWithoutErrors(`ps`);
-  const lines = result.split('\n').map( (x) => x.trim()).filter( (x) => x).slice(1);
-  const pids = lines.map( (line) => line.split(' ')[0]);
-  console.info('pids:', pids);
-  return pids;
-}
-
-let initialPids;
-
-const makeLocalBuild = async function() {
-    const localOutput = await runLocal(`
-      # mkdir -p copy
-      # rsync -az --exclude="copy" . copy
-      # cd copy
-      . ~/.nvm/nvm.sh
-      npm pack interactive-landscape@${LANDSCAPEAPP}
-      tar xzf interactive*
-      cd package
-      cp _yarn.lock yarn.lock
-      echo 0
-      nvm install
-      echo 1
-      nvm use
-      echo 2
-      npm install -g agentkeepalive --save
-      echo 3
-      npm install -g npm --no-progress
-      echo 4
-      npm install -g yarn@latest
-      echo 5
-      yarn >/dev/null
-      export NODE_OPTIONS="--unhandled-rejections=strict"
-      export JEST_OPTIONS="-i"
-      PROJECT_PATH=.. yarn build
-    `, { assignFn: (x) => localPid = x, showOutputFn: () => remoteFailed });
-
-    if (!buildDone) {
-      console.info('Local build finished, exit code:', localOutput.exitCode);
-      if (localOutput.exitCode !== 0) {
-        console.info(localOutput.text);
-        localFailed = true;
-        if (!remoteFailed) {
-          return;
-        } else {
-          process.exit(1);
-        }
-      }
-      buildDone = true;
-      await runLocalWithoutErrors(`
-          rm -rf netlify/dist || true
-          cp -r dist netlify
-          mv netlify/dist/functions netlify/functions
-          cp -r netlify/functions functions # Fix netlify bug
-        `);
-      process.exit(0);
-    } else {
-      console.info('Ignore local build');
-    }
-}
 const key = `
 -----BEGIN OPENSSH PRIVATE KEY-----
 ${(process.env.BUILDBOT_KEY || '').replace(/\s/g,'\n')}
@@ -175,6 +107,7 @@ EOSSH
 `
   return await runLocal(bashCommand, options);
 };
+
 const runRemoteWithoutErrors = async function(command) {
   const result = await runRemote(command);
   console.info(result.text.trim());
@@ -189,7 +122,7 @@ const makeRemoteBuildWithCache = async function() {
     mkdir tmpRemote
     cd tmpRemote
     rm -rf package || true
-    npm pack interactive-landscape@${LANDSCAPEAPP}
+    npm pack interactive-landscape${LANDSCAPEAPP}
     tar xzf interactive*.tgz
     cd ..
     mv tmpRemote/package packageRemote
@@ -351,25 +284,10 @@ const makeRemoteBuildWithCache = async function() {
       rm -rf /root/builds/${outputFolder}
       `
   )
-  if (!buildDone) {
-    buildDone = true;
-    const newPids = await getPids();
-    const pidsToKill = newPids.filter( (x) => !initialPids.includes(x));
-    console.info(await runLocal(`kill -9 ${pidsToKill.join(' ')}`));
 
-    localPid.kill();
-
-    const pause = function(i) {
-      return new Promise(function(resolve) {
-        setTimeout(resolve, 5 * 1000);
-      })
-    };
-    await pause(); // allow the previous process to be killed
-    await runLocalWithoutErrors(`ps`);
-
-    console.info('Remote build done!');
-    console.info(output.text);
-    await runLocalWithoutErrors(`
+  console.info('Remote build done!');
+  console.info(output.text);
+  await runLocalWithoutErrors(`
       rm -rf netlify/dist || true
       rm -rf dist || true
       mkdir -p netlify/dist
@@ -379,8 +297,7 @@ const makeRemoteBuildWithCache = async function() {
       mv netlify/dist/functions netlify/functions
       cp -r netlify/functions functions # Fix netlify bug
     `);
-    process.exit(0);
-  }
+  process.exit(0);
 }
 
 async function main() {
@@ -388,8 +305,6 @@ async function main() {
   console.info('starting', process.cwd());
   process.chdir('..');
   await runLocal('rm package*.json');
-
-  initialPids = await getPids();
 
   const cleanPromise = runRemoteWithoutErrors(`
     find builds/node_cache -maxdepth 1 -mtime +1 -exec rm -rf {} +;
@@ -399,13 +314,9 @@ async function main() {
   });
 
   await Promise.all([makeRemoteBuildWithCache().catch(function(ex) {
-    console.info('Remote build failed! Continuing with a local build', ex);
-    remoteFailed = true;
-    if (localFailed) {
-      process.exit(1);
-    }
-  }), makeLocalBuild(), cleanPromise]);
-
+    console.info('build failed', ex);
+    process.exit(1);
+  }), cleanPromise]);
 }
 
 main().catch(function(ex) {
