@@ -128,7 +128,7 @@ const makeRemoteBuildWithCache = async function() {
     tar xzf interactive*.tgz
     cd ..
     mv tmpRemote/package packageRemote
-    cp packageRemote/_yarn.lock packageRemote/yarn.lock || true
+    cp packageRemote/_yarn.lock packageRemote/yarn.lock
   `);
 
   //how to get a hash based on our files
