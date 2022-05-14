@@ -26,7 +26,7 @@
 - [Generating a Guide](#generating-a-guide)
 
 
-The landscapeapp is an upstream NPM [module](https://www.npmjs.com/package/interactive-landscape) that supports building interactive landscape websites such as the [CNCF Cloud Native Landscape](https://landscape.cncf.io) ([source](https://github.com/cncf/landscape)) and the [LF Artificial Intelligence Landscape](https://landscape.lfai.foundation) ([source](https://github.com/lfai/lfai-landscape)). The application is managed by [Dan Kohn](https://www.dankohn.com) of [CNCF](https://www.cncf.io) and is under active development by [Andrey Kozlov](https://github.com/ZeusTheTrueGod) (who did most of the development to date) and [Jordi Noguera](https://jordinl.com).
+The landscapeapp is an upstream NPM [module](https://www.npmjs.com/package/interactive-landscape) that supports building interactive landscape websites such as the [CNCF Cloud Native Landscape](https://landscape.cncf.io) ([source](https://github.com/cncf/landscape)) and the [LF Artificial Intelligence Landscape](https://landscape.lfai.foundation) ([source](https://github.com/lfai/lfai-landscape)). The application is under active development by [Andrey Kozlov](https://github.com/AndreyKozlov1984) and [Jordi Noguera](https://jordinl.com).
 
 In addition to creating fully interactive sites, the landscapeapp builds static images on each update. See examples in [ADOPTERS.md](ADOPTERS.md). All current [Linux Foundation](https://linuxfoundation.org) landscapes are listed in [landscapes.yml](landscapes.yml).
 
@@ -128,6 +128,8 @@ We require all landscape entries to include a [Crunchbase](https://www.crunchbas
 
 Using an external source for this info saves effort in most cases, because most organizations are already listed. Going forward, the data is being independently maintained and updated over time.
 
+If for certain reason Crunchbase should not be used - we rely on `organization: { name: 'My Organization Name' }` instead of a `crunchbase` field
+
 #### Overriding industries from Crunchbase
 
 To override industries returned from Crunchbase for a specific Crunchbase entry, add it to an `crunchbase_overrides` top-level entry on `landscape.yml`. For instance, the following will set `industries` for Linux Foundation to Linux and Cloud Computing:
@@ -168,7 +170,7 @@ If you want to create an interactive landscape for your project or organization:
 
 ### API Keys
 
-You want to add the following to your `~/.bash_profile`. If you're with the LF, ask Dan Kohn on CNCF [Slack](https://slack.cncf.io) for the Crunchbase and Twitter keys.
+You want to add the following to your `~/.bash_profile`. If you're with the LF, ask someone on CNCF [Slack](https://slack.cncf.io) for the Crunchbase and Twitter keys.
 
 For the GitHub key, please go to https://github.com/settings/tokens and create a key (you can call it `personal landscape`) with *no* permissions. That is, don't click any checkboxes, because you only need to access public repos.
 
@@ -190,22 +192,6 @@ dev$ cd landscapeapp
 dev$ npm install -g yarn@latest
 dev$ yarn
 ```
-Now, to use the local landscapeapp you can add the following to your `~/.bash_profile` or `.zshrc`:
-```sh
-function y { export PROJECT_PATH=`pwd` && (cd ../landscapeapp && yarn run "$@")}
-export -f y
-# yf does a normal build and full test run
-alias yf='y fetch'
-alias yl='y check-links'
-alias yq='y remove-quotes'
-# yp does a build and then opens up the landscape in your browser ( can view the PDF and PNG files )
-alias yp='y build && y open:dist'
-# yo does a quick build and opens up the landscape in your browser
-alias yo='y open:src'
-alias a='for lpath in /Users/your-username/dev/{landscapeapp,cdf-landscape,lfai-landscape}; do echo $lpath; git -C $lpath pull -p; done; (cd /Users/your-username/dev/landscapeapp && yarn);'
-
-```
-Reload with `. ~/.bash_profile` and then use `yo`, `yf`, etc. to run functions on the landscape in your landscape directory. `a` will do a git pull on each of the project directories you specify and install any necessary node modules for landscapeapp.
 
 ### Adding to a google search console
   Go to the google search console, add a new property, enter the url of the
