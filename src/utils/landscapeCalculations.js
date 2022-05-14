@@ -1,4 +1,6 @@
-import settings from 'public/settings.json'
+import path from 'path';
+import fs from 'fs';
+import settings from 'dist/settings';
 import fields from "../types/fields";
 
 export const itemMargin = 3

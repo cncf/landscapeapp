@@ -9,10 +9,12 @@
 //     url(id by default): how the value is stored in the url
 //     sortOrder(element index by default): sort order when grouping
 //     match: function
+import path from 'path';
+import fs from 'fs';
 import _ from 'lodash';
-import lookups from 'project/lookup.json';
+import lookups from  'project/lookup'
 import unpack from '../utils/unpackArray';
-import settings from 'public/settings.json';
+import settings from 'dist/settings'
 import isParent from '../utils/isParent';
 
 const relationField = (function() {
@@ -334,17 +336,17 @@ const processValuesBeforeSaving = function({options, values}) {
   });
 };
 
+// passed to the client
 export function options(field) {
   return fields[field].values.map(function(values) {
     return {
-      id: values.id,
+      id: values.url,
       label: values.label,
-      level: values.level,
-      children: values.children,
-      parentId: values.parentId
+      level: values.level || 1,
     };
   });
 }
+
 export function filterFn({field, filters}) {
   const fieldInfo = fields[field];
   const filter = filters[field];

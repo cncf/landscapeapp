@@ -6,7 +6,6 @@ import { appUrl } from './distSettings'
 
 async function main() {
   const puppeteer = require('puppeteer');
-  console.info('go!');
   const browser = await puppeteer.launch({args: ['--no-sandbox', '--disable-setuid-sandbox']});
   const page = await browser.newPage();
   var hasErrors = false;
@@ -16,7 +15,7 @@ async function main() {
     if (response.status() !== 200) {
       throw `[yarn check-landscape]: cannot load URL "${path}"`
     }
-    await Promise.delay(10000);
+    await Promise.delay(20000);
     const errors = await page.evaluate( function() {
       var result = [];
       var sections = document.querySelectorAll('.big-picture-section');

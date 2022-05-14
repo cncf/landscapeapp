@@ -1,5 +1,5 @@
 // generates html and atom pages from dist/funding.json
-import millify from 'millify';
+import { millify } from '../src/utils/format';
 import { settings, projectPath } from './settings'
 import path from 'path';
 const result = JSON.parse(require('fs').readFileSync(path.resolve(projectPath, 'dist/funding.json'), 'utf-8'));

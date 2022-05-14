@@ -67,7 +67,9 @@ const stringifyGrouping = grouping => {
   }
 }
 
-const parseGrouping = grouping => grouping === 'no' ? grouping : getField(grouping) || defaultGrouping
+const parseGrouping = function(grouping) {
+  return grouping === 'no' ? grouping : getField(grouping) || defaultGrouping
+}
 
 const stringifyCardStyle = style => style !== 'card' ? style : null
 
@@ -121,7 +123,10 @@ const stringifyParams = (params = {}) => {
     { arrayFormat: 'comma', skipNull: true, skipEmptyString: true })
 }
 
-const parseParams = ({ mainContentMode, ...query }) => {
+const parseParams = (query) => {
+  if (typeof query === 'string') {
+    query = Object.fromEntries(new URLSearchParams(query));
+  }
   const filters = Object.entries(fields).reduce((result, [key, field]) => {
     const param = field.url || field.id
     const value = query[param]
@@ -130,7 +135,6 @@ const parseParams = ({ mainContentMode, ...query }) => {
   }, {})
 
   return {
-    mainContentMode,
     selectedItemId: query.selected,
     zoom: parseZoom(query),
     isFullscreen: parseBoolean(query.fullscreen),

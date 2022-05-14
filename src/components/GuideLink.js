@@ -1,26 +1,17 @@
 import React from 'react'
-import css from 'styled-jsx/css'
-import InfoIcon from '@material-ui/icons/InfoOutlined'
-import OutboundLink from './OutboundLink'
-import assetPath from '../utils/assetPath'
 
-const GuideLink = ({ anchor, label, className="" }) => {
+const OutboundLink = ({to, className, children, ...props}) =>
+  (<a data-type="external" target="_blank" href={to} className={className} {...props}>{children}</a>)
+
+const GuideLink = ({ anchor, label, className="", ...props }) => {
+  const svg = <svg viewBox="0 0 24 24" aria-hidden="true">
+    <path d="M11 7h2v2h-2zm0 4h2v6h-2zm1-9C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"></path>
+  </svg>;
   const ariaLabel = `Read more about ${label} on the guide`
-  const to = assetPath(`/guide#${anchor}`)
+  const to = `guide#${anchor}`;
 
-  const svgEl = css.resolve`
-    svg {
-      stroke-width: 0;
-    }
-
-    svg:hover {
-      stroke-width: 0.5;
-    }
-  `
-
-  return <OutboundLink className={className} to={to} aria-label={ariaLabel}>
-    {svgEl.styles}
-    <InfoIcon style={{ fontSize: 'inherit' }} className={svgEl.className}/>
+  return <OutboundLink className={className} to={to} aria-label={ariaLabel} {...props}>
+    {svg}
   </OutboundLink>
 }
 

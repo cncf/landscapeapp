@@ -16,16 +16,11 @@ const pause = function(i) {
   })
 };
 
-console.info('starting', process.cwd());
-run('npm init -y');
-console.info('installing js-yaml', process.cwd());
-run('npm install js-yaml@4.0.0');
-const yaml = require('js-yaml');
+const yaml = require('./jsyaml');
 process.chdir('..');
-console.info('starting real script', process.cwd());
 const landscapesInfo = yaml.load(require('fs').readFileSync('landscapes.yml'));
 
-const dockerImage = 'netlify/build:xenial';
+const dockerImage = 'netlify/build:focal';
 const dockerHome = '/opt/buildhome';
 
 async function main() {
@@ -74,6 +69,24 @@ EOSSH
     const result = await runLocal(bashCommand);
     let newOutput = [];
     for (var l of result.text.split('\n')) {
+      if (l.match(/Counting objects: /)) {
+        continue;
+      }
+      if (l.match(/ExperimentalWarning: Custom ESM Loaders is an experimental feature./)) {
+        continue
+      }
+      if (l.match(/Compressing objects: /)) {
+        continue;
+      }
+      if (l.match(/Receiving objects: /)) {
+        continue;
+      }
+      if (l.match(/Resolving deltas: /)) {
+        continue;
+      }
+      if (l.match(/Could not resolve ".*?" in file/)) {
+        continue;
+      }
       newOutput.push(l);
       if (l.includes('mesg: ttyname failed: Inappropriate ioctl for device')) {
         newOutput = [];
@@ -234,8 +247,12 @@ EOSSH
 
     output  = await runRemote(dockerCommand);
     output.landscape = landscape;
-    console.info(`Output from: ${output.landscape.name}, exit code: ${output.exitCode}`);
-    console.info(output.text);
+    if (output.exitCode) {
+      console.info(`Output from: ${output.landscape.name}, exit code: ${output.exitCode}`);
+      console.info(output.text);
+    } else {
+      console.info(`Done: ${output.landscape.name}`);
+    }
     if (output.exitCode === 255) { // a single ssh failure
       output  = await runRemote(dockerCommand);
       output.landscape = landscape;
