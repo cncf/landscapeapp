@@ -25,7 +25,7 @@ export function getDefaultCard({item}) {
           <div data-id={item.id} className="mosaic-wrap" key={item.id}>
             <div className={`mosaic ${item.oss ? '' : 'nonoss' }`} style={getRelationStyle(item.relation)}>
               <div className="logo_wrapper">
-                <img src={assetPath(item.href)} className='logo' max-height='100%' max-width='100%' alt={item.name} />
+                <img loading="lazy" src={assetPath(item.href)} className='logo' max-height='100%' max-width='100%' alt={item.name} />
               </div>
               <div className="mosaic-info">
                 <div className="mosaic-title">
@@ -75,7 +75,7 @@ export function getBorderlessCard({item}) {
   const card = (
             <div data-id={item.id} className="mosaic-wrap" key={item.id}>
               <div className="mosaic">
-                <img src={assetPath(item.href)} className='logo' alt={item.name} />
+                <img loading="lazy" src={assetPath(item.href)} className='logo' alt={item.name} />
               </div>
             </div>
   );
