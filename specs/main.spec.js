@@ -121,15 +121,15 @@ describe("Landscape Test", () => {
       await page.waitForSelector('.cards-section [data-mode=main]');
     });
     test('When I click on an item the modal is open', async function() {
-      await waitForSelector(page, '.cards-section [data-mode=main] img[data-id]');
-      await page.click('.cards-section [data-mode=main] img[data-id]');
+      await waitForSelector(page, '.cards-section [data-mode=main] [data-id]');
+      await page.click('.cards-section [data-mode=main] [data-id]');
       await waitForSelector(page, ".modal-content .product-logo");
     });
 
     test('If I would straight open the url with a selected id, a modal appears', async function() {
       await page.goto(appUrl);
-      await waitForSelector(page, '.cards-section [data-mode=main] img[data-id]');
-      await page.click('.cards-section [data-mode=main] img[data-id]');
+      await waitForSelector(page, '.cards-section [data-mode=main] [data-id]');
+      await page.click('.cards-section [data-mode=main] [data-id]');
       await waitForSelector(page, ".modal-content .product-logo");
     });
     close();
@@ -137,8 +137,8 @@ describe("Landscape Test", () => {
   landscapeSettingsList.slice(1).forEach(({ name, basePath, url }) => {
     test(`I visit ${name} landscape page and have all required elements, elements are clickable`, async () => {
       const page = await makePage(`${appUrl}/${basePath}`);
-      await waitForSelector(page, `.cards-section [data-mode=${url}] img[data-id]`);
-      await page.click(`.cards-section [data-mode=${url}] img[data-id]`);
+      await waitForSelector(page, `.cards-section [data-mode=${url}] [data-id]`);
+      await page.click(`.cards-section [data-mode=${url}] [data-id]`);
       await waitForSelector(page, ".modal-content .product-logo");
     }, 6 * 60 * 1000); //give it up to 1 min to execute
     close();
