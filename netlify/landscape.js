@@ -225,6 +225,7 @@ const makeRemoteBuildWithCache = async function() {
     `nvm install ${nvmrc}`,
     `nvm use ${nvmrc}`,
     `yarn`,
+    `git config --global --add safe.directory /opt/repo`,
     `export NODE_OPTIONS="--unhandled-rejections=strict"`,
     `PROJECT_PATH=.. yarn run build`,
     `cp -r /opt/repo/dist /dist`
