@@ -9,7 +9,7 @@ export function render({settings, items, exportUrl}) {
   const params = parseParams(exportUrl.split('?').slice(-1)[0]);
   const groupedItems = getGroupedItems({data: items, ...params})
   const cardStyle = params.cardStyle || 'default';
-  const cardFn = cardStyle === 'borderless' ? renderBorderlessCard : cardStyle === 'flat' ? renderFlatCard : getDefaultCard;
+  const cardFn = cardStyle === 'borderless' ? renderBorderlessCard : cardStyle === 'flat' ? renderFlatCard : renderDefaultCard;
   const linkUrl = exportUrl.replace('&embed=yes', '').replace('embed=yes', '')
 
   const result = `

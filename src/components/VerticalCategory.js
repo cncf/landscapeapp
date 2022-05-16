@@ -7,8 +7,8 @@ import {
   itemMargin, smallItemWidth,
   subcategoryMargin
 } from "../utils/landscapeCalculations";
-import SubcategoryInfo from './SubcategoryInfo'
-import CategoryHeader from './CategoryHeader'
+import { renderSubcategoryInfo } from './SubcategoryInfo'
+import { renderCategoryHeader } from './CategoryHeader'
 
 export function renderVerticalCategory ({header, guideInfo, subcategories, top, left, width, height, color, href, fitWidth}) {
   const subcategoriesWithCalculations = calculateVerticalCategory({ subcategories, fitWidth, width });

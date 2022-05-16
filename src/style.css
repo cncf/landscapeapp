@@ -646,10 +646,11 @@ a:hover svg {
   font-size: 14px;
   margin: 15px 0px;
   max-width: 165px;
+  white-space: nowrap;
 }
 .guide-toggle .toggle-item {
   user-select: none;
-  width: 50%;
+  width: 49%;
   text-align: center;
   padding: 2px;
   color: rgb(46, 103, 191);

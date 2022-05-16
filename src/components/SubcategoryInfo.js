@@ -1,4 +1,4 @@
-import guideLink from './GuideLink'
+import { renderGuideLink } from './GuideLink'
 import { h } from '../utils/format';
 import { smallItemHeight, smallItemWidth } from '../utils/landscapeCalculations'
 

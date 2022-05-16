@@ -53,7 +53,7 @@ export function render({settings, landscapeSettings, guide, entries }) {
       .map(node => {
         const hasChildren = (parents[node.anchor] || 0) > 1
         return `
-          <a href="#${node.anchor}" data-level=${node.level} class="sidebar-link expandable" style="padding-left: ${10 + level * 10} px;">
+          <a href="#${node.anchor}" data-level=${node.level} class="sidebar-link expandable" style="padding-left: ${10 + node.level * 10} px;">
             ${h(node.title)} ${hasChildren ? `<svg viewBox="0 0 24 24"><path d="M10 17l5-5-5-5v10z"></path></svg> ` : ''}
           </a>
           ${hasChildren ? `
@@ -64,7 +64,7 @@ export function render({settings, landscapeSettings, guide, entries }) {
 
   const renderLandscapeLink = ({ landscapeKey, title }) => {
     const href = `card-mode?category=${landscapeKey}`
-    return `<a href="${href}" target="_blank" class="permalink"> ${h(guideIcon)} ${h(title)} </a>`;
+    return `<a href="${href}" target="_blank" class="permalink"> ${guideIcon} ${h(title)} </a>`;
   }
 
   const renderContent = ({ nodes, enhancedEntries }) => {
