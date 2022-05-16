@@ -1,74 +1,57 @@
-import React from 'react';
+import { h } from '../utils/format';
 import _ from 'lodash';
 import assetPath from '../utils/assetPath';
 
-const LandscapeInfo = ({width, height, top, left, childrenInfo}) => {
-  const children = childrenInfo.map(function(info) {
-    const positionProps = {
-        position: 'absolute',
-        top: _.isUndefined(info.top) ? null : info.top,
-        left: _.isUndefined(info.left) ? null : info.left,
-        right: _.isUndefined(info.right) ? null : info.right,
-        bottom: _.isUndefined(info.bottom) ? null : info.bottom,
-        width: _.isUndefined(info.width) ? null : info.width,
-        height: _.isUndefined(info.height) ? null : info.height
-    };
+export function renderLandscapeInfo({width, height, top, left, children}) {
+  children = children.map(function(info) {
+    const positionStyle = `
+        position: absolute;
+        top: ${info.top}px;
+        left: ${info.left}px;
+        right: ${info.right}px;
+        bottom: ${info.bottom}px;
+        width: ${info.width}px;
+        height: ${info.height}px;
+    `;
     if (info.type === 'text') {
-      // pdf requires a normal version without a zoom trick
-      const isPdf = false;
-      if (isPdf) {
-        return <div key='text' style={{
-          ...positionProps,
-          fontSize: info.font_size,
-          fontStyle: 'italic',
-          textAlign: 'justify',
-          zIndex: 1
-        }}>{info.text}</div>
-      // while in a browser we use a special version which renders fonts
-      // properly on a small zoom
-      } else {
-        return <div key='text' style={{
-          ...positionProps,
-          fontSize: info.font_size * 4,
-          fontStyle: 'italic',
-          textAlign: 'justify',
-          zIndex: 1
-        }}><div style={{
-          position: 'absolute',
-          left: 0,
-          top: 0,
-          width: '400%',
-          height: '100%',
-          transform: 'scale(0.25)',
-          transformOrigin: 'left'
-        }}> {info.text} </div></div>
-
-
-      }
+      return `<div key='text' style="
+          ${positionStyle}
+          font-size: ${info.font_size * 4}px;
+          font-style: italic;
+          text-align: justify;
+          z-index: 1;
+        "><div style="
+          position: absolute;
+          left: 0;
+          top: 0;
+          width: 400%;
+          height: 100%;
+          transform: scale(0.25);
+          transform-origin: left;
+        "> ${h(info.text)} </div></div>`;
     }
     if (info.type === 'title') {
-      return <div key='title' style= {{
-        ...positionProps,
-        fontSize: info.font_size,
-        color: '#666'
-      }}>{info.title}</div>
+      return `<div key='title' style="
+        ${positionStyle}
+        font-size: ${info.font_size}px;
+        color: #666;
+      ">${h(info.title)}</div>`;
     }
     if (info.type === 'image') {
-      return <img src={assetPath(`images/${info.image}`)} style={{...positionProps}} key={info.image} alt={info.title || info.image} />
+      return `<img src="${assetPath(`images/${info.image}`)}" style="${positionStyle}" alt="${info.title || info.image}" />`;
     }
-  });
+  }).join('');
 
-  return <div style={{
-    position: 'absolute',
-    width: width,
-    height: height - 20,
-    top: top,
-    left: left,
-    border: '1px solid black',
-    background: 'white',
-    borderRadius: 10,
-    marginTop: 20,
-    boxShadow: `0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19)`
-  }}>{children}</div>
+  return `<div style="
+    position: absolute;
+    width: ${width}px;
+    height: ${height - 20}px;
+    top: ${top}px;
+    left: ${left}px;
+    border: 1px solid black;
+    background: white;
+    border-radius: 10px;
+    margin-top: 20px;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+  ">${children}</div>`
 }
-export default LandscapeInfo;

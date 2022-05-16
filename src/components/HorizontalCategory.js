@@ -1,9 +1,5 @@
-import React, { Fragment, useContext } from "react";
-import Item from "./Item";
-
-const InternalLink = ({to, className, children}) =>
-  (<a data-type="internal" href={to} className={className}>{children}</a>)
-
+import { renderItem } from "./Item";
+import { h } from '../utils/format';
 import {
   calculateHorizontalCategory,
   categoryBorder,
@@ -15,106 +11,112 @@ import {
   subcategoryMargin,
   subcategoryTitleHeight
 } from "../utils/landscapeCalculations";
-import SubcategoryInfo from './SubcategoryInfo'
-import CategoryHeader from './CategoryHeader'
+import { renderSubcategoryInfo } from './SubcategoryInfo'
+import { renderCategoryHeader } from './CategoryHeader'
 
-const Divider = ({ color }) => {
-  const width = dividerWidth
-  const marginTop = 2 * subcategoryMargin
-  const height = `calc(100% - ${2 * marginTop}px)`
+const renderDivider = (color) => {
+  const width = dividerWidth;
+  const marginTop = 2 * subcategoryMargin;
+  const height = `calc(100% - ${2 * marginTop}px)`;
 
-  return <div style={{ width, marginTop, height, borderLeft: `${width}px solid ${color}` }}/>
+  return `<div style="
+    width: ${width}px;
+    margin-top: ${marginTop}px;
+    height: ${height};
+    border-left: ${width}px solid ${color}
+    "></div>`;
 }
 
-const HorizontalCategory = ({ header, guideInfo, subcategories, width, height, top, left, color, href, fitWidth }) => {
+export function renderHorizontalCategory({ header, guideInfo, subcategories, width, height, top, left, color, href, fitWidth }) {
   const addInfoIcon = !!guideInfo;
   const subcategoriesWithCalculations = calculateHorizontalCategory({ height, width, subcategories, fitWidth, addInfoIcon })
   const totalRows = Math.max(...subcategoriesWithCalculations.map(({ rows }) => rows))
 
-  return (
-    <div style={{ width, left, height, top, position: 'absolute' }} className="big-picture-section">
+  return `
+    <div style="
+      width: ${width}px;
+      left: ${left}px;
+      height: ${height}px;
+      top: ${top}px;
+      position: absolute;
+      " class="big-picture-section">
       <div
-        style={{
-          position: 'absolute',
-          background: color,
-          top: subcategoryTitleHeight,
-          bottom: 0,
-          left: 0,
-          right: 0,
-          boxShadow: '0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.2)',
-          padding: categoryBorder
-        }}
+        style="
+          position: absolute;
+          background: ${color};
+          top: ${subcategoryTitleHeight}px;
+          bottom: 0;
+          left: 0;
+          right: 0;
+          box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.2);
+          padding: ${categoryBorder}px;
+        "
       >
-        <div style={{
-          top: 0,
-          bottom: 0,
-          left: 0,
-          width: categoryTitleHeight,
-          position: 'absolute',
-          writingMode: 'vertical-rl',
-          transform: 'rotate(180deg)',
-          textAlign: 'center',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center'
-        }}>
-          <CategoryHeader href={href} label={header} guideAnchor={guideInfo} background={color} rotate={true} />
+        <div style="
+          top: 0;
+          bottom: 0;
+          left: 0;
+          width: ${categoryTitleHeight}px;
+          position: absolute;
+          writing-mode: vertical-rl;
+          transform: rotate(180deg);
+          text-align: center;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+        ">
+          ${renderCategoryHeader({href, label: header, guideAnchor: guideInfo, background: color,rotate: true})}
         </div>
-        <div style={{
-          marginLeft: 30,
-          height: '100%',
-          display: 'flex',
-          justifyContent: 'space-evenly',
-          background: 'white'
-        }}>
-          {subcategoriesWithCalculations.map((subcategory, index) => {
+        <div style="
+          margin-left: 30px;
+          height: 100%;
+          display: flex;
+          justify-content: space-evenly;
+          background: white;
+        ">
+          ${subcategoriesWithCalculations.map((subcategory, index) => {
             const lastSubcategory = index !== subcategories.length - 1
             const { allItems, guideInfo, columns, width, name, href } = subcategory
-            const padding = fitWidth ? 0 : `${subcategoryMargin}px 0`
-            const style = {
-              display: 'grid',
-              height: '100%',
-              gridTemplateColumns: `repeat(${columns}, ${smallItemWidth}px)`,
-              gridAutoRows: `${smallItemHeight}px`
-            }
-            const extraStyle = fitWidth ? { justifyContent: 'space-evenly', alignContent: 'space-evenly' } : { gridGap: itemMargin }
+            const padding = fitWidth ? 0 : `${subcategoryMargin}px 0`;
+            const style = `
+              display: grid;
+              height: 100%;
+              grid-template-columns: repeat(${columns}, ${smallItemWidth}px);
+              grid-auto-rows: ${smallItemHeight}px;
+            `;
+            const extraStyle = fitWidth ? `justify-content: space-evenly; align-content: space-evenly;` : `grid-gap: ${itemMargin}px;`;
             const path = [header, name].join(' / ')
 
-            return <Fragment key={name}>
-              <div style={{
-                width,
-                position: 'relative',
-                overflow: 'visible',
-                padding,
-                boxSizing: 'border-box'
-              }}>
-                <div style={{
-                  position: 'absolute',
-                  top: -1 * categoryTitleHeight,
-                  left: 0,
-                  right: 0,
-                  height: categoryTitleHeight,
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  textAlign: 'center'
-                }}>
-                  <InternalLink to={href} className="white-link">{name}</InternalLink>
+            return `
+              <div style="
+                width: ${width}px;
+                position: relative;
+                overflow: visible;
+                padding: ${padding};
+                box-sizing: border-box;
+              ">
+                <div style="
+                  position: absolute;
+                  top: ${-1 * categoryTitleHeight}px;
+                  left: 0;
+                  right: 0;
+                  height: ${categoryTitleHeight}px;
+                  display: flex;
+                  align-items: center;
+                  justify-content: center;
+                  text-align: center;
+                ">
+                  <a data-type="internal" href="${href}" class="white-link">${h(name)}</a>
                 </div>
-                <div style={{...style, ...extraStyle}}>
-                  {
-                    allItems.map(item => <Item item={item} key={item.name}/>)
-                  }
-
-                  { guideInfo && <SubcategoryInfo label={name} anchor={guideInfo} column={columns} row={totalRows}/> } </div>
+                <div style="${style} ${extraStyle}">
+                  ${allItems.map(renderItem).join('')}
+                  ${guideInfo ? renderSubcategoryInfo({label: name, anchor: guideInfo,column: columns, row:totalRows}) : ''}
+                </div>
               </div>
-
-              {lastSubcategory && <Divider color={color}/>}
-            </Fragment>
-          })}
+              ${lastSubcategory ? renderDivider(color) : ''}
+              `
+          }).join('')}
         </div>
       </div>
-    </div>);
+    </div>`;
 }
-
-export default HorizontalCategory

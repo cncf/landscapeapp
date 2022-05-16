@@ -1,13 +1,11 @@
-import React, { Fragment } from 'react';
-import ReactDOMServer from 'react-dom/server';
 import _ from 'lodash';
 
 // Render all items here!
 
-import HorizontalCategory from './HorizontalCategory'
-import VerticalCategory from './VerticalCategory'
-import LandscapeInfo from './LandscapeInfo';
-import OtherLandscapeLink from './OtherLandscapeLink';
+import { renderHorizontalCategory } from './HorizontalCategory'
+import { renderVerticalCategory } from './VerticalCategory'
+import { renderLandscapeInfo } from './LandscapeInfo';
+import { renderOtherLandscapeLink } from './OtherLandscapeLink';
 
 const extractKeys = (obj, keys) => {
   const attributes = _.pick(obj, keys)
@@ -16,19 +14,14 @@ const extractKeys = (obj, keys) => {
 }
 
 
-export function getElement({landscapeSettings, landscapeItems}) {
+export function render({landscapeSettings, landscapeItems}) {
   const elements = landscapeSettings.elements.map(element => {
     if (element.type === 'LandscapeLink') {
-      return <OtherLandscapeLink {..._.pick(element, ['width','height','top','left','color', 'layout', 'title', 'url', 'image']) }
-                                 key={JSON.stringify(element)}
-      />
+      return renderOtherLandscapeLink(element)
     }
     if (element.type === 'LandscapeInfo') {
-      return <LandscapeInfo {..._.pick(element, ['width', 'height', 'top', 'left']) } childrenInfo={element.children}
-                            key={JSON.stringify(element)}
-      />
+      return renderLandscapeInfo(element)
     }
-
     const category = landscapeItems.find(c => c.key === element.category) || {}
     const attributes = extractKeys(element, ['width', 'height', 'top', 'left', 'color', 'fit_width', 'is_large'])
     const subcategories = category.subcategories.map(subcategory => {
@@ -36,14 +29,13 @@ export function getElement({landscapeSettings, landscapeItems}) {
       return { ...subcategory, allItems }
     })
 
-    const Component = element.type === 'HorizontalCategory' ? HorizontalCategory : VerticalCategory
-    return <Component {...category} subcategories={subcategories} {...attributes} />
-  });
+    if (element.type === 'HorizontalCategory') {
+      return renderHorizontalCategory({...category, ...attributes, subcategories: subcategories});
+    }
+    if (element.type === 'VerticalCategory') {
+      return renderVerticalCategory({...category, ...attributes, subcategories: subcategories});
+    }
+  }).join('');
 
-  return <div style={{ position: 'relative' }}>
-      {elements}
-    </div>
+  return `<div style="position: relative;">${elements}</div>`;
 };
-export function render() {
-  return ReactDOMServer.renderToStaticMarkup(getElement.apply(this, arguments));
-}

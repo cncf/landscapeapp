@@ -1,19 +1,18 @@
-import GuideLink from './GuideLink'
+import guideLink from './GuideLink'
+import { h } from '../utils/format';
 import { smallItemHeight, smallItemWidth } from '../utils/landscapeCalculations'
 
 
-const SubcategoryInfo = ({ label, anchor, row, column }) => {
-  const style={
-    width: smallItemWidth,
-    height: smallItemHeight,
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    fontSize: '18px',
-    gridColumnStart: column || 'auto',
-    gridRowStart: row || 'auto'
-  };
-  return <GuideLink label={label} anchor={anchor} style={style}/>
+export function renderSubcategoryInfo ({ label, anchor, row, column }) {
+  const style=`
+    width: ${smallItemWidth}px;
+    height: ${smallItemHeight}px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    grid-column-start: ${column || 'auto'};
+    grid-row-start: ${row || 'auto'};
+  `;
+  return renderGuideLink({label: label, anchor: anchor, style: style})
 }
-
-export default SubcategoryInfo;
