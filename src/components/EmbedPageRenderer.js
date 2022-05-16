@@ -40,7 +40,7 @@ export function render({settings, items, exportUrl}) {
                   <div className="sh_wrapper">
                     <div style={{fontSize: '24px', paddingLeft: '16px', lineHeight: '48px', fontWeight: 500}}>
                       <span>{groupedItem.header}</span>
-                      <span className="items-cont">({groupedItem.items.length})</span>
+                      <span className="items-cont">&nbsp;({groupedItem.items.length})</span>
                     </div>
                   </div> : null
                 return [ header, ...cardElements];
