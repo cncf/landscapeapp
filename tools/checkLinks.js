@@ -29,7 +29,7 @@ const getUrls = () => {
   }, new Set())
 }
 
-async function checkViaPuppeteer(remainingAttempts = 3) {
+async function checkViaPuppeteer(url, remainingAttempts = 3) {
   const puppeteer = require('puppeteer');
   const browser = await puppeteer.launch({args: ['--no-sandbox', '--disable-setuid-sandbox', '--ignore-certificate-errors']});
 
@@ -50,7 +50,7 @@ async function checkViaPuppeteer(remainingAttempts = 3) {
   } catch(ex2) {
     await browser.close();
     if (remainingAttempts > 0 ) {
-      return await checkViaPuppeteer(remainingAttempts - 1)
+      return await checkViaPuppeteer(url, remainingAttempts - 1)
     } else {
       return false;
     }
@@ -148,8 +148,8 @@ const main = async () => {
     await new Promise(resolve => setTimeout(resolve, delay))
     const { status, success, effectiveUrl } = await checkUrl(url);
     if (success && normalizeUrl(url) !== normalizeUrl(effectiveUrl)) {
-      redirects[url] = normalizeUrl(effectiveUrl, true)
       process.stdout.write(redirectColor('R'))
+      addError(`${type} of ${name}: redirect ${url} to ${effectiveUrl}`);
     } else if (success) {
       process.stdout.write('.')
     } else if (status === '403') {
@@ -159,7 +159,7 @@ const main = async () => {
       addError(`${type} of ${name}: invalid URL ${url} - ${status}`);
       process.stdout.write(errorColor('E'))
     }
-  })
+  }, { concurrency: 20 })
   saveLandscape(fixRedirects(landscape, redirects))
   updateProcessedLandscape(processedLandscape => fixRedirects(processedLandscape, redirects))
 }
