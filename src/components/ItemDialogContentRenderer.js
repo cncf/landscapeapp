@@ -684,7 +684,7 @@ export function render({settings, tweetsCount, itemInfo}) {
                             </div>
                             </Fragment>;
 
-  const result = <div className="modal-content">
+  const result = <div className={`modal-content ${itemInfo.oss ? 'oss' : 'nonoss'}`}>
     {  productLogoAndTagsAndCharts }
     <div className="product-scroll" >
       { productInfo }
