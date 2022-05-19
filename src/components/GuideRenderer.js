@@ -9,9 +9,8 @@ import assetPath from '../utils/assetPath';
 
 
 
-// landscapeSettings should be a main page
 // guide is a guide index
-export function render({settings, landscapeSettings, guide, entries }) {
+export function render({settings, items, guide }) {
   const Title = () => <h1 className="title">{settings.global.short_name} Landscape Guide</h1>;
   const SubcategoryMetadata = ({ node, entries }) => {
     const orderedEntries = _.orderBy(entries,  (x) => !x.isLarge);
@@ -96,18 +95,28 @@ export function render({settings, landscapeSettings, guide, entries }) {
           </div>
     })
   }
-  const categories = landscapeSettings.elements.map(element => element).reduce((acc, category) => {
-    return { ...acc, [category.category]: category }
-  }, {})
 
-  const enhancedEntries = entries.map(entry => {
-    const categoryAttrs = categories[entry.category]
+  const enhancedEntries = items.map( (entry) => {
+    let subcategory = entry.path.split(' / ')[1];
+    let categoryAttrs = null;
+    for (let key in settings.big_picture) {
+      let page = settings.big_picture[key];
+      for (let element of page.elements) {
+        if (!page.category && element.category === entry.category) {
+          categoryAttrs = element;
+        }
+        if (page.category === entry.category && element.category === subcategory) {
+          categoryAttrs = element;
+        }
+      }
+    }
+
     if (!categoryAttrs) {
       return null;
     }
-    const enhanced = { ...entry, categoryAttrs, isVisible: true }
+    const enhanced = { ...entry, categoryAttrs }
     return { ...enhanced, isLarge: isLargeFn(enhanced) }
-  }).filter ( (x) => !!x);
+  }).filter( (x) => !!x);
 
   return ReactDOMServer.renderToStaticMarkup (
     <>
