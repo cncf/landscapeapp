@@ -1,9 +1,10 @@
-import qs, { stringifyUrl } from 'query-string'
-import fields, { sortOptions } from '../types/fields'
-import { isArray } from 'lodash'
+const qs = require('query-string');
 
-const defaultSort = 'name'
-const defaultGrouping = 'relation'
+const { fields, sortOptions } = require('../types/fields');
+const { isArray } = require('lodash');
+
+const defaultSort = 'name';
+const defaultGrouping = 'relation';
 
 const compact = obj => {
   return Object.entries(obj).reduce((result, [key, value]) => {
@@ -119,7 +120,7 @@ const stringifyParams = (params = {}) => {
     ...filters
   })
 
-  return stringifyUrl({ url: `/${path}`, query },
+  return qs.stringifyUrl({ url: `/${path}`, query },
     { arrayFormat: 'comma', skipNull: true, skipEmptyString: true })
 }
 
@@ -147,4 +148,5 @@ const parseParams = (query) => {
   }
 }
 
-export { stringifyParams, parseParams }
+module.exports.stringifyParams = stringifyParams;
+module.exports.parseParams = parseParams;

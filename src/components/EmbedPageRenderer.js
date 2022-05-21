@@ -1,11 +1,12 @@
 // Render only for an export
-import _ from 'lodash';
-import { h } from '../utils/format';
-import getGroupedItems  from '../utils/itemsCalculator'
-import { parseParams } from '../utils/routing'
-import { renderDefaultCard, renderBorderlessCard, renderFlatCard } from './CardRenderer';
+const _ = require('lodash');
+const { h } = require('../utils/format');
+const { getGroupedItems } = require('../utils/itemsCalculator');
+const { parseParams } = require('../utils/routing');
+const { renderDefaultCard, renderBorderlessCard, renderFlatCard } = require('./CardRenderer');
+const icons = require('../utils/icons');
 
-export function render({settings, items, exportUrl}) {
+module.exports.render = function({settings, items, exportUrl}) {
   const params = parseParams(exportUrl.split('?').slice(-1)[0]);
   const groupedItems = getGroupedItems({data: items, ...params})
   const cardStyle = params.cardStyle || 'default';
@@ -19,8 +20,8 @@ export function render({settings, items, exportUrl}) {
         <div class="modal-body">
           <div class="modal-buttons">
             <a class="modal-close">x</a>
-            <span class="modal-prev"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z"></path></svg></span>
-            <span class="modal-next"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"></path></svg></span>
+            <span class="modal-prev">${icons.prev}</span>
+            <span class="modal-next">${icons.next}</span>
           </div>
           <div class="modal-content"></div>
         </div>

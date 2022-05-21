@@ -1,11 +1,10 @@
-import 'regenerator-runtime/runtime';
-import puppeteer from "puppeteer";
-import 'expect-puppeteer';
-import { paramCase } from 'change-case';
-import { settings } from '../tools/settings';
-import { projects } from '../tools/loadData';
-import { landscapeSettingsList } from "../src/utils/landscapeSettings";
-import { appUrl, pathPrefix } from '../tools/distSettings'
+const puppeteer = require("puppeteer");
+require('expect-puppeteer');
+const { paramCase } = require('change-case');
+const { settings } = require('../tools/settings');
+const { projects } = require('../tools/loadData');
+const { landscapeSettingsList } = requrie("../src/utils/landscapeSettings");
+const { appUrl, pathPrefix } = require('../tools/distSettings');
 
 const devicesMap = puppeteer.devices;
 const width = 1920;

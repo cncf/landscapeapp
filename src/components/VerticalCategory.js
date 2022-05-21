@@ -1,16 +1,16 @@
-import { renderItem } from "./Item";
-import { h } from '../utils/format';
+const { renderItem } = require("./Item");
+const { h } = require('../utils/format');
 
-import {
+const {
   calculateVerticalCategory,
   categoryTitleHeight,
   itemMargin, smallItemWidth,
   subcategoryMargin
-} from "../utils/landscapeCalculations";
-import { renderSubcategoryInfo } from './SubcategoryInfo'
-import { renderCategoryHeader } from './CategoryHeader'
+} = require("../utils/landscapeCalculations");
+const { renderSubcategoryInfo } = require( './SubcategoryInfo');
+const { renderCategoryHeader } = require('./CategoryHeader');
 
-export function renderVerticalCategory ({header, guideInfo, subcategories, top, left, width, height, color, href, fitWidth}) {
+module.exports.renderVerticalCategory = function({header, guideInfo, subcategories, top, left, width, height, color, href, fitWidth}) {
   const subcategoriesWithCalculations = calculateVerticalCategory({ subcategories, fitWidth, width });
   return `<div>
     <div style="

@@ -1,11 +1,11 @@
-import _ from 'lodash';
+const _ = require('lodash');
 
 // Render all items here!
 
-import { renderHorizontalCategory } from './HorizontalCategory'
-import { renderVerticalCategory } from './VerticalCategory'
-import { renderLandscapeInfo } from './LandscapeInfo';
-import { renderOtherLandscapeLink } from './OtherLandscapeLink';
+const { renderHorizontalCategory } = require('./HorizontalCategory');
+const { renderVerticalCategory } = require('./VerticalCategory');
+const { renderLandscapeInfo } = require('./LandscapeInfo');
+const { renderOtherLandscapeLink } = require('./OtherLandscapeLink');
 
 const extractKeys = (obj, keys) => {
   const attributes = _.pick(obj, keys)
@@ -14,7 +14,7 @@ const extractKeys = (obj, keys) => {
 }
 
 
-export function render({landscapeSettings, landscapeItems}) {
+module.exports.render = function({landscapeSettings, landscapeItems}) {
   const elements = landscapeSettings.elements.map(element => {
     if (element.type === 'LandscapeLink') {
       return renderOtherLandscapeLink(element)

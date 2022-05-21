@@ -1,4 +1,4 @@
-export default function stringOrSpecial(x) {
+module.exports.stringOrSpecial = function(x) {
   if (x === 'true') {
     return true;
   }

@@ -1,16 +1,19 @@
-import path from 'path';
-import fs from 'fs';
-import settings from 'dist/settings';
-import {
+const path = require('path');
+const fs = require('fs');
+
+const {
   largeItemHeight,
   largeItemWidth,
   smallItemHeight,
   smallItemWidth
-} from "../utils/landscapeCalculations";
+} = require("../utils/landscapeCalculations");
 
-import assetPath from '../utils/assetPath'
-import fields from "../types/fields";
-import { h } from '../utils/format';
+const { assetPath }  = require('../utils/assetPath');
+const { fields } = require("../types/fields");
+const { h } = require('../utils/format');
+
+const { readJsonFromDist } = require('../utils/readJson');
+const settings = readJsonFromDist('settings');
 
 const largeItem = function(item) {
   const relationInfo = fields.relation.valuesMap[item.relation]
@@ -54,7 +57,7 @@ const smallItem = function(item) {
     />`
 }
 
-export function renderItem(item) {
+module.exports.renderItem =  function (item) {
   const {isLarge, category, oss, categoryAttrs } = item;
   const isMember = category === settings.global.membership;
   const ossClass = isMember || oss || categoryAttrs.isLarge ? 'oss' : 'nonoss';

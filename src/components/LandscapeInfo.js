@@ -1,8 +1,9 @@
-import { h } from '../utils/format';
-import _ from 'lodash';
-import assetPath from '../utils/assetPath';
+const _ = require('lodash');
 
-export function renderLandscapeInfo({width, height, top, left, children}) {
+const { h } = require('../utils/format');
+const assetPath = require('../utils/assetPath');
+
+module.exports.renderLandscapeInfo = function({width, height, top, left, children}) {
   children = children.map(function(info) {
     const positionStyle = `
         position: absolute;

@@ -1,14 +1,16 @@
-import path from 'path';
-import fs from 'fs';
-import items from 'dist/data/items';
-import settings from 'dist/settings'
+const fs = require('fs');
+const path = require('path');
 
-import { flattenItems } from '../utils/itemsCalculator'
-import getGroupedItems  from '../utils/itemsCalculator'
-import getSummary, { getSummaryText } from '../utils/summaryCalculator';
-import { parseParams } from '../utils/routing'
+const { flattenItems } = require('../utils/itemsCalculator');
+const { getGroupedItems }  = require('../utils/itemsCalculator');
+const { getSummary, getSummaryText } = require('../utils/summaryCalculator');
+const { parseParams } = require('../utils/routing');
+const { readJsonFromDist } = require('../utils/readJson');
 
-export const processRequest = query => {
+const items = readJsonFromDist('dist/data/items');
+const settings = readJsonFromDist('dist/settings');
+
+const processRequest = query => {
   const params = parseParams(query);
   const p = new URLSearchParams(query);
   params.format = p.get('format');
@@ -24,9 +26,10 @@ export const processRequest = query => {
     items: groupedItems
   }
 }
+module.exports.processRequest = processRequest;
 
 // Netlify function
-export async function handler(event, context) {
+module.exports.handler = fuction(event, context) {
   const body = processRequest(event.queryStringParameters)
   const headers = { 'Content-Type': 'application/json' }
   return { statusCode: 200, body: JSON.stringify(body), headers }

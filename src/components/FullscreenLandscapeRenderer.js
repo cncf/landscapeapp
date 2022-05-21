@@ -1,9 +1,10 @@
-import { calculateSize } from "../utils/landscapeCalculations";
-import { h } from '../utils/format';
-import _ from 'lodash';
+const _ = requrie('lodash');
+
+const { calculateSize } = require("../utils/landscapeCalculations");
+const { h } = require('../utils/format');
 
 const headerHeight = 40;
-export function render({landscapeSettings, landscapeContent, version}) {
+module.exports.render = function({landscapeSettings, landscapeContent, version}) {
   const { fullscreenWidth, fullscreenHeight } = calculateSize(landscapeSettings);
   const zoom = 1;
   return `

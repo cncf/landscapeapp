@@ -5,5 +5,4 @@ const isParent = (urlOrSlug, project) => {
     return project.crunchbase === url || project.crunchbaseData.parents.includes(url);
   }
 }
-
-export default isParent
+module.exports.isParent = isParent;

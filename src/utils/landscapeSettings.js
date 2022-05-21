@@ -1,6 +1,8 @@
-import path from 'path';
-import fs from 'fs';
-import settings from 'dist/settings';
+const path = require('path');
+const fs = require('fs');
+
+const { readJsonFromDist } = require('./readJson');
+const settings = readJsonFromDist('settings');
 
 function calcLandscapeSettingsList(settingsObj) {
   return Object.values(settingsObj.big_picture)
@@ -14,20 +16,23 @@ function calcLandscapeSettingsList(settingsObj) {
 };
 
 // client side version
-export const landscapeSettingsList = calcLandscapeSettingsList(settings);
+const landscapeSettingsList = calcLandscapeSettingsList(settings);
 const landscapeSettingsDict = landscapeSettingsList.reduce((dict, landscapeSettings) => {
   dict[landscapeSettings.url] = landscapeSettings;
   return dict;
-}, {})
+}, {});
+module.exports.landscapeSettingsList = landscapeSettingsList;
 
-export const findLandscapeSettings = (url) => {
+const findLandscapeSettings = (url) => {
   if (url === 'main') {
     url = 'landscape';
   }
   return landscapeSettingsDict[['card-mode', 'guide'].includes(url) ? 'landscape' : url]
 }
+module.exports.findLandscapeSettings = findLandscapeSettings;
 
 // server side version, with up to date information
-export function getLandscapeSettingsList(settingsObj) {
+function getLandscapeSettingsList(settingsObj) {
   return calcLandscapeSettingsList(settingsObj);
 }
+module.exports.getLandscapeSettingsList = getLandscapeSettingsList;

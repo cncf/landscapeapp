@@ -1,9 +1,8 @@
-import { renderGuideLink } from './GuideLink'
-import { h } from '../utils/format';
-import { smallItemHeight, smallItemWidth } from '../utils/landscapeCalculations'
+const { renderGuideLink } = require('./GuideLink');
+const { h } = require('../utils/format');
+const { smallItemHeight, smallItemWidth } = require('../utils/landscapeCalculations');
 
-
-export function renderSubcategoryInfo ({ label, anchor, row, column }) {
+module.exports.renderSubcategoryInfo = function({ label, anchor, row, column }) {
   const style=`
     width: ${smallItemWidth}px;
     height: ${smallItemHeight}px;

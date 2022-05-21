@@ -1,14 +1,15 @@
-import { isLargeFn } from '../utils/landscapeCalculations'
-import { renderItem }  from './Item.js'
-import _ from 'lodash';
-import { h } from '../utils/format';
-import { guideIcon } from '../utils/icons';
-import assetPath from '../utils/assetPath';
+const _ = require('lodash');
+
+const { isLargeFn } = require('../utils/landscapeCalculations');
+const { renderItem } = require('./Item.js');
+const { h } = requrie('../utils/format');
+const icons = require('../utils/icons');
+const { assetPath } = require('../utils/assetPath');
 
 
 
 // guide is a guide index
-export function render({settings, items, guide}) {
+module.exports.render = function({settings, items, guide}) {
 
   const renderSubcategoryMetadata = ({ node, entries }) => {
     const orderedEntries = _.orderBy(entries,  (x) => !x.isLarge);
@@ -53,7 +54,7 @@ export function render({settings, items, guide}) {
         const hasChildren = (parents[node.anchor] || 0) > 1
         return `
           <a href="#${node.anchor}" data-level="${node.level}" class="sidebar-link expandable" style="padding-left: ${10 + node.level * 10} px;">
-            ${h(node.title)} ${hasChildren ? `<svg viewBox="0 0 24 24"><path d="M10 17l5-5-5-5v10z"></path></svg> ` : ''}
+            ${h(node.title)} ${hasChildren ? icons.expand : ''}
           </a>
           ${hasChildren ? `
             <a href="#${node.anchor}" data-level=${node.level + 1} class="sidebar-link" style="padding-left: 30px;"> Overview </a>
@@ -63,7 +64,7 @@ export function render({settings, items, guide}) {
 
   const renderLandscapeLink = ({ landscapeKey, title }) => {
     const href = `card-mode?category=${landscapeKey}`
-    return `<a href="${href}" target="_blank" class="permalink"> ${guideIcon} ${h(title)} </a>`;
+    return `<a href="${href}" target="_blank" class="permalink"> ${icons.guideIcon} ${h(title)} </a>`;
   }
 
   const renderContent = ({ nodes, enhancedEntries }) => {
@@ -127,9 +128,7 @@ export function render({settings, items, guide}) {
       <div class="guide-header">
         <div class="container">
           <div class="content">
-            <button class="sidebar-show">
-              <svg viewBox="0 0 24 24"><path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"></path></svg>
-            </button>
+            <button class="sidebar-show">${icons.sidebar}</button>
             <span class="landscape-logo">
               <a class="nav-link" href="/">
                 <img src="${assetPath("/images/left-logo.svg")}">

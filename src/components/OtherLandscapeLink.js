@@ -1,8 +1,8 @@
-import assetPath from '../utils/assetPath';
-import { h } from '../utils/format';
+const { assetPath } = require('../utils/assetPath');
+const { h } = require('../utils/format');
 
-import { stringifyParams } from '../utils/routing'
-import { categoryBorder, categoryTitleHeight, subcategoryTitleHeight } from '../utils/landscapeCalculations'
+const { stringifyParams } = require('../utils/routing');
+const { categoryBorder, categoryTitleHeight, subcategoryTitleHeight } = require('../utils/landscapeCalculations');
 
 const renderCardLink = ({ url, children }) => {
   if (url.indexOf('http') === 0) {
@@ -13,7 +13,7 @@ const renderCardLink = ({ url, children }) => {
   }
 };
 
-export function renderOtherLandscapeLink({top, left, height, width, color, title, image, url, layout}) {
+module.exports.renderOtherLandscapeLink = function({top, left, height, width, color, title, image, url, layout}) {
   const imageSrc = image || assetPath(`images/${url}_preview.png`);
   if (layout === 'category') {
     return `<div style="

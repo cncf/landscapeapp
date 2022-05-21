@@ -1,6 +1,6 @@
-import _ from 'lodash';
-import formatNumber from 'format-number';
-export default function formatAmount(v) {
+const _ = require('lodash');
+const formatNumber = require('format-number');
+function formatAmount(v) {
   if (_.isString(v)) {
     return v;
   }
@@ -11,3 +11,4 @@ export default function formatAmount(v) {
     return '$' + number(Math.round(v / 1000 / 1000)) + 'M';
   }
 }
+module.exports.formatAmount = formatAmount;

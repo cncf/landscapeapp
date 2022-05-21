@@ -1,23 +1,30 @@
-import path from 'path';
-import fs from 'fs';
-import settings from 'dist/settings';
-import fields from "../types/fields";
+const path = require('path');
+const fs = require('fs');
 
-export const itemMargin = 3
-export const smallItemWidth = 34
-export const smallItemHeight = 30
-export const largeItemWidth = 2 * smallItemWidth + itemMargin
-export const largeItemHeight = 2 * smallItemHeight + itemMargin
-export const subcategoryMargin = 6
-export const subcategoryTitleHeight = 20
-export const dividerWidth = 2
-export const categoryBorder = 1
-export const categoryTitleHeight = 30
-export const outerPadding = 20
-export const headerHeight = 40
+const { readJsonFromDist } = require('./readJson');
+const { fields } = require("../types/fields");
+
+const settings = readJsonFromDist('settings');
+
+const itemMargin = 3;
+const smallItemWidth = 34;
+const smallItemHeight = 30;
+const largeItemWidth = 2 * smallItemWidth + itemMargin;
+const largeItemHeight = 2 * smallItemHeight + itemMargin;
+const subcategoryMargin = 6;
+const subcategoryTitleHeight = 20;
+const dividerWidth = 2;
+const categoryBorder = 1;
+const categoryTitleHeight = 30;
+const outerPadding = 20;
+const headerHeight = 40;
+
+module.exports.itemMargin = itemMargin;
+module.exports.smallItemWidth = smallItemWidth;
+module.exports.smallItemHeight = smallItemHeight;
 
 // Check if item is large
-export const isLargeFn = ({ relation, category, member, categoryAttrs }) => {
+const isLargeFn = ({ relation, category, member, categoryAttrs }) => {
   const relationInfo = fields.relation.valuesMap[relation]
   if (category === settings.global.membership) {
     const membershipInfo = settings.membership[member];
@@ -25,6 +32,7 @@ export const isLargeFn = ({ relation, category, member, categoryAttrs }) => {
   }
   return !!categoryAttrs.isLarge || !!relationInfo.big_picture_order;
 }
+module.exports.isLargeFn = isLargeFn;
 
 // Compute if items are large and/or visible.
 // Count number of items, large items count for 4 small items.
@@ -41,7 +49,7 @@ const computeItems = (subcategories, addInfoIcon = false) => {
 }
 
 // Calculate width and height of a given landscape
-export const calculateSize = landscapeSettings => {
+const calculateSize = landscapeSettings => {
   const width = Math.max(...landscapeSettings.elements.map(({ left, width }) => left + width))
   const height = Math.max(...landscapeSettings.elements.map(({ top, height }) => top + height))
   const fullscreenWidth = width + 2 * outerPadding
@@ -49,6 +57,7 @@ export const calculateSize = landscapeSettings => {
 
   return { width, height, fullscreenWidth, fullscreenHeight }
 }
+module.exports.calculateSize = calculateSize;
 
 // Calculate each subcategory width and the disposition of its items, assuming fixed padding for each item.
 const calculateHorizontalFixedWidth = ({ subcategories, maxColumns, maxRows, fitWidth }) => {
@@ -129,10 +138,10 @@ const calculateHorizontalStretch = ({ subcategories, maxWidth, maxHeight }) => {
 
   subcategories.forEach(subcategory => subcategory.width = Math.floor(maxWidth * subcategory.columns / totalColumns))
 
-  return subcategories
+  return subcategories;
 }
 
-export const calculateHorizontalCategory = ({ height, width, subcategories, fitWidth, addInfoIcon = false }) => {
+const calculateHorizontalCategory = ({ height, width, subcategories, fitWidth, addInfoIcon = false }) => {
   const subcategoriesWithCalculations = computeItems(subcategories, addInfoIcon)
   const maxWidth = width - categoryTitleHeight - categoryBorder - (2 * subcategoryMargin - itemMargin + dividerWidth) * subcategories.length + dividerWidth
   const maxHeight = height - 2 * (subcategoryMargin + categoryBorder) + itemMargin - 2 * categoryBorder
@@ -145,8 +154,9 @@ export const calculateHorizontalCategory = ({ height, width, subcategories, fitW
     return calculateHorizontalFixedWidth({ subcategories: subcategoriesWithCalculations, maxColumns, maxRows, fitWidth })
   }
 }
+module.exports.calculateHorizontalCategory = calculateHorizontalCategory;
 
-export const calculateVerticalCategory = ({ subcategories, fitWidth, width }) => {
+const calculateVerticalCategory = ({ subcategories, fitWidth, width }) => {
   const subcategoriesWithCalculations = computeItems(subcategories)
   const maxColumns = Math.floor((width - 2 * (categoryBorder + itemMargin)) / (smallItemWidth + itemMargin))
 
@@ -161,3 +171,4 @@ export const calculateVerticalCategory = ({ subcategories, fitWidth, width }) =>
     return { ...subcategory, columns, width: subWidth, rows }
   })
 }
+module.exports.calculateVerticalCategory = calculateVerticalCategory;

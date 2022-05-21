@@ -1,6 +1,6 @@
-import { renderItem } from "./Item";
-import { h } from '../utils/format';
-import {
+const { renderItem } = require("./Item");
+const { h } = require('../utils/format');
+const {
   calculateHorizontalCategory,
   categoryBorder,
   categoryTitleHeight,
@@ -10,9 +10,9 @@ import {
   smallItemHeight,
   subcategoryMargin,
   subcategoryTitleHeight
-} from "../utils/landscapeCalculations";
-import { renderSubcategoryInfo } from './SubcategoryInfo'
-import { renderCategoryHeader } from './CategoryHeader'
+} = require("../utils/landscapeCalculations");
+const { renderSubcategoryInfo } = require('./SubcategoryInfo');
+const { renderCategoryHeader } = require('./CategoryHeader');
 
 const renderDivider = (color) => {
   const width = dividerWidth;
@@ -27,7 +27,7 @@ const renderDivider = (color) => {
     "></div>`;
 }
 
-export function renderHorizontalCategory({ header, guideInfo, subcategories, width, height, top, left, color, href, fitWidth }) {
+module.exports.renderHorizontalCategory = function({ header, guideInfo, subcategories, width, height, top, left, color, href, fitWidth }) {
   const addInfoIcon = !!guideInfo;
   const subcategoriesWithCalculations = calculateHorizontalCategory({ height, width, subcategories, fitWidth, addInfoIcon })
   const totalRows = Math.max(...subcategoriesWithCalculations.map(({ rows }) => rows))

@@ -1,13 +1,16 @@
-import path from 'path';
-import fs from 'fs';
-import items from 'dist/data/items';
-import settings from 'dist/settings'
+const fs = require('fs');
+const path = require('path');
 
-import { flattenItems } from '../utils/itemsCalculator'
-import getGroupedItems  from '../utils/itemsCalculator'
-import { parseParams } from '../utils/routing'
+const { flattenItems } = require('../utils/itemsCalculator');
+const { getGroupedItems }  = require('../utils/itemsCalculator');
+const { getSummary, getSummaryText } = require('../utils/summaryCalculator');
+const { parseParams } = require('../utils/routing');
+const { readJsonFromDist } = require('../utils/readJson');
 
-export const processRequest = query => {
+const items = readJsonFromDist('dist/data/items');
+const settings = readJsonFromDist('dist/settings');
+
+const processRequest = query => {
   const params = parseParams({ mainContentMode: 'card-mode', ...query })
   const groupedItems = getGroupedItems({items: items, ...params})
     .map(group => {
@@ -16,10 +19,12 @@ export const processRequest = query => {
     })
   return params.grouping === 'no' ? flattenItems(groupedItems) : groupedItems
 }
+module.exports.processRequest = processRequest;
 
 // Netlify function
-export async function handler(event, context) {
+function handler(event, context) {
   const body = processRequest(event.queryStringParameters)
   const headers = { 'Content-Type': 'application/json' }
   return { statusCode: 200, body: JSON.stringify(body), headers }
 }
+module.exports.handler = handler;

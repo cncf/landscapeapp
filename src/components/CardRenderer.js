@@ -1,7 +1,7 @@
-import _ from 'lodash';
-import assetPath from '../utils/assetPath';
-import { millify, h } from '../utils/format';
-import fields from '../types/fields';
+const  _ = require('lodash');
+const { assetPath } = require('../utils/assetPath');
+const { millify, h } = require('../utils/format');
+const { fields } = require('../types/fields');
 
 function getRelationStyle(relation) {
   const relationInfo = fields.relation.valuesMap[relation]
@@ -12,7 +12,7 @@ function getRelationStyle(relation) {
   }
 }
 
-export function renderDefaultCard({item}) {
+module.exports.renderDefaultCard = function renderDefaultCard({item}) {
   return `
           <div data-id="${h(item.id)}" class="mosaic-wrap">
             <div class="mosaic ${item.oss ? '' : 'nonoss' }" style="${getRelationStyle(item.relation)}">
@@ -41,7 +41,7 @@ export function renderDefaultCard({item}) {
   `;
 }
 
-export function renderFlatCard({item}) {
+module.exports.renderFlatCard = function renderFlatCard({item}) {
   return `
             <div data-id="${item.id}" class="mosaic-wrap">
               <div class="mosaic">
@@ -53,7 +53,7 @@ export function renderFlatCard({item}) {
   `;
 }
 
-export function renderBorderlessCard({item}) {
+module.exports.renderBorderlessCard = function renderBorderlessCard({item}) {
   return `
             <div data-id="${item.id}" class="mosaic-wrap">
               <div class="mosaic">

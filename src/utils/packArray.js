@@ -1,7 +1,8 @@
-import _ from 'lodash';
+const _ = require('lodash');
 
-export default function pack(records) {
+function pack(records) {
   const keys = _.uniq(_.flatten(_.map(records, (x) => _.keys(x))));
   const compact = _.map( records,  (x) => _.map(keys, (key) => x[key] || '!E'));
   return [keys].concat(compact);
 }
+module.exports.pack = pack;

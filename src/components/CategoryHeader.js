@@ -1,9 +1,10 @@
-import { h } from '../utils/format';
-import { renderGuideLink } from './GuideLink'
-import { categoryTitleHeight } from '../utils/landscapeCalculations'
-import getContrastRatio from 'get-contrast-ratio'
+const getContrastRatio = require('get-contrast-ratio');
 
-export function renderCategoryHeader({ href, label, guideAnchor, background, rotate = false }) {
+const { h } = require('../utils/format');
+const { renderGuideLink } = require('./GuideLink');
+const { categoryTitleHeight } = require('../utils/landscapeCalculations');
+
+module.exports.renderCategoryHeader = function renderCategoryHeader({ href, label, guideAnchor, background, rotate = false }) {
   const lowContrast = getContrastRatio('#ffffff', background) < 4.5
   const color = lowContrast ? '#282828' : '#ffffff'
   const backgroundColor = lowContrast ? 'rgba(255, 255, 255, 0.2)' : 'rgba(0, 0, 0, 0.2)'

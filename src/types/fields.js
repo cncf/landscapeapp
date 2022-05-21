@@ -9,13 +9,16 @@
 //     url(id by default): how the value is stored in the url
 //     sortOrder(element index by default): sort order when grouping
 //     match: function
-import path from 'path';
-import fs from 'fs';
-import _ from 'lodash';
-import lookups from  'project/lookup'
-import unpack from '../utils/unpackArray';
-import settings from 'dist/settings'
-import isParent from '../utils/isParent';
+const path = require('path');
+const fs = require('fs');
+const _ = require('lodash');
+
+const { unpack } = require('../utils/unpackArray');
+const { isParent } = require('../utils/isParent');
+const { readJsonFromProject, readJsonFromDist } from '../utils/readJson';
+
+const lookups = readJsonFromProject('lookup');
+const settings = readJsonFromDist('settings');
 
 const relationField = (function() {
   const additionalRelations = settings.relation.values.flatMap(({ children }) => children || [])
@@ -301,7 +304,7 @@ _.each(fields, function(field, key) {
 
   field.valuesMap = _.keyBy(field.values, 'id')
 });
-export default fields;
+module.exports.fields = fields;
 
 const processValuesBeforeLoading = function({options, values}) {
   return options.filter(function(option) {
@@ -337,7 +340,7 @@ const processValuesBeforeSaving = function({options, values}) {
 };
 
 // passed to the client
-export function options(field) {
+function options(field) {
   return fields[field].values.map(function(values) {
     return {
       id: values.url,
@@ -346,8 +349,9 @@ export function options(field) {
     };
   });
 }
+module.exports.options = options;
 
-export function filterFn({field, filters}) {
+function filterFn({field, filters}) {
   const fieldInfo = fields[field];
   const filter = filters[field];
   return function(x) {
@@ -369,12 +373,15 @@ export function filterFn({field, filters}) {
     }
   };
 }
-export function getGroupingValue({item, grouping, filters}) {
+module.exports.filterFn = filterFn;
+
+function getGroupingValue({item, grouping, filters}) {
   const { id, groupFn } = fields[grouping];
   return groupFn ? groupFn({ item , filters }) : item[id];
 }
+module.exports.getGroupingValue = getGroupingValue;
 
-export const sortOptions = [{
+const sortOptions = [{
   id: 'name',
   direction: 'asc',
   label: 'Alphabetical (a to z)',
@@ -413,4 +420,5 @@ export const sortOptions = [{
   label: 'Date Joined',
   disabled: true
 }]
+module.exports.sortOptions = sortOptions;
 

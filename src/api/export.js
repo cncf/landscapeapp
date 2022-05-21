@@ -1,17 +1,18 @@
-import path from 'path';
-import fs from 'fs';
+const path = require('path');
+const fs = require('fs');
 
-import allItems from 'dist/data/items-export';
-import items from 'dist/data/items';
-import settings from 'dist/settings'
+const { flattenItems } = require('../utils/itemsCalculator');
+const { getGroupedItems }  = require('../utils/itemsCalculator');
+const { getSummary, getSummaryText } = require('../utils/summaryCalculator');
+const { parseParams } = require('../utils/routing');
+const Parser = require('json2csv/lib/JSON2CSVParser');
+const { readJsonFromDist } = require('../utils/readJson');
 
-import { flattenItems } from '../utils/itemsCalculator';
-import getGroupedItems  from '../utils/itemsCalculator';
-import getSummary, { getSummaryText } from '../utils/summaryCalculator';
-import { parseParams } from '../utils/routing';
-import Parser from 'json2csv/lib/JSON2CSVParser';
+const allItems = readJsonFromDist('dist/data/items-export');
+const items = readJsonFromDist('dist/data/items');
+const settings = readJsonFromDist('dist/settings');
 
-export const processRequest = query => {
+const processRequest = query => {
   const params = parseParams(query);
   const p = new URLSearchParams(query);
   params.format = p.get('format');
@@ -28,9 +29,10 @@ export const processRequest = query => {
   const csv = json2csvParser.parse(itemsForExport, { fields });
   return csv;
 }
+module.exports.processRequest = processRequest;
 
 // Netlify function
-export async function handler(event, context) {
+function handler(event, context) {
   const body = processRequest(event.queryStringParameters)
   const headers = {
       'Content-Type': 'text/css',
@@ -38,6 +40,8 @@ export async function handler(event, context) {
   };
   return { statusCode: 200, body: body, headers }
 }
+module.exports.handler = handler;
+
 if (__filename === process.argv[1]) {
   console.info(JSON.stringify(processRequest(process.argv[2]), null, 4));
 }
