@@ -1135,7 +1135,7 @@ const CncfLandscapeApp = {
         div.innerHTML = `
       <div style="font-size: 24px; padding-left: 16px; line-height: 48px; font-weight: 500;">
         ${ href ? `<a data-type="internal" href=${href}>${header}</a>` : `<span>${header}</span>` }
-        <span class="items-cont">(${count})</span>
+        <span class="items-cont">&nbsp;(${count})</span>
       </div>
   `;
         return div;

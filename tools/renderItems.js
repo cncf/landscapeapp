@@ -55,17 +55,16 @@ async function main() {
 
     payload[ key === 'main' ? 'main' : landscapeSettings.url] = landscapeContent;
 
-    // render a guide too
-    if (key === 'main' && guideJson) {
-      const guideContent = GuideRenderer.render({
-        settings,
-        landscapeSettings,
-        guide: guideJson,
-        entries: projects
-      });
-      payload.guide = guideContent;
-      await fs.writeFile(path.resolve(distPath, `data/items/guide.html`), guideContent);
-    }
+  }
+
+  if (guideJson) {
+    const guideContent = GuideRenderer.render({
+      settings,
+      guide: guideJson,
+      items: projects
+    });
+    payload.guide = guideContent;
+    await fs.writeFile(path.resolve(distPath, `data/items/guide.html`), guideContent);
   }
 
 

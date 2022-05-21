@@ -39,7 +39,7 @@ export function render({settings, items, exportUrl}) {
                   <div class="sh_wrapper">
                     <div style="font-size: 24px; padding-left: 16px; line-height: 48px; font-weight: 500;">
                       <span>${h(groupedItem.header)}</span>
-                      <span class="items-cont">(${groupedItem.items.length})</span>
+                      <span class="items-cont">&nbsp;(${groupedItem.items.length})</span>
                     </div>
                   </div>` : '';
                 return [ header, ...cardElements].join('');

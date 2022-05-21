@@ -7,10 +7,9 @@ import assetPath from '../utils/assetPath';
 
 
 
-// landscapeSettings should be a main page
 // guide is a guide index
-export function render({settings, landscapeSettings, guide, entries }) {
-  const title = `<h1 class="title">${settings.global.short_name} Landscape Guide</h1>`;
+export function render({settings, items, guide}) {
+
   const renderSubcategoryMetadata = ({ node, entries }) => {
     const orderedEntries = _.orderBy(entries,  (x) => !x.isLarge);
     const projectEntries = entries.filter(entry => entry.project)
@@ -38,7 +37,7 @@ export function render({settings, landscapeSettings, guide, entries }) {
         ${ orderedEntries.map(entry => renderItem(entry)).join('') }
       </div>
       `;
-  }
+  };
 
   const renderNavigation = ({ nodes }) => {
     const links = nodes.filter(node => node.anchor)
@@ -53,7 +52,7 @@ export function render({settings, landscapeSettings, guide, entries }) {
       .map(node => {
         const hasChildren = (parents[node.anchor] || 0) > 1
         return `
-          <a href="#${node.anchor}" data-level=${node.level} class="sidebar-link expandable" style="padding-left: ${10 + node.level * 10} px;">
+          <a href="#${node.anchor}" data-level="${node.level}" class="sidebar-link expandable" style="padding-left: ${10 + node.level * 10} px;">
             ${h(node.title)} ${hasChildren ? `<svg viewBox="0 0 24 24"><path d="M10 17l5-5-5-5v10z"></path></svg> ` : ''}
           </a>
           ${hasChildren ? `
@@ -71,8 +70,8 @@ export function render({settings, landscapeSettings, guide, entries }) {
     return nodes.map((node, idx) => {
       const subcategoryEntries = node.subcategory && enhancedEntries.filter(entry => entry.path.split(' / ')[1].trim() === node.title) || [];
       return `<div>
-        ${ node.title ?  `<div class="section-title" id=${node.anchor}>
-          <h2 data-variant=${node.level + 1}>
+        ${ node.title ?  `<div class="section-title" id="${h(node.anchor)}">
+          <h2 data-variant="${node.level + 1}">
             ${ node.landscapeKey
                 ? renderLandscapeLink({landscapeKey: node.landscapeKey, title: node.title})
                 : h(node.title)
@@ -86,18 +85,27 @@ export function render({settings, landscapeSettings, guide, entries }) {
     }).join('');
   }
 
-  const categories = landscapeSettings.elements.map(element => element).reduce((acc, category) => {
-    return { ...acc, [category.category]: category }
-  }, {})
+  const enhancedEntries = items.map( (entry) => {
+    let subcategory = entry.path.split(' / ')[1];
+    let categoryAttrs = null;
+    for (let key in settings.big_picture) {
+      let page = settings.big_picture[key];
+      for (let element of page.elements) {
+        if (!page.category && element.category === entry.category) {
+          categoryAttrs = element;
+        }
+        if (page.category === entry.category && element.category === subcategory) {
+          categoryAttrs = element;
+        }
+      }
+    }
 
-  const enhancedEntries = entries.map(entry => {
-    const categoryAttrs = categories[entry.category]
     if (!categoryAttrs) {
       return null;
     }
-    const enhanced = { ...entry, categoryAttrs, isVisible: true }
+    const enhanced = { ...entry, categoryAttrs }
     return { ...enhanced, isLarge: isLargeFn(enhanced) }
-  }).filter ( (x) => !!x);
+  }).filter( (x) => !!x);
 
   return `
       <div class="side-content">
@@ -147,5 +155,5 @@ export function render({settings, landscapeSettings, guide, entries }) {
           </div>
         </div>
       </div>
-    `
+    `;
 }
