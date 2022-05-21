@@ -674,7 +674,7 @@ export function render({settings, tweetsCount, itemInfo}) {
       </div>
   `;
 
-  const result = `<div class="modal-content">
+  const result = `<div class="modal-content ${itemInfo.oss ? 'oss' : 'nonoss'}">
     ${productLogoAndTagsAndCharts}
     <div class="product-scroll" >
       ${productInfo}
