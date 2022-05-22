@@ -1,6 +1,6 @@
-import {
+const {
   fetchBestPracticeEntriesWithFullScan,
-} from './fetchBestPractices';
+} = require('./fetchBestPractices');
 async function main() {
   const data = await fetchBestPracticeEntriesWithFullScan({
     cache: [],

@@ -5,7 +5,8 @@ import { GithubClient } from './apiClients'
 import { landscape } from './landscape'
 import { processedLandscape } from './processedLandscape'
 
-export const cacheKey = (url, branch) => `${url}#${branch}`
+cacheKey = (url, branch) => `${url}#${branch}`
+module.exports.cacheKey = cacheKey;
 
 const deleteReposWithNewAdditionalRepos = (cache) => {
   const processedAdditionalRepos = traverse(processedLandscape).reduce((acc, node) => {
@@ -29,7 +30,7 @@ const deleteReposWithNewAdditionalRepos = (cache) => {
   })
 }
 
-export const getProcessedRepos = () => {
+const getProcessedRepos = () => {
   let processedRepos = traverse(processedLandscape).reduce((acc, node) => {
     if (node && node.github_data && node.repo_url) {
       acc[cacheKey(node.repo_url, node.branch)] = {
@@ -46,8 +47,9 @@ export const getProcessedRepos = () => {
 
   return processedRepos
 }
+module.exports.getProcessedRepos = getProcessedRepos;
 
-export const getProcessedGithubOrgs = () => {
+const getProcessedGithubOrgs = () => {
   return traverse(processedLandscape).reduce((acc, node) => {
     if (node && node.github_data && node.project_org) {
       const { project_org, github_data, github_start_commit_data, repos } = node
@@ -56,8 +58,9 @@ export const getProcessedGithubOrgs = () => {
     return acc
   }, {})
 }
+module.exports.getProcessedGithubOrgs = getProcessedGithubOrgs;
 
-export const getOrganizations = () => {
+const getOrganizations = () => {
   const orgs = traverse(landscape).reduce((acc, node) => {
     if (node && node.project_org && node.hasOwnProperty('item')) {
       acc.push({ url: node.project_org })
@@ -66,8 +69,9 @@ export const getOrganizations = () => {
   }, [])
   return orgs
 }
+module.exports.getOrganizations = getOrganizations;
 
-export const fetchGithubOrgs = async preferCache => {
+const fetchGithubOrgs = async preferCache => {
   const githubOrgs = getOrganizations()
   const processedGithubOrgs = getProcessedGithubOrgs()
   return await Promise.map(githubOrgs, async ({ url }) => {
@@ -89,8 +93,9 @@ export const fetchGithubOrgs = async preferCache => {
     return { data: { url, repos }, github_data: { description } }
   }, { concurrency: 10 })
 }
+module.exports.fetchGithubOrgs = fetchGithubOrgs;
 
-export const getRepos = () => {
+const getRepos = () => {
   const repos = traverse(landscape).reduce((acc, node) => {
     if (node && node.repo_url && node.hasOwnProperty('item') && !node.project_org) {
       acc.push({ url: node.repo_url, branch: node.branch, multiple: !!node.additional_repos })
@@ -110,8 +115,9 @@ export const getRepos = () => {
   }, [])
   return _.uniq(repos);
 }
+module.exports.getRepos = getRepos;
 
-export const getProcessedReposStartDates = () => {
+const getProcessedReposStartDates = () => {
   let processedReposStartDates = traverse(processedLandscape).reduce((acc, node) => {
     if (node && node.github_start_commit_data) {
       acc[cacheKey(node.repo_url, node.branch)] = { ...node.github_start_commit_data,  url: node.repo_url, branch: node.branch }
@@ -123,3 +129,4 @@ export const getProcessedReposStartDates = () => {
 
   return processedReposStartDates
 }
+module.exports.getProcessedReposStartDates = getProcessedReposStartDates;

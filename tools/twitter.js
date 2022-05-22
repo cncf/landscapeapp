@@ -1,13 +1,14 @@
-import colors from 'colors';
-import Promise from 'bluebird';
-import _ from 'lodash';
-import path from 'path';
-import { projectPath } from './settings';
-import actualTwitter from './actualTwitter';
-import errorsReporter from './reporter';
+const colors = require('colors');
+const Promise = require('bluebird');
+const _ = require('lodash');
+const path = require('path');
 const debug = require('debug')('twitter');
-import makeReporter from './progressReporter';
-import { TwitterClient} from './apiClients';
+
+const { projectPath } = require('./settings');
+const { actualTwitter } = require('./actualTwitter');
+const { errorsReporter } = require('./reporter');
+const { makeReporter } = require('./progressReporter');
+const { TwitterClient} = require('./apiClients');
 const { addError, addFatal } = errorsReporter('twitter');
 const error = colors.red;
 const fatal = (x) => colors.red(colors.inverse(x));
@@ -38,7 +39,7 @@ async function getLandscapeItems(crunchbaseEntries) {
   return items;
 }
 
-export async function extractSavedTwitterEntries() {
+module.exports.extractSavedTwitterEntries = function() {
   const traverse = require('traverse');
   let source = [];
   try {
@@ -75,7 +76,7 @@ async function readDate(url) {
   return new Date(tweets[0].created_at);
 }
 
-export async function fetchTwitterEntries({cache, preferCache, crunchbaseEntries}) {
+module.exports.fetchTwitterEntries =  async function({cache, preferCache, crunchbaseEntries}) {
   const items = (await getLandscapeItems(crunchbaseEntries));
   const errors = [];
   const fatalErrors = [];

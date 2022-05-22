@@ -1,8 +1,7 @@
-import process from 'process';
-import path from 'path';
-import { projectPath, settings } from './settings';
-import actualTwitter from './actualTwitter';
-import { setFatalError, reportFatalErrors } from './fatalErrors';
+const path = require('path');
+const { projectPath, settings } = require('./settings');
+const { actualTwitter } = require('./actualTwitter');
+const { setFatalError, reportFatalErrors } from './fatalErrors';
 
 async function main() {
 

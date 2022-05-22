@@ -1,9 +1,9 @@
-import colors from 'colors';
+const colors = require('colors');
 const error = colors.red;
 const fatal = (x) => colors.red(colors.inverse(x));
 
 let messages = [];
-export function getMessages() {
+function getMessages() {
   return messages;
 }
 
@@ -17,7 +17,7 @@ try {
 }
 
 
-export default function build(category) {
+function build(category) {
   return {
     addError: function(msg) {
       console.info(error(`ERROR: ${msg}`));
@@ -43,3 +43,4 @@ export default function build(category) {
 function save() {
   require('fs').writeFileSync('/tmp/landscape.json', JSON.stringify(messages, null, 4));
 }
+module.exports = { build, getMessages };

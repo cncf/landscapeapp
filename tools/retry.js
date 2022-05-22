@@ -1,4 +1,4 @@
-import Promise from 'bluebird';
+const Promise = require('bluebird');
 const maxAttempts = 5;
 const retry  = async function (fn, attempts = maxAttempts, delay = 50000) {
   try {
@@ -12,4 +12,4 @@ const retry  = async function (fn, attempts = maxAttempts, delay = 50000) {
     return await retry(fn, attempts - 1, delay);
   }
 }
-export default retry;
+module.exports.retry = retry;
