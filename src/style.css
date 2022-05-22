@@ -1024,6 +1024,12 @@ html.embed body {
 .column-content {
   display: flex; flex-wrap: wrap; position: relative
 }
+.column-content [data-section-id] {
+  width: 100%;
+  display: flex;
+  flex-wrap: wrap;
+  position: relative;
+}
 
 .oss img { background: white; }
 .nonoss img { background: #E4E4E4; }

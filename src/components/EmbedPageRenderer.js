@@ -4,6 +4,7 @@ import React from 'react';
 import ReactDOMServer from 'react-dom/server';
 import getGroupedItems  from '../utils/itemsCalculator'
 import { parseParams } from '../utils/routing'
+import saneName from '../utils/saneName';
 import { getDefaultCard, getBorderlessCard, getFlatCard } from './CardRenderer';
 
 export function render({settings, items, exportUrl}) {
@@ -37,13 +38,13 @@ export function render({settings, items, exportUrl}) {
               { groupedItems.map( (groupedItem) => {
                 const cardElements = groupedItem.items.map( (item) => cardFn({item}));
                 const header = items.length > 0 ?
-                  <div className="sh_wrapper">
+                  <div className="sh_wrapper" data-wrapper-id={saneName(groupedItem.header)}>
                     <div style={{fontSize: '24px', paddingLeft: '16px', lineHeight: '48px', fontWeight: 500}}>
                       <span>{groupedItem.header}</span>
                       <span className="items-cont">&nbsp;({groupedItem.items.length})</span>
                     </div>
                   </div> : null
-                return [ header, ...cardElements];
+                return [ header, <div data-section-id={saneName(groupedItem.header)}>{cardElements}</div>];
               })
               }
             </div>
