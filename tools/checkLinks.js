@@ -1,11 +1,12 @@
-import { exec } from 'child_process'
-import { writeFileSync, unlinkSync } from 'fs'
-import colors from 'colors'
-import Promise from 'bluebird'
-import traverse from 'traverse'
-import { landscape, saveLandscape } from './landscape'
-import { updateProcessedLandscape } from './processedLandscape'
-import errorsReporter from './reporter';
+const { exec } = require('child_process');
+const { writeFileSync, unlinkSync } = require('fs');
+const colors = require('colors');
+const Promise = require('bluebird');
+const traverse = require('traverse');
+
+const { landscape, saveLandscape } = require('./landscape');
+const { updateProcessedLandscape } = require('./processedLandscape');
+const { errorsReporter } = require('./reporter');
 
 const { addError } = errorsReporter('link');
 

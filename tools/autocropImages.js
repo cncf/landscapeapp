@@ -1,7 +1,8 @@
-import { projectPath } from './settings';
-import autoCropSvg from 'svg-autocrop';
-import path from 'path';
-import fs from 'fs';
+const autoCropSvg = require('svg-autocrop');
+const path = require('path');
+const fs = require('fs');
+
+const { projectPath } = require('./settings');
 
 async function main() {
   const files = require('fs').readdirSync(path.resolve(projectPath, 'images'));

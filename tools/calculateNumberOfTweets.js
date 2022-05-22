@@ -1,7 +1,8 @@
-import _ from 'lodash';
-import { TwitterClient } from './apiClients';
-import { settings } from './settings';
-import { updateProcessedLandscape } from "./processedLandscape";
+const _ = require('lodash');
+
+const { TwitterClient } = require('./apiClients');
+const { settings } = require('./settings');
+const { updateProcessedLandscape } = require("./processedLandscape");
 
 // we need to know a latest since_id, otherwise we can only expect
 async function getLatestTweets(sinceId) {

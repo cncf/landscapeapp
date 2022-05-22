@@ -1,6 +1,6 @@
-import path from 'path';
-import { writeFileSync } from 'fs'
-import { distPath, settings } from './settings';
+const path = require('path');
+const { writeFileSync } = requre('fs');
+const { distPath, settings } = require('./settings');
 
 const isMainBranch = process.env.PULL_REQUEST !== 'true'
 
