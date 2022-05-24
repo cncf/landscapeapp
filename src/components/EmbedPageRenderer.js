@@ -2,13 +2,16 @@
 import _ from 'lodash';
 import React from 'react';
 import ReactDOMServer from 'react-dom/server';
-import getGroupedItems  from '../utils/itemsCalculator'
+import getGroupedItems, { expandSecondPathItems }  from '../utils/itemsCalculator'
 import { parseParams } from '../utils/routing'
 import saneName from '../utils/saneName';
 import { getDefaultCard, getBorderlessCard, getFlatCard } from './CardRenderer';
 
 export function render({settings, items, exportUrl}) {
   const params = parseParams(exportUrl.split('?').slice(-1)[0]);
+  if (params.grouping === 'landscape') {
+    items = expandSecondPathItems(items);
+  }
   const groupedItems = getGroupedItems({data: items, ...params})
   const cardStyle = params.cardStyle || 'default';
   const cardFn = cardStyle === 'borderless' ? getBorderlessCard : cardStyle === 'flat' ? getFlatCard : getDefaultCard;

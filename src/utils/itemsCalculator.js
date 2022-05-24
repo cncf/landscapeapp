@@ -15,6 +15,17 @@ const groupAndSort = (items, sortCriteria) => {
   return _.groupBy(_.orderBy(items, sortCriteria), 'landscape')
 }
 
+export const expandSecondPathItems = function(data) {
+  const extraItems = data.filter( (x) => x.second_path).map( (item) => ({
+    ...item,
+    category: item.second_path.split('/')[0].trim(),
+    path: item.second_path,
+    landscape: item.second_path,
+    second_path: item.path
+  }));
+  return data.concat(extraItems);
+}
+
 export const getFilteredItems = function({data, filters}) {
     var filterHostedProject = filterFn({field: 'relation', filters});
     var filterByLicense = filterFn({field: 'license', filters});

@@ -9,7 +9,7 @@ import * as HomePageRenderer from '../src/components/HomePageRenderer.js';
 import * as GuideRenderer from '../src/components/GuideRenderer.js';
 import * as EmbedPageRenderer from '../src/components/EmbedPageRenderer.js';
 import * as FullscreenLandscapeRenderer from '../src/components/FullscreenLandscapeRenderer';
-import { getLandscapeItems } from '../src/utils/itemsCalculator.js';
+import { getLandscapeItems, expandSecondPathItems } from '../src/utils/itemsCalculator.js';
 import { findLandscapeSettings } from '../src/utils/landscapeSettings'
 import fs from 'fs/promises';
 
@@ -33,8 +33,9 @@ async function main() {
   for (let key in settings.big_picture) {
     const landscapeSettingsEntry = settings.big_picture[key];
     const landscapeSettings = findLandscapeSettings(landscapeSettingsEntry.url);
+    const expandedItems = expandSecondPathItems(projects);
     const landscapeItems = getLandscapeItems({
-      items: projects,
+      items: expandedItems,
       landscapeSettings: landscapeSettings,
       guideIndex
     });
@@ -71,9 +72,6 @@ async function main() {
     payload.guide = guideContent;
     await fs.writeFile(path.resolve(distPath, `data/items/guide.html`), guideContent);
   }
-
-
-
 
   let defaultCards = '';
   let borderlessCards = '';

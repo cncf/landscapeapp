@@ -1,9 +1,9 @@
 import path from 'path';
 import fs from 'fs';
-import items from 'dist/data/items';
+import projects from 'dist/data/items';
 import settings from 'dist/settings'
 
-import { flattenItems } from '../utils/itemsCalculator'
+import { flattenItems, expandSecondPathItems } from '../utils/itemsCalculator'
 import getGroupedItems  from '../utils/itemsCalculator'
 import getSummary, { getSummaryText } from '../utils/summaryCalculator';
 import { parseParams } from '../utils/routing'
@@ -12,6 +12,12 @@ export const processRequest = query => {
   const params = parseParams(query);
   const p = new URLSearchParams(query);
   params.format = p.get('format');
+
+  let items = projects;
+  if (params.grouping === 'landscape' || params.format !== 'card') {
+    items = expandSecondPathItems(items);
+  };
+
   const summary = getSummary({data: items, ...params});
   const groupedItems = getGroupedItems({data: items, ...params})
     .map(group => {
