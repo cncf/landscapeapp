@@ -601,6 +601,7 @@ export function render({settings, tweetsCount, itemInfo}) {
         <div className="product-name">{itemInfo.name}</div>
         <div className="product-parent"><InternalLink to={linkToOrganization}><span>{itemInfo.organization}</span>{memberTag(itemInfo)}</InternalLink></div>
         <div className="product-category">{itemCategory(itemInfo.landscape)}</div>
+        { itemInfo.second_path && <div className="product-category">{itemCategory(itemInfo.second_path)}</div> }
         <div className="product-description">{itemInfo.description}</div>
       </React.Fragment>
     </div>

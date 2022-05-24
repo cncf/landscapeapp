@@ -24,6 +24,7 @@ const cleanupFile = function(filename, orderKeys) {
 
 const landscapeKeys = [
   'name',
+  'second_path',
   'description',
   'homepage_url',
   'project',

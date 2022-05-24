@@ -16,6 +16,7 @@ async function main() {
 
   const allowedKeys = [
     'name',
+    'second_path',
     'homepage_url',
     'logo',
     'twitter',

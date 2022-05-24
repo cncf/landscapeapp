@@ -2,10 +2,10 @@ import path from 'path';
 import fs from 'fs';
 
 import allItems from 'dist/data/items-export';
-import items from 'dist/data/items';
+import projects from 'dist/data/items';
 import settings from 'dist/settings'
 
-import { flattenItems } from '../utils/itemsCalculator';
+import { flattenItems, expandSecondPathItems } from '../utils/itemsCalculator';
 import getGroupedItems  from '../utils/itemsCalculator';
 import getSummary, { getSummaryText } from '../utils/summaryCalculator';
 import { parseParams } from '../utils/routing';
@@ -15,6 +15,15 @@ export const processRequest = query => {
   const params = parseParams(query);
   const p = new URLSearchParams(query);
   params.format = p.get('format');
+
+  let items = projects;
+  if (params.grouping === 'landscape' || params.format !== 'card') {
+    items = expandSecondPathItems(items);
+  };
+
+  // extract alias - if grouping = category
+  // extract alias - if params != card-mode (big_picture - always show)
+  // i.e. make a copy to items here - to get a list of ids
 
   const selectedItems = flattenItems(getGroupedItems({data: items, ...params}))
     .reduce((acc, item) => ({ ...acc, [item.id]: true }), {})
