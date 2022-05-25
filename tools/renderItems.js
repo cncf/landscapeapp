@@ -250,5 +250,8 @@ async function main() {
   }
 
 
+  // render acquistions
+
+
 }
 main();

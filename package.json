@@ -32,7 +32,7 @@
     "funding": "babel-node tools/fundingForMasterBranch",
     "prepare-landscape": "babel-node tools/prepareLandscape.js && babel-node tools/renderItems.js",
     "setup-robots": "babel-node tools/sitemap && babel-node tools/addRobots",
-    "build": "yarn fetch && yarn prepare-landscape && yarn setup-robots && yarn export-functions && yarn stop-old-ci && yarn start-ci && babel-node tools/parallelWithRetry integration-test check-landscape render-landscape funding && yarn stop-ci",
+    "build": "yarn fetch && yarn prepare-landscape && babel-node tools/renderAcquisitions && yarn setup-robots && yarn export-functions && yarn stop-old-ci && yarn start-ci && babel-node tools/parallelWithRetry integration-test check-landscape render-landscape funding && yarn stop-ci",
     "export-functions": "babel-node ./tools/exportFunctions",
     "latest": "yarn",
     "reset-tweet-count": "babel-node tools/resetTweetCount.js",
