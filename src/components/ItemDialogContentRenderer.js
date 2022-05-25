@@ -600,8 +600,9 @@ export function render({settings, tweetsCount, itemInfo}) {
       <React.Fragment>
         <div className="product-name">{itemInfo.name}</div>
         <div className="product-parent"><InternalLink to={linkToOrganization}><span>{itemInfo.organization}</span>{memberTag(itemInfo)}</InternalLink></div>
-        <div className="product-category">{itemCategory(itemInfo.landscape)}</div>
-        { itemInfo.second_path && <div className="product-category">{itemCategory(itemInfo.second_path)}</div> }
+        { !itemInfo.allPaths && <div className="product-category">{itemCategory(itemInfo.landscape)}</div> }
+        { itemInfo.second_path && [itemInfo.second_path].flat().map( (path) => <div className="product-category">{itemCategory(path)}</div>) }
+        { itemInfo.allPaths && itemInfo.allPaths.map( (path) => <div className="product-category">{itemCategory(path)}</div>) }
         <div className="product-description">{itemInfo.description}</div>
       </React.Fragment>
     </div>

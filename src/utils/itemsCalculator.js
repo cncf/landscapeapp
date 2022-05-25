@@ -16,13 +16,13 @@ const groupAndSort = (items, sortCriteria) => {
 }
 
 export const expandSecondPathItems = function(data) {
-  const extraItems = data.filter( (x) => x.second_path).map( (item) => ({
+  const extraItems = data.filter( (x) => x.second_path).flatMap( (item) => [item.second_path].flat().map( (extraPath) => ({
     ...item,
-    category: item.second_path.split('/')[0].trim(),
-    path: item.second_path,
-    landscape: item.second_path,
-    second_path: item.path
-  }));
+    category: extraPath.split('/')[0].trim(),
+    path: extraPath,
+    landscape: extraPath,
+    allPaths: [item.path.concat([item.second_path].flat())]
+  })));
   return data.concat(extraItems);
 }
 
