@@ -19,7 +19,7 @@ const linkToOrg = organization => {
   if (!members.includes(organization)) {
     return organization;
   }
-  const url = stringifyParams({ mainContentMode: 'landscape', filters: { organization }})
+  const url = stringifyParams({ mainContentMode: 'card-mode', filters: { organization }})
     return `<a href="${url}">${organization}</a>`
 }
 
