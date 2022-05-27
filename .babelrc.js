@@ -8,8 +8,8 @@ module.exports = {
     }],
     ["module-resolver", {
       alias: {
-        project: process.env.PROJECT_PATH,
-        dist: path.resolve(process.env.PROJECT_PATH, 'dist', process.env.PROJECT_NAME || '')
+        project: process.env.PROJECT_PATH || '',
+        dist: path.resolve(process.env.PROJECT_PATH || '', 'dist', process.env.PROJECT_NAME || '')
       }
     }]
   ]
