@@ -1,12 +1,13 @@
-import { projectPath } from './settings';
-import { writeFileSync, readFileSync, existsSync } from "fs";
-import { resolve } from "path";
-import { load } from "js-yaml";
-import { dump } from "./yaml";
+const { resolve } = require("path");
+const { writeFileSync, readFileSync, existsSync } = require("fs");
+
+const { projectPath } = require('./settings');
+const { load } = require("js-yaml");
+const { dump } = require("./yaml");
 
 const path = resolve(projectPath, 'processed_landscape.yml');
-export const processedLandscape = existsSync(path) ? load(readFileSync(path)) : {};
-export const updateProcessedLandscape = async callback => {
+const processedLandscape = module.exports.processedLandscape = existsSync(path) ? load(readFileSync(path)) : {};
+const updateProcessedLandscape = module.exports.updateProcessedLandscape = async callback => {
   const updatedProcessedLandscape = await callback(processedLandscape);
   const newContent = "# THIS FILE IS GENERATED AUTOMATICALLY!\n" + dump(updatedProcessedLandscape);
   writeFileSync(path, newContent);

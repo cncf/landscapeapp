@@ -1,17 +1,18 @@
-import _ from 'lodash';
-import axios from 'axios'
-import errorsReporter, { getMessages } from './reporter';
+const _ = require('lodash');
+const axios = require('axios');
+
+const { errorsReporter, getMessages } from './reporter';
 const { addFatal } = errorsReporter('general');
 
-export function hasFatalErrors() {
+const hasFatalErrors = module.exports.hasFatalErrors = function() {
   return getMessages().filter( (x) => x.type === 'fatal') > 0;
 }
 
-export function setFatalError(errorText) {
+const setFatalError = module.exports.setFatalError = function(errorText) {
   addFatal(errorText);
 }
 
-export async function reportFatalErrors() {
+const reportFatalErrors = module.exports.reportFatalErrors = async function() {
   if (!process.env.GITHUB_TOKEN) {
     console.info(`Can not report fatal errors, GITHUB_TOKEN not provided`);
     return;

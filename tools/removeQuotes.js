@@ -1,7 +1,8 @@
-import _ from 'lodash';
-import path from 'path';
-import { projectPath } from './settings';
-import { dump } from './yaml';
+const _ = require('lodash');
+const path = require('path');
+
+const { projectPath } = require('./settings');
+const { dump } = require('./yaml');
 
 const cleanupFile = function(filename, orderKeys) {
   const source = require('js-yaml').load(require('fs').readFileSync(path.resolve(projectPath, filename)));
@@ -24,6 +25,7 @@ const cleanupFile = function(filename, orderKeys) {
 
 const landscapeKeys = [
   'name',
+  'second_path',
   'description',
   'homepage_url',
   'project',

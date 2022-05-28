@@ -1,4 +1,4 @@
-export default function(x) {
+const ensureHttps = global.exports.ensureHttps = function(x) {
   if (!x) {
     return x;
   }

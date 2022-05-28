@@ -1,15 +1,16 @@
-import colors from 'colors';
-import retry from './retry';
-import requestWithRetry from './requestWithRetry';
-import Promise from 'bluebird';
-import _ from 'lodash';
-import errorsReporter from './reporter';
-import { settings, projectPath } from './settings';
-import path from 'path';
-import makeReporter from './progressReporter';
+const colors = require('colors');
+const Promise = require('bluebird');
+const _ = require('lodash');
+const path = require('path');
+const debug = require('debug')('bestpractices');
+
+const { errorsReporter } = require('./reporter');
+const { requestWithRetry } = require('./requestWithRetry');
+const { settings, projectPath } = require('./settings');
+const { makeReporter } = require('./progressReporter');
+const { retry } = require('./retry');
 
 const { addError } = errorsReporter('bestpractices');
-const debug = require('debug')('bestpractices');
 
 const errorColor = colors.red;
 const cacheMiss = colors.green;
@@ -73,7 +74,7 @@ async function fetchEntry(url) {
   return await retry(() => fetchEntryNoRetry(url), 3);
 }
 
-export async function fetchBestPracticeEntriesWithFullScan({cache, preferCache}) {
+const fetchBestPracticeEntriesWithFullScan = module.exports.fetchBestPracticeEntriesWithFullScan =  async function({cache, preferCache}) {
   const items = await getLandscapeItems();
   const errors = [];
   var fetchedEntries = null;
@@ -117,7 +118,7 @@ export async function fetchBestPracticeEntriesWithFullScan({cache, preferCache})
   return result;
 }
 
-export async function fetchBestPracticeEntriesWithIndividualUrls({cache, preferCache}) {
+const fetchBestPracticeEntriesWithIndividualUrls = module.exports.fetchBestPracticeEntriesWithIndividualUrls = async function({cache, preferCache}) {
   const items = await getLandscapeItems();
   const errors = [];
   const reporter = makeReporter();
@@ -164,7 +165,7 @@ export async function fetchBestPracticeEntriesWithIndividualUrls({cache, preferC
 
 }
 
-export async function extractSavedBestPracticeEntries() {
+const extractSavedBestPracticeEntries = module.exports.extractSavedBestPracticeEntries =  async function extractSavedBestPracticeEntries() {
   const traverse = require('traverse');
   let source = [];
   try {

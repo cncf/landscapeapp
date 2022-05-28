@@ -1,9 +1,9 @@
-import traverse from 'traverse'
-import _ from 'lodash'
-import Promise from 'bluebird'
-import { GithubClient } from './apiClients'
-import { landscape } from './landscape'
-import { processedLandscape } from './processedLandscape'
+const traverse = require('traverse');
+const _ = require('lodash');
+const Promise = require('bluebird');
+const { GithubClient } = require('./apiClients');
+const { landscape } = require('./landscape');
+const { processedLandscape } = require('./processedLandscape');
 
 cacheKey = (url, branch) => `${url}#${branch}`
 module.exports.cacheKey = cacheKey;

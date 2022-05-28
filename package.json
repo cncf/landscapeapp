@@ -1,6 +1,6 @@
 {
   "name": "interactive-landscape",
-  "version": "1.0.648",
+  "version": "1.0.654",
   "description": "Visualization tool for building interactive landscapes",
   "engines": {
     "npm": ">=3",
@@ -32,7 +32,7 @@
     "funding": "node tools/fundingForMasterBranch",
     "prepare-landscape": "node tools/prepareLandscape.js && node tools/renderItems.js",
     "setup-robots": "node tools/sitemap && node tools/addRobots",
-    "build": "yarn fetch && yarn prepare-landscape && yarn setup-robots && yarn export-functions && yarn stop-old-ci && yarn start-ci && node tools/parallelWithRetry integration-test check-landscape render-landscape funding && yarn stop-ci",
+    "build": "yarn fetch && yarn prepare-landscape && node tools/renderAcquisitions && yarn setup-robots && yarn export-functions && yarn stop-old-ci && yarn start-ci && node tools/parallelWithRetry integration-test check-landscape render-landscape funding && yarn stop-ci",
     "export-functions": "node ./tools/exportFunctions",
     "latest": "yarn",
     "reset-tweet-count": "node tools/resetTweetCount.js",

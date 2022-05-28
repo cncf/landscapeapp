@@ -1,7 +1,8 @@
-import path from 'path';
-import fs from 'fs';
-import settings from 'dist/settings';
-import Parser from 'json2csv/lib/JSON2CSVParser'
+const path = require('path');
+const fs = require('fs');
+const Parser = require('json2csv/lib/JSON2CSVParser');
+
+const { settings } = require('./settings');
 
 const fields = settings => [{
   label: 'id',
@@ -143,7 +144,7 @@ function formatDate(row, field) {
   return value.substring(0, 10) + ' ' + value.substring(11, 19);
 }
 
-const prepareItemsForExport = items => {
+const prepareItemsForExport = module.exports.prepareItemsForExport = items => {
   const parser = new Parser({ fields: fields(settings), quote: '' })
 
   return items.map(item => {
@@ -151,5 +152,3 @@ const prepareItemsForExport = items => {
     return fields.map(field => [field.label, parser.processValue(field.value(item))])
   })
 }
-
-export default prepareItemsForExport

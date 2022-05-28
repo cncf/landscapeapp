@@ -1,5 +1,5 @@
-import { report } from './reportToSlack';
-import generateReport from './reportBuilder';
+const { report } = require('./reportToSlack');
+const { generateReport } = require('./reportBuilder');
 
 const landscapesInfo = require('js-yaml').load(require('fs').readFileSync('landscapes.yml'));
 

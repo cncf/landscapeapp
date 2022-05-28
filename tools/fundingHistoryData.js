@@ -1,9 +1,11 @@
 // Calculates a json file which shows changes in funding of different companies
-import _ from 'lodash';
-import saneName from '../src/utils/saneName'
-import { settings, projectPath } from './settings'
-import path from 'path';
-import { execSync } from 'child_process'
+const _ = require('lodash');
+const path = require('path');
+const { execSync } = require('child_process');
+
+const { saneName } = require('../src/utils/saneName');
+const { settings, projectPath } = require('./settings');
+
 const base = settings.global.website;
 // sync should go from a proper place!!!
 require('child_process').execSync(`cd '${projectPath}'; git remote rm github 2>/dev/null || true`);

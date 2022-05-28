@@ -1,9 +1,8 @@
 const fs = require('fs');
 const path = require('path');
 
-const { flattenItems } = require('../utils/itemsCalculator');
+const { flattenItems, expandSecondPathItems } = require('../utils/itemsCalculator');
 const { getGroupedItems }  = require('../utils/itemsCalculator');
-const { getSummary, getSummaryText } = require('../utils/summaryCalculator');
 const { parseParams } = require('../utils/routing');
 const { readJsonFromDist } = require('../utils/readJson');
 
@@ -12,6 +11,14 @@ const settings = readJsonFromDist('dist/settings');
 
 const processRequest = query => {
   const params = parseParams({ mainContentMode: 'card-mode', ...query })
+  // extract alias - if grouping = category
+  // extract alias - if params != card-mode (big_picture - always show)
+  // i.e. make a copy to items here - to get a list of ids
+  let items = projects;
+  if (params.grouping === 'landscape') {
+    items = expandSecondPathItems(items);
+  }
+
   const groupedItems = getGroupedItems({items: items, ...params})
     .map(group => {
       const items = group.items.map(({ id, name, href }) => ({ id, name, logo: `${settings.global.website}/${href}` }))

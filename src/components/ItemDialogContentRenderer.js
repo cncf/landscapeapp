@@ -571,12 +571,16 @@ module.exports.render = function({settings, tweetsCount, itemInfo}) {
 
   const shortenUrl = (url) => url.replace(/http(s)?:\/\/(www\.)?/, "").replace(/\/$/, "");
 
+  const productPaths1 = [itemInfo.landscape, itemInfo.second_path || [], itemInfo.allPaths || []].flat();
+  const productPaths = _.uniq(productPaths1.filter( (x) => !!x));
   const productInfo = `
     <div class="product-main">
         <div class="product-name">${h(itemInfo.name)}</div>
         <div class="product-parent"><a data-type=internal href="${linkToOrganization}">
           <span>${h(itemInfo.organization)}</span>${renderMemberTag(itemInfo)}</a></div>
-        <div class="product-category">${renderItemCategory(itemInfo.landscape)}</div>
+        ${productPaths.map( (productPath) => `
+          <div class="product-category">${renderItemCategory(productPath)}</div>
+        `).join('')}
         <div class="product-description">${h(itemInfo.description)}</div>
     </div>
     <div class="product-properties">

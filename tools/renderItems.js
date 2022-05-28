@@ -1,17 +1,17 @@
-import path from 'path';
-import  { settings, projectPath, distPath, basePath } from './settings.js';
-import  { projects } from './loadData.js';
-import { processedLandscape } from './processedLandscape.js';
-import { render } from '../src/components/ItemDialogContentRenderer.js';
-import * as CardRenderer from '../src/components/CardRenderer.js';
-import * as LandscapeContentRenderer from '../src/components/LandscapeContentRenderer.js';
-import * as HomePageRenderer from '../src/components/HomePageRenderer.js';
-import * as GuideRenderer from '../src/components/GuideRenderer.js';
-import * as EmbedPageRenderer from '../src/components/EmbedPageRenderer.js';
-import * as FullscreenLandscapeRenderer from '../src/components/FullscreenLandscapeRenderer';
-import { getLandscapeItems } from '../src/utils/itemsCalculator.js';
-import { findLandscapeSettings } from '../src/utils/landscapeSettings'
-import fs from 'fs/promises';
+const path = require('path');
+const fs = require('fs/promises');
+const { settings, projectPath, distPath, basePath } = require('./settings.js');
+const  { projects } = require('./loadData.js');
+const { processedLandscape } = require('./processedLandscape.js');
+const { render } = require('../src/components/ItemDialogContentRenderer.js');
+const CardRenderer = require('../src/components/CardRenderer.js');
+const LandscapeContentRenderer = require('../src/components/LandscapeContentRenderer.js');
+const HomePageRenderer = require('../src/components/HomePageRenderer.js');
+const GuideRenderer = require('../src/components/GuideRenderer.js');
+const EmbedPageRenderer = require('../src/components/EmbedPageRenderer.js');
+const FullscreenLandscapeRenderer = require('../src/components/FullscreenLandscapeRenderer');
+const { getLandscapeItems, expandSecondPathItems } = require('../src/utils/itemsCalculator.js');
+const { findLandscapeSettings } = require('../src/utils/landscapeSettings');
 
 async function main() {
   await fs.mkdir(path.resolve(distPath, 'data/items'), { recursive: true});
@@ -33,8 +33,9 @@ async function main() {
   for (let key in settings.big_picture) {
     const landscapeSettingsEntry = settings.big_picture[key];
     const landscapeSettings = findLandscapeSettings(landscapeSettingsEntry.url);
+    const expandedItems = expandSecondPathItems(projects);
     const landscapeItems = getLandscapeItems({
-      items: projects,
+      items: expandedItems,
       landscapeSettings: landscapeSettings,
       guideIndex
     });
@@ -66,10 +67,6 @@ async function main() {
     payload.guide = guideContent;
     await fs.writeFile(path.resolve(distPath, `data/items/guide.html`), guideContent);
   }
-
-
-
-
 
   let defaultCards = '';
   let borderlessCards = '';
@@ -246,6 +243,9 @@ async function main() {
     await fs.mkdir(path.resolve(distPath, `pages`), { recursive: true });
     await fs.writeFile(path.resolve(distPath, `pages/${key}.html`), renderEmbedPage(embedded));
   }
+
+
+  // render acquistions
 
 
 }

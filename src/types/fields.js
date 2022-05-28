@@ -15,7 +15,7 @@ const _ = require('lodash');
 
 const { unpack } = require('../utils/unpackArray');
 const { isParent } = require('../utils/isParent');
-const { readJsonFromProject, readJsonFromDist } from '../utils/readJson';
+const { readJsonFromProject, readJsonFromDist } = require('../utils/readJson');
 
 const lookups = readJsonFromProject('lookup');
 const settings = readJsonFromDist('settings');

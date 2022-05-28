@@ -1,7 +1,7 @@
 const fs = require('fs');
 const path = require('path');
 
-const { flattenItems } = require('../utils/itemsCalculator');
+const { flattenItems, expandSecondPathItems } = require('../utils/itemsCalculator');
 const { getGroupedItems }  = require('../utils/itemsCalculator');
 const { getSummary, getSummaryText } = require('../utils/summaryCalculator');
 const { parseParams } = require('../utils/routing');
@@ -14,6 +14,12 @@ const processRequest = query => {
   const params = parseParams(query);
   const p = new URLSearchParams(query);
   params.format = p.get('format');
+
+  let items = projects;
+  if (params.grouping === 'landscape' || params.format !== 'card') {
+    items = expandSecondPathItems(items);
+  };
+
   const summary = getSummary({data: items, ...params});
   const groupedItems = getGroupedItems({data: items, ...params})
     .map(group => {

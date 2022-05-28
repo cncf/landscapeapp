@@ -38,6 +38,7 @@ const getSummary = function(params) {
   } else {
     filteredItemsByTab = filteredItems;
   }
+  filteredItemsByTab = _.uniq(filteredItemsByTab, 'id');
 
 
   const organizations = getOrganizations(params);

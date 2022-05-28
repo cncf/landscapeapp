@@ -1,23 +1,21 @@
-import { readFileSync } from 'fs'
-import Promise from 'bluebird';
-import { load } from 'js-yaml'
-import { hasFatalErrors, reportFatalErrors } from './fatalErrors';
-import { projectPath, settings } from './settings';
-import errorsReporter from './reporter';
+const { readFileSync } = require('fs');
+const Promise = require('bluebird');
+const { emojify } = require('node-emoji')
+const { load } = require('js-yaml');
+const _ = require('lodash');
+const traverse = require('traverse');
+
+const { hasFatalErrors, reportFatalErrors } = require('./fatalErrors');
+const { projectPath, settings } = require('./settings');
+const { errorsReporter } = require('./reporter');
+const { actualTwitter } = require('./actualTwitter');
+const { saneName } = require('../src/utils/saneName');
+const { formatCity } = require('../src/utils/formatCity');
+const { pack } = require('../src/utils/packArray');
+
 const { addFatal } = errorsReporter('general');
-
-console.info('processed', projectPath);
-
 const processedLandscape = load(readFileSync(`${projectPath}/processed_landscape.yml`))
 const { crunchbase_overrides = {} } = load(readFileSync(`${projectPath}/landscape.yml`))
-const traverse = require('traverse');
-const _ = require('lodash');
-const { emojify } = require('node-emoji')
-
-import actualTwitter from './actualTwitter';
-import saneName from '../src/utils/saneName';
-import formatCity from '../src/utils/formatCity';
-import pack from '../src/utils/packArray';
 
 async function failOnSingleError(text) {
   addFatal(text);

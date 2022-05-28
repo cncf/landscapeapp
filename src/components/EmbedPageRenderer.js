@@ -1,13 +1,16 @@
 // Render only for an export
 const _ = require('lodash');
 const { h } = require('../utils/format');
-const { getGroupedItems } = require('../utils/itemsCalculator');
+const { getGroupedItems, expandSecondPathItems } = require('../utils/itemsCalculator');
 const { parseParams } = require('../utils/routing');
 const { renderDefaultCard, renderBorderlessCard, renderFlatCard } = require('./CardRenderer');
 const icons = require('../utils/icons');
 
 module.exports.render = function({settings, items, exportUrl}) {
   const params = parseParams(exportUrl.split('?').slice(-1)[0]);
+  if (params.grouping === 'landscape') {
+    items = expandSecondPathItems(items);
+  }
   const groupedItems = getGroupedItems({data: items, ...params})
   const cardStyle = params.cardStyle || 'default';
   const cardFn = cardStyle === 'borderless' ? renderBorderlessCard : cardStyle === 'flat' ? renderFlatCard : renderDefaultCard;
@@ -37,15 +40,14 @@ module.exports.render = function({settings, items, exportUrl}) {
               ${ groupedItems.map( (groupedItem) => {
                 const cardElements = groupedItem.items.map( (item) => cardFn({item}));
                 const header = items.length > 0 ? `
-                  <div class="sh_wrapper">
+                  <div class="sh_wrapper" data-wrapper-id="${h(saneName(groupedItem.header))}">
                     <div style="font-size: 24px; padding-left: 16px; line-height: 48px; font-weight: 500;">
                       <span>${h(groupedItem.header)}</span>
                       <span class="items-cont">&nbsp;(${groupedItem.items.length})</span>
                     </div>
                   </div>` : '';
-                return [ header, ...cardElements].join('');
-              })
-              }
+                return [ header, `<div data-section-id="${h(saneName(groupedItem.header))}">${cardElements.join('')}</div>`].join('');
+              }) }
             </div>
           </div>
           <div id="embedded-footer">

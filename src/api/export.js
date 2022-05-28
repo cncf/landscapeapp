@@ -1,8 +1,8 @@
-const path = require('path');
 const fs = require('fs');
+const path = require('path');
 
 const { flattenItems } = require('../utils/itemsCalculator');
-const { getGroupedItems }  = require('../utils/itemsCalculator');
+const { getGroupedItems, expandSecondPathItems }  = require('../utils/itemsCalculator');
 const { getSummary, getSummaryText } = require('../utils/summaryCalculator');
 const { parseParams } = require('../utils/routing');
 const Parser = require('json2csv/lib/JSON2CSVParser');
@@ -16,6 +16,15 @@ const processRequest = query => {
   const params = parseParams(query);
   const p = new URLSearchParams(query);
   params.format = p.get('format');
+
+  let items = projects;
+  if (params.grouping === 'landscape' || params.format !== 'card') {
+    items = expandSecondPathItems(items);
+  };
+
+  // extract alias - if grouping = category
+  // extract alias - if params != card-mode (big_picture - always show)
+  // i.e. make a copy to items here - to get a list of ids
 
   const selectedItems = flattenItems(getGroupedItems({data: items, ...params}))
     .reduce((acc, item) => ({ ...acc, [item.id]: true }), {})

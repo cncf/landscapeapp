@@ -1,7 +1,7 @@
 const path = require('path');
 const { projectPath, settings } = require('./settings');
 const { actualTwitter } = require('./actualTwitter');
-const { setFatalError, reportFatalErrors } from './fatalErrors';
+const { setFatalError, reportFatalErrors } = require('./fatalErrors');
 
 async function main() {
 
@@ -15,6 +15,7 @@ async function main() {
 
   const allowedKeys = [
     'name',
+    'second_path',
     'homepage_url',
     'logo',
     'twitter',

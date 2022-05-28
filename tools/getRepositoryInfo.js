@@ -1,9 +1,9 @@
-import shortRepoName from '../src/utils/shortRepoName';
-import { GithubClient } from './apiClients';
+const  { shortRepoName } = require('../src/utils/shortRepoName');
+const { GithubClient } = require('./apiClients');
 
 
 const cache = {};
-export default async function getRepositoryInfo(url) {
+const getRepositoryInfo = module.exports.getRepositoryInfo = async function(url) {
   if (cache[url]) {
     return cache[url];
   }
@@ -16,7 +16,7 @@ export default async function getRepositoryInfo(url) {
 }
 
 const getLanguagesCache = {}
-export async function getLanguages(url) {
+const getLanguages = module.exports.getLanguages = async function(url) {
   if (getLanguagesCache[url]) {
     return getLanguagesCache[url];
   }
@@ -29,7 +29,7 @@ export async function getLanguages(url) {
 }
 
 const weeklyContributionsCache = {}
-export async function getWeeklyContributions(url) {
+const getWeeklyContributions = module.exports.getWeeklyContributions = async function(url) {
   if (weeklyContributionsCache[url]) {
     return weeklyContributionsCache[url];
   }
@@ -39,5 +39,4 @@ export async function getWeeklyContributions(url) {
   });
   weeklyContributionsCache[url] = apiInfo;
   return apiInfo;
-
 }

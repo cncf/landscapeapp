@@ -1,4 +1,3 @@
-# Just some ideas
 SERVER_ADDRESS=root@<%= ip %>
 nocheck=" -o StrictHostKeyChecking=no "
 ssh $nocheck $SERVER_ADDRESS << 'EOSSH'

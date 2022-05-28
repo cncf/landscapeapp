@@ -58,7 +58,7 @@ async function checkViaPuppeteer(url, remainingAttempts = 3) {
   }
 }
 
-export const checkUrl = (url, attempt = 1) => {
+const checkUrl = module.exports.checkUrl = (url, attempt = 1) => {
     return new Promise(resolve => {
         const curlOptions = [
             '--fail',

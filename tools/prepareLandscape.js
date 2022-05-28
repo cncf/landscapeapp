@@ -1,13 +1,14 @@
-import path from 'path'
-import { load  } from 'js-yaml'
-import fs from 'fs/promises';
-import { execSync } from 'child_process'
-import qs from 'query-string'
-import loadGuide from './loadGuide'
-import { projectPath, settings, distPath } from './settings';
+const path = require('path');
+const fs = require('fs/promises');
+const qs = require('query-string');
+const { load  } = require('js-yaml');
+const { execSync } = require('child_process');
+
+const { loadGuide } = require('./loadGuide');
+const { projectPath, settings, distPath } = require('./settings');
 
 const items = require(path.resolve(projectPath, 'data.json'))
-const { website } = settings.global
+const { website } = settings.global;
 
 //render
 async function main() {
