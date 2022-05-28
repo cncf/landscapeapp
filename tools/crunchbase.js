@@ -217,7 +217,7 @@ const fetchData = module.exports.fetchData = async function(name) {
   }
 }
 
-const fetchCrunchbaseEntries = module.exports.fetchCrunchbaseEntries({cache, preferCache}) {
+const fetchCrunchbaseEntries = module.exports.fetchCrunchbaseEntries = async function({cache, preferCache}) {
   // console.info(organizations);
   // console.info(_.find(organizations, {name: 'foreman'}));
   const reporter = makeReporter();

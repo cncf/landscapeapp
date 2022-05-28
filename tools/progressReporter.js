@@ -1,6 +1,6 @@
 const _ = require('lodash');
 const isNetlify = !!process.env.REPOSITORY_URL;
-module.exports.makeReporter() = function() {
+module.exports.makeReporter = function() {
   const items = [];
   return {
     write: function(element) {

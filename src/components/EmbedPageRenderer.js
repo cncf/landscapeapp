@@ -1,5 +1,6 @@
 // Render only for an export
 const _ = require('lodash');
+const { saneName } = require('../utils/saneName');
 const { h } = require('../utils/format');
 const { getGroupedItems, expandSecondPathItems } = require('../utils/itemsCalculator');
 const { parseParams } = require('../utils/routing');

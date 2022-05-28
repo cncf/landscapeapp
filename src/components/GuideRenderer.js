@@ -2,15 +2,15 @@ const _ = require('lodash');
 
 const { isLargeFn } = require('../utils/landscapeCalculations');
 const { renderItem } = require('./Item.js');
-const { h } = requrie('../utils/format');
-const icons = require('../utils/icons');
+const { h } = require('../utils/format');
 const { assetPath } = require('../utils/assetPath');
+const icons = require('../utils/icons');
 
 
 
 // guide is a guide index
 module.exports.render = function({settings, items, guide}) {
-
+  const title = `<h1 className="title">${h(settings.global.short_name)} Landscape Guide</h1>`;
   const renderSubcategoryMetadata = ({ node, entries }) => {
     const orderedEntries = _.orderBy(entries,  (x) => !x.isLarge);
     const projectEntries = entries.filter(entry => entry.project)

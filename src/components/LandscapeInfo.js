@@ -1,7 +1,7 @@
 const _ = require('lodash');
 
 const { h } = require('../utils/format');
-const assetPath = require('../utils/assetPath');
+const { assetPath } = require('../utils/assetPath');
 
 module.exports.renderLandscapeInfo = function({width, height, top, left, children}) {
   children = children.map(function(info) {

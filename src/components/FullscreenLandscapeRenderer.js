@@ -1,4 +1,4 @@
-const _ = requrie('lodash');
+const _ = require('lodash');
 
 const { calculateSize } = require("../utils/landscapeCalculations");
 const { h } = require('../utils/format');

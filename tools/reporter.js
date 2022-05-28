@@ -3,7 +3,7 @@ const error = colors.red;
 const fatal = (x) => colors.red(colors.inverse(x));
 
 let messages = [];
-function getMessages() {
+const getMessages = module.exports.getMessages = function() {
   return messages;
 }
 
@@ -17,7 +17,7 @@ try {
 }
 
 
-function build(category) {
+const errorsReporter = module.exports.errorsReporter = function(category) {
   return {
     addError: function(msg) {
       console.info(error(`ERROR: ${msg}`));
@@ -43,4 +43,3 @@ function build(category) {
 function save() {
   require('fs').writeFileSync('/tmp/landscape.json', JSON.stringify(messages, null, 4));
 }
-module.exports = { build, getMessages };

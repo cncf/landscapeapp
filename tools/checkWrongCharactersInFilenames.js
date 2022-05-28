@@ -4,7 +4,7 @@ const Promise = require('bluebird');
 
 const { projectPath, settings } = require('./settings');
 const { dump } = require('./yaml');
-const { hasFatalErrors, setFatalError, reportFatalErrors } from './fatalErrors';
+const { hasFatalErrors, setFatalError, reportFatalErrors } = require('./fatalErrors');
 
 function hasNonAscii(str) {
     return ! /^[\x00-\x7F]*$/.test(str);

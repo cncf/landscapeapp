@@ -1,4 +1,4 @@
-const getContrastRatio = require('get-contrast-ratio');
+const getContrastRatio = require('get-contrast-ratio').default;
 
 const { h } = require('../utils/format');
 const { renderGuideLink } = require('./GuideLink');

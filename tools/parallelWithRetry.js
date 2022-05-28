@@ -1,5 +1,5 @@
 const Promise = require('bluebird');
-const _ - requrie('lodash');
+const _ - require('lodash');
 
 function runIt({task, showOutput}) {
   return new Promise(function(resolve) {

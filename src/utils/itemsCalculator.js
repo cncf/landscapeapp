@@ -1,11 +1,11 @@
 const formatNumber = require('format-number');
 const _ = require('lodash');
-const { fiels, filterFn, getGroupingValue } = require('/types/fields');
+const { fields, filterFn, getGroupingValue } = require('../types/fields');
 const { groupingLabel } = require('../utils/groupingLabel');
 const { groupingOrder } = require('../utils/groupingOrder');
 const { formatAmount } = require('../utils/formatAmount');
 const { stringOrSpecial } = require('../utils/stringOrSpecial');
-const { getLandscapeCategories } = requrie('./sharedItemsCalculator');
+const { getLandscapeCategories } = require('./sharedItemsCalculator');
 const { findLandscapeSettings } = require('./landscapeSettings');
 const { stringifyParams } = require('./routing');
 

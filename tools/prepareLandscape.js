@@ -32,10 +32,10 @@ async function main() {
     await fs.writeFile(path.resolve(distPath, 'guide.json'), JSON.stringify(guide))
   }
 
-  const prepareItemsForExport = require('./prepareItemsForExport').default
-  const { flattenItems } = require('../src/utils/itemsCalculator')
-  const getGroupedItems  = require('../src/utils/itemsCalculator').default
-  const { parseParams } = require('../src/utils/routing')
+  const { prepareItemsForExport } = require('./prepareItemsForExport');
+  const { flattenItems } = require('../src/utils/itemsCalculator');
+  const { getGroupedItems }  = require('../src/utils/itemsCalculator');
+  const { parseParams } = require('../src/utils/routing');
 
   const itemsForExport = prepareItemsForExport(items)
   await fs.writeFile(path.resolve(distPath, 'data', 'items-export.json'), JSON.stringify(itemsForExport))

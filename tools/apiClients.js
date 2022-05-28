@@ -1,6 +1,6 @@
 const { env } = require('process');
 const { stringify, parse } = require('query-string');
-const axios = reuqire('axios');
+const axios = require('axios');
 const OAuth1 = require('oauth-1.0a');
 const crypto = require('crypto');
 const _ = require('lodash');

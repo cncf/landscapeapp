@@ -1,7 +1,7 @@
 const _ = require('lodash');
 const axios = require('axios');
 
-const { errorsReporter, getMessages } from './reporter';
+const { errorsReporter, getMessages } = require('./reporter');
 const { addFatal } = errorsReporter('general');
 
 const hasFatalErrors = module.exports.hasFatalErrors = function() {

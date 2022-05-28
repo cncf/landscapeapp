@@ -3,7 +3,7 @@ require('expect-puppeteer');
 const { paramCase } = require('change-case');
 const { settings } = require('../tools/settings');
 const { projects } = require('../tools/loadData');
-const { landscapeSettingsList } = requrie("../src/utils/landscapeSettings");
+const { landscapeSettingsList } = require("../src/utils/landscapeSettings");
 const { appUrl, pathPrefix } = require('../tools/distSettings');
 
 const devicesMap = puppeteer.devices;
