@@ -6,7 +6,7 @@ const { fields } = require('../types/fields');
 function getRelationStyle(relation) {
   const relationInfo = fields.relation.valuesMap[relation]
   if (relationInfo && relationInfo.color) {
-    return `border: '4px solid ${relationInfo.color};`;
+    return `border: 4px solid ${relationInfo.color};`;
   } else {
     return '';
   }
@@ -28,7 +28,7 @@ module.exports.renderDefaultCard = function renderDefaultCard({item}) {
                   ${_.isNumber(item.stars) && item.stars ?
                       `<div>
                         <span>★</span>
-                        <span style="position: relative; top: -3;">${h(item.starsAsText)}</span>
+                        <span>${h(item.starsAsText)}</span>
                       </div>` : ''
                   }
                   ${Number.isInteger(item.amount) ?

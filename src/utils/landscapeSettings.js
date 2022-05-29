@@ -16,23 +16,20 @@ function calcLandscapeSettingsList(settingsObj) {
 };
 
 // client side version
-const landscapeSettingsList = calcLandscapeSettingsList(settings);
+const landscapeSettingsList = module.exports.landscapeSettingsList = calcLandscapeSettingsList(settings);
 const landscapeSettingsDict = landscapeSettingsList.reduce((dict, landscapeSettings) => {
   dict[landscapeSettings.url] = landscapeSettings;
   return dict;
 }, {});
-module.exports.landscapeSettingsList = landscapeSettingsList;
 
-const findLandscapeSettings = (url) => {
+const findLandscapeSettings = module.exports.findLandscapeSettings = (url) => {
   if (url === 'main') {
     url = 'landscape';
   }
   return landscapeSettingsDict[['card-mode', 'guide'].includes(url) ? 'landscape' : url]
 }
-module.exports.findLandscapeSettings = findLandscapeSettings;
 
 // server side version, with up to date information
-function getLandscapeSettingsList(settingsObj) {
+const getLandscapeSettingsList = module.exports.getLandscapeSettingsList = function(settingsObj) {
   return calcLandscapeSettingsList(settingsObj);
 }
-module.exports.getLandscapeSettingsList = getLandscapeSettingsList;

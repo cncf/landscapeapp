@@ -40,7 +40,7 @@ module.exports.render = function({settings, tweetsCount, itemInfo}) {
   const twitterUrl = `https://twitter.com/intent/tweet`
 
   return `<div class="tweet-button">
-    <a data-tweet="true" href="${twitterUrl}">${icons.bird}<span>Tweet</span></a>
+    <a data-tweet="true" href="${h(twitterUrl)}">${icons.bird}<span>Tweet</span></a>
       <div class="tweet-count-wrapper">
         <div class="tweet-count">${tweetsCount}</div>
     </div>
@@ -191,8 +191,8 @@ module.exports.render = function({settings, tweetsCount, itemInfo}) {
       ${languages.map(function(language) {
         const url = language.name === 'Other' ? null : closeUrl({ grouping: 'no', filters: {language: language.name }});
         return `<div style="position: relative; margin-top: 2px; height: 12px;" >
-        <div style="display: inline-block; position: absolute; height: 12px; width: 12px; background: ${language.color}; top: 2px; margin-right: 4px;" />
-        <div style="display: inline-block; position: relative; width: 125px; left: 16px,  white-space: nowrap; text-overflow: 'ellipsis'; overflow: hidden">
+        <div style="display: inline-block; position: absolute; height: 12px; width: 12px; background: ${language.color}; top: 2px; margin-right: 4px;" ></div>
+        <div style="display: inline-block; position: relative; width: 125px; left: 16px;  white-space: nowrap; text-overflow: 'ellipsis'; overflow: hidden;">
           <a data-type="internal" href="${url}">${h(getLegendText(language)) }</a></div>
       </div>`
       }).join('')}
@@ -215,7 +215,7 @@ module.exports.render = function({settings, tweetsCount, itemInfo}) {
     const renderCircle = ({
       center, color, radius
     }) => `
-      <ellipse cx=${center} cy=${center} fill=${color} rx=${radius} ry=${radius} stroke="#fff" strokeWidth="1" />
+      <ellipse cx=${center} cy=${center} fill=${color} rx=${radius} ry=${radius} stroke="#fff" strokeWidth="1" ></ellipse>
     `;
 
     const renderSectors = ({
@@ -293,11 +293,11 @@ module.exports.render = function({settings, tweetsCount, itemInfo}) {
       const m = firstWeek.getMonth();
       for (let i = 0; i < 12; i += 2) {
         const monthName = months[(m + i) % 12];
-        const separator = i === 12 ? '' : `<span style="width: 23px; display: inline-block;" />`;
+        const separator = i === 12 ? '' : `<span style="width: 23px; display: inline-block;" ></span>`;
         result.push(`<span style="width: 30px; display: inline-block">${monthName}</span>`);
         result.push(separator);
       }
-      return result.join('');;
+      return result.join('');
     })();
 
     const barValues = itemInfo.github_data.contributions.split(';').map( (x)=> +x).slice(-51)
@@ -327,14 +327,14 @@ module.exports.render = function({settings, tweetsCount, itemInfo}) {
     const xyLines = ( () => {
       const result = []
       for (let x = 0; x <= step; x += 1) {
-        result.push(`div style="
-          position: absolute
+        result.push(`<div style="
+          position: absolute;
           left: 20px;
           right: 0;
           top: ${(x / step) * 100}%;
           height: .5px;
           background: #777;"
-          />
+          ></div>
        `)
         result.push(`<span style="
           display: inline-block;
@@ -352,27 +352,27 @@ module.exports.render = function({settings, tweetsCount, itemInfo}) {
         top: 0;
         width: .5px;
         background: #777;
-      "/>`);
+      "></div>`);
       return result.join('');
     })();
     const bars = barValues.map(function(value, index) {
       if (value === 0) {
-        value === 1;
+        value = 1;
       }
       return `<div style="
         position: absolute;
         bottom: 0;
-        top: ${(maxValue - value) / maxValue * 150})px;
+        top: ${(maxValue - value) / maxValue * 150}px;
         left: ${24 + index * 5.6}px;
         width: 4px;
         background: #00F;
         border: 1px solid #777;
-      " />`;
+      " ></div>`;
     }).join('');
 
 
     const width = 300;
-    return `<div style="width: {width}px; height: 150px; position: relative;">
+    return `<div style="width: ${width}px; height: 150px; position: relative;">
       ${xyLines}
       ${bars}
       <div style="
@@ -411,9 +411,9 @@ module.exports.render = function({settings, tweetsCount, itemInfo}) {
     <div class="product-property row">
       <div class="product-property-name col col-40">Twitter</div>
       <div class="product-property-value col col-60">
-        <a data-type=external target=_blank href="${itemInfo.twitter}">${h(formatTwitter(itemInfo.twitter))}"</a>
+        <a data-type=external target=_blank href="${itemInfo.twitter}">${h(formatTwitter(itemInfo.twitter))}</a>
       </div>
-   </div>;
+   </div>
   ` : '';
 
   const latestTweetDateElement = itemInfo.twitter ? `
@@ -452,7 +452,7 @@ module.exports.render = function({settings, tweetsCount, itemInfo}) {
       <div class="product-property-name col col-40">Headquarters</div>
       <div class="product-property-value tight-col col-60">
         <a data-type=external target=_blank href="${closeUrl({ grouping: 'headquarters', filters:{headquarters:itemInfo.headquarters}})}">${h(itemInfo.headquarters)}</a>
-      div>
+      </div>
     </div>
   ` : '';
 
@@ -525,17 +525,17 @@ module.exports.render = function({settings, tweetsCount, itemInfo}) {
       })();
       const valueText = (function() {
         if (!!(new Date(value).getTime()) && typeof value === 'string') {
-          return relativeDate(new Date(value));
+          return h(relativeDate(new Date(value)));
         }
         if (typeof value === 'string' && (value.indexOf('http://') === 0 || value.indexOf('https://') === 0)) {
-          return `a data-type=external target=_blank href="${value}">${value}</a>`;
+          return `<a data-type=external target=_blank href="${h(value)}">${h(value)}</a>`;
         }
-        return value;
+        return h(value);
       })();
       return `<div class="product-property row">
-        <div class="product-property-name tight-col col-20">${keyText}</div>
+        <div class="product-property-name tight-col col-20">${h(keyText)}</div>
         <div class="product-proerty-value tight-col col-80">${valueText}</div>
-        </div>`;
+      </div>`;
     });
     return items.join('');
   })();
@@ -550,8 +550,8 @@ module.exports.render = function({settings, tweetsCount, itemInfo}) {
   `;
 
     const productLogoAndTagsAndCharts = `
-      <div class="product-logo" style="{getRelationStyle(itemInfo.relation)}">
-        <img src="${assetPath(itemInfo.href)}" class="product-logo-img"/>
+      <div class="product-logo" style="${getRelationStyle(itemInfo.relation)}">
+        <img src="${assetPath(itemInfo.href)}" class="product-logo-img">
       </div>
       <div class="product-tags">
         <div class="product-badges" style="width: 300px;" >

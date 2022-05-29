@@ -97,8 +97,8 @@ module.exports.render = function({settings, guidePayload, hasGuide, bigPictureKe
         <div class="modal-body">
           <div class="modal-buttons">
             <a class="modal-close">x</a>
-            <span class="modal-prev">${icons.next}</span>
-            <span class="modal-next">${icons.prev}</span>
+            <span class="modal-prev">${icons.prev}</span>
+            <span class="modal-next">${icons.next}</span>
           </div>
           <div class="modal-content"></div>
         </div>

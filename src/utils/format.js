@@ -1,4 +1,4 @@
-function millify(value) {
+const millify = module.exports.millify = function(value) {
   let base, suffix;
   if (value < 1000 - 0.05) {
     base = value;
@@ -19,9 +19,8 @@ function millify(value) {
   const digits = base.toFixed(1).replace('.0', '');
   return digits + suffix;
 }
-module.exports.millify = millify;
 
-function h(html) {
+const h = module.exports.h = function(html) {
   var entityMap = {
     '&': '&amp;',
     '<': '&lt;',
@@ -36,4 +35,3 @@ function h(html) {
     return entityMap[s];
   });
 }
-module.exports.h = h;

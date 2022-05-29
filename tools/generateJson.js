@@ -1,3 +1,4 @@
+const formatNumber = require('format-number');
 const { readFileSync } = require('fs');
 const Promise = require('bluebird');
 const { emojify } = require('node-emoji')
@@ -12,6 +13,7 @@ const { actualTwitter } = require('./actualTwitter');
 const { saneName } = require('../src/utils/saneName');
 const { formatCity } = require('../src/utils/formatCity');
 const { pack } = require('../src/utils/packArray');
+const { formatAmount } = require('../src/utils/formatAmount');
 
 const { addFatal } = errorsReporter('general');
 const processedLandscape = load(readFileSync(`${projectPath}/processed_landscape.yml`))
@@ -238,7 +240,7 @@ async function main () {
         bestPracticeBadgeId: (node.best_practice_data || {}).badge,
         bestPracticePercentage: (node.best_practice_data || {}).percentage,
         industries: (crunchbase_overrides[node.crunchbase] || {}).industries || (node.crunchbase_data || {}).industries || [],
-        enduser: isEndUser()
+        enduser: isEndUser(),
       });
     }
   });
@@ -250,6 +252,13 @@ async function main () {
       return el.linkedin.replace(/\?.*/, '');
     }
 
+
+    const hasStars = item.stars !== 'N/A' && item.stars !== 'Not Entered Yet';
+    const hasMarketCap = item.amount !== 'N/A' && item.amount !== 'Not Entered Yet';
+    item.starsPresent = hasStars;
+    item.starsAsText = hasStars ? formatNumber({integerSeparator: ','})(item.stars) : '';
+    item.marketCapPresent = hasMarketCap;
+    item.marketCapAsText = formatAmount(item.amount);
 
     if (item.crunchbase_data) {
       item.crunchbaseData.numEmployeesMin = item.crunchbaseData.num_employees_min;

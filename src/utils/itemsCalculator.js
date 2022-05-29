@@ -1,9 +1,7 @@
-const formatNumber = require('format-number');
 const _ = require('lodash');
 const { fields, filterFn, getGroupingValue } = require('../types/fields');
 const { groupingLabel } = require('../utils/groupingLabel');
 const { groupingOrder } = require('../utils/groupingOrder');
-const { formatAmount } = require('../utils/formatAmount');
 const { stringOrSpecial } = require('../utils/stringOrSpecial');
 const { getLandscapeCategories } = require('./sharedItemsCalculator');
 const { findLandscapeSettings } = require('./landscapeSettings');
@@ -43,27 +41,7 @@ const getFilteredItems = module.exports.getFilteredItems = function({data, filte
     });
 }
 
-const addExtraFields = function(data) {
-  return _.map(data, function(data) {
-    const hasStars = data.stars !== 'N/A' && data.stars !== 'Not Entered Yet';
-    const hasMarketCap = data.amount !== 'N/A' && data.amount !== 'Not Entered Yet';
-    return { ...data,
-      starsPresent: hasStars ,
-      starsAsText: hasStars ? formatNumber({integerSeparator: ','})(data.stars) : '',
-      marketCapPresent: hasMarketCap,
-      marketCapAsText: formatAmount(data.amount)
-    };
-  });
-}
-
-const getExtraFields = function({data, filters}) {
-  const filtered = getFilteredItems({data, filters});
-  return addExtraFields(filtered);
-}
-
 const getSortedItems = function({data, filters, sortField, sortDirection}) {
-  data = getExtraFields({data, filters });
-
   const fieldInfo = fields[sortField];
   const nonPublic = (x) => (x.name || '').toString().indexOf('Non-Public Organization') === 0;
   const emptyItemsNA = data.filter(function(x) {

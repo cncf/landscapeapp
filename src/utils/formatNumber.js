@@ -1,9 +1,8 @@
 const _ = require('lodash');
-const formatNumber = require('format-number');
-function _formatNumber(v) {
+const _formatNumber = require('format-number');
+const formatNumber = module.exports.formatNumber = function(v) {
   if (_.isString(v)) {
     return '';
   }
-  return formatNumber({integerSeparator: ','})(v);
+  return _formatNumber({integerSeparator: ','})(v);
 }
-module.exports.formatNumber = _formatNumber;

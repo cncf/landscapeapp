@@ -1,4 +1,4 @@
-function formatCity({city, region, country}) {
+const formatCity = module.exports.formatCity = function({city, region, country}) {
   if (!city) {
     return null;
   }
@@ -10,4 +10,3 @@ function formatCity({city, region, country}) {
   }
   return `${city}, ${country}`;
 }
-module.exports.formatCity = formatCity;
