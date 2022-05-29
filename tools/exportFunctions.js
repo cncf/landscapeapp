@@ -7,12 +7,12 @@ const fs  = require('fs');
 const ncc = require('@vercel/ncc');
 
 const { distPath, projectPath } = require('./settings');
-const { readDataFromProject, readDataFromDist } = require('../src/utils/readJson');
+const { readJsonFromDist, readJsonFromProject } = require('../src/utils/readJson');
 const { settings } = require('./settings');
 
-const items = readDataFromDist('data/items');
-const itemsExport = readDataFromDist('data/items-export');
-const lookup = readDataFromProject('lookup');
+const items = readJsonFromDist('data/items');
+const itemsExport = readJsonFromDist('data/items-export');
+const lookup = readJsonFromProject('lookup');
 
 const { PROJECT_NAME, PROJECT_PATH } = process.env
 
@@ -29,7 +29,7 @@ async function main() {
     const destFile = [PROJECT_NAME, file].filter(_ => _).join('--')
     const { code } = await ncc(`${srcFolder}/${file}`);
 
-    code = `
+    const finalCode = `
       global.lookups = {
         'items': ${JSON.stringify(items)},
         'items-export': ${JSON.stringify(itemsExport)},
@@ -38,7 +38,7 @@ async function main() {
       }
     ` + code
 
-    fs.writeFileSync(`${destFolder}/${destFile}`, code)
+    fs.writeFileSync(`${destFolder}/${destFile}`, finalCode)
     if (code.includes('eval("')) {
       console.info('forgot to embed a module');
       process.exit(1);

@@ -8,9 +8,9 @@ const { parseParams } = require('../utils/routing');
 const Parser = require('json2csv/lib/JSON2CSVParser');
 const { readJsonFromDist } = require('../utils/readJson');
 
-const allItems = readJsonFromDist('dist/data/items-export');
-const items = readJsonFromDist('dist/data/items');
-const settings = readJsonFromDist('dist/settings');
+const allItems = readJsonFromDist('data/items-export');
+const projects = readJsonFromDist('data/items');
+const settings = readJsonFromDist('settings');
 
 const processRequest = query => {
   const params = parseParams(query);

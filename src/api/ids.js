@@ -7,8 +7,8 @@ const { getSummary, getSummaryText } = require('../utils/summaryCalculator');
 const { parseParams } = require('../utils/routing');
 const { readJsonFromDist } = require('../utils/readJson');
 
-const items = readJsonFromDist('dist/data/items');
-const settings = readJsonFromDist('dist/settings');
+const projects = readJsonFromDist('data/items');
+const settings = readJsonFromDist('settings');
 
 const processRequest = query => {
   const params = parseParams(query);
@@ -35,7 +35,7 @@ const processRequest = query => {
 module.exports.processRequest = processRequest;
 
 // Netlify function
-module.exports.handler = fuction(event, context) {
+module.exports.handler = function(event, context) {
   const body = processRequest(event.queryStringParameters)
   const headers = { 'Content-Type': 'application/json' }
   return { statusCode: 200, body: JSON.stringify(body), headers }

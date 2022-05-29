@@ -64,7 +64,7 @@ module.exports.render = function({settings, items, guide}) {
 
   const renderLandscapeLink = ({ landscapeKey, title }) => {
     const href = `card-mode?category=${landscapeKey}`
-    return `<a href="${href}" target="_blank" class="permalink"> ${icons.guideIcon} ${h(title)} </a>`;
+    return `<a href="${href}" target="_blank" class="permalink">${icons.guide} ${h(title)} </a>`;
   }
 
   const renderContent = ({ nodes, enhancedEntries }) => {

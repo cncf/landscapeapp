@@ -1,6 +1,6 @@
 const path = require('path');
 const fs = require('fs');
-const _ = requrie('lodash');
+const _ = require('lodash');
 
 const { getItemsForExport, getLandscapeItems } = require('./itemsCalculator');
 const { millify } = require('../utils/format');

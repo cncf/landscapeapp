@@ -6,8 +6,8 @@ const { getGroupedItems }  = require('../utils/itemsCalculator');
 const { parseParams } = require('../utils/routing');
 const { readJsonFromDist } = require('../utils/readJson');
 
-const items = readJsonFromDist('dist/data/items');
-const settings = readJsonFromDist('dist/settings');
+const projects = readJsonFromDist('data/items');
+const settings = readJsonFromDist('settings');
 
 const processRequest = query => {
   const params = parseParams({ mainContentMode: 'card-mode', ...query })
