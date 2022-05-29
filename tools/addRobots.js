@@ -1,5 +1,5 @@
 const path = require('path');
-const { writeFileSync } = requre('fs');
+const { writeFileSync } = require('fs');
 const { distPath, settings } = require('./settings');
 
 const isMainBranch = process.env.PULL_REQUEST !== 'true'

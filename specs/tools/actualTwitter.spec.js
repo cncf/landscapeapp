@@ -1,4 +1,4 @@
-const actualTwitter = require('../../tools/actualTwitter');
+const { actualTwitter } = require('../../tools/actualTwitter');
 
 describe('Twitter URL', () => {
   describe('when crunchbase data not set', () => {

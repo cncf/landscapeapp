@@ -16,4 +16,4 @@ nvm use
 npm install -g npm
 npm install -g yarn
 yarn
-yarn run babel-node tools/landscapes.js
+yarn node tools/landscapes.js
