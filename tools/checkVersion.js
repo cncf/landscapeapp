@@ -1,6 +1,6 @@
 const axios = require('axios');
 
-const checkVersion = module.exports.checkVersion = async function() {
+module.exports.checkVersion = async function() {
   try {
     const { data:result } = await axios({
       url: `https://api.github.com/repos/cncf/landscapeapp/branches/master`,

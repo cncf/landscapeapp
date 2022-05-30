@@ -3,7 +3,7 @@ const { GithubClient } = require('./apiClients');
 
 
 const cache = {};
-const getRepositoryInfo = module.exports.getRepositoryInfo = async function(url) {
+module.exports.getRepositoryInfo = async function(url) {
   if (cache[url]) {
     return cache[url];
   }
@@ -16,7 +16,7 @@ const getRepositoryInfo = module.exports.getRepositoryInfo = async function(url)
 }
 
 const getLanguagesCache = {}
-const getLanguages = module.exports.getLanguages = async function(url) {
+module.exports.getLanguages = async function(url) {
   if (getLanguagesCache[url]) {
     return getLanguagesCache[url];
   }
@@ -29,7 +29,7 @@ const getLanguages = module.exports.getLanguages = async function(url) {
 }
 
 const weeklyContributionsCache = {}
-const getWeeklyContributions = module.exports.getWeeklyContributions = async function(url) {
+module.exports.getWeeklyContributions = async function(url) {
   if (weeklyContributionsCache[url]) {
     return weeklyContributionsCache[url];
   }

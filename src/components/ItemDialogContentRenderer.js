@@ -36,7 +36,6 @@ module.exports.render = function({settings, tweetsCount, itemInfo}) {
 
   const tweetButton = (function() {
     // locate zoom buttons
-  const { text } = settings.twitter
   const twitterUrl = `https://twitter.com/intent/tweet`
 
   return `<div class="tweet-button">
@@ -228,10 +227,10 @@ module.exports.render = function({settings, tweetsCount, itemInfo}) {
       let angleMargin = 0;
       return total > 0 ? `
         <g>
-          ${data.map((d, i) => {
+          ${data.map((d) => {
             const isLarge = d.value / total > 0.5;
             const angle = 360 * d.value / total;
-            const radius = center + (d.expanded ? expandSize : 0) - 1 / 2;
+            const radius = center - 1 / 2;
 
             angleStart = angleEnd;
             angleMargin = angleMargin > angle ? angle : angleMargin;
@@ -256,7 +255,7 @@ module.exports.render = function({settings, tweetsCount, itemInfo}) {
   ` : ''
     }
 
-    const renderPie = ({width, height, data}) => {
+    const renderPie = ({data}) => {
       const viewBoxSize = 100;
       const center = viewBoxSize / 2;
       if (!data || data.length === 0) {
@@ -274,7 +273,7 @@ module.exports.render = function({settings, tweetsCount, itemInfo}) {
 
       return `<div style="width: 220px; height: 120px; position: relative">
         <div style="margin-left: 170px; width: 100px; height: 100px;">
-          ${renderPie({height: 100,  width: 100, data: languages})}
+          ${renderPie({data: languages})}
         </div>
         ${legend}
       </div>`;
@@ -616,8 +615,8 @@ module.exports.render = function({settings, tweetsCount, itemInfo}) {
                       total:
                     </span>
                     <span class="product-repo-stars">
-                      ${iconGithub}
-                      ${iconStar}
+                      ${icons.github}
+                      ${icons.star}
                       ${formatNumber(itemInfo.github_data.stars)}
                     </span> ` : ''
                  }

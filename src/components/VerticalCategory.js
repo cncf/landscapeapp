@@ -45,7 +45,6 @@ module.exports.renderVerticalCategory = function({header, guideInfo, subcategori
             grid-template-columns: repeat(${columns}, ${smallItemWidth}px);
           `;
           const extraStyle = fitWidth ? `justify-content: space-evenly; flex: 1;` : `grid-gap: ${itemMargin}px; `
-          const path = [header, name].join(' / ')
 
           return `<div style="
             position: relative;

@@ -12,7 +12,6 @@ const { errorsReporter } = require('./reporter');
 const { actualTwitter } = require('./actualTwitter');
 const { saneName } = require('../src/utils/saneName');
 const { formatCity } = require('../src/utils/formatCity');
-const { pack } = require('../src/utils/packArray');
 const { formatAmount } = require('../src/utils/formatAmount');
 
 const { addFatal } = errorsReporter('general');
@@ -730,14 +729,14 @@ async function main () {
   }
 
   const lookups = {
-    organization: pack(extractOptions('organization')),
-    landscape: pack(generateLandscapeHierarchy()),
-    license: pack(generateLicenses()),
-    headquarters: pack(generateHeadquarters()),
+    organization: extractOptions('organization'),
+    landscape: generateLandscapeHierarchy(),
+    license: generateLicenses(),
+    headquarters: generateHeadquarters(),
     crunchbaseSlugs: generateCrunchbaseSlugs(),
     languages: generateLanguages(),
-    companyTypes: pack(generateCompanyTypes()),
-    industries: pack(generateIndustries())
+    companyTypes: generateCompanyTypes(),
+    industries: generateIndustries()
   }
 
   require('fs').writeFileSync(`${projectPath}/data.json`, JSON.stringify(itemsWithExtraFields, null, 2));

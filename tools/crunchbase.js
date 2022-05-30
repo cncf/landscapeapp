@@ -66,7 +66,7 @@ const getCrunchbaseOrganizationsList = module.exports.getCrunchbaseOrganizations
   return _.orderBy(_.uniq(organizations), 'name');
 }
 
-const extractSavedCrunchbaseEntries = module.exports.extractSavedCrunchbaseEntries = async function() {
+module.exports.extractSavedCrunchbaseEntries = async function() {
   const traverse = require('traverse');
   let source = [];
   try {
@@ -217,7 +217,7 @@ const fetchData = module.exports.fetchData = async function(name) {
   }
 }
 
-const fetchCrunchbaseEntries = module.exports.fetchCrunchbaseEntries = async function({cache, preferCache}) {
+module.exports.fetchCrunchbaseEntries = async function({cache, preferCache}) {
   // console.info(organizations);
   // console.info(_.find(organizations, {name: 'foreman'}));
   const reporter = makeReporter();

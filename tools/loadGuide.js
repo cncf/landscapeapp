@@ -182,7 +182,7 @@ const parseGuide = () => {
   })
 }
 
-const loadGuide = module.exports.loadGuide = () => {
+module.exports.loadGuide = () => {
   if (!fs.existsSync(guidePath)) {
     return null
   }

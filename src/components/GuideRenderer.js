@@ -47,7 +47,7 @@ module.exports.render = function({settings, items, guide}) {
       .reduce((acc, n) => ({ ...acc, [n]: (acc[n] || 0) + 1}), {})
 
     return links
-      .filter(({ title, level, anchor }) => {
+      .filter(({ title }) => {
         return title
       })
       .map(node => {
@@ -68,7 +68,7 @@ module.exports.render = function({settings, items, guide}) {
   }
 
   const renderContent = ({ nodes, enhancedEntries }) => {
-    return nodes.map((node, idx) => {
+    return nodes.map((node) => {
       const subcategoryEntries = node.subcategory && enhancedEntries.filter(entry => entry.path.split(' / ')[1].trim() === node.title) || [];
       return `<div>
         ${ node.title ?  `<div class="section-title" id="${h(node.anchor)}">

@@ -48,7 +48,7 @@ const getContributorsList = async (repo, page = 1) => {
   return contributors.concat(contributors.length === per_page ? await getContributorsList(repo, page + 1) : [])
 }
 
-const fetchGithubEntries = module.exports.fetchGithubEntries = async function({cache, preferCache}) {
+module.exports.fetchGithubEntries = async function({cache, preferCache}) {
   const errors = [];
   const fatalErrors = [];
   const githubOrgs = (await fetchGithubOrgs(preferCache))

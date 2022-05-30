@@ -2,7 +2,7 @@ const path = require('path');
 const _ = require('lodash');
 
 const { projects } = require("./loadData");
-const { settings, projectPath, distPath } = require('./settings');
+const { distPath } = require('./settings');
 const { millify } = require('../src/utils/format');
 const { stringifyParams } = require('../src/utils/routing');
 
@@ -45,7 +45,7 @@ const page = `
          <td>Date</td>
        </tr>
      </thead>
-     ${acquisitions.map(function(item, index) {
+     ${acquisitions.map(function(item) {
        return `
        <tr>
          <td>${linkToOrg(item.acquirer)}</td>

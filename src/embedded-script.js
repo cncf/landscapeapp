@@ -128,16 +128,12 @@ const CncfLandscapeApp = {
     }
 
     //calculate previous and next items;
-    let prevItem = null;
-    let nextItem = null;
-    if (true) {
-      const selectedItemEl = document.querySelector(`[data-id=${selectedItemId}]`);
-      const parent = selectedItemEl.closest('.cards-section');
-      const allItems = parent.querySelectorAll('[data-id]');
-      const index = [].indexOf.call(allItems, selectedItemEl);
-      prevItem = index > 0 ? allItems[index - 1].getAttribute('data-id') : null;
-      nextItem = index < allItems.length - 1 ? allItems[index + 1].getAttribute('data-id') : null;
-    }
+    const selectedItemEl = document.querySelector(`[data-id=${selectedItemId}]`);
+    const parent = selectedItemEl.closest('.cards-section');
+    const allItems = parent.querySelectorAll('[data-id]');
+    const index = [].indexOf.call(allItems, selectedItemEl);
+    const prevItem = index > 0 ? allItems[index - 1].getAttribute('data-id') : null;
+    const nextItem = index < allItems.length - 1 ? allItems[index + 1].getAttribute('data-id') : null;
 
     this.nextItemId = nextItem;
     this.prevItemId = prevItem;

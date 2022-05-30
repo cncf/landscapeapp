@@ -15,7 +15,7 @@ const cacheMiss = colors.green;
 const { addError, addFatal } = errorsReporter('github');
 
 
-const fetchStartDateEntries = module.exports.fetchStartDateEntries = async function({cache, preferCache}) {
+module.exports.fetchStartDateEntries = async function({cache, preferCache}) {
   const githubOrgs = (await fetchGithubOrgs(preferCache))
     .map(org => ({ ...org.data, ...org.github_start_commit_data}))
   const repos = [...getRepos(), ...githubOrgs.filter(org => !org.cached).map(org => org.repos).flat()]

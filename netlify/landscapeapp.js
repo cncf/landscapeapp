@@ -1,9 +1,6 @@
 const path = require('path')
 const { readdirSync, writeFileSync } = require('fs')
 const generateIndex = require('./generateIndex')
-const run = function(x) {
-  console.info(require('child_process').execSync(x).toString())
-}
 const debug = function() {
   if (process.env.DEBUG_BUILD) {
     console.info.apply(console, arguments);
@@ -167,7 +164,6 @@ EOSSH
   await runRemoteWithoutErrors(`chmod -R 777 /root/builds/${folder}`);
 
   // lets guarantee npm install for this folder first
-  const branch = process.env.BRANCH;
   {
     const buildCommand = [
       "(ls . ~/.nvm/nvm.sh || (curl -s -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.35.3/install.sh | bash >/dev/null))",

@@ -1,4 +1,4 @@
-const ensureHttps = module.exports.ensureHttps = function(x) {
+module.exports.ensureHttps = function(x) {
   if (!x) {
     return x;
   }

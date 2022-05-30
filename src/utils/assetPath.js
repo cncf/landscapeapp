@@ -1,6 +1,6 @@
 const { getBasePath } = require('../../tools/getBasePath');
 
-const assetPath = module.exports.assetPath = path => {
+module.exports.assetPath = path => {
   if (path.startsWith('http://') || path.startsWith('https://')) {
     return path;
   }

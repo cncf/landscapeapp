@@ -14,6 +14,5 @@ child.stderr.on('data', function(data) {
     //Here is where the error output goes
 });
 child.on('close', function(code) {
-    console.log('done');
-    //Here you can get the exit code of the script
+    console.log(`done, exit code: ${code} `);
 });

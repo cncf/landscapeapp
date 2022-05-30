@@ -85,8 +85,6 @@ module.exports.renderHorizontalCategory = function({ header, guideInfo, subcateg
               grid-auto-rows: ${smallItemHeight}px;
             `;
             const extraStyle = fitWidth ? `justify-content: space-evenly; align-content: space-evenly;` : `grid-gap: ${itemMargin}px;`;
-            const path = [header, name].join(' / ')
-
             return `
               <div style="
                 width: ${width}px;

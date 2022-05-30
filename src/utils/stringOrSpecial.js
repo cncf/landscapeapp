@@ -1,4 +1,4 @@
-const stringOrSpecial = module.exports.stringOrSpecial = function(x) {
+module.exports.stringOrSpecial = function(x) {
   if (x === 'true') {
     return true;
   }

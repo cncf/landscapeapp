@@ -528,7 +528,6 @@ const CncfLandscapeApp = {
         }
         let hasTrue = false;
         let hasChildren = false;
-        let children = [];
         for (let i = parentIndex + 1; i < allItems.length; i++) {
           const childEl = allItems[i];
           if (childEl.getAttribute('data-level') === "1") {
@@ -735,7 +734,7 @@ const CncfLandscapeApp = {
       if (item.level === 1) {
         let allChildren = [];
         let selectedChildren = [];
-        for (j = i + 1; j < wrapper.selectData.length; j++) {
+        for (let j = i + 1; j < wrapper.selectData.length; j++) {
           let childItem = wrapper.selectData[j];
           if (childItem.level === 1) {
             break;
@@ -776,7 +775,7 @@ const CncfLandscapeApp = {
       if (item.level === 1 && selectedIds.includes(item.id)) {
         let children = [];
         let totalChildren = 0;
-        for (j = i + 1; j < wrapper.selectData.length; j++) {
+        for (let j = i + 1; j < wrapper.selectData.length; j++) {
           let childItem = wrapper.selectData[j];
           if (childItem.level === 1) {
             break;
@@ -853,7 +852,7 @@ const CncfLandscapeApp = {
       }
     }
     if (state.zoom !== initialState.zoom) {
-      params.zoom = (state.zoom * 100).toFixed(0);;
+      params.zoom = (state.zoom * 100).toFixed(0);
     }
 
 

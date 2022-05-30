@@ -9,11 +9,8 @@
 //     url(id by default): how the value is stored in the url
 //     sortOrder(element index by default): sort order when grouping
 //     match: function
-const path = require('path');
-const fs = require('fs');
 const _ = require('lodash');
 
-const { unpack } = require('../utils/unpackArray');
 const { isParent } = require('../utils/isParent');
 const { readJsonFromProject, readJsonFromDist } = require('../utils/readJson');
 
@@ -89,7 +86,7 @@ const fields = {
     id: 'license',
     label: 'License',
     isArray: true,
-    values: [].concat(unpack(lookups.license) || []),
+    values: [].concat(lookups.license || []),
     processValuesBeforeSaving: function(values) {
       return processValuesBeforeSaving({options: fields.license.values, values: values});
     },
@@ -105,13 +102,13 @@ const fields = {
     id: 'organization',
     label: 'Organization',
     isArray: true,
-    values: [].concat(unpack(lookups.organization) || [])
+    values: [].concat(lookups.organization || [])
   },
   headquarters: {
     id: 'headquarters',
     label: 'Headquarters Location',
     isArray: true,
-    values: [].concat(unpack(lookups.headquarters) || []),
+    values: [].concat(lookups.headquarters || []),
     processValuesBeforeSaving: function(values) {
       return processValuesBeforeSaving({options: fields.headquarters.values, values: values});
     },
@@ -124,7 +121,7 @@ const fields = {
     url: 'company-type',
     label: 'Company Type',
     isArray: true,
-    values: [].concat(unpack(lookups.companyTypes) || []),
+    values: [].concat(lookups.companyTypes || []),
     filterFn: function(filter, _, record) {
       if (!filter || filter.length === 0) {
         return true;
@@ -138,7 +135,7 @@ const fields = {
     id: 'industries',
     label: 'Industries',
     isArray: true,
-    values: [].concat(unpack(lookups.industries) || []),
+    values: [].concat(lookups.industries || []),
     filterFn: function(filter, _, record) {
       if (!filter || filter.length === 0) {
         return true;
@@ -153,7 +150,7 @@ const fields = {
     url: 'category',
     label: 'Category',
     isArray: true,
-    values: [].concat(unpack(lookups.landscape) || []),
+    values: [].concat(lookups.landscape || []),
     processValuesBeforeSaving: function(values) {
       return processValuesBeforeSaving({options: fields.landscape.values, values: values});
     },

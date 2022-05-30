@@ -1,4 +1,4 @@
-const millify = module.exports.millify = function(value) {
+module.exports.millify = function(value) {
   let base, suffix;
   if (value < 1000 - 0.05) {
     base = value;
@@ -20,7 +20,7 @@ const millify = module.exports.millify = function(value) {
   return digits + suffix;
 }
 
-const h = module.exports.h = function(html) {
+module.exports.h = function(html) {
   var entityMap = {
     '&': '&amp;',
     '<': '&lt;',

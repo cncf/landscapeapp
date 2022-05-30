@@ -1,5 +1,5 @@
 document.addEventListener('DOMContentLoaded', function() {
-  iFrameResize({
+  window.iFrameResize({
     log: false,
     onMessage : function(messageData){ // Callback fn when message is received
       if (messageData.message.type === 'showModal') {

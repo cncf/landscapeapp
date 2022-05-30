@@ -1,4 +1,4 @@
-const formatCity = module.exports.formatCity = function({city, region, country}) {
+module.exports.formatCity = function({city, region, country}) {
   if (!city) {
     return null;
   }

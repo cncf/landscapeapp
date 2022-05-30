@@ -3,7 +3,7 @@ const error = colors.red;
 const fatal = (x) => colors.red(colors.inverse(x));
 
 let messages = [];
-const getMessages = module.exports.getMessages = function() {
+module.exports.getMessages = function() {
   return messages;
 }
 
@@ -17,7 +17,7 @@ try {
 }
 
 
-const errorsReporter = module.exports.errorsReporter = function(category) {
+module.exports.errorsReporter = function(category) {
   return {
     addError: function(msg) {
       console.info(error(`ERROR: ${msg}`));

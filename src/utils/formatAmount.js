@@ -1,6 +1,6 @@
 const _ = require('lodash');
 const formatNumber = require('format-number');
-const formatAmount = module.exports.formatAmount = function(v) {
+module.exports.formatAmount = function(v) {
   if (_.isString(v)) {
     return v;
   }

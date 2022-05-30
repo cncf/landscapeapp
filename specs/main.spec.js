@@ -6,7 +6,6 @@ const { projects } = require('../tools/loadData');
 const { landscapeSettingsList } = require("../src/utils/landscapeSettings");
 const { appUrl, pathPrefix } = require('../tools/distSettings');
 
-const devicesMap = puppeteer.devices;
 const width = 1920;
 const height = 1080;
 
@@ -39,7 +38,7 @@ async function makePage(initialUrl) {
       console.info('retrying...', ex);
       browser.close();
     } catch(ex2) {
-
+      console.info('failed to close browser', ex2);
     }
     return await makePage(initialUrl);
   }

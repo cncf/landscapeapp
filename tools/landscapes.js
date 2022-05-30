@@ -49,7 +49,7 @@ async function main() {
 
     const startTime = new Date().getTime();
 
-    function runIt() {
+    const runIt = function() {
       return new Promise(function(resolve) {
         let logs = [];
         var spawn = require('child_process').spawn;

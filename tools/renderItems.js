@@ -1,6 +1,6 @@
 const path = require('path');
 const fs = require('fs/promises');
-const { settings, projectPath, distPath, basePath } = require('./settings.js');
+const { settings, distPath, basePath } = require('./settings.js');
 const  { projects } = require('./loadData.js');
 const { processedLandscape } = require('./processedLandscape.js');
 const { render } = require('../src/components/ItemDialogContentRenderer.js');

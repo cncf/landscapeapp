@@ -6,7 +6,7 @@ const path = require('path');
 const fs  = require('fs');
 const ncc = require('@vercel/ncc');
 
-const { distPath, projectPath } = require('./settings');
+const { distPath  } = require('./settings');
 const { readJsonFromDist, readJsonFromProject } = require('../src/utils/readJson');
 const { settings } = require('./settings');
 
@@ -14,7 +14,7 @@ const items = readJsonFromDist('data/items');
 const itemsExport = readJsonFromDist('data/items-export');
 const lookup = readJsonFromProject('lookup');
 
-const { PROJECT_NAME, PROJECT_PATH } = process.env
+const { PROJECT_NAME } = process.env
 
 const destFolder = path.resolve(distPath, 'functions');
 const srcFolder = `${process.env.PWD}/src/api`;

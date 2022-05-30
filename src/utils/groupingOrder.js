@@ -1,6 +1,6 @@
 const { fields } = require('../types/fields');
 const _ = require('lodash');
-const groupingOrder = module.exports.groupingOrder = function(field) {
+module.exports.groupingOrder = function(field) {
   const values = fields[field].answers;
   const sortedValues = _.orderBy(values, 'groupingSortOrder');
   return function(x) {

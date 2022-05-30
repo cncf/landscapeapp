@@ -1,7 +1,6 @@
 const path = require('path');
 const fs = require('fs/promises');
 const qs = require('query-string');
-const { load  } = require('js-yaml');
 const { execSync } = require('child_process');
 
 const { loadGuide } = require('./loadGuide');
@@ -25,7 +24,7 @@ async function main() {
   await fs.copyFile( path.resolve(projectPath, 'images', 'favicon.png'), path.resolve(distPath, 'favicon.png'));
   for (let item of items) {
     await fs.writeFile(path.resolve(distPath, 'data', 'items', `${item.id}.json`), JSON.stringify(item))
-  };
+  }
 
   const guide = loadGuide();
   if (guide) {

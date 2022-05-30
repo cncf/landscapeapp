@@ -8,7 +8,7 @@ const traverse = require('traverse');
 
 require('./suppressAnnoyingWarnings');
 const { saneName } = require('../src/utils/saneName');
-const { settings, projectPath } = require('./settings');
+const { projectPath } = require('./settings');
 const { errorsReporter } = require('./reporter');
 const { makeReporter } = require('./progressReporter');
 const { retry } = require("./retry");
@@ -40,7 +40,7 @@ async function getLandscapeItems() {
   return items;
 }
 
-const extractSavedImageEntries = module.exports.extractSavedImageEntries =  async function() {
+module.exports.extractSavedImageEntries =  async function() {
   const traverse = require('traverse');
   let source = [];
   try {
@@ -79,7 +79,7 @@ function getItemHash(item) {
   return;
 }
 
-const fetchImageEntries = module.exports.fetchImageEntries =  async function({cache, preferCache}) {
+module.exports.fetchImageEntries =  async function({cache, preferCache}) {
   const items = await getLandscapeItems();
   const errors = [];
   const fatalErrors = [];
@@ -169,7 +169,7 @@ const fetchImageEntries = module.exports.fetchImageEntries =  async function({ca
   }
 }
 
-const removeNonReferencedImages = module.exports.removeNonReferencedImages = function(imageEntries) {
+module.exports.removeNonReferencedImages = function(imageEntries) {
   const existingFiles = fs.readdirSync(path.resolve(projectPath, 'cached_logos'));
   const allowedFiles = imageEntries.filter( (e) => !!e).map( (e) => e.fileName );
   _.each(existingFiles, function(existingFile) {

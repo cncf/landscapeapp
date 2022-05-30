@@ -6,7 +6,6 @@ const { setFatalError, reportFatalErrors } = require('./fatalErrors');
 async function main() {
 
   const source = require('js-yaml').load(require('fs').readFileSync(path.resolve(projectPath,'landscape.yml')));
-  const traverse = require('traverse');
   const _ = require('lodash');
 
   console.info('Processing the tree');
@@ -55,7 +54,7 @@ async function main() {
 
   const validateRepos = ({ name, repo_url, branch, additional_repos }) => {
     const repos = [repo_url ? { repo_url, branch } : null, ...(additional_repos || [])].filter(_ => _)
-    for (const { repo_url, branch, ...rest } of repos) {
+    for (const { repo_url, ...rest } of repos) {
       if (!repo_url) {
         errors.push(`item ${name} must have repo_url set`)
       } else if (repo_url.indexOf('https://github.com') >= 0 && !repo_url.match(new RegExp('^https://github\.com/[^/]+/[^/]+$'))) {

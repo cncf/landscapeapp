@@ -1,5 +1,4 @@
 // Render only for an export
-const _ = require('lodash');
 const { saneName } = require('../utils/saneName');
 const { h } = require('../utils/format');
 const { getGroupedItems, expandSecondPathItems } = require('../utils/itemsCalculator');
@@ -7,7 +6,7 @@ const { parseParams } = require('../utils/routing');
 const { renderDefaultCard, renderBorderlessCard, renderFlatCard } = require('./CardRenderer');
 const icons = require('../utils/icons');
 
-module.exports.render = function({settings, items, exportUrl}) {
+module.exports.render = function({items, exportUrl}) {
   const params = parseParams(exportUrl.split('?').slice(-1)[0]);
   if (params.grouping === 'landscape') {
     items = expandSecondPathItems(items);
@@ -59,4 +58,5 @@ module.exports.render = function({settings, items, exportUrl}) {
         </div>
       </div>
     </div>`;
+  return result;
 };

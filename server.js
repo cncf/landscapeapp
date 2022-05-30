@@ -14,7 +14,7 @@ http.createServer(function (request, response) {
     const query = request.url.split('?')[1] || '';
 
     if (!process.env.INLINE_API) {
-      require('child_process').exec(`babel-node src/api/ids.js '${query}'`, {}, function(e, output, err) {
+      require('child_process').exec(`node src/api/ids.js '${query}'`, {}, function(e, output, err) {
         response.writeHead(200, { 'Content-Type': 'application/json' });
         response.end(output);
       });
@@ -30,7 +30,7 @@ http.createServer(function (request, response) {
     const query = request.url.split('?')[1] || '';
 
     if (!process.env.INLINE_API) {
-      require('child_process').exec(`babel-node src/api/export.js '${query}'`, {}, function(e, output, err) {
+      require('child_process').exec(`node src/api/export.js '${query}'`, {}, function(e, output, err) {
         response.writeHead(200, {
           'Content-Type': 'text/css',
           'Content-Disposition': 'attachment; filename=interactive-landscape.csv'

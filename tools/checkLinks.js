@@ -1,5 +1,4 @@
 const { exec } = require('child_process');
-const { writeFileSync, unlinkSync } = require('fs');
 const colors = require('colors');
 const Promise = require('bluebird');
 const traverse = require('traverse');
@@ -36,11 +35,10 @@ async function checkViaPuppeteer(url, remainingAttempts = 3) {
 
   const page = await browser.newPage();
   page.setDefaultNavigationTimeout(120 * 1000);
-  let result = null;
   try {
     await page.goto(url);
     await Promise.delay(5 * 1000);
-    const newUrl = await page.evaluate ( (x) => window.location.href );
+    const newUrl = await page.evaluate ( () => window.location.href );
     await browser.close();
     const withoutTrailingSlash = (x) => x.replace(/#(.*)/, '').replace(/\/$/, '');
     if (withoutTrailingSlash(newUrl) === withoutTrailingSlash(url)) {

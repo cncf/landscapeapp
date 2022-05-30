@@ -6,7 +6,7 @@ const debug = require('debug')('bestpractices');
 
 const { errorsReporter } = require('./reporter');
 const { requestWithRetry } = require('./requestWithRetry');
-const { settings, projectPath } = require('./settings');
+const { projectPath } = require('./settings');
 const { makeReporter } = require('./progressReporter');
 const { retry } = require('./retry');
 
@@ -74,7 +74,7 @@ async function fetchEntry(url) {
   return await retry(() => fetchEntryNoRetry(url), 3);
 }
 
-const fetchBestPracticeEntriesWithFullScan = module.exports.fetchBestPracticeEntriesWithFullScan =  async function({cache, preferCache}) {
+module.exports.fetchBestPracticeEntriesWithFullScan =  async function({cache, preferCache}) {
   const items = await getLandscapeItems();
   const errors = [];
   var fetchedEntries = null;
@@ -96,7 +96,7 @@ const fetchBestPracticeEntriesWithFullScan = module.exports.fetchBestPracticeEnt
       let badge = _.find(fetchedEntries, (x) => x.repo_url.toLowerCase() === item.repo_url.toLowerCase());
       if (!badge && item.project_org) {
         repo_url = item.project_org;
-        let badge = _.find(fetchedEntries, (x) => x.repo_url.toLowerCase() === item.project_org.toLowerCase());
+        badge = _.find(fetchedEntries, (x) => x.repo_url.toLowerCase() === item.project_org.toLowerCase());
       }
       reporter.write(cacheMiss("*"));
       return ({
@@ -118,7 +118,7 @@ const fetchBestPracticeEntriesWithFullScan = module.exports.fetchBestPracticeEnt
   return result;
 }
 
-const fetchBestPracticeEntriesWithIndividualUrls = module.exports.fetchBestPracticeEntriesWithIndividualUrls = async function({cache, preferCache}) {
+module.exports.fetchBestPracticeEntriesWithIndividualUrls = async function({cache, preferCache}) {
   const items = await getLandscapeItems();
   const errors = [];
   const reporter = makeReporter();
@@ -128,7 +128,7 @@ const fetchBestPracticeEntriesWithIndividualUrls = module.exports.fetchBestPract
     }
     let cachedEntry = _.find(cache, (c) => c.repo_url.toLowerCase() === item.repo_url.toLowerCase());
     if (!cachedEntry && item.project_org) {
-      let cachedEntry = _.find(cache, (c) => c.repo_url.toLowerCase() === item.project_org.toLowerCase());
+      cachedEntry = _.find(cache, (c) => c.repo_url.toLowerCase() === item.project_org.toLowerCase());
     }
     if (cachedEntry && preferCache) {
       reporter.write('.');
@@ -165,7 +165,7 @@ const fetchBestPracticeEntriesWithIndividualUrls = module.exports.fetchBestPract
 
 }
 
-const extractSavedBestPracticeEntries = module.exports.extractSavedBestPracticeEntries =  async function extractSavedBestPracticeEntries() {
+module.exports.extractSavedBestPracticeEntries =  async function extractSavedBestPracticeEntries() {
   const traverse = require('traverse');
   let source = [];
   try {

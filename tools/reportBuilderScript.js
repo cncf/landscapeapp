@@ -1,4 +1,4 @@
-linksDiv = document.querySelector('#link');
+const linksDiv = document.querySelector('#link');
 
 for (let i = 0; i < linksDiv.children.length; i++) {
   const link = linksDiv.children[i];

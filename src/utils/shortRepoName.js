@@ -1,4 +1,4 @@
-const shortRepoName = module.exports.shortRepoName = function(url) {
+module.exports.shortRepoName = function(url) {
   if (!url) {
     return '';
   }

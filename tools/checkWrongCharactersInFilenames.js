@@ -1,8 +1,7 @@
 const _ = require('lodash');
 const path = require('path');
-const Promise = require('bluebird');
 
-const { projectPath, settings } = require('./settings');
+const { projectPath } = require('./settings');
 const { dump } = require('./yaml');
 const { hasFatalErrors, setFatalError, reportFatalErrors } = require('./fatalErrors');
 

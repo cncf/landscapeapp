@@ -1,5 +1,3 @@
-const path = require('path');
-const fs = require('fs');
 const _ = require('lodash');
 
 const { getItemsForExport, getLandscapeItems } = require('./itemsCalculator');

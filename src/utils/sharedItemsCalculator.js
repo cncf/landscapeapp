@@ -1,5 +1,5 @@
 const _ = require('lodash');
-const getLandscapeCategories = module.exports.getLandscapeCategories = ({ landscape, landscapeSettings }) => {
+module.exports.getLandscapeCategories = ({ landscape, landscapeSettings }) => {
   if (landscapeSettings.isMain) {
     return landscape.filter( ({ level }) => level === 1).filter((category) => {
       return _.find(landscapeSettings.elements, (element) => element.category === category.id);

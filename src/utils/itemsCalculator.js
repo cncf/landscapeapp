@@ -4,7 +4,6 @@ const { groupingLabel } = require('../utils/groupingLabel');
 const { groupingOrder } = require('../utils/groupingOrder');
 const { stringOrSpecial } = require('../utils/stringOrSpecial');
 const { getLandscapeCategories } = require('./sharedItemsCalculator');
-const { findLandscapeSettings } = require('./landscapeSettings');
 const { stringifyParams } = require('./routing');
 
 const landscape = fields.landscape.values;
@@ -13,7 +12,7 @@ const groupAndSort = (items, sortCriteria) => {
   return _.groupBy(_.orderBy(items, sortCriteria), 'landscape')
 }
 
-const expandSecondPathItems = module.exports.expandSecondPathItems = function(data) {
+module.exports.expandSecondPathItems = function(data) {
   const extraItems = data.filter( (x) => x.second_path).flatMap( (item) => [item.second_path].flat().map( (extraPath) => ({
     ...item,
     category: extraPath.split('/')[0].trim(),
@@ -24,7 +23,7 @@ const expandSecondPathItems = module.exports.expandSecondPathItems = function(da
   return data.concat(extraItems);
 }
 
-const getFilteredItems = module.exports.getFilteredItems = function({data, filters}) {
+module.exports.getFilteredItems = function({data, filters}) {
     var filterHostedProject = filterFn({field: 'relation', filters});
     var filterByLicense = filterFn({field: 'license', filters});
     var filterByOrganization = filterFn({field: 'organization', filters});
@@ -41,7 +40,7 @@ const getFilteredItems = module.exports.getFilteredItems = function({data, filte
     });
 }
 
-const getSortedItems = function({data, filters, sortField, sortDirection}) {
+const getSortedItems = function({data, sortField, sortDirection}) {
   const fieldInfo = fields[sortField];
   const nonPublic = (x) => (x.name || '').toString().indexOf('Non-Public Organization') === 0;
   const emptyItemsNA = data.filter(function(x) {
@@ -84,7 +83,7 @@ const getSortedItems = function({data, filters, sortField, sortDirection}) {
 }
 
 const getGroupedItems = module.exports.getGroupedItems = function({ data, filters, sortField, sortDirection, grouping }) {
-  const items = getSortedItems({ data, filters, sortField, sortDirection });
+  const items = getSortedItems({ data, sortField, sortDirection });
 
   if (grouping === 'no') {
     return [{
@@ -127,7 +126,7 @@ const bigPictureSortOrder = [
   }
 ];
 
-const getLandscapeItems = module.exports.getLandscapeItems = function({landscapeSettings, items, guideIndex = {}}) {
+module.exports.getLandscapeItems = function({landscapeSettings, items, guideIndex = {}}) {
   if (landscapeSettings.isMain) {
     const categories = getLandscapeCategories({landscapeSettings, landscape });
     const itemsMap = groupAndSort(items, bigPictureSortOrder);
@@ -186,13 +185,13 @@ const getLandscapeItems = module.exports.getLandscapeItems = function({landscape
   }
 }
 
-const flattenItems = module.exports.flattenItems = groupedItems => {
+module.exports.flattenItems = groupedItems => {
   return groupedItems.flatMap(group => {
     const { items, subcategories } = group
     return group.hasOwnProperty('items') ? items : subcategories.flatMap(({ items }) => items)
   })
 }
 
-const getItemsForExport = module.exports.getItemsForExport = function(params) {
+module.exports.getItemsForExport = function(params) {
   return _.flatten(getGroupedItems(params).map((x) => x.items));
 }

@@ -4,7 +4,7 @@ const axios = require('axios');
 const { errorsReporter, getMessages } = require('./reporter');
 const { addFatal } = errorsReporter('general');
 
-const hasFatalErrors = module.exports.hasFatalErrors = function() {
+module.exports.hasFatalErrors = function() {
   return getMessages().filter( (x) => x.type === 'fatal') > 0;
 }
 
@@ -49,7 +49,8 @@ const reportFatalErrors = module.exports.reportFatalErrors = async function() {
 }
 
 async function main() {
-  fatalErrors = ['FATAL: <div> *b* </div> error number 1', 'FATAL: error number 2'];
+  setFatalError('FATAL: <div> *b* </div> error number 1');
+  setFatalError('FATAL: error number 2');
   await reportFatalErrors();
 }
 // uncomment and set env vars to debug

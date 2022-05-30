@@ -1,5 +1,4 @@
 const { renderGuideLink } = require('./GuideLink');
-const { h } = require('../utils/format');
 const { smallItemHeight, smallItemWidth } = require('../utils/landscapeCalculations');
 
 module.exports.renderSubcategoryInfo = function({ label, anchor, row, column }) {

@@ -1,18 +1,13 @@
-const fs = require('fs');
-const path = require('path');
-
 const { flattenItems } = require('../utils/itemsCalculator');
 const { getGroupedItems, expandSecondPathItems }  = require('../utils/itemsCalculator');
-const { getSummary, getSummaryText } = require('../utils/summaryCalculator');
 const { parseParams } = require('../utils/routing');
 const Parser = require('json2csv/lib/JSON2CSVParser');
 const { readJsonFromDist } = require('../utils/readJson');
 
 const allItems = readJsonFromDist('data/items-export');
 const projects = readJsonFromDist('data/items');
-const settings = readJsonFromDist('settings');
 
-const processRequest = query => {
+const processRequest = module.exports.processRequest = query => {
   const params = parseParams(query);
   const p = new URLSearchParams(query);
   params.format = p.get('format');
@@ -20,7 +15,7 @@ const processRequest = query => {
   let items = projects;
   if (params.grouping === 'landscape' || params.format !== 'card') {
     items = expandSecondPathItems(items);
-  };
+  }
 
   // extract alias - if grouping = category
   // extract alias - if params != card-mode (big_picture - always show)
@@ -29,7 +24,7 @@ const processRequest = query => {
   const selectedItems = flattenItems(getGroupedItems({data: items, ...params}))
     .reduce((acc, item) => ({ ...acc, [item.id]: true }), {})
 
-  const fields = allItems[0].map(([label, _]) => label !== 'id' && label).filter(_ => _);
+  const fields = allItems[0].map(([label]) => label !== 'id' && label).filter(_ => _);
   const itemsForExport = allItems
     .map(item => item.reduce((acc, [label, value]) =>  ({ ...acc, [label]: value }), {}))
     .filter(item => selectedItems[item.id]);
@@ -38,10 +33,9 @@ const processRequest = query => {
   const csv = json2csvParser.parse(itemsForExport, { fields });
   return csv;
 }
-module.exports.processRequest = processRequest;
 
 // Netlify function
-function handler(event, context) {
+module.exports.handler = function(event) {
   const body = processRequest(event.queryStringParameters)
   const headers = {
       'Content-Type': 'text/css',
@@ -49,8 +43,6 @@ function handler(event, context) {
   };
   return { statusCode: 200, body: body, headers }
 }
-module.exports.handler = handler;
-
 if (__filename === process.argv[1]) {
   console.info(JSON.stringify(processRequest(process.argv[2]), null, 4));
 }

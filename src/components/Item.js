@@ -1,13 +1,3 @@
-const path = require('path');
-const fs = require('fs');
-
-const {
-  largeItemHeight,
-  largeItemWidth,
-  smallItemHeight,
-  smallItemWidth
-} = require("../utils/landscapeCalculations");
-
 const { assetPath }  = require('../utils/assetPath');
 const { fields } = require("../types/fields");
 const { h } = require('../utils/format');

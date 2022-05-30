@@ -5,8 +5,7 @@ const { GithubClient } = require('./apiClients');
 const { landscape } = require('./landscape');
 const { processedLandscape } = require('./processedLandscape');
 
-cacheKey = (url, branch) => `${url}#${branch}`
-module.exports.cacheKey = cacheKey;
+const cacheKey = module.exports.cacheKey =  (url, branch) => `${url}#${branch}`
 
 const deleteReposWithNewAdditionalRepos = (cache) => {
   const processedAdditionalRepos = traverse(processedLandscape).reduce((acc, node) => {

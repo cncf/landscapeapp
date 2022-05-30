@@ -1,6 +1,3 @@
-const path = require('path');
-const fs = require('fs');
-
 const { readJsonFromDist } = require('./readJson');
 const settings = readJsonFromDist('settings');
 
@@ -13,7 +10,7 @@ function calcLandscapeSettingsList(settingsObj) {
       return { url, basePath, isMain, ...rest }
     })
 
-};
+}
 
 // client side version
 const landscapeSettingsList = module.exports.landscapeSettingsList = calcLandscapeSettingsList(settings);
@@ -22,7 +19,7 @@ const landscapeSettingsDict = landscapeSettingsList.reduce((dict, landscapeSetti
   return dict;
 }, {});
 
-const findLandscapeSettings = module.exports.findLandscapeSettings = (url) => {
+module.exports.findLandscapeSettings = (url) => {
   if (url === 'main') {
     url = 'landscape';
   }
@@ -30,6 +27,6 @@ const findLandscapeSettings = module.exports.findLandscapeSettings = (url) => {
 }
 
 // server side version, with up to date information
-const getLandscapeSettingsList = module.exports.getLandscapeSettingsList = function(settingsObj) {
+module.exports.getLandscapeSettingsList = function(settingsObj) {
   return calcLandscapeSettingsList(settingsObj);
 }

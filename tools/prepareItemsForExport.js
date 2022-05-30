@@ -1,5 +1,3 @@
-const path = require('path');
-const fs = require('fs');
 const Parser = require('json2csv/lib/JSON2CSVParser');
 
 const { settings } = require('./settings');
@@ -144,7 +142,7 @@ function formatDate(row, field) {
   return value.substring(0, 10) + ' ' + value.substring(11, 19);
 }
 
-const prepareItemsForExport = module.exports.prepareItemsForExport = items => {
+module.exports.prepareItemsForExport = items => {
   const parser = new Parser({ fields: fields(settings), quote: '' })
 
   return items.map(item => {

@@ -1,5 +1,3 @@
-const _ = require('lodash');
-
 const { h } = require('../utils/format');
 const { assetPath } = require('../utils/assetPath');
 

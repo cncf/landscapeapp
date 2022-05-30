@@ -117,13 +117,13 @@ const ApiClient = ({ baseURL, applyKey, keys, defaultOptions = {}, defaultParams
   }
 };
 
-const CrunchbaseClient = module.exports.CrunchbaseClient = ApiClient({
+module.exports.CrunchbaseClient = ApiClient({
   baseURL: 'https://api.crunchbase.com/api/v4',
   defaultParams: { user_key: env.CRUNCHBASE_KEY_4 },
   defaultOptions: { followRedirect: true, maxRedirects: 5, timeout: 10 * 1000 }
 });
 
-const GithubClient = module.exports.GithubClient = ApiClient({
+module.exports.GithubClient = ApiClient({
   baseURL: 'https://api.github.com',
   retryStatuses: [403], // Github returns 403 when rate limiting.
   delayFn: error => {
@@ -150,7 +150,7 @@ const GithubClient = module.exports.GithubClient = ApiClient({
 
 const [consumerKey, consumerSecret, accessTokenKey, accessTokenSecret] = (env.TWITTER_KEYS || '').split(',');
 
-const TwitterClient = module.exports.TwitterClient = ApiClient({
+module.exports.TwitterClient = ApiClient({
   baseURL: 'https://api.twitter.com/1.1',
   defaultOptions: {
     oauth: {
@@ -162,6 +162,6 @@ const TwitterClient = module.exports.TwitterClient = ApiClient({
   }
 });
 
-const YahooFinanceClient = module.exports.YahooFinanceClient = ApiClient({
+module.exports.YahooFinanceClient = ApiClient({
   baseURL: 'https://query2.finance.yahoo.com',
 });
