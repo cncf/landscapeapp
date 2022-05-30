@@ -7,6 +7,7 @@
     "node": ">= 10.5"
   },
   "scripts": {
+    "eslint": "eslint src tools specs netlify",
     "autocrop-images": "node tools/autocropImages",
     "dev": "yarn server",
     "open:src": "yarn server",
@@ -50,6 +51,7 @@
     "cheerio": "^1.0.0-rc.10",
     "colors": "1.4.0",
     "debug": "^4.3.4",
+    "eslint": "latest",
     "event-emitter": "0.3.5",
     "expect-puppeteer": "^6.1.0",
     "feed": "^4.2.2",
@@ -90,10 +92,5 @@
     "type": "git",
     "url": "https://github.com/cncf/landscapeapp"
   },
-  "packageManager": "yarn@3.2.0",
-  "devDependencies": {
-    "@typescript-eslint/eslint-plugin": "latest",
-    "@typescript-eslint/parser": "latest",
-    "eslint": "latest"
-  }
+  "packageManager": "yarn@3.2.0"
 }
