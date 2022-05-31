@@ -914,6 +914,12 @@ a:hover svg {
   transition-delay: 0s, 0s;
 }
 
+.main-parent {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
 .main {
   margin-left: 205px;
   padding: 10px;
@@ -938,7 +944,7 @@ a:hover svg {
   min-height: 500px;
 }
 
-.cards-section {
+.main, .cards-section {
   display: flex;
   flex-direction: column;
   flex: 1;

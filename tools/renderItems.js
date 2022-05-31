@@ -135,6 +135,7 @@ async function main() {
   `
   const renderPage = ({homePage, mode}) => {
     let result = `
+    <!DOCTYPE html>
     ${headers}
     <script>${ga}</script>
     <style>
@@ -203,6 +204,7 @@ async function main() {
   const resizerConfig = await fs.readFile('src/iframeResizer.js');
   await fs.writeFile(path.resolve(distPath, 'iframeResizer.js'), resizerHostJs + "\n" + resizerConfig);
   const embed = `
+    <!DOCTYPE html>
     <div>
       <h1>Testing how great is that embed </h1>
       <iframe frameBorder="0" id="landscape" scrolling="no" style="width: 1px; min-width: 100%;"
@@ -218,6 +220,7 @@ async function main() {
   const embeddedJs = await fs.readFile('src/embedded-script.js', 'utf-8');
   const renderEmbedPage = (page) => {
     let result = `
+    <!DOCTYPE html>
     ${headers}
     <script>${ga}</script>
     <style>

@@ -63,7 +63,7 @@ describe("Embed test", () => {
       page = await makePage(appUrl + '/embed');
       frame = await page.frames()[1];
       await frame.waitForSelector('.cards-section .mosaic');
-      await frame.waitForXPath(`//h1[contains(text(), 'full interactive landscape')]`);
+      await waitForSelector(frame, '#embedded-footer');
     });
 
     test('Do not see a content from a main mode', async function() {
