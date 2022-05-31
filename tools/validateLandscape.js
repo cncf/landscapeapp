@@ -54,7 +54,8 @@ async function main() {
 
   const validateRepos = ({ name, repo_url, branch, additional_repos }) => {
     const repos = [repo_url ? { repo_url, branch } : null, ...(additional_repos || [])].filter(_ => _)
-    for (const { repo_url, ...rest } of repos) {
+    for (const repoEntry of repos) {
+      const { repo_url } = repoEntry;
       if (!repo_url) {
         errors.push(`item ${name} must have repo_url set`)
       } else if (repo_url.indexOf('https://github.com') >= 0 && !repo_url.match(new RegExp('^https://github\.com/[^/]+/[^/]+$'))) {
@@ -67,8 +68,10 @@ async function main() {
         }
       }
 
-      for (let wrongKey in rest) {
-        addKeyError(`item ${name}`, `additional_repos.${wrongKey}`)
+      for (let wrongKey in repoEntry) {
+        if (wrongKey !== 'repo_url' && wrongKey !== 'branch') {
+          addKeyError(`item ${name}`, `additional_repos.${wrongKey}`)
+        }
       }
     }
   }

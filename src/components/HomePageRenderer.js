@@ -223,7 +223,7 @@ module.exports.render = function({settings, guidePayload, hasGuide, bigPictureKe
           <div id="footer" style="
             margin-top: 10px;
             font-size: 9pt;
-            width: '100%';
+            width: 100%;
             text-align: center;">
               ${h(settings.home.footer)} For more information, please see the&nbsp;
             <a data-type="external" target="_blank" eventLabel="crunchbase-terms" href="https://github.com/${settings.global.repo}/blob/HEAD/README.md#license">
@@ -231,7 +231,7 @@ module.exports.render = function({settings, guidePayload, hasGuide, bigPictureKe
               </a> info.
           </div>
           <div id="embedded-footer">
-            <h1 style="margin-top: 20px; width: '100%'; text-align: center;">
+            <h1 style="margin-top: 20px; width: 100%; text-align: center;">
               <a data-type="external" target="_blank" href="url">View</a> the full interactive landscape
             </h1>
           </div>

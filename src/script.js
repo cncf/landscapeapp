@@ -15,7 +15,7 @@ const CncfLandscapeApp = {
     if (CncfLandscapeApp.state.embed) {
       document.querySelector('html').classList.add('embed');
       setInterval(function() {
-        document.body.style.height = document.querySelector('.column-content').scrollHeight;
+        document.body.style.height = document.querySelector('.column-content').scrollHeight + 80;
       }, 1000);
       document.querySelector('#embedded-footer a').href = this.stringifyBrowserUrl({...this.state, embed: false});
     }
