@@ -18,7 +18,7 @@ module.exports.render = function({items, exportUrl}) {
 
   const result = `
    <div class="modal" style="display: none;">
-      <div class="modal-shadow" />
+      <div class="modal-shadow"></div>
       <div class="modal-container">
         <div class="modal-body">
           <div class="modal-buttons">
@@ -30,8 +30,8 @@ module.exports.render = function({items, exportUrl}) {
         </div>
       </div>
     </div>
-    <div id="home" class="${'app ' + cardStyle + '-mode' }">
-      <div class="app-overlay" />
+    <div id="home" class="app ${cardStyle}-mode">
+      <div class="app-overlay"></div>
       <div class="main-parent">
         <div class="app-overlay"></div>
         <div class="main">

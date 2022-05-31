@@ -23,7 +23,7 @@ module.exports.expandSecondPathItems = function(data) {
   return data.concat(extraItems);
 }
 
-module.exports.getFilteredItems = function({data, filters}) {
+const getFilteredItems = module.exports.getFilteredItems = function({data, filters}) {
     var filterHostedProject = filterFn({field: 'relation', filters});
     var filterByLicense = filterFn({field: 'license', filters});
     var filterByOrganization = filterFn({field: 'organization', filters});
@@ -40,7 +40,8 @@ module.exports.getFilteredItems = function({data, filters}) {
     });
 }
 
-const getSortedItems = function({data, sortField, sortDirection}) {
+const getSortedItems = function({data, filters, sortField, sortDirection}) {
+  data = getFilteredItems({data, filters});
   const fieldInfo = fields[sortField];
   const nonPublic = (x) => (x.name || '').toString().indexOf('Non-Public Organization') === 0;
   const emptyItemsNA = data.filter(function(x) {
@@ -83,7 +84,7 @@ const getSortedItems = function({data, sortField, sortDirection}) {
 }
 
 const getGroupedItems = module.exports.getGroupedItems = function({ data, filters, sortField, sortDirection, grouping }) {
-  const items = getSortedItems({ data, sortField, sortDirection });
+  const items = getSortedItems({ data, filters, sortField, sortDirection });
 
   if (grouping === 'no') {
     return [{
