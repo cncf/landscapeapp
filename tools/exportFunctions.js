@@ -35,8 +35,8 @@ async function main() {
         'items-export': ${JSON.stringify(itemsExport)},
         'settings': ${JSON.stringify(settings)},
         'lookup': ${JSON.stringify(lookup)}
-      }
-    ` + code
+      };
+    ` + code;
 
     fs.writeFileSync(`${destFolder}/${destFile}`, finalCode)
     if (code.includes('eval("')) {
