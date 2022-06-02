@@ -113,7 +113,7 @@ const CncfLandscapeApp = {
   showSelectedItem: async function(selectedItemId) {
     this.selectedItems = this.selectedItems || {};
     if (!this.selectedItems[selectedItemId]) {
-      const result = await fetch(`/data/items/info-${selectedItemId}.html`);
+      const result = await fetch(`${this.basePath}/data/items/info-${selectedItemId}.html`);
       const text = await result.text();
       this.selectedItems[selectedItemId] = text;
     }

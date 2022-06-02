@@ -233,6 +233,7 @@ async function main() {
     </script>
     <script>
       ${embeddedJs}
+      CncfLandscapeApp.basePath = '${basePath}';
     </script>
     <body class="embed">
       ${page}
