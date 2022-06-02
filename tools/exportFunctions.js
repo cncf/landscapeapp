@@ -29,18 +29,26 @@ async function main() {
     const destFile = [PROJECT_NAME, file].filter(_ => _).join('--')
     const { code } = await ncc(`${srcFolder}/${file}`);
 
-    const finalCode = `
-      global.lookups = {
-        'items': ${JSON.stringify(items)},
-        'items-export': ${JSON.stringify(itemsExport)},
-        'settings': ${JSON.stringify(settings)},
-        'lookup': ${JSON.stringify(lookup)}
-      };
-    ` + code;
+    const finalCode = code
+      .replaceAll(`readJsonFromDist('settings')`, JSON.stringify(settings))
+      .replaceAll(`readJsonFromDist('data/items')`, JSON.stringify(items))
+      .replaceAll(`readJsonFromDist('data/items-export')`, JSON.stringify(itemsExport))
+      .replaceAll(`readJsonFromProject('lookup')`, JSON.stringify(lookup))
 
     fs.writeFileSync(`${destFolder}/${destFile}`, finalCode)
-    if (code.includes('eval("')) {
-      console.info('forgot to embed a module');
+    if (finalCode.includes('eval("')) {
+      console.info('forgot to embed a module: eval detected');
+      console.info(file);
+      process.exit(1);
+    }
+    if (finalCode.includes('readJsonFromDist(')) {
+      console.info('readJsonFromDist() detected');
+      console.info(file);
+      process.exit(1);
+    }
+    if (finalCode.includes('readJsonFromProject(')) {
+      console.info('readJsonFromProject() detected');
+      console.info(file);
       process.exit(1);
     }
   }
