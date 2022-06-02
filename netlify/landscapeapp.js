@@ -203,6 +203,7 @@ EOSSH
     const outputFolder = landscape.name + new Date().getTime();
     const buildCommand = [
       `cd /opt/repo`,
+      `git config --global --add safe.directory /opt/repo`,
       `. ~/.nvm/nvm.sh`,
       `nvm use`,
       `export NODE_OPTIONS="--unhandled-rejections=strict"`,
