@@ -24,7 +24,7 @@ const processRequest = module.exports.processRequest = query => {
   return params.grouping === 'no' ? flattenItems(groupedItems) : groupedItems
 }
 // Netlify function
-module.exports.handler = function(event) {
+module.exports.handler = async function(event) {
   const body = processRequest(event.queryStringParameters)
   const headers = { 'Content-Type': 'application/json' }
   return { statusCode: 200, body: JSON.stringify(body), headers }

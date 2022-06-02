@@ -35,7 +35,7 @@ const processRequest = module.exports.processRequest = query => {
 }
 
 // Netlify function
-module.exports.handler = function(event) {
+module.exports.handler = async function(event) {
   const body = processRequest(event.queryStringParameters)
   const headers = {
       'Content-Type': 'text/css',
