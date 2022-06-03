@@ -114,16 +114,7 @@ const runRemoteWithoutErrors = async function(command) {
 
 const makeRemoteBuildWithCache = async function() {
   await runLocalWithoutErrors(`
-    echo extracting
-    mkdir tmpRemote
-    cd tmpRemote
-    rm -rf package || true
-    # npm pack github:cncf/landscapeapp#vanilla
-    npm pack interactive-landscape${LANDSCAPEAPP}
-    tar xzf interactive*.tgz
-    cd ..
-    mv tmpRemote/package packageRemote
-    cp packageRemote/_yarn.lock packageRemote/yarn.lock
+    git clone -b deploy --single-branch https://github.com/cncf/landscapeapp packageRemote
   `);
 
   //how to get a hash based on our files

@@ -318,18 +318,7 @@ EOSSH
       git remote rm github 2>/dev/null || true
       git remote add github "https://$GITHUB_USER:$GITHUB_TOKEN@github.com/cncf/landscapeapp"
       git fetch github
-      # git diff # Need to comment this when a diff is too large
-      git checkout -- .
-      npm version patch || npm version patch || npm version patch
-      git commit -m 'Update to a new version [skip ci]' --allow-empty --amend
-      git branch -D tmp || true
-      git checkout -b tmp
-      git push github HEAD:master || true
-      git push github HEAD:master --tags --force
-      echo "//registry.npmjs.org/:_authToken=$NPM_TOKEN" > ~/.npmrc
-      git diff
-      npm -q publish || (sleep 5 && npm -q publish) || (sleep 30 && npm -q publish)
-      echo 'Npm package published'
+      git push github master:deploy --force
     `);
     // just for debug purpose
     //now we have a different hash, because we updated a version, but for build purposes we have exactly same npm modules
