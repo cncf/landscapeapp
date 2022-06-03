@@ -319,7 +319,7 @@ EOSSH
       git remote add github "https://$GITHUB_USER:$GITHUB_TOKEN@github.com/cncf/landscapeapp"
       git fetch github
       git --no-pager show HEAD
-      git push github master:deploy
+      git push github github/master:deploy
     `);
     // just for debug purpose
     //now we have a different hash, because we updated a version, but for build purposes we have exactly same npm modules
