@@ -1,4 +1,3 @@
-require("@babel/register");
 const { setFatalError, reportFatalErrors } = require('./fatalErrors');
 
 class MyCustomReporter {

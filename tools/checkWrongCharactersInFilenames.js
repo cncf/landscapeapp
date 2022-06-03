@@ -1,10 +1,9 @@
-import _ from 'lodash';
-import path from 'path';
-import Promise from 'bluebird';
-import { projectPath, settings } from './settings';
-import { dump } from './yaml';
+const _ = require('lodash');
+const path = require('path');
 
-import { hasFatalErrors, setFatalError, reportFatalErrors } from './fatalErrors';
+const { projectPath } = require('./settings');
+const { dump } = require('./yaml');
+const { hasFatalErrors, setFatalError, reportFatalErrors } = require('./fatalErrors');
 
 function hasNonAscii(str) {
     return ! /^[\x00-\x7F]*$/.test(str);

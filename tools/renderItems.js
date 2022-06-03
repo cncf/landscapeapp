@@ -1,17 +1,17 @@
-import path from 'path';
-import  { settings, projectPath, distPath, basePath } from './settings.js';
-import  { projects } from './loadData.js';
-import { processedLandscape } from './processedLandscape.js';
-import { render } from '../src/components/ItemDialogContentRenderer.js';
-import * as CardRenderer from '../src/components/CardRenderer.js';
-import * as LandscapeContentRenderer from '../src/components/LandscapeContentRenderer.js';
-import * as HomePageRenderer from '../src/components/HomePageRenderer.js';
-import * as GuideRenderer from '../src/components/GuideRenderer.js';
-import * as EmbedPageRenderer from '../src/components/EmbedPageRenderer.js';
-import * as FullscreenLandscapeRenderer from '../src/components/FullscreenLandscapeRenderer';
-import { getLandscapeItems, expandSecondPathItems } from '../src/utils/itemsCalculator.js';
-import { findLandscapeSettings } from '../src/utils/landscapeSettings'
-import fs from 'fs/promises';
+const path = require('path');
+const fs = require('fs/promises');
+const { settings, distPath, basePath } = require('./settings.js');
+const  { projects } = require('./loadData.js');
+const { processedLandscape } = require('./processedLandscape.js');
+const { render } = require('../src/components/ItemDialogContentRenderer.js');
+const CardRenderer = require('../src/components/CardRenderer.js');
+const LandscapeContentRenderer = require('../src/components/LandscapeContentRenderer.js');
+const HomePageRenderer = require('../src/components/HomePageRenderer.js');
+const GuideRenderer = require('../src/components/GuideRenderer.js');
+const EmbedPageRenderer = require('../src/components/EmbedPageRenderer.js');
+const FullscreenLandscapeRenderer = require('../src/components/FullscreenLandscapeRenderer');
+const { getLandscapeItems, expandSecondPathItems } = require('../src/utils/itemsCalculator.js');
+const { findLandscapeSettings } = require('../src/utils/landscapeSettings');
 
 async function main() {
   await fs.mkdir(path.resolve(distPath, 'data/items'), { recursive: true});
@@ -44,14 +44,9 @@ async function main() {
       landscapeSettings: landscapeSettings
     });
 
-    const landscapeContentElement = LandscapeContentRenderer.getElement({
-      landscapeItems: landscapeItems,
-      landscapeSettings: landscapeSettings
-    });
-
     const fullscreenContent = FullscreenLandscapeRenderer.render({
       landscapeSettings: landscapeSettings,
-      landscapeContent: landscapeContentElement,
+      landscapeContent: landscapeContent,
       version: '1.0'
     });
 
@@ -140,6 +135,7 @@ async function main() {
   `
   const renderPage = ({homePage, mode}) => {
     let result = `
+    <!DOCTYPE html>
     ${headers}
     <script>${ga}</script>
     <style>
@@ -208,6 +204,7 @@ async function main() {
   const resizerConfig = await fs.readFile('src/iframeResizer.js');
   await fs.writeFile(path.resolve(distPath, 'iframeResizer.js'), resizerHostJs + "\n" + resizerConfig);
   const embed = `
+    <!DOCTYPE html>
     <div>
       <h1>Testing how great is that embed </h1>
       <iframe frameBorder="0" id="landscape" scrolling="no" style="width: 1px; min-width: 100%;"
@@ -223,6 +220,7 @@ async function main() {
   const embeddedJs = await fs.readFile('src/embedded-script.js', 'utf-8');
   const renderEmbedPage = (page) => {
     let result = `
+    <!DOCTYPE html>
     ${headers}
     <script>${ga}</script>
     <style>
@@ -235,6 +233,7 @@ async function main() {
     </script>
     <script>
       ${embeddedJs}
+      CncfLandscapeApp.basePath = '${basePath}';
     </script>
     <body class="embed">
       ${page}

@@ -1,4 +1,4 @@
-export default function formatCity({city, region, country}) {
+module.exports.formatCity = function({city, region, country}) {
   if (!city) {
     return null;
   }

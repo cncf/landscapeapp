@@ -1,12 +1,13 @@
-import path from 'path'
-import { existsSync, readFileSync } from 'fs'
-import  { pick } from 'lodash'
-import cheerio from 'cheerio'
-import { Converter } from 'showdown'
-import sanitizeHtml from 'sanitize-html'
-import assetPath from '../src/utils/assetPath'
-import { landscape } from './landscape'
-import saneName from '../src/utils/saneName'
+const path = require('path');
+const fs = require('fs');
+const _ = require('lodash');
+const cheerio = require('cheerio');
+const { Converter } = require('showdown');
+const sanitizeHtml = require('sanitize-html');
+
+const { assetPath } = require('../src/utils/assetPath');
+const { landscape } = require('./landscape');
+const { saneName } = require('../src/utils/saneName');
 
 const categories = landscape.landscape
 
@@ -143,7 +144,7 @@ const extractDataAttributes = node => {
     .filter(key => !['data-category', 'data-subcategory', 'data-buzzwords'].includes(key))
 
   if (invalidKeys.length) {
-    throw new GuideError(`Invalid attribute(s) found on <section>`, pick(attributes, invalidKeys))
+    throw new GuideError(`Invalid attribute(s) found on <section>`, _.pick(attributes, invalidKeys))
   }
 
   const category = attributes['data-category']
@@ -165,7 +166,7 @@ const extractDataAttributes = node => {
 }
 
 const parseGuide = () => {
-  const content = parseHtml(readFileSync(guidePath))
+  const content = parseHtml(fs.readFileSync(guidePath))
 
   return content.flatMap(node => {
     const content = markdownToHtml(node.text)
@@ -181,8 +182,8 @@ const parseGuide = () => {
   })
 }
 
-const loadGuide = () => {
-  if (!existsSync(guidePath)) {
+module.exports.loadGuide = () => {
+  if (!fs.existsSync(guidePath)) {
     return null
   }
 
@@ -207,4 +208,4 @@ const loadGuide = () => {
   })
 }
 
-export default loadGuide
+

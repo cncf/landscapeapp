@@ -9,13 +9,13 @@
 //     url(id by default): how the value is stored in the url
 //     sortOrder(element index by default): sort order when grouping
 //     match: function
-import path from 'path';
-import fs from 'fs';
-import _ from 'lodash';
-import lookups from  'project/lookup'
-import unpack from '../utils/unpackArray';
-import settings from 'dist/settings'
-import isParent from '../utils/isParent';
+const _ = require('lodash');
+
+const { isParent } = require('../utils/isParent');
+const { readJsonFromProject, readJsonFromDist } = require('../utils/readJson');
+
+const lookups = readJsonFromProject('lookup');
+const settings = readJsonFromDist('settings');
 
 const relationField = (function() {
   const additionalRelations = settings.relation.values.flatMap(({ children }) => children || [])
@@ -86,7 +86,7 @@ const fields = {
     id: 'license',
     label: 'License',
     isArray: true,
-    values: [].concat(unpack(lookups.license) || []),
+    values: [].concat(lookups.license || []),
     processValuesBeforeSaving: function(values) {
       return processValuesBeforeSaving({options: fields.license.values, values: values});
     },
@@ -102,13 +102,13 @@ const fields = {
     id: 'organization',
     label: 'Organization',
     isArray: true,
-    values: [].concat(unpack(lookups.organization) || [])
+    values: [].concat(lookups.organization || [])
   },
   headquarters: {
     id: 'headquarters',
     label: 'Headquarters Location',
     isArray: true,
-    values: [].concat(unpack(lookups.headquarters) || []),
+    values: [].concat(lookups.headquarters || []),
     processValuesBeforeSaving: function(values) {
       return processValuesBeforeSaving({options: fields.headquarters.values, values: values});
     },
@@ -121,7 +121,7 @@ const fields = {
     url: 'company-type',
     label: 'Company Type',
     isArray: true,
-    values: [].concat(unpack(lookups.companyTypes) || []),
+    values: [].concat(lookups.companyTypes || []),
     filterFn: function(filter, _, record) {
       if (!filter || filter.length === 0) {
         return true;
@@ -135,7 +135,7 @@ const fields = {
     id: 'industries',
     label: 'Industries',
     isArray: true,
-    values: [].concat(unpack(lookups.industries) || []),
+    values: [].concat(lookups.industries || []),
     filterFn: function(filter, _, record) {
       if (!filter || filter.length === 0) {
         return true;
@@ -150,7 +150,7 @@ const fields = {
     url: 'category',
     label: 'Category',
     isArray: true,
-    values: [].concat(unpack(lookups.landscape) || []),
+    values: [].concat(lookups.landscape || []),
     processValuesBeforeSaving: function(values) {
       return processValuesBeforeSaving({options: fields.landscape.values, values: values});
     },
@@ -301,7 +301,7 @@ _.each(fields, function(field, key) {
 
   field.valuesMap = _.keyBy(field.values, 'id')
 });
-export default fields;
+module.exports.fields = fields;
 
 const processValuesBeforeLoading = function({options, values}) {
   return options.filter(function(option) {
@@ -337,7 +337,7 @@ const processValuesBeforeSaving = function({options, values}) {
 };
 
 // passed to the client
-export function options(field) {
+function options(field) {
   return fields[field].values.map(function(values) {
     return {
       id: values.url,
@@ -346,8 +346,9 @@ export function options(field) {
     };
   });
 }
+module.exports.options = options;
 
-export function filterFn({field, filters}) {
+function filterFn({field, filters}) {
   const fieldInfo = fields[field];
   const filter = filters[field];
   return function(x) {
@@ -369,12 +370,15 @@ export function filterFn({field, filters}) {
     }
   };
 }
-export function getGroupingValue({item, grouping, filters}) {
+module.exports.filterFn = filterFn;
+
+function getGroupingValue({item, grouping, filters}) {
   const { id, groupFn } = fields[grouping];
   return groupFn ? groupFn({ item , filters }) : item[id];
 }
+module.exports.getGroupingValue = getGroupingValue;
 
-export const sortOptions = [{
+const sortOptions = [{
   id: 'name',
   direction: 'asc',
   label: 'Alphabetical (a to z)',
@@ -413,4 +417,5 @@ export const sortOptions = [{
   label: 'Date Joined',
   disabled: true
 }]
+module.exports.sortOptions = sortOptions;
 

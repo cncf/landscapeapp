@@ -1,4 +1,4 @@
-import {getReleaseDate} from './githubDates';
+const { getReleaseDate } = require('./githubDates');
 
 async function main() {
   const date = await getReleaseDate({repo: 'rails/rails'});

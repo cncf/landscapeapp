@@ -1,4 +1,4 @@
-import axios from 'axios'
+const axios = require('axios');
 
 const url = `https://hooks.slack.com/services/${process.env.SLACK_CHANNEL}`;
 const data = {

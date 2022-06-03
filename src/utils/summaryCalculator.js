@@ -1,12 +1,12 @@
-import _ from 'lodash';
-import { getItemsForExport, getLandscapeItems } from './itemsCalculator';
-import { millify } from '../utils/format';
-import formatNumber from '../utils/formatNumber';
-import { findLandscapeSettings } from "./landscapeSettings";
+const _ = require('lodash');
 
-import path from 'path';
-import fs from 'fs';
-import settings from 'dist/settings';
+const { getItemsForExport, getLandscapeItems } = require('./itemsCalculator');
+const { millify } = require('../utils/format');
+const { formatNumber } = require('../utils/formatNumber');
+const { findLandscapeSettings } = require("./landscapeSettings");
+const { readJsonFromDist } = require('./readJson');
+
+const settings = readJsonFromDist('settings');
 
 const getOrganizations = function(params) {
   const filteredItems = getItemsForExport(params);
@@ -46,7 +46,9 @@ const getSummary = function(params) {
   const marketCap = settings.global.hide_funding_and_market_cap ? 0 :_.sumBy(organizations, 'marketCap');
   return { total, stars, funding, marketCap };
 }
-export const getSummaryText = function(summary) {
+module.exports.getSummary = getSummary;
+
+const getSummaryText = function(summary) {
   if (!summary.total) {
     return 'There are no cards matching your filters';
   }
@@ -66,4 +68,4 @@ export const getSummaryText = function(summary) {
   return `${startText} ${text}.`;
 
 };
-export default getSummary;
+module.exports.getSummaryText = getSummaryText;

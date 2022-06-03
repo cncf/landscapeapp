@@ -1,14 +1,12 @@
-import path from 'path';
-import fs from 'fs';
-import projects from 'dist/data/items';
-import settings from 'dist/settings'
+const { expandSecondPathItems } = require('../utils/itemsCalculator');
+const { getGroupedItems }  = require('../utils/itemsCalculator');
+const { getSummary, getSummaryText } = require('../utils/summaryCalculator');
+const { parseParams } = require('../utils/routing');
+const { readJsonFromDist } = require('../utils/readJson');
 
-import { flattenItems, expandSecondPathItems } from '../utils/itemsCalculator'
-import getGroupedItems  from '../utils/itemsCalculator'
-import getSummary, { getSummaryText } from '../utils/summaryCalculator';
-import { parseParams } from '../utils/routing'
+const projects = readJsonFromDist('data/items');
 
-export const processRequest = query => {
+const processRequest = module.exports.processRequest = query => {
   const params = parseParams(query);
   const p = new URLSearchParams(query);
   params.format = p.get('format');
@@ -16,7 +14,7 @@ export const processRequest = query => {
   let items = projects;
   if (params.grouping === 'landscape' || params.format !== 'card') {
     items = expandSecondPathItems(items);
-  };
+  }
 
   const summary = getSummary({data: items, ...params});
   const groupedItems = getGroupedItems({data: items, ...params})
@@ -32,7 +30,7 @@ export const processRequest = query => {
 }
 
 // Netlify function
-export async function handler(event, context) {
+module.exports.handler = async function(event) {
   const body = processRequest(event.queryStringParameters)
   const headers = { 'Content-Type': 'application/json' }
   return { statusCode: 200, body: JSON.stringify(body), headers }

@@ -1,17 +1,18 @@
-import colors from 'colors';
-import Promise from 'bluebird'
-import _ from 'lodash';
-import ensureHttps from './ensureHttps';
-import errorsReporter  from './reporter';
-import { projectPath } from './settings';
-import path from 'path';
-import makeReporter from './progressReporter';
+const colors = require('colors');
+const Promise = require('bluebird');
+const _ = require('lodash');
+const path = require('path');
+const debug = require('debug')('cb');
+
+const { ensureHttps } = require('./ensureHttps');
+const { errorsReporter } = require('./reporter');
+const { projectPath } = require('./settings');
+const { makeReporter } = require('./progressReporter');
+const { CrunchbaseClient, YahooFinanceClient } = require('./apiClients');
+
 const error = colors.red;
 const fatal = (x) => colors.red(colors.inverse(x));
 const cacheMiss = colors.green;
-const debug = require('debug')('cb');
-import { CrunchbaseClient, YahooFinanceClient } from './apiClients';
-
 const { addError, addFatal } = errorsReporter('crunchbase');
 
 const EXCHANGE_SUFFIXES = {
@@ -41,7 +42,7 @@ const getSymbolWithSuffix = (symbol, exchange) => {
   return [symbol, exchangeSuffix].filter(_ => _).join('.')
 }
 
-export async function getCrunchbaseOrganizationsList() {
+const getCrunchbaseOrganizationsList = module.exports.getCrunchbaseOrganizationsList = async function() {
   const traverse = require('traverse');
   const source = require('js-yaml').load(require('fs').readFileSync(path.resolve(projectPath, 'landscape.yml')));
   var organizations = [];
@@ -65,7 +66,7 @@ export async function getCrunchbaseOrganizationsList() {
   return _.orderBy(_.uniq(organizations), 'name');
 }
 
-export async function extractSavedCrunchbaseEntries() {
+module.exports.extractSavedCrunchbaseEntries = async function() {
   const traverse = require('traverse');
   let source = [];
   try {
@@ -134,7 +135,7 @@ const fetchCrunchbaseOrganization = async id => {
   });
 }
 
-export async function fetchData(name) {
+const fetchData = module.exports.fetchData = async function(name) {
   const result = await fetchCrunchbaseOrganization(name)
   const mapAcquisitions = function(a) {
     const result = {
@@ -216,7 +217,7 @@ export async function fetchData(name) {
   }
 }
 
-export async function fetchCrunchbaseEntries({cache, preferCache}) {
+module.exports.fetchCrunchbaseEntries = async function({cache, preferCache}) {
   // console.info(organizations);
   // console.info(_.find(organizations, {name: 'foreman'}));
   const reporter = makeReporter();

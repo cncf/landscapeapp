@@ -1,6 +1,6 @@
-import _ from 'lodash';
-import formatNumber from 'format-number';
-export default function formatAmount(v) {
+const _ = require('lodash');
+const formatNumber = require('format-number');
+module.exports.formatAmount = function(v) {
   if (_.isString(v)) {
     return v;
   }

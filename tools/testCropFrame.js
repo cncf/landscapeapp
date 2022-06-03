@@ -1,5 +1,5 @@
-import fs from 'fs';
-import  { autoCropSvg } from './processSvg';
+const fs = require('fs');
+const  { autoCropSvg } = require('./processSvg');
 async function testFile() {
   process.env.DEBUG_SVG=true;
   var fName = './hosted_logos/kubevirt.svg';
@@ -7,5 +7,4 @@ async function testFile() {
   const processedSvg = await autoCropSvg(svg);
   require('fs').writeFileSync('/tmp/result.svg', processedSvg);
 }
-
 testFile();

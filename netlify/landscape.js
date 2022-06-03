@@ -43,7 +43,7 @@ const runLocal = function(command, options = {}) {
         console.info(lastOutput.s);
         lastOutput.s = "";
         lastOutput.time = new Date().getTime();
-      };
+      }
     }
   }
 
@@ -299,7 +299,6 @@ const makeRemoteBuildWithCache = async function() {
 }
 
 async function main() {
-  const path = require('path');
   console.info('starting', process.cwd());
   process.chdir('..');
   await runLocal('rm package*.json');
@@ -307,7 +306,7 @@ async function main() {
   const cleanPromise = runRemoteWithoutErrors(`
     find builds/node_cache -maxdepth 1 -mtime +1 -exec rm -rf {} +;
     find builds/ -maxdepth 1 -not -path "builds/node_cache" -mtime +1 -exec rm -rf {} +;
-  `).catch(function(ex) {
+  `).catch(function() {
     console.info('Failed to clean up a builds folder');
   });
 

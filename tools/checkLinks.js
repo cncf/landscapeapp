@@ -1,11 +1,11 @@
-import { exec } from 'child_process'
-import { writeFileSync, unlinkSync } from 'fs'
-import colors from 'colors'
-import Promise from 'bluebird'
-import traverse from 'traverse'
-import { landscape, saveLandscape } from './landscape'
-import { updateProcessedLandscape } from './processedLandscape'
-import errorsReporter from './reporter';
+const { exec } = require('child_process');
+const colors = require('colors');
+const Promise = require('bluebird');
+const traverse = require('traverse');
+
+const { landscape, saveLandscape } = require('./landscape');
+const { updateProcessedLandscape } = require('./processedLandscape');
+const { errorsReporter } = require('./reporter');
 
 const { addError } = errorsReporter('link');
 
@@ -35,11 +35,10 @@ async function checkViaPuppeteer(url, remainingAttempts = 3) {
 
   const page = await browser.newPage();
   page.setDefaultNavigationTimeout(120 * 1000);
-  let result = null;
   try {
     await page.goto(url);
     await Promise.delay(5 * 1000);
-    const newUrl = await page.evaluate ( (x) => window.location.href );
+    const newUrl = await page.evaluate ( () => window.location.href );
     await browser.close();
     const withoutTrailingSlash = (x) => x.replace(/#(.*)/, '').replace(/\/$/, '');
     if (withoutTrailingSlash(newUrl) === withoutTrailingSlash(url)) {
@@ -57,7 +56,7 @@ async function checkViaPuppeteer(url, remainingAttempts = 3) {
   }
 }
 
-export const checkUrl = (url, attempt = 1) => {
+const checkUrl = module.exports.checkUrl = (url, attempt = 1) => {
     return new Promise(resolve => {
         const curlOptions = [
             '--fail',

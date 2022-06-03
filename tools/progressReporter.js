@@ -1,6 +1,6 @@
-import _ from 'lodash';
+const _ = require('lodash');
 const isNetlify = !!process.env.REPOSITORY_URL;
-export default function makeReporter() {
+module.exports.makeReporter = function() {
   const items = [];
   return {
     write: function(element) {

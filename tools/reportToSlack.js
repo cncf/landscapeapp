@@ -1,6 +1,6 @@
-import axios from 'axios'
+const axios = require('axios');
 
-export async function report({ returnCode, reportUrl, messages, slackChannel, icon_url, name, onlyErrors = false }) {
+module.exports.report = async function report({ returnCode, reportUrl, messages, slackChannel, icon_url, name, onlyErrors = false }) {
   const url = `https://hooks.slack.com/services/${slackChannel}`;
   const errorStatus = returnCode === 0 ? 'SUCCESS' : 'FAILURE'
 

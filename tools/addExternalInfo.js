@@ -1,27 +1,26 @@
-import checkVersion from './checkVersion';
-import { hasFatalErrors, reportFatalErrors } from './fatalErrors';
-import errorsReporter from './reporter';
-import process from 'process';
-import path from 'path';
-import { projectPath, settings } from './settings';
-import actualTwitter from './actualTwitter';
-import { extractSavedImageEntries, fetchImageEntries, removeNonReferencedImages } from './fetchImages';
-import { extractSavedCrunchbaseEntries, fetchCrunchbaseEntries } from './crunchbase';
-import { fetchGithubEntries } from './fetchGithubStats';
-import { getProcessedRepos, getProcessedReposStartDates } from './repos';
-import { fetchStartDateEntries } from './fetchGithubStartDate';
-import { extractSavedTwitterEntries, fetchTwitterEntries } from './twitter';
-import {
+const path = require('path');
+const traverse = require('traverse');
+const _ = require('lodash');
+
+const { checkVersion } = require('./checkVersion');
+const { hasFatalErrors, reportFatalErrors } = require('./fatalErrors');
+const { errorsReporter } = require('./reporter');
+const { projectPath, settings } = require('./settings');
+const { actualTwitter } = require('./actualTwitter');
+const { extractSavedImageEntries, fetchImageEntries, removeNonReferencedImages } = require('./fetchImages');
+const { extractSavedCrunchbaseEntries, fetchCrunchbaseEntries } = require('./crunchbase');
+const { fetchGithubEntries } = require('./fetchGithubStats');
+const { getProcessedRepos, getProcessedReposStartDates } = require('./repos');
+const { fetchStartDateEntries } = require('./fetchGithubStartDate');
+const { extractSavedTwitterEntries, fetchTwitterEntries } = require('./twitter');
+const {
   extractSavedBestPracticeEntries,
   fetchBestPracticeEntriesWithFullScan,
   fetchBestPracticeEntriesWithIndividualUrls
-} from './fetchBestPractices';
-import shortRepoName from '../src/utils/shortRepoName';
-import { updateProcessedLandscape } from "./processedLandscape";
-
+} = require('./fetchBestPractices');
+const { shortRepoName } = require('../src/utils/shortRepoName');
+const { updateProcessedLandscape } = require("./processedLandscape");
 const { landscape } = require('./landscape')
-const traverse = require('traverse');
-const _ = require('lodash');
 const { addFatal } = errorsReporter('crunchbase');
 
 var useCrunchbaseCache = true;
@@ -30,7 +29,8 @@ var useGithubCache = true;
 var useGithubStartDatesCache = true;
 var useTwitterCache = true;
 var useBestPracticesCache = true;
-var key = require('process').env.LEVEL || 'easy';
+var key = process.env.LEVEL || 'easy';
+
 function reportOptions() {
   console.info(`Running with a level=${key}. Settings:
      Use cached crunchbase data: ${useCrunchbaseCache}

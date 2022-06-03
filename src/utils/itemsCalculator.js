@@ -1,13 +1,10 @@
-import _ from 'lodash';
-import fields, { filterFn, getGroupingValue } from '../types/fields';
-import groupingLabel from '../utils/groupingLabel';
-import groupingOrder from '../utils/groupingOrder';
-import formatAmount from '../utils/formatAmount';
-import formatNumber from 'format-number';
-import stringOrSpecial from '../utils/stringOrSpecial';
-import { getLandscapeCategories } from './sharedItemsCalculator';
-import { findLandscapeSettings } from "./landscapeSettings";
-import { stringifyParams } from './routing'
+const _ = require('lodash');
+const { fields, filterFn, getGroupingValue } = require('../types/fields');
+const { groupingLabel } = require('../utils/groupingLabel');
+const { groupingOrder } = require('../utils/groupingOrder');
+const { stringOrSpecial } = require('../utils/stringOrSpecial');
+const { getLandscapeCategories } = require('./sharedItemsCalculator');
+const { stringifyParams } = require('./routing');
 
 const landscape = fields.landscape.values;
 
@@ -15,7 +12,7 @@ const groupAndSort = (items, sortCriteria) => {
   return _.groupBy(_.orderBy(items, sortCriteria), 'landscape')
 }
 
-export const expandSecondPathItems = function(data) {
+module.exports.expandSecondPathItems = function(data) {
   const extraItems = data.filter( (x) => x.second_path).flatMap( (item) => [item.second_path].flat().map( (extraPath) => ({
     ...item,
     category: extraPath.split('/')[0].trim(),
@@ -26,7 +23,7 @@ export const expandSecondPathItems = function(data) {
   return data.concat(extraItems);
 }
 
-export const getFilteredItems = function({data, filters}) {
+const getFilteredItems = module.exports.getFilteredItems = function({data, filters}) {
     var filterHostedProject = filterFn({field: 'relation', filters});
     var filterByLicense = filterFn({field: 'license', filters});
     var filterByOrganization = filterFn({field: 'organization', filters});
@@ -43,27 +40,8 @@ export const getFilteredItems = function({data, filters}) {
     });
 }
 
-const addExtraFields = function(data) {
-  return _.map(data, function(data) {
-    const hasStars = data.stars !== 'N/A' && data.stars !== 'Not Entered Yet';
-    const hasMarketCap = data.amount !== 'N/A' && data.amount !== 'Not Entered Yet';
-    return { ...data,
-      starsPresent: hasStars ,
-      starsAsText: hasStars ? formatNumber({integerSeparator: ','})(data.stars) : '',
-      marketCapPresent: hasMarketCap,
-      marketCapAsText: formatAmount(data.amount)
-    };
-  });
-}
-
-const getExtraFields = function({data, filters}) {
-  const filtered = getFilteredItems({data, filters});
-  return addExtraFields(filtered);
-}
-
 const getSortedItems = function({data, filters, sortField, sortDirection}) {
-  data = getExtraFields({data, filters });
-
+  data = getFilteredItems({data, filters});
   const fieldInfo = fields[sortField];
   const nonPublic = (x) => (x.name || '').toString().indexOf('Non-Public Organization') === 0;
   const emptyItemsNA = data.filter(function(x) {
@@ -105,7 +83,7 @@ const getSortedItems = function({data, filters, sortField, sortDirection}) {
   return sortedViaMainSort.concat(sortedViaName1).concat(sortedViaName2).concat(sortedViaName3).concat(sortedViaName4);
 }
 
-const getGroupedItems = function({ data, filters, sortField, sortDirection, grouping }) {
+const getGroupedItems = module.exports.getGroupedItems = function({ data, filters, sortField, sortDirection, grouping }) {
   const items = getSortedItems({ data, filters, sortField, sortDirection });
 
   if (grouping === 'no') {
@@ -149,7 +127,7 @@ const bigPictureSortOrder = [
   }
 ];
 
-export function getLandscapeItems({landscapeSettings, items, guideIndex = {}}) {
+module.exports.getLandscapeItems = function({landscapeSettings, items, guideIndex = {}}) {
   if (landscapeSettings.isMain) {
     const categories = getLandscapeCategories({landscapeSettings, landscape });
     const itemsMap = groupAndSort(items, bigPictureSortOrder);
@@ -208,15 +186,13 @@ export function getLandscapeItems({landscapeSettings, items, guideIndex = {}}) {
   }
 }
 
-export const flattenItems = groupedItems => {
+module.exports.flattenItems = groupedItems => {
   return groupedItems.flatMap(group => {
     const { items, subcategories } = group
     return group.hasOwnProperty('items') ? items : subcategories.flatMap(({ items }) => items)
   })
 }
 
-export function getItemsForExport(params) {
+module.exports.getItemsForExport = function(params) {
   return _.flatten(getGroupedItems(params).map((x) => x.items));
 }
-
-export default getGroupedItems;

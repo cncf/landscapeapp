@@ -1,4 +1,4 @@
-export default function shortRepoName(url) {
+module.exports.shortRepoName = function(url) {
   if (!url) {
     return '';
   }

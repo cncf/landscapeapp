@@ -1,10 +1,11 @@
-import path from 'path';
-import { projects } from "./loadData";
-import { settings, projectPath, distPath } from './settings'
-import { millify } from '../src/utils/format';
-import { stringifyParams } from '../src/utils/routing'
+const path = require('path');
+const _ = require('lodash');
 
-import _ from 'lodash';
+const { projects } = require("./loadData");
+const { distPath } = require('./settings');
+const { millify } = require('../src/utils/format');
+const { stringifyParams } = require('../src/utils/routing');
+
 
 const organizations = _.uniqBy(projects, 'crunchbase')
 const acquisitionsUnsorted = organizations
@@ -44,7 +45,7 @@ const page = `
          <td>Date</td>
        </tr>
      </thead>
-     ${acquisitions.map(function(item, index) {
+     ${acquisitions.map(function(item) {
        return `
        <tr>
          <td>${linkToOrg(item.acquirer)}</td>

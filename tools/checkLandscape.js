@@ -1,11 +1,12 @@
-import './suppressAnnoyingWarnings';
-import Promise from 'bluebird';
-import { landscapeSettingsList } from '../src/utils/landscapeSettings'
-import { setFatalError, reportFatalErrors } from './fatalErrors';
-import { appUrl } from './distSettings'
+const Promise = require('bluebird');
+const puppeteer = require('puppeteer');
+
+require('./suppressAnnoyingWarnings');
+const { landscapeSettingsList } = require('../src/utils/landscapeSettings');
+const { setFatalError, reportFatalErrors } = require('./fatalErrors');
+const { appUrl } = require('./distSettings');
 
 async function main() {
-  const puppeteer = require('puppeteer');
   const browser = await puppeteer.launch({args: ['--no-sandbox', '--disable-setuid-sandbox']});
   const page = await browser.newPage();
   var hasErrors = false;

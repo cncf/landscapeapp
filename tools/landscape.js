@@ -1,12 +1,12 @@
-import path from "path";
-import { projectPath } from "./settings";
-import { readFileSync, writeFileSync } from "fs";
-import { dump } from "./yaml";
+const path = require("path");
+const fs = require('fs');
+
+const { dump } = require("./yaml");
+const { projectPath } = require("./settings");
 
 const landscapePath = path.resolve(projectPath, 'landscape.yml');
 
-export const landscape = require('js-yaml').load(readFileSync(landscapePath));
-
-export const saveLandscape = (newLandscape) => {
-  writeFileSync(landscapePath, dump(newLandscape));
+module.exports.landscape = require('js-yaml').load(fs.readFileSync(landscapePath));
+module.exports.saveLandscape = (newLandscape) => {
+  fs.writeFileSync(landscapePath, dump(newLandscape));
 }

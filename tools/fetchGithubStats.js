@@ -1,17 +1,18 @@
-import colors from 'colors';
+const colors = require('colors');
 const Promise = require('bluebird');
-import _ from 'lodash';
-import { parse } from 'querystring'
-import errorsReporter from './reporter';
-import makeReporter from './progressReporter';
+const _ = require('lodash');
+const { parse } = require('querystring');
 const debug = require('debug')('github');
-import shortRepoName from '../src/utils/shortRepoName';
-import getRepositoryInfo , { getLanguages, getWeeklyContributions}  from './getRepositoryInfo';
-import { cacheKey, fetchGithubOrgs, getRepos } from './repos'
-import { GithubClient} from './apiClients'
+
+const { errorsReporter } = require('./reporter');
+const { makeReporter } = require('./progressReporter');
+const { shortRepoName } = require('../src/utils/shortRepoName');
+const { getRepositoryInfo , getLanguages, getWeeklyContributions} = require('./getRepositoryInfo');
+const { cacheKey, fetchGithubOrgs, getRepos } = require('./repos');
+const { GithubClient} = require('./apiClients');
 
 const { addError, addFatal } = errorsReporter('github');
-import { getRepoLatestDate, getReleaseDate } from './githubDates';
+const { getRepoLatestDate, getReleaseDate } = require('./githubDates');
 
 const githubColors = JSON.parse(require('fs').readFileSync('tools/githubColors.json', 'utf-8'));
 
@@ -47,7 +48,7 @@ const getContributorsList = async (repo, page = 1) => {
   return contributors.concat(contributors.length === per_page ? await getContributorsList(repo, page + 1) : [])
 }
 
-export async function fetchGithubEntries({cache, preferCache}) {
+module.exports.fetchGithubEntries = async function({cache, preferCache}) {
   const errors = [];
   const fatalErrors = [];
   const githubOrgs = (await fetchGithubOrgs(preferCache))

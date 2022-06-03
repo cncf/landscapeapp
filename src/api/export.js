@@ -1,17 +1,13 @@
-import path from 'path';
-import fs from 'fs';
+const { flattenItems } = require('../utils/itemsCalculator');
+const { getGroupedItems, expandSecondPathItems }  = require('../utils/itemsCalculator');
+const { parseParams } = require('../utils/routing');
+const Parser = require('json2csv/lib/JSON2CSVParser');
+const { readJsonFromDist } = require('../utils/readJson');
 
-import allItems from 'dist/data/items-export';
-import projects from 'dist/data/items';
-import settings from 'dist/settings'
+const allItems = readJsonFromDist('data/items-export');
+const projects = readJsonFromDist('data/items');
 
-import { flattenItems, expandSecondPathItems } from '../utils/itemsCalculator';
-import getGroupedItems  from '../utils/itemsCalculator';
-import getSummary, { getSummaryText } from '../utils/summaryCalculator';
-import { parseParams } from '../utils/routing';
-import Parser from 'json2csv/lib/JSON2CSVParser';
-
-export const processRequest = query => {
+const processRequest = module.exports.processRequest = query => {
   const params = parseParams(query);
   const p = new URLSearchParams(query);
   params.format = p.get('format');
@@ -19,7 +15,7 @@ export const processRequest = query => {
   let items = projects;
   if (params.grouping === 'landscape' || params.format !== 'card') {
     items = expandSecondPathItems(items);
-  };
+  }
 
   // extract alias - if grouping = category
   // extract alias - if params != card-mode (big_picture - always show)
@@ -28,7 +24,7 @@ export const processRequest = query => {
   const selectedItems = flattenItems(getGroupedItems({data: items, ...params}))
     .reduce((acc, item) => ({ ...acc, [item.id]: true }), {})
 
-  const fields = allItems[0].map(([label, _]) => label !== 'id' && label).filter(_ => _);
+  const fields = allItems[0].map(([label]) => label !== 'id' && label).filter(_ => _);
   const itemsForExport = allItems
     .map(item => item.reduce((acc, [label, value]) =>  ({ ...acc, [label]: value }), {}))
     .filter(item => selectedItems[item.id]);
@@ -39,7 +35,7 @@ export const processRequest = query => {
 }
 
 // Netlify function
-export async function handler(event, context) {
+module.exports.handler = async function(event) {
   const body = processRequest(event.queryStringParameters)
   const headers = {
       'Content-Type': 'text/css',

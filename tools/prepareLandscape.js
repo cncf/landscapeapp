@@ -1,13 +1,13 @@
-import path from 'path'
-import { load  } from 'js-yaml'
-import fs from 'fs/promises';
-import { execSync } from 'child_process'
-import qs from 'query-string'
-import loadGuide from './loadGuide'
-import { projectPath, settings, distPath } from './settings';
+const path = require('path');
+const fs = require('fs/promises');
+const qs = require('query-string');
+const { execSync } = require('child_process');
+
+const { loadGuide } = require('./loadGuide');
+const { projectPath, settings, distPath } = require('./settings');
 
 const items = require(path.resolve(projectPath, 'data.json'))
-const { website } = settings.global
+const { website } = settings.global;
 
 //render
 async function main() {
@@ -24,17 +24,17 @@ async function main() {
   await fs.copyFile( path.resolve(projectPath, 'images', 'favicon.png'), path.resolve(distPath, 'favicon.png'));
   for (let item of items) {
     await fs.writeFile(path.resolve(distPath, 'data', 'items', `${item.id}.json`), JSON.stringify(item))
-  };
+  }
 
   const guide = loadGuide();
   if (guide) {
     await fs.writeFile(path.resolve(distPath, 'guide.json'), JSON.stringify(guide))
   }
 
-  const prepareItemsForExport = require('./prepareItemsForExport').default
-  const { flattenItems } = require('../src/utils/itemsCalculator')
-  const getGroupedItems  = require('../src/utils/itemsCalculator').default
-  const { parseParams } = require('../src/utils/routing')
+  const { prepareItemsForExport } = require('./prepareItemsForExport');
+  const { flattenItems } = require('../src/utils/itemsCalculator');
+  const { getGroupedItems }  = require('../src/utils/itemsCalculator');
+  const { parseParams } = require('../src/utils/routing');
 
   const itemsForExport = prepareItemsForExport(items)
   await fs.writeFile(path.resolve(distPath, 'data', 'items-export.json'), JSON.stringify(itemsForExport))

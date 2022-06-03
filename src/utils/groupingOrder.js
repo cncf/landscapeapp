@@ -1,6 +1,6 @@
-import fields from '../types/fields';
-import _ from 'lodash';
-export default function groupFn(field) {
+const { fields } = require('../types/fields');
+const _ = require('lodash');
+module.exports.groupingOrder = function(field) {
   const values = fields[field].answers;
   const sortedValues = _.orderBy(values, 'groupingSortOrder');
   return function(x) {

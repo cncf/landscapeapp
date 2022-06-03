@@ -1,23 +1,22 @@
-import { readFileSync } from 'fs'
-import Promise from 'bluebird';
-import { load } from 'js-yaml'
-import { hasFatalErrors, reportFatalErrors } from './fatalErrors';
-import { projectPath, settings } from './settings';
-import errorsReporter from './reporter';
+const formatNumber = require('format-number');
+const { readFileSync } = require('fs');
+const Promise = require('bluebird');
+const { emojify } = require('node-emoji')
+const { load } = require('js-yaml');
+const _ = require('lodash');
+const traverse = require('traverse');
+
+const { hasFatalErrors, reportFatalErrors } = require('./fatalErrors');
+const { projectPath, settings } = require('./settings');
+const { errorsReporter } = require('./reporter');
+const { actualTwitter } = require('./actualTwitter');
+const { saneName } = require('../src/utils/saneName');
+const { formatCity } = require('../src/utils/formatCity');
+const { formatAmount } = require('../src/utils/formatAmount');
+
 const { addFatal } = errorsReporter('general');
-
-console.info('processed', projectPath);
-
 const processedLandscape = load(readFileSync(`${projectPath}/processed_landscape.yml`))
 const { crunchbase_overrides = {} } = load(readFileSync(`${projectPath}/landscape.yml`))
-const traverse = require('traverse');
-const _ = require('lodash');
-const { emojify } = require('node-emoji')
-
-import actualTwitter from './actualTwitter';
-import saneName from '../src/utils/saneName';
-import formatCity from '../src/utils/formatCity';
-import pack from '../src/utils/packArray';
 
 async function failOnSingleError(text) {
   addFatal(text);
@@ -240,7 +239,7 @@ async function main () {
         bestPracticeBadgeId: (node.best_practice_data || {}).badge,
         bestPracticePercentage: (node.best_practice_data || {}).percentage,
         industries: (crunchbase_overrides[node.crunchbase] || {}).industries || (node.crunchbase_data || {}).industries || [],
-        enduser: isEndUser()
+        enduser: isEndUser(),
       });
     }
   });
@@ -252,6 +251,13 @@ async function main () {
       return el.linkedin.replace(/\?.*/, '');
     }
 
+
+    const hasStars = item.stars !== 'N/A' && item.stars !== 'Not Entered Yet';
+    const hasMarketCap = item.amount !== 'N/A' && item.amount !== 'Not Entered Yet';
+    item.starsPresent = hasStars;
+    item.starsAsText = hasStars ? formatNumber({integerSeparator: ','})(item.stars) : '';
+    item.marketCapPresent = hasMarketCap;
+    item.marketCapAsText = formatAmount(item.amount);
 
     if (item.crunchbase_data) {
       item.crunchbaseData.numEmployeesMin = item.crunchbaseData.num_employees_min;
@@ -723,14 +729,14 @@ async function main () {
   }
 
   const lookups = {
-    organization: pack(extractOptions('organization')),
-    landscape: pack(generateLandscapeHierarchy()),
-    license: pack(generateLicenses()),
-    headquarters: pack(generateHeadquarters()),
+    organization: extractOptions('organization'),
+    landscape: generateLandscapeHierarchy(),
+    license: generateLicenses(),
+    headquarters: generateHeadquarters(),
     crunchbaseSlugs: generateCrunchbaseSlugs(),
     languages: generateLanguages(),
-    companyTypes: pack(generateCompanyTypes()),
-    industries: pack(generateIndustries())
+    companyTypes: generateCompanyTypes(),
+    industries: generateIndustries()
   }
 
   require('fs').writeFileSync(`${projectPath}/data.json`, JSON.stringify(itemsWithExtraFields, null, 2));

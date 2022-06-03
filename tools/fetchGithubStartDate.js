@@ -1,20 +1,21 @@
 const Promise = require('bluebird');
-import _ from 'lodash';
-import colors from 'colors';
-import errorsReporter from './reporter';
-import getRepositoryInfo from './getRepositoryInfo';
-import makeReporter from './progressReporter';
-import { cacheKey, getRepos, fetchGithubOrgs } from './repos';
+const _ = require('lodash');
+const debug = require('debug')('github');
+const colors = require('colors');
+
+const { getRepoStartDate } = require('./githubDates');
+const { errorsReporter } = require('./reporter');
+const { getRepositoryInfo } = require('./getRepositoryInfo');
+const { makeReporter } = require('./progressReporter');
+const { cacheKey, getRepos, fetchGithubOrgs } = require('./repos');
 
 const error = colors.red;
 const fatal = (x) => colors.red(colors.inverse(x));
 const cacheMiss = colors.green;
-const debug = require('debug')('github');
 const { addError, addFatal } = errorsReporter('github');
 
-import { getRepoStartDate } from './githubDates';
 
-export async function fetchStartDateEntries({cache, preferCache}) {
+module.exports.fetchStartDateEntries = async function({cache, preferCache}) {
   const githubOrgs = (await fetchGithubOrgs(preferCache))
     .map(org => ({ ...org.data, ...org.github_start_commit_data}))
   const repos = [...getRepos(), ...githubOrgs.filter(org => !org.cached).map(org => org.repos).flat()]

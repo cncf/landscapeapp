@@ -1,78 +1,95 @@
-import React from 'react';
-import assetPath from '../utils/assetPath';
+const { assetPath } = require('../utils/assetPath');
+const { h } = require('../utils/format');
 
-const OutboundLink = ({to, className, children}) =>
-    (<a data-type="external" href={to} className={className}>{children}</a>)
-const InternalLink = ({to, className, children}) =>
-  (<a data-type="tab" href={to} className={className}>{children}</a>)
+const { stringifyParams } = require('../utils/routing');
+const { categoryBorder, categoryTitleHeight, subcategoryTitleHeight } = require('../utils/landscapeCalculations');
 
-import { stringifyParams } from '../utils/routing'
-import { categoryBorder, categoryTitleHeight, subcategoryTitleHeight } from '../utils/landscapeCalculations'
+const renderCardLink = ({ url, children }) => {
+  if (url.indexOf('http') === 0) {
+    return `<a data-type=external target=_blank href="${url} style="display: flex; flex-direction: column">${children}</a>`;
+  } else {
+    url = stringifyParams({ mainContentMode: url });
+    return `<a data-type=tab href="${url} style="display: flex; flex-direction: column">${children}</a>`;
+  }
+};
 
-const CardLink = ({ url, children }) => {
-  const Component = url.indexOf('http') === 0 ? OutboundLink : InternalLink
-  const to = url.indexOf('http') === 0 ? url : stringifyParams({ mainContentMode: url })
-
-  return <Component to={to} style={{ display: 'flex', flexDirection: 'column' }}>{children}</Component>
-}
-
-const OtherLandscapeLink = function({top, left, height, width, color, title, image, url, layout}) {
+module.exports.renderOtherLandscapeLink = function({top, left, height, width, color, title, image, url, layout}) {
   const imageSrc = image || assetPath(`images/${url}_preview.png`);
   if (layout === 'category') {
-    return <div style={{
-      position: 'absolute', top, left, height, width, background: color,
-      overflow: 'hidden',
-      cursor: 'pointer',
-      boxShadow: `0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19)`,
-      padding: 1,
-      display: 'flex'
-    }}>
-      <CardLink url={url}>
-        <div style={{ width, height: 30, lineHeight: '28px', textAlign: 'center', color: 'white', fontSize: 12}}>{title}</div>
-        <div style={{ flex: 1, background: 'white', position: 'relative', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-            <img loading="lazy" src={imageSrc} style={{ width: width - 12, height: height - 42,
-              objectFit: 'contain', backgroundPosition: 'center', backgroundRepeat: 'no-repeat' }} alt={title} />
-        </div>
-      </CardLink>
-  </div>
+    return `<div style="
+      position: absolute;
+      top: ${top}px;
+      left: ${left}px;
+      height: ${height}px;
+      width: ${width}px;
+      background: ${color};
+      overflow: hidden;
+      cursor: pointer;
+      box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+      padding: 1px;
+      display: flex;
+    ">
+      ${renderCardLink({url: url, children: `
+        <div style="width: ${width}px;height: 30px; line-height: 28px; text-align: center; color: 'white'; font-size: 12px;">${h(title)}</div>
+        <div style="flex: 1; background: white; position: relative; display: flex; justify-content: center; align-items: center">
+            <img loading="lazy" src="${imageSrc}" style="
+              width: ${width - 12}px; height: ${height - 42}px;
+              object-fit: contain;
+              background-position: center;
+              background-repeat: no-repeat;" alt=${title} />
+        </div>`})}
+  </div>`;
   }
   if (layout === 'subcategory') {
-    return <div style={{ width, left, height, top, position: 'absolute', overflow: 'hidden' }}>
-      <CardLink url={url}>
+    return `<div style="
+      width: ${width}px;
+      left: ${left}px;
+      height: ${height}px;
+      top: ${top}px;
+      position: absolute;
+      overflow: hidden;">
+      ${renderCardLink({url: url, children: `
         <div
-          style={{
-            position: 'absolute',
-            background: color,
-            top: subcategoryTitleHeight,
-            bottom: 0,
-            left: 0,
-            right: 0,
-            boxShadow: '0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.2)',
-            padding: categoryBorder,
-            display: 'flex'
-          }}
+          style="
+            position: absolute;
+            background: ${color};
+            top: ${subcategoryTitleHeight}px;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            boxShadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.2);
+            padding: ${categoryBorder}px;
+            display: flex
+          "
         >
-          <div style={{
-            width: categoryTitleHeight,
-            writingMode: 'vertical-rl',
-            transform: 'rotate(180deg)',
-            textAlign: 'center',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            fontSize: 12,
-            lineHeight: '13px',
-            color: 'white'
-          }}>
-            {title}
+          <div style="
+            width: ${categoryTitleHeight}px;
+            writing-mode: 'vertical-rl';
+            transform: rotate(180deg);
+            text-align: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px,
+            line-height: 13px;
+            color: white;
+          ">
+            ${h(title)}
           </div>
-          <div style={{ display: 'flex', flex: 1, background: 'white', justifyContent: 'center', alignItems: 'center' }}>
-            <img loading="lazy" src={imageSrc} alt={title}
-                 style={{ width: width - 42, height: height - 32, objectFit: 'contain', backgroundPosition: 'center', backgroundRepeat: 'no-repeat' }} />
+          <div style="
+            display: flex;
+            flex: 1;
+            background: white;
+            justify-content: center;
+            align-items: center; ">
+              <img loading="lazy" src="${imageSrc}" alt="${title}"
+                  style="width: ${width - 42}px;
+                         height: ${height - 32}px;
+                         object-fit: contain;
+                         background-position: center;
+                         background-repeat: no-repeat;" />
           </div>
-        </div>
-      </CardLink>
-    </div>;
+        </div>`})}
+    </div>`
   }
 }
-export default OtherLandscapeLink;

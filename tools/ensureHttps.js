@@ -1,4 +1,4 @@
-export default function(x) {
+module.exports.ensureHttps = function(x) {
   if (!x) {
     return x;
   }

@@ -1,5 +1,5 @@
-import Promise from 'bluebird';
-import _ from 'lodash';
+const Promise = require('bluebird');
+const _ = require('lodash');
 
 function runIt({task, showOutput}) {
   return new Promise(function(resolve) {

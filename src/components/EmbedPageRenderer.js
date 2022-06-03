@@ -1,65 +1,62 @@
 // Render only for an export
-import _ from 'lodash';
-import React from 'react';
-import ReactDOMServer from 'react-dom/server';
-import getGroupedItems, { expandSecondPathItems }  from '../utils/itemsCalculator'
-import { parseParams } from '../utils/routing'
-import saneName from '../utils/saneName';
-import { getDefaultCard, getBorderlessCard, getFlatCard } from './CardRenderer';
+const { saneName } = require('../utils/saneName');
+const { h } = require('../utils/format');
+const { getGroupedItems, expandSecondPathItems } = require('../utils/itemsCalculator');
+const { parseParams } = require('../utils/routing');
+const { renderDefaultCard, renderBorderlessCard, renderFlatCard } = require('./CardRenderer');
+const icons = require('../utils/icons');
 
-export function render({settings, items, exportUrl}) {
+module.exports.render = function({items, exportUrl}) {
   const params = parseParams(exportUrl.split('?').slice(-1)[0]);
   if (params.grouping === 'landscape') {
     items = expandSecondPathItems(items);
   }
   const groupedItems = getGroupedItems({data: items, ...params})
   const cardStyle = params.cardStyle || 'default';
-  const cardFn = cardStyle === 'borderless' ? getBorderlessCard : cardStyle === 'flat' ? getFlatCard : getDefaultCard;
+  const cardFn = cardStyle === 'borderless' ? renderBorderlessCard : cardStyle === 'flat' ? renderFlatCard : renderDefaultCard;
   const linkUrl = exportUrl.replace('&embed=yes', '').replace('embed=yes', '')
 
-  const result = <>
-   <div className="modal" style={{display: "none"}}>
-      <div className="modal-shadow" />
-      <div className="modal-container">
-        <div className="modal-body">
-          <div className="modal-buttons">
-            <a className="modal-close">x</a>
-            <span className="modal-prev"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z"></path></svg></span>
-            <span className="modal-next"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"></path></svg></span>
+  const result = `
+   <div class="modal" style="display: none;">
+      <div class="modal-shadow"></div>
+      <div class="modal-container">
+        <div class="modal-body">
+          <div class="modal-buttons">
+            <a class="modal-close">x</a>
+            <span class="modal-prev">${icons.prev}</span>
+            <span class="modal-next">${icons.next}</span>
           </div>
-          <div className="modal-content"></div>
+          <div class="modal-content"></div>
         </div>
       </div>
     </div>
-    <div id="home" className={"app " + cardStyle + "-mode" }>
-      <div className="app-overlay" />
-      <div className="main-parent">
-        <div className="app-overlay"></div>
-        <div className="main">
-          <div className="cards-section">
-            <div className="column-content" >
-              { groupedItems.map( (groupedItem) => {
+    <div id="home" class="app ${cardStyle}-mode">
+      <div class="app-overlay"></div>
+      <div class="main-parent">
+        <div class="app-overlay"></div>
+        <div class="main">
+          <div class="cards-section">
+            <div class="column-content" >
+              ${ groupedItems.map( (groupedItem) => {
                 const cardElements = groupedItem.items.map( (item) => cardFn({item}));
-                const header = items.length > 0 ?
-                  <div className="sh_wrapper" data-wrapper-id={saneName(groupedItem.header)}>
-                    <div style={{fontSize: '24px', paddingLeft: '16px', lineHeight: '48px', fontWeight: 500}}>
-                      <span>{groupedItem.header}</span>
-                      <span className="items-cont">&nbsp;({groupedItem.items.length})</span>
+                const header = items.length > 0 ? `
+                  <div class="sh_wrapper" data-wrapper-id="${h(saneName(groupedItem.header))}">
+                    <div style="font-size: 24px; padding-left: 16px; line-height: 48px; font-weight: 500;">
+                      <span>${h(groupedItem.header)}</span>
+                      <span class="items-cont">&nbsp;(${groupedItem.items.length})</span>
                     </div>
-                  </div> : null
-                return [ header, <div data-section-id={saneName(groupedItem.header)}>{cardElements}</div>];
-              })
-              }
+                  </div>` : '';
+                return [ header, `<div data-section-id="${h(saneName(groupedItem.header))}">${cardElements.join('')}</div>`].join('');
+              }) }
             </div>
           </div>
           <div id="embedded-footer">
-            <h1 style={{ marginTop: 20, width: '100%', textAlign: 'center' }}>
-              <a data-type="external" target="_blank" href={linkUrl}>View</a> the full interactive landscape
+            <h1 style="margin-top: 20px; width: 100%; text-align: center;">
+              <a data-type="external" target="_blank" href="${linkUrl}">View</a> the full interactive landscape
             </h1>
           </div>
         </div>
       </div>
-    </div>
-    </>
-    return ReactDOMServer.renderToStaticMarkup(result);
+    </div>`;
+  return result;
 };

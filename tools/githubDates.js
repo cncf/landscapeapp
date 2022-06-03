@@ -1,7 +1,6 @@
-import { GithubClient } from './apiClients';
+const { GithubClient } = require('./apiClients');
 
-
-export async function getReleaseDate({repo}) {
+module.exports.getReleaseDate = async function({repo}) {
   const releases = await GithubClient.request({ path: `/repos/${repo}/releases` });
 
   if (releases.length > 0) {
@@ -9,7 +8,7 @@ export async function getReleaseDate({repo}) {
   }
 }
 
-export async function getRepoLatestDate({repo, branch}) {
+module.exports.getRepoLatestDate = async function({repo, branch}) {
   const branchSha = await getBranchSha(repo, branch);
   const commits = await GithubClient.request({ path: `/repos/${repo}/commits?sha=${branchSha}` });
   const firstCommit = commits[0];
@@ -44,7 +43,7 @@ const getCommitsLastPagePath = async (repo, branchSha) => {
   return pathname + search;
 }
 
-export async function getRepoStartDate({repo, branch}) {
+module.exports.getRepoStartDate = async function({repo, branch}) {
   const branchSha = await getBranchSha(repo, branch);
   const commitsLastPagePath = await getCommitsLastPagePath(repo, branchSha);
   const commits = await GithubClient.request({ path: commitsLastPagePath })

@@ -1,8 +1,9 @@
-import _ from 'lodash';
-import { landscape, saveLandscape } from "./landscape";
-import { processedLandscape } from "./processedLandscape";
-import { YahooFinanceClient } from "./apiClients";
-import errorsReporter from './reporter';
+const _ = require('lodash');
+
+const { landscape, saveLandscape } = require("./landscape");
+const { processedLandscape } = require("./processedLandscape");
+const { YahooFinanceClient } = require("./apiClients");
+const errorsReporter = require('./reporter');
 const { addFatal } = errorsReporter('general');
 
 function find({source, categoryName, subcategoryName, itemName}) {

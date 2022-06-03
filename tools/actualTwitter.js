@@ -1,4 +1,4 @@
-export default function actualTwitter(node, crunchbaseEntry) {
+module.exports.actualTwitter = function actualTwitter(node, crunchbaseEntry) {
   const twitterUrl = 'twitter' in node ? node.twitter : (crunchbaseEntry || {}).twitter;
 
   if (twitterUrl) {

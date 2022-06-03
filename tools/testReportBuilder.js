@@ -1,4 +1,4 @@
-import generateReport from './reportBuilder';
+const { generateReport } = require('./reportBuilder');
 const input = {
   logs: `
   some long logs are here

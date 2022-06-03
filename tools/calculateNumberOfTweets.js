@@ -1,16 +1,15 @@
-import _ from 'lodash';
-import { TwitterClient } from './apiClients';
-import { settings } from './settings';
-import { updateProcessedLandscape } from "./processedLandscape";
+const _ = require('lodash');
+
+const { TwitterClient } = require('./apiClients');
+const { settings } = require('./settings');
+const { updateProcessedLandscape } = require("./processedLandscape");
 
 // we need to know a latest since_id, otherwise we can only expect
 async function getLatestTweets(sinceId) {
-  let count = 0;
   async function getTweets(maxId) {
     const params = {q: settings.twitter.search, count: 100, max_id: maxId, since_id: sinceId};
     const result = await TwitterClient.request({ path: 'search/tweets.json', params });
     const withoutLastId = result.statuses.filter( (x) => x.id_str !== maxId);
-    count += withoutLastId.length;
     if (withoutLastId.length === 0) {
       return [];
     } else {

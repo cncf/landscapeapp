@@ -7,6 +7,12 @@ const http = require('http');
 const fs = require('fs');
 const path = require('path');
 
+const fnFile = (file) => {
+  const functionsPath = path.join(projectPath, 'dist', process.env.PROJECT_NAME || '', 'functions' );
+  const destFile = [process.env.PROJECT_NAME, file].filter(_ => _).join('--');
+  return path.join(functionsPath, destFile);
+}
+
 http.createServer(function (request, response) {
 
   if (request.url.indexOf('/api/ids') !== -1) {
@@ -14,7 +20,8 @@ http.createServer(function (request, response) {
     const query = request.url.split('?')[1] || '';
 
     if (!process.env.INLINE_API) {
-      require('child_process').exec(`babel-node src/api/ids.js '${query}'`, {}, function(e, output, err) {
+      require('child_process').exec(`node ${fnFile("ids.js")} '${query}'`, {}, function(e, output, err) {
+        console.info(err);
         response.writeHead(200, { 'Content-Type': 'application/json' });
         response.end(output);
       });
@@ -30,7 +37,7 @@ http.createServer(function (request, response) {
     const query = request.url.split('?')[1] || '';
 
     if (!process.env.INLINE_API) {
-      require('child_process').exec(`babel-node src/api/export.js '${query}'`, {}, function(e, output, err) {
+      require('child_process').exec(`node ${fnFile("export.js")} '${query}'`, {}, function(e, output, err) {
         response.writeHead(200, {
           'Content-Type': 'text/css',
           'Content-Disposition': 'attachment; filename=interactive-landscape.csv'
@@ -47,6 +54,7 @@ http.createServer(function (request, response) {
     }
     return;
   }
+
   let filePath = path.join(process.env.PROJECT_PATH, 'dist', request.url.split('?')[0]);
   if (fs.existsSync(path.resolve(filePath, 'index.html'))) {
     filePath = path.resolve(filePath, 'index.html');

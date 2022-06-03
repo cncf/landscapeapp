@@ -1,4 +1,4 @@
-export function millify(value) {
+module.exports.millify = function(value) {
   let base, suffix;
   if (value < 1000 - 0.05) {
     base = value;
@@ -20,3 +20,18 @@ export function millify(value) {
   return digits + suffix;
 }
 
+module.exports.h = function(html) {
+  var entityMap = {
+    '&': '&amp;',
+    '<': '&lt;',
+    '>': '&gt;',
+    '"': '&quot;',
+    "'": '&#39;',
+    '/': '&#x2F;',
+    '`': '&#x60;',
+    '=': '&#x3D;'
+  };
+  return String(html).replace(/[&<>"'`=\/]/g, function fromEntityMap (s) {
+    return entityMap[s];
+  });
+}

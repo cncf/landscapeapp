@@ -7,11 +7,11 @@
 // messages are stored in /tmp/landscape.json
 // links results are stored in /tmp/links.json
 
-import anchorme from 'anchorme';
+const anchorme = require('anchorme');
 const run = function(x) {
   return (require('child_process').execSync(x).toString());
 }
-export default function generateReport({logs, name, messages, status, startTime, endTime}) {
+module.exports.generateReport = function({logs, name, messages, status, startTime}) {
   const startTimeFormatted = new Date(startTime).toISOString().substring(0, 16);
   require('fs').writeFileSync('/tmp/logfile.txt', logs);
   const formattedLogs = run('cat /tmp/logfile.txt | aha --no-header');

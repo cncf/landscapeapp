@@ -1,68 +1,61 @@
-import React, { Fragment } from 'react';
-import ReactDOMServer from 'react-dom/server';
-import { calculateSize } from "../utils/landscapeCalculations";
-import _ from 'lodash';
-
+const { calculateSize } = require("../utils/landscapeCalculations");
 const headerHeight = 40;
-export function render({landscapeSettings, landscapeContent, version}) {
+module.exports.render = function({landscapeSettings, landscapeContent, version}) {
   const { fullscreenWidth, fullscreenHeight } = calculateSize(landscapeSettings);
-  const zoom = 1;
-  return ReactDOMServer.renderToStaticMarkup(
-      <div className="gradient-bg" style={{
-        width: fullscreenWidth,
-        height: fullscreenHeight,
-        overflow: 'hidden'
-        }}>
-        <div className="inner-landscape" style={{
-          width: fullscreenWidth,
-          height: fullscreenHeight,
-          paddingTop: headerHeight + 20,
-          paddingLeft: 20,
-          position: 'relative',
-        }}>
-          { landscapeContent }
-          <div style={{
-            position: 'absolute',
-            top: 10,
-            left: '50%',
-            transform: 'translateX(-50%)',
-            fontSize: 18,
-            background: 'rgb(64,89,163)',
-            color: 'white',
-            paddingLeft: 20,
-            paddingRight: 20,
-            paddingTop: 3,
-            paddingBottom: 3,
-            borderRadius: 5
-          }}>{landscapeSettings.fullscreen_header}</div>
-          { !landscapeSettings.fullscreen_hide_grey_logos && <div style={{
-            position: 'absolute',
-            top: 15,
-            right: 12,
-            fontSize: 11,
-            background: '#eee',
-            color: 'rgb(100,100,100)',
-            paddingLeft: 20,
-            paddingRight: 20,
-            paddingTop: 3,
-            paddingBottom: 3,
-            borderRadius: 5
-          }}>Greyed logos are not open source</div> }
-          <div style={{
-            position: 'absolute',
-            top: 10,
-            left: 15,
-            fontSize: 14,
-            color: 'white',
-          }}>{landscapeSettings.title} </div>
-          <div style={{
-            position: 'absolute',
-            top: 30,
-            left: 15,
-            fontSize: 12,
-            color: '#eee',
-          }}>{version}</div>
+  return `
+      <div class="gradient-bg" style="
+        width: ${fullscreenWidth}px;
+        height: ${fullscreenHeight}px;
+        overflow: hidden;
+        "><div class="inner-landscape" style="
+          width: ${fullscreenWidth}px;
+          height: ${fullscreenHeight}px;
+          padding-top: ${headerHeight + 20}px;
+          padding-left: 20px;
+          position: relative;
+        ">
+          ${landscapeContent }
+          <div style="
+            position: absolute;
+            top: 10px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 18px,
+            background: rgb(64,89,163);
+            color: white;
+            padding-left: 20px;
+            padding-right: 20px;
+            padding-top: 3px;
+            padding-bottom: 3px;
+            border-radius: 5px;
+          ">${landscapeSettings.fullscreen_header}</div>
+          ${ !landscapeSettings.fullscreen_hide_grey_logos ? `<div style="
+            position: absolute;
+            top: 15px;
+            right: 12px;
+            font-size: 11px;
+            background: #eee;
+            color: rgb(100,100,100);
+            padding-left: 20px;
+            padding-right: 20px;
+            padding-top: 3px;
+            padding-bottom: 3px;
+            border-radius: 5px;
+          ">Greyed logos are not open source</div>` : '' }
+          <div style="
+            position: absolute;
+            top: 10px;
+            left: 15px;
+            font-size: 14px;
+            color: white;
+          ">${landscapeSettings.title} </div>
+          <div style="
+            position: absolute;
+            top: 30px;
+            left: 15px;
+            font-size: 12px;
+            color: #eee;
+          ">${version}</div>
         </div>
-      </div>
-  );
+      </div>`;
 }

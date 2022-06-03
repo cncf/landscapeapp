@@ -1,9 +1,9 @@
-import { env } from 'process';
-import { stringify, parse } from 'query-string';
-import axios from 'axios'
-import OAuth1 from 'oauth-1.0a'
-import crypto from 'crypto'
-import _ from 'lodash'
+const { env } = require('process');
+const { stringify, parse } = require('query-string');
+const axios = require('axios');
+const OAuth1 = require('oauth-1.0a');
+const crypto = require('crypto');
+const _ = require('lodash');
 
 ['GITHUB_KEY', 'TWITTER_KEYS'].forEach((key) => {
   if (!env[key]) {
@@ -117,13 +117,13 @@ const ApiClient = ({ baseURL, applyKey, keys, defaultOptions = {}, defaultParams
   }
 };
 
-export const CrunchbaseClient = ApiClient({
+module.exports.CrunchbaseClient = ApiClient({
   baseURL: 'https://api.crunchbase.com/api/v4',
   defaultParams: { user_key: env.CRUNCHBASE_KEY_4 },
   defaultOptions: { followRedirect: true, maxRedirects: 5, timeout: 10 * 1000 }
 });
 
-export const GithubClient = ApiClient({
+module.exports.GithubClient = ApiClient({
   baseURL: 'https://api.github.com',
   retryStatuses: [403], // Github returns 403 when rate limiting.
   delayFn: error => {
@@ -150,7 +150,7 @@ export const GithubClient = ApiClient({
 
 const [consumerKey, consumerSecret, accessTokenKey, accessTokenSecret] = (env.TWITTER_KEYS || '').split(',');
 
-export const TwitterClient = ApiClient({
+module.exports.TwitterClient = ApiClient({
   baseURL: 'https://api.twitter.com/1.1',
   defaultOptions: {
     oauth: {
@@ -162,6 +162,6 @@ export const TwitterClient = ApiClient({
   }
 });
 
-export const YahooFinanceClient = ApiClient({
+module.exports.YahooFinanceClient = ApiClient({
   baseURL: 'https://query2.finance.yahoo.com',
 });

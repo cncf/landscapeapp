@@ -1,9 +1,9 @@
-import colors from 'colors';
+const colors = require('colors');
 const error = colors.red;
 const fatal = (x) => colors.red(colors.inverse(x));
 
 let messages = [];
-export function getMessages() {
+module.exports.getMessages = function() {
   return messages;
 }
 
@@ -17,7 +17,7 @@ try {
 }
 
 
-export default function build(category) {
+module.exports.errorsReporter = function(category) {
   return {
     addError: function(msg) {
       console.info(error(`ERROR: ${msg}`));

@@ -1,4 +1,4 @@
-import requestWithRetry from './requestWithRetry';
+const { requestWithRetry } = require('./requestWithRetry');
 async function main() {
   const result = await requestWithRetry({
     url: 'http://google.com',

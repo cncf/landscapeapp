@@ -1,23 +1,24 @@
-import './suppressAnnoyingWarnings';
-import colors from 'colors';
-import Promise from 'bluebird';
-import saneName from '../src/utils/saneName';
-import fs from 'fs';
-import path from 'path';
-import _ from 'lodash';
-import { settings, projectPath } from './settings';
-import errorsReporter from './reporter';
-import makeReporter from './progressReporter';
-import autoCropSvg from 'svg-autocrop';
-import retry from "./retry";
-const debug = require('debug')('images');
-const { addFatal, addError } = errorsReporter('image');
+const colors = require('colors');
+const Promise = require('bluebird');
+const fs = require('fs');
+const path = require('path');
+const _ = require('lodash');
+const autoCropSvg = require('svg-autocrop');
+const traverse = require('traverse');
 
+require('./suppressAnnoyingWarnings');
+const { saneName } = require('../src/utils/saneName');
+const { projectPath } = require('./settings');
+const { errorsReporter } = require('./reporter');
+const { makeReporter } = require('./progressReporter');
+const { retry } = require("./retry");
+const debug = require('debug')('images');
+
+const { addFatal, addError } = errorsReporter('image');
 const error = colors.red;
 const fatal = (x) => colors.red(colors.inverse(x));
 const cacheMiss = colors.green;
 
-const traverse = require('traverse');
 
 async function getLandscapeItems() {
   const source =  require('js-yaml').load(fs.readFileSync(path.resolve(projectPath, 'landscape.yml')));
@@ -39,7 +40,7 @@ async function getLandscapeItems() {
   return items;
 }
 
-export async function extractSavedImageEntries() {
+module.exports.extractSavedImageEntries =  async function() {
   const traverse = require('traverse');
   let source = [];
   try {
@@ -78,7 +79,7 @@ function getItemHash(item) {
   return;
 }
 
-export async function fetchImageEntries({cache, preferCache}) {
+module.exports.fetchImageEntries =  async function({cache, preferCache}) {
   const items = await getLandscapeItems();
   const errors = [];
   const fatalErrors = [];
@@ -168,7 +169,7 @@ export async function fetchImageEntries({cache, preferCache}) {
   }
 }
 
-export function removeNonReferencedImages(imageEntries) {
+module.exports.removeNonReferencedImages = function(imageEntries) {
   const existingFiles = fs.readdirSync(path.resolve(projectPath, 'cached_logos'));
   const allowedFiles = imageEntries.filter( (e) => !!e).map( (e) => e.fileName );
   _.each(existingFiles, function(existingFile) {

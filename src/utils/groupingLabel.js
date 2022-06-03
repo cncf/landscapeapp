@@ -1,8 +1,7 @@
-import fields from '../types/fields';
-import _ from 'lodash';
+const { fields } = require('../types/fields');
+const  _ = require('lodash');
 
-
-export default function groupingLabel(field, id) {
+module.exports.groupingLabel = function(field, id) {
   const values = fields[field].answers;
   const valueInfo = _.find(values, {id: id});
   return valueInfo.groupingLabel;

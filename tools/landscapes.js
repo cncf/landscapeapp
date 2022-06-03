@@ -1,5 +1,5 @@
-import { report } from './reportToSlack';
-import generateReport from './reportBuilder';
+const { report } = require('./reportToSlack');
+const { generateReport } = require('./reportBuilder');
 
 const landscapesInfo = require('js-yaml').load(require('fs').readFileSync('landscapes.yml'));
 
@@ -49,7 +49,7 @@ async function main() {
 
     const startTime = new Date().getTime();
 
-    function runIt() {
+    const runIt = function() {
       return new Promise(function(resolve) {
         let logs = [];
         var spawn = require('child_process').spawn;
