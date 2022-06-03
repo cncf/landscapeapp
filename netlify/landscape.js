@@ -1,7 +1,6 @@
 // We will execute this script from a landscape build,
 // "prepublish": "cp yarn.lock _yarn.lock",
 // "postpublish": "rm _yarn.lock || true"
-const LANDSCAPEAPP = process.env.LANDSCAPEAPP || "@latest"
 const remote = `root@${process.env.BUILD_SERVER}`;
 const dockerImage = 'netlify/build:focal';
 const dockerHome = '/opt/buildhome';
