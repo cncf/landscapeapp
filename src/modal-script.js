@@ -144,7 +144,7 @@ const CncfLandscapeApp = {
   },
 
   hideSelectedItem: function() {
-    window.parent.postMessage({type: 'landscapeapp-hide'});
+    window.parent.postMessage({type: 'landscapeapp-hide'}, '*');
   }
 }
 document.addEventListener('DOMContentLoaded', () => CncfLandscapeApp.init());

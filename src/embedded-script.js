@@ -67,7 +67,7 @@ const CncfLandscapeApp = {
         search: window.location.search,
         pathname: window.location.pathname
       }
-    });
+    }, '*');
   }
 }
 document.addEventListener('DOMContentLoaded', () => CncfLandscapeApp.init());
