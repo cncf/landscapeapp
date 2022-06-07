@@ -2,7 +2,6 @@
 // having to bother with any packages or similar problems.
 const fs = require('fs/promises');
 const path = require('path');
-const net = require('net');
 
 const oldCreateConnection = require('https').globalAgent.createConnection;
 require('https').globalAgent.createConnection = function(options, cb) {
@@ -56,7 +55,6 @@ function get(path) {
         const base = process.env.DEBUG_SERVER ? 'http://localhost:3000' : 'https://weblandscapes.ddns.net';
         const http = require(base.indexOf('http://') === 0 ? 'http' : 'https');
 
-        let data = '';
         path = `${base}/api/console/download/${path}`;
         const req = http.request(path, function(res) {
             resolve({
@@ -160,6 +158,7 @@ function server() {
 
 async function main() {
     server();
+    //eslint-disable-next-line no-constant-condition
     while(true) {
         await build();
     }
