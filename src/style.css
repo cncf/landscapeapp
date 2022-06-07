@@ -1306,6 +1306,16 @@ html.ios.has-selected-item, html.ios.has-selected-item body {
   display: none;
 }
 
+.embed.modal-embed .column-content {
+  display: none;
+}
+.embed.modal-embed {
+  background: inherit;
+}
+.embed.modal-embed #embedded-footer {
+  display: none;
+}
+
 .tweet-button {
   width: 105px;
   display: flex;

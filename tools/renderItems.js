@@ -100,7 +100,6 @@ async function main() {
   }
 
   const fonts = await fs.readFile('src/fonts.css', 'utf-8');
-  const resizerScript = await fs.readFile(require.resolve('iframe-resizer/js/iframeResizer.contentWindow.min.js'), 'utf-8');
   const description = `${settings.global.meta.description}. Updated: ${process.env.lastUpdated}`;
   const favicon = '/favicon.png';
 
@@ -143,9 +142,6 @@ async function main() {
       ${processedCss}
     </style>
     <script async defer src="//platform.twitter.com/widgets.js" charset="utf-8"></script>
-    <script>
-      ${resizerScript}
-    </script>
     <script>
       ${js}
       CncfLandscapeApp.initialMode = '${mode}';
@@ -200,9 +196,8 @@ async function main() {
   }
 
   // embed
-  const resizerHostJs = await fs.readFile(require.resolve('iframe-resizer/js/iframeResizer.min.js'), 'utf-8');
-  const resizerConfig = await fs.readFile('src/iframeResizer.js');
-  await fs.writeFile(path.resolve(distPath, 'iframeResizer.js'), resizerHostJs + "\n" + resizerConfig);
+  const resizerScript = await fs.readFile('src/iframeResizer.js');
+  await fs.writeFile(path.resolve(distPath, 'iframeResizer.js'), resizerScript);
   const embed = `
     <!DOCTYPE html>
     <div>
@@ -216,8 +211,34 @@ async function main() {
   `
   await fs.writeFile(path.resolve(distPath, 'embed.html'), embed);
 
+  const embed2 = `
+    <!DOCTYPE html>
+    <div>
+      <h1>Testing how great is that embed </h1>
+      <h1>Testing how great is that embed </h1>
+      <h1>Testing how great is that embed </h1>
+      <h1>Testing how great is that embed </h1>
+      <h1>Testing how great is that embed </h1>
+      <h1>Testing how great is that embed </h1>
+      <iframe frameBorder="0" id="landscape" scrolling="no" style="width: 1px; min-width: 100%;"
+        src="${basePath}/pages/members">
+      </iframe>
+      <script src="${basePath}/iframeResizer.js"></script>
+      <h2>Wow, that was a cool embed.</h2>
+      <h2>Wow, that was a cool embed.</h2>
+      <h2>Wow, that was a cool embed.</h2>
+      <h2>Wow, that was a cool embed.</h2>
+      <h2>Wow, that was a cool embed.</h2>
+      <h2>Wow, that was a cool embed.</h2>
+      <h2>Wow, that was a cool embed.</h2>
+    </div>
+  `
+  await fs.writeFile(path.resolve(distPath, 'embed2.html'), embed2);
+
   // embed page renderer
   const embeddedJs = await fs.readFile('src/embedded-script.js', 'utf-8');
+  const embeddedModalJs = await fs.readFile('src/modal-script.js', 'utf-8');
+
   const renderEmbedPage = (page) => {
     let result = `
     <!DOCTYPE html>
@@ -227,10 +248,6 @@ async function main() {
       ${fonts}
       ${processedCss}
     </style>
-    <script async defer src="//platform.twitter.com/widgets.js" charset="utf-8"></script>
-    <script>
-      ${resizerScript}
-    </script>
     <script>
       ${embeddedJs}
       CncfLandscapeApp.basePath = '${basePath}';
@@ -241,11 +258,33 @@ async function main() {
     `;
     return result;
   }
+
+  const renderEmbedModalPage = (page) => {
+    let result = `
+    <!DOCTYPE html>
+    <style>
+      ${fonts}
+      ${processedCss}
+    </style>
+    <script async defer src="//platform.twitter.com/widgets.js" charset="utf-8"></script>
+    <script>
+      ${embeddedModalJs}
+      CncfLandscapeApp.basePath = '${basePath}';
+    </script>
+    <body class="embed modal-embed">
+      ${page}
+    </body>
+    `;
+    return result;
+  }
+
   for (let key in settings.prerender) {
     const url = settings.prerender[key];
     const embedded = EmbedPageRenderer.render({settings, items: projects, exportUrl: url });
     await fs.mkdir(path.resolve(distPath, `pages`), { recursive: true });
+    await fs.mkdir(path.resolve(distPath, `pages-modal`), { recursive: true });
     await fs.writeFile(path.resolve(distPath, `pages/${key}.html`), renderEmbedPage(embedded));
+    await fs.writeFile(path.resolve(distPath, `pages-modal/${key}.html`), renderEmbedModalPage(embedded));
   }
 
 
