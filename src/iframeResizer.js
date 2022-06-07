@@ -6,8 +6,9 @@ addEventListener('message', function(e) {
     const iframe = document.createElement('iframe');
     document.body.appendChild(iframe);
     window.landscapeappModalIframe = iframe;
-    const search = e.data.location.search || '?a=a';
-    const src = e.data.location.pathname.replace('/pages/', '/pages-modal/') + search + '&selected=' + e.data.selected;
+    const url = new URL(document.querySelector('#landscape').src);
+    const search = url.search || '?a=a';
+    const src = url.pathname.replace('/pages/', '/pages-modal/') + search + '&selected=' + e.data.selected;
     iframe.src = src;
     iframe.style.position = 'fixed';
     iframe.style.left = 0;
