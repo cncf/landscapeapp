@@ -410,7 +410,7 @@ module.exports.render = function({settings, tweetsCount, itemInfo}) {
     <div class="product-property row">
       <div class="product-property-name col col-40">Twitter</div>
       <div class="product-property-value col col-60">
-        <a data-type=external target=_blank href="${itemInfo.twitter}">${h(formatTwitter(itemInfo.twitter))}</a>
+        <a data-type="external" target="_blank" href="${itemInfo.twitter}">${h(formatTwitter(itemInfo.twitter))}</a>
       </div>
    </div>
   ` : '';
@@ -420,7 +420,7 @@ module.exports.render = function({settings, tweetsCount, itemInfo}) {
       <div class="product-property-name col col-50">Latest Tweet</div>
       <div class="product-property-value col col-50">
         ${ itemInfo.latestTweetDate ? `
-          <a data-type=external target=_blank href="${h(itemInfo.twitter)}">${formatDate(itemInfo.latestTweetDate)}</a>
+          <a data-type="external" target="_blank" href="${h(itemInfo.twitter)}">${formatDate(itemInfo.latestTweetDate)}</a>
         ` : ''}
         </div>
       </div>
@@ -430,7 +430,7 @@ module.exports.render = function({settings, tweetsCount, itemInfo}) {
     <div class="product-property row">
       <div class="product-property-name col col-40">First Commit</div>
       <div class="product-property-value tight-col col-60">
-        <a data-type=external target=_blank href=${h(itemInfo.firstCommitLink)}">${formatDate(itemInfo.firstCommitDate)}</a>
+        <a data-type="external" target=_blank href=${h(itemInfo.firstCommitLink)}">${formatDate(itemInfo.firstCommitDate)}</a>
       </div>
     </div>
   ` : '';
@@ -439,7 +439,7 @@ module.exports.render = function({settings, tweetsCount, itemInfo}) {
     <div class="product-property row">
       <div class="product-property-name col col-40">Contributors</div>
       <div class="product-property-value tight-col col-60">
-        <a data-type=external target=_blank href="${itemInfo.contributorsLink}">
+        <a data-type="external" target=_blank href="${itemInfo.contributorsLink}">
           ${itemInfo.contributorsCount > 500 ? '500+' : itemInfo.contributorsCount }
         </a>
       </div>
@@ -450,7 +450,7 @@ module.exports.render = function({settings, tweetsCount, itemInfo}) {
     <div class="product-property row">
       <div class="product-property-name col col-40">Headquarters</div>
       <div class="product-property-value tight-col col-60">
-        <a data-type=external target=_blank href="${closeUrl({ grouping: 'headquarters', filters:{headquarters:itemInfo.headquarters}})}">${h(itemInfo.headquarters)}</a>
+        <a data-type="external" target=_blank href="${closeUrl({ grouping: 'headquarters', filters:{headquarters:itemInfo.headquarters}})}">${h(itemInfo.headquarters)}</a>
       </div>
     </div>
   ` : '';
@@ -460,14 +460,14 @@ module.exports.render = function({settings, tweetsCount, itemInfo}) {
       <div class="product-property-name col col-40">${itemInfo.amountKind === 'funding' ? 'Funding' : 'Market Cap'}</div>
       ${  itemInfo.amountKind === 'funding' ? `
           <div class="product-property-value tight-col col-60">
-            <a data-type=external target=_blank href="${itemInfo.crunchbase + '#section-funding-rounds'}">
+            <a data-type="external" target=_blank href="${itemInfo.crunchbase + '#section-funding-rounds'}">
               ${'$' + millify(itemInfo.amount)}
             </a>
           </div>` : ''
       }
       ${ itemInfo.amountKind !== 'funding' ? `
               <div class="product-property-value tight-col col-60">
-                <a data-type=external target=_blank href="https://finance.yahoo.com/quote/${itemInfo.yahoo_finance_data.effective_ticker}">
+                <a data-type="external" target=_blank href="https://finance.yahoo.com/quote/${itemInfo.yahoo_finance_data.effective_ticker}">
                   ${'$' + millify(itemInfo.amount)}
                 </a>
               </div>` : ''
@@ -479,7 +479,7 @@ module.exports.render = function({settings, tweetsCount, itemInfo}) {
     <div class="product-property row">
       <div class="product-property-name col col-40">Ticker</div>
       <div class="product-property-value tight-col col-60">
-        <a data-type=external target=_blank href="https://finance.yahoo.com/quote/${itemInfo.yahoo_finance_data.effective_ticker}">
+        <a data-type="external" target=_blank href="https://finance.yahoo.com/quote/${itemInfo.yahoo_finance_data.effective_ticker}">
           ${h(itemInfo.yahoo_finance_data.effective_ticker)}
         </a>
       </div>
@@ -490,7 +490,7 @@ module.exports.render = function({settings, tweetsCount, itemInfo}) {
     <div class="product-property row">
       <div class="product-property-name col col-50">Latest Commit</div>
       <div class="product-property-value col col-50">
-        <a data-type=external target=_blank href="${itemInfo.latestCommitLink}">${formatDate(itemInfo.latestCommitDate)}</a>
+        <a data-type="external" target=_blank href="${itemInfo.latestCommitLink}">${formatDate(itemInfo.latestCommitDate)}</a>
       </div>
     </div>
   ` : '';
@@ -499,7 +499,7 @@ module.exports.render = function({settings, tweetsCount, itemInfo}) {
     <div class="product-property row">
       <div class="product-property-name col col-50">Latest Release</div>
       <div class="product-property-value col col-50">
-        <a data-type=external target=_blank href="${itemInfo.releaseLink}">${formatDate(itemInfo.releaseDate)}</a>
+        <a data-type="external" target=_blank href="${itemInfo.releaseLink}">${formatDate(itemInfo.releaseDate)}</a>
       </div>
     </div>
   ` : '';
@@ -527,7 +527,7 @@ module.exports.render = function({settings, tweetsCount, itemInfo}) {
           return h(relativeDate(new Date(value)));
         }
         if (typeof value === 'string' && (value.indexOf('http://') === 0 || value.indexOf('https://') === 0)) {
-          return `<a data-type=external target=_blank href="${h(value)}">${h(value)}</a>`;
+          return `<a data-type="external" target=_blank href="${h(value)}">${h(value)}</a>`;
         }
         return h(value);
       })();
@@ -586,7 +586,7 @@ module.exports.render = function({settings, tweetsCount, itemInfo}) {
       <div class="product-property row">
         <div class="product-property-name col col-20">Website</div>
         <div class="product-property-value col col-80">
-          <a href=external target=_blank href="${itemInfo.homepage_url}">${shortenUrl(itemInfo.homepage_url)}</a>
+          <a data-type=external target=_blank href="${itemInfo.homepage_url}">${shortenUrl(itemInfo.homepage_url)}</a>
         </div>
       </div>
       ${ (itemInfo.repos || []).map(({ url, stars }, idx) => {
