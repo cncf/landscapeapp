@@ -100,6 +100,7 @@ async function main() {
   }
 
   const fonts = await fs.readFile('src/fonts.css', 'utf-8');
+  const resizerScript = await fs.readFile(require.resolve('iframe-resizer/js/iframeResizer.contentWindow.min.js'), 'utf-8');
   const description = `${settings.global.meta.description}. Updated: ${process.env.lastUpdated}`;
   const favicon = '/favicon.png';
 
@@ -142,6 +143,9 @@ async function main() {
       ${processedCss}
     </style>
     <script async defer src="//platform.twitter.com/widgets.js" charset="utf-8"></script>
+    <script>
+      ${resizerScript}
+    </script>
     <script>
       ${js}
       CncfLandscapeApp.initialMode = '${mode}';
@@ -196,8 +200,8 @@ async function main() {
   }
 
   // embed
-  const resizerScript = await fs.readFile('src/iframeResizer.js');
-  await fs.writeFile(path.resolve(distPath, 'iframeResizer.js'), resizerScript);
+  const resizerHostScript = await fs.readFile('src/iframeResizer.js');
+  await fs.writeFile(path.resolve(distPath, 'iframeResizer.js'), resizerHostScript);
   const embed = `
     <!DOCTYPE html>
     <div>
@@ -248,6 +252,10 @@ async function main() {
       ${fonts}
       ${processedCss}
     </style>
+    <script async defer src="//platform.twitter.com/widgets.js" charset="utf-8"></script>
+    <script>
+      ${resizerScript}
+    </script>
     <script>
       ${embeddedJs}
       CncfLandscapeApp.basePath = '${basePath}';

@@ -8,15 +8,72 @@ const CncfLandscapeApp = {
       }, '*');
     }, 1000);
 
-    this.state = {};
+    this.state = {
+      selected: null
+    }
+
+    if (window.parentIFrame) {
+      document.addEventListener('keydown', (e) => {
+        if (e.keyCode === 27) {
+          if (CncfLandscapeApp.state.selected) {
+            this.state.selected = null;
+            this.hideSelectedItem();
+          }
+        }
+      });
+    }
 
     document.body.addEventListener('click', (e) => {
       const cardEl = e.target.closest('[data-id]');
       if (cardEl) {
         const selectedItemId = cardEl.getAttribute('data-id');
+        CncfLandscapeApp.state.selected = selectedItemId;
         this.showSelectedItem(selectedItemId);
+        e.preventDefault();
+        e.stopPropagation();
       }
-    });
+
+      const modalBodyEl = e.target.closest('.modal-body');
+      const shadowEl = e.target.closest('.modal-container');
+      if (shadowEl && !modalBodyEl) {
+        this.state.selected = null;
+        this.hideSelectedItem();
+        e.preventDefault();
+        e.stopPropagation();
+      }
+
+      const modalClose = e.target.closest('.modal-close');
+      if (modalClose) {
+        this.state.selected = null;
+        this.hideSelectedItem();
+        e.preventDefault();
+        e.stopPropagation();
+      }
+
+      const nextItem = e.target.closest('.modal-next');
+      if (nextItem && CncfLandscapeApp.nextItemId) {
+        CncfLandscapeApp.state.selected = CncfLandscapeApp.nextItemId;
+        this.showSelectedItem(CncfLandscapeApp.state.selected);
+        e.preventDefault();
+        e.stopPropagation();
+      }
+
+      const prevItem = e.target.closest('.modal-prev');
+      if (prevItem && CncfLandscapeApp.prevItemId) {
+        CncfLandscapeApp.state.selected = CncfLandscapeApp.prevItemId;
+        this.showSelectedItem(CncfLandscapeApp.state.selected);
+        e.preventDefault();
+        e.stopPropagation();
+      }
+
+      const selectedItemInternalLinkEl = e.target.closest('.modal-body a[data-type=internal]')
+      if (selectedItemInternalLinkEl) {
+        e.preventDefault();
+        e.stopPropagation();
+        return
+      }
+
+    }, false);
 
     // support custom css styles and custom js eval code through iframe
     window.addEventListener('message', (event) => {
@@ -60,14 +117,89 @@ const CncfLandscapeApp = {
   },
 
   showSelectedItem: async function(selectedItemId) {
-    window.parent.postMessage({
-      type: 'landscapeapp-show',
-      selected: selectedItemId,
-      location: {
-        search: window.location.search,
-        pathname: window.location.pathname
-      }
-    }, '*');
+    if (!window.parentIFrame) {
+      window.parent.postMessage({
+        type: 'landscapeapp-show',
+        selected: selectedItemId,
+        location: {
+          search: window.location.search,
+          pathname: window.location.pathname
+        }
+      }, '*');
+      return;
+    }
+
+    this.selectedItems = this.selectedItems || {};
+    if (!this.selectedItems[selectedItemId]) {
+      const result = await fetch(`${this.basePath}/data/items/info-${selectedItemId}.html`);
+      const text = await result.text();
+      this.selectedItems[selectedItemId] = text;
+    }
+    document.querySelector('.modal').style.display="";
+    document.querySelector('.modal .modal-content').outerHTML = this.selectedItems[selectedItemId];
+    document.querySelector('body').style.overflow = 'hidden';
+
+    if (window.twttr) {
+      window.twttr.widgets.load();
+    } else {
+      setTimeout( () => window.twttr && window.twttr.widgets.load(), 1000);
+    }
+
+    //calculate previous and next items;
+    const selectedItemEl = document.querySelector(`[data-id=${selectedItemId}]`);
+    const parent = selectedItemEl.closest('.cards-section');
+    const allItems = parent.querySelectorAll('[data-id]');
+    const index = [].indexOf.call(allItems, selectedItemEl);
+    const prevItem = index > 0 ? allItems[index - 1].getAttribute('data-id') : null;
+    const nextItem = index < allItems.length - 1 ? allItems[index + 1].getAttribute('data-id') : null;
+
+    this.nextItemId = nextItem;
+    this.prevItemId = prevItem;
+
+    if (nextItem) {
+      document.querySelector('.modal-next').removeAttribute('disabled');
+    } else {
+      document.querySelector('.modal-next').setAttribute('disabled', '');
+    }
+
+    if (prevItem) {
+      document.querySelector('.modal-prev').removeAttribute('disabled');
+    } else {
+      document.querySelector('.modal-prev').setAttribute('disabled', '');
+    }
+
+    if (window.parentIFrame) {
+      window.parentIFrame.sendMessage({type: 'showModal'});
+      window.parentIFrame.getPageInfo(function(info) {
+        var offset = info.scrollTop - info.offsetTop;
+        var maxHeight = info.clientHeight * 0.9;
+        if (maxHeight > 640) {
+          maxHeight = 640;
+        }
+        var defaultTop = (info.windowHeight - maxHeight) / 2;
+        var top = defaultTop + offset;
+        if (top < 0 && info.iframeHeight <= 600) {
+          top = 10;
+        }
+        setTimeout(function() {
+          const modal = document.querySelector('.modal-body');
+          if (modal) {
+            modal.style.top = top + 'px';
+            modal.style.marginTop = 0;
+            modal.style.marginBottom = 0;
+            modal.style.bottom = '';
+            modal.style.maxHeight = maxHeight + 'px';
+          }
+        }, 10);
+      });
+    }
+  },
+  hideSelectedItem: function() {
+    document.querySelector('.modal').style.display="none";
+    document.querySelector('body').style.overflow = '';
+    if (window.parentIFrame) {
+      window.parentIFrame.sendMessage({type: 'hideModal'})
+    }
   }
 }
 document.addEventListener('DOMContentLoaded', () => CncfLandscapeApp.init());
