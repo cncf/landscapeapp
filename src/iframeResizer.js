@@ -15,6 +15,7 @@ addEventListener('message', function(e) {
     iframe.style.top = 0;
     iframe.style.width = '100%';
     iframe.style.height = '100%';
+    iframe.style.zIndex = 10000;
     iframe.focus();
   }
   if (e.data && e.data.type === 'landscapeapp-hide') {
