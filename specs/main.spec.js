@@ -56,29 +56,29 @@ async function waitForHeaderText(page, text) {
   await page.waitForFunction(`[...document.querySelectorAll('.sh_wrapper')].find( (x) => x.innerText.includes('${text}'))`);
 }
 
-describe("Embed test", () => {
-  describe("I visit an example embed page", () => {
-    let frame;
-    test('page is open and has a frame', async function(){
-      page = await makePage(appUrl + '/embed');
-      frame = await page.frames()[1];
-      await frame.waitForSelector('.cards-section .mosaic');
-      await waitForSelector(frame, '#embedded-footer');
-    });
+// describe("Embed test", () => {
+  // describe("I visit an example embed page", () => {
+    // let frame;
+    // test('page is open and has a frame', async function(){
+      // page = await makePage(appUrl + '/embed');
+      // frame = await page.frames()[1];
+      // await frame.waitForSelector('.cards-section .mosaic');
+      // await waitForSelector(frame, '#embedded-footer');
+    // });
 
-    test('Do not see a content from a main mode', async function() {
-      const title = await frame.$('h1', { text: settings.test.header })
-      expect(await title.boundingBox()).toBe(null)
-    });
+    // test('Do not see a content from a main mode', async function() {
+      // const title = await frame.$('h1', { text: settings.test.header })
+      // expect(await title.boundingBox()).toBe(null)
+    // });
 
-    // ensure that it is clickable
-    test('I can click on a tile in a frame and I get a modal after that', async function() {
-      await waitForSelector(frame, ".cards-section .mosaic img");
-      await frame.click(`.mosaic img`);
-    });
-    close();
-  }, 6 * 60 * 1000); //give it up to 1 min to execute
-});
+    // // ensure that it is clickable
+    // test('I can click on a tile in a frame and I get a modal after that', async function() {
+      // await waitForSelector(frame, ".cards-section .mosaic img");
+      // await frame.click(`.mosaic img`);
+    // });
+    // close();
+  // }, 6 * 60 * 1000); //give it up to 1 min to execute
+// });
 
 describe("Main test", () => {
   describe("I visit a main page and have all required elements", () => {
