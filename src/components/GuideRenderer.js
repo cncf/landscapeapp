@@ -10,7 +10,7 @@ const icons = require('../utils/icons');
 
 // guide is a guide index
 module.exports.render = function({settings, items, guide}) {
-  const title = `<h1 className="title">${h(settings.global.short_name)} Landscape Guide</h1>`;
+  const title = `<h1 className="title" style="margin-top: -5px;">${h(settings.global.short_name)} Landscape Guide</h1>`;
   const renderSubcategoryMetadata = ({ node, entries }) => {
     const orderedEntries = _.orderBy(entries,  (x) => !x.isLarge);
     const projectEntries = entries.filter(entry => entry.project)
@@ -53,7 +53,7 @@ module.exports.render = function({settings, items, guide}) {
       .map(node => {
         const hasChildren = (parents[node.anchor] || 0) > 1
         return `
-          <a href="#${node.anchor}" data-level="${node.level}" class="sidebar-link expandable" style="padding-left: ${10 + node.level * 10} px;">
+          <a href="#${node.anchor}" data-level="${node.level}" class="sidebar-link expandable" style="padding-left: ${10 + node.level * 10}px;">
             ${h(node.title)} ${hasChildren ? icons.expand : ''}
           </a>
           ${hasChildren ? `
@@ -149,7 +149,6 @@ module.exports.render = function({settings, items, guide}) {
       <div class="main-content">
         <div class="container">
           <div class="content">
-            ${title}
             ${renderContent({nodes: guide,enhancedEntries: enhancedEntries})}
           </div>
         </div>
