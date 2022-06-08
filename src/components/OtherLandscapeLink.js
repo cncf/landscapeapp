@@ -6,10 +6,10 @@ const { categoryBorder, categoryTitleHeight, subcategoryTitleHeight } = require(
 
 const renderCardLink = ({ url, children }) => {
   if (url.indexOf('http') === 0) {
-    return `<a data-type=external target=_blank href="${url} style="display: flex; flex-direction: column">${children}</a>`;
+    return `<a data-type=external target=_blank href="${url}" style="display: flex; flex-direction: column;">${children}</a>`;
   } else {
     url = stringifyParams({ mainContentMode: url });
-    return `<a data-type=tab href="${url} style="display: flex; flex-direction: column">${children}</a>`;
+    return `<a data-type=tab href="${url}" style="display: flex; flex-direction: column;">${children}</a>`;
   }
 };
 
@@ -30,13 +30,14 @@ module.exports.renderOtherLandscapeLink = function({top, left, height, width, co
       display: flex;
     ">
       ${renderCardLink({url: url, children: `
-        <div style="width: ${width}px;height: 30px; line-height: 28px; text-align: center; color: 'white'; font-size: 12px;">${h(title)}</div>
-        <div style="flex: 1; background: white; position: relative; display: flex; justify-content: center; align-items: center">
+        <div style="width: ${width}px;height: 30px; line-height: 28px; text-align: center; color: white; font-size: 12px;">${h(title)}</div>
+        <div style="flex: 1; background: white; position: relative; display: flex; justify-content: center; align-items: center;">
             <img loading="lazy" src="${imageSrc}" style="
-              width: ${width - 12}px; height: ${height - 42}px;
+              width: ${width - 12}px;
+              height: ${height - 42}px;
               object-fit: contain;
               background-position: center;
-              background-repeat: no-repeat;" alt=${title} />
+              background-repeat: no-repeat;" alt="${h(title)}" />
         </div>`})}
   </div>`;
   }
@@ -59,18 +60,18 @@ module.exports.renderOtherLandscapeLink = function({top, left, height, width, co
             right: 0;
             boxShadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.2);
             padding: ${categoryBorder}px;
-            display: flex
+            display: flex;
           "
         >
           <div style="
             width: ${categoryTitleHeight}px;
-            writing-mode: 'vertical-rl';
+            writing-mode: vertical-rl;
             transform: rotate(180deg);
             text-align: center;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 12px,
+            font-size: 12px;
             line-height: 13px;
             color: white;
           ">
@@ -82,7 +83,7 @@ module.exports.renderOtherLandscapeLink = function({top, left, height, width, co
             background: white;
             justify-content: center;
             align-items: center; ">
-              <img loading="lazy" src="${imageSrc}" alt="${title}"
+              <img loading="lazy" src="${imageSrc}" alt="${h(title)}"
                   style="width: ${width - 42}px;
                          height: ${height - 32}px;
                          object-fit: contain;
