@@ -646,6 +646,18 @@ const CncfLandscapeApp = {
     assignSingleSelect('sort');
     assignSingleSelect('grouping');
     assignMultiSelect('category');
+
+    const isCardMode = CncfLandscapeApp.state.mode === 'card';
+    if (isCardMode) {
+      document.querySelector('.select[data-name=sort]').classList.remove('select-disabled');
+      document.querySelector('.select[data-name=grouping]').classList.remove('select-disabled');
+      document.querySelector('.select[data-name=category]').classList.remove('select-disabled');
+    } else {
+      document.querySelector('.select[data-name=sort]').classList.add('select-disabled');
+      document.querySelector('.select[data-name=grouping]').classList.add('select-disabled');
+      document.querySelector('.select[data-name=category]').classList.add('select-disabled');
+    }
+
     assignMultiSelect('project');
     assignMultiSelect('license');
     assignMultiSelect('organization');

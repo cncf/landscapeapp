@@ -1858,6 +1858,10 @@ html.ios.has-selected-item, html.ios.has-selected-item body {
 	width: 180px;
   margin-bottom: 10px;
 }
+.select-disabled {
+  opacity: 0.35;
+  pointer-events: none;
+}
 
 .select-text {
 	position: relative;
