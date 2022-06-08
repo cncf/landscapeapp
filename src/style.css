@@ -1293,6 +1293,7 @@ html.ios.has-selected-item, html.ios.has-selected-item body {
   cursor: pointer;
   min-width: 40px;
   text-align: center;
+  margin-top: -6px;
 }
 .right-buttons .disabled {
   cursor: default;
