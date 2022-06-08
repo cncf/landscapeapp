@@ -14,6 +14,7 @@ const renderCardLink = ({ url, children }) => {
 };
 
 module.exports.renderOtherLandscapeLink = function({top, left, height, width, color, title, image, url, layout}) {
+  title = title || ''; //avoid undefined!
   const imageSrc = image || assetPath(`images/${url}_preview.png`);
   if (layout === 'category') {
     return `<div style="
