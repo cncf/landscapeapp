@@ -133,16 +133,16 @@ module.exports.render = function({settings, tweetsCount, itemInfo}) {
       if (itemInfo.oss) {
         const emptyUrl="https://bestpractices.coreinfrastructure.org/";
         return `<a data-type="external" target="_blank" href=${emptyUrl} class="tag tag-grass">
-          <span class="tag-value">No CII Best Practices </span>
+          <span class="tag-value">No OpenSSF Best Practices </span>
           </a>`;
       } else {
         return '';
       }
     }
     const url = `https://bestpractices.coreinfrastructure.org/en/projects/${itemInfo.bestPracticeBadgeId}`;
-    const label = itemInfo.bestPracticePercentage === 100 ? 'passing' : (itemInfo.bestPracticePercentage + '%');
+    const label = itemInfo.bestPracticePercentage === 100 ? '✓' : (itemInfo.bestPracticePercentage + '%');
     return (`<a data-type="external" target="_blank" href="${url}" class="tag tag-grass">
-      <span class="tag-name">CII Best Practices</span>
+      <span class="tag-name">OpenSSF Best Practices</span>
       <span class="tag-value">${label}</span>
       </a>`);
   }
