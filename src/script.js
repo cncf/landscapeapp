@@ -12,6 +12,17 @@ const CncfLandscapeApp = {
 
     this.manageZoomAndFullscreenButtons();
 
+    if (CncfLandscapeApp.state.embed) {
+      document.querySelector('html').classList.add('embed');
+      setInterval(function() {
+        const realHeight = document.querySelector('.column-content').scrollHeight + 80;
+        window.parent.postMessage({
+          type: 'landscapeapp-resize',
+          height: realHeight
+        }, '*');
+      }, 1000);
+      document.querySelector('#embedded-footer a').href = this.stringifyBrowserUrl({...this.state, embed: false});
+    }
     if (CncfLandscapeApp.state.cardStyle === 'borderless') {
       document.querySelector('html').classList.add('borderless-mode');
     }
@@ -145,6 +156,9 @@ const CncfLandscapeApp = {
       if (groupingInternalLinkEl) {
         e.preventDefault();
         e.stopPropagation();
+        if (CncfLandscapeApp.state.embed) {
+          return;
+        }
         const newState = {...CncfLandscapeApp.state };
         const linkState = this.parseUrl({search: groupingInternalLinkEl.getAttribute('href'), pathname: '', hash: ''});
 
@@ -165,6 +179,9 @@ const CncfLandscapeApp = {
       if (selectedItemInternalLinkEl) {
         e.preventDefault();
         e.stopPropagation();
+        if (CncfLandscapeApp.state.embed) {
+          return;
+        }
         const newState = {...CncfLandscapeApp.state };
         const linkState = this.parseUrl({search: selectedItemInternalLinkEl.getAttribute('href'), pathname: '', hash: ''});
         // Hide dialog, switch to a card mode
@@ -293,6 +310,45 @@ const CncfLandscapeApp = {
       }
     }, false);
 
+    // support custom css styles and custom js eval code through iframe
+    window.addEventListener('message', (event) => {
+      var data = event.data;
+      if (data.type === "css") {
+        var styles = data.css;
+        var el = document.createElement('style');
+        el.type = 'text/css';
+        if (el.styleSheet) {
+          el.styleSheet.cssText = styles;
+        } else {
+          el.appendChild(document.createTextNode(styles));
+        }
+        document.getElementsByTagName("head")[0].appendChild(el);
+      }
+      if (data.type === "js") {
+        eval(data.js);
+      }
+    });
+
+    // support css styles via param
+    const params = new URLSearchParams(window.location.search.substring(1));
+    if (params.get('css')) {
+      const element = document.createElement("link");
+      element.setAttribute("rel", "stylesheet");
+      element.setAttribute("type", "text/css");
+      element.setAttribute("href", params.get('css'));
+      document.getElementsByTagName("head")[0].appendChild(element);
+    }
+    if (params.get('style')) {
+      const element = document.createElement("style");
+      let style = params.get('style');
+      try {
+        style = JSON.parse(style)
+      } catch(ex) {
+
+      }
+      element.innerHTML = style;
+      document.getElementsByTagName("head")[0].appendChild(element);
+    }
     window.addEventListener('popstate', (e) => {
       if (e.state) {
         CncfLandscapeApp.state = e.state;
@@ -618,7 +674,8 @@ const CncfLandscapeApp = {
       enduser: params.get('enduser') || '',
       parent: params.get('parent') || '',
       language: params.get('language') || '',
-      selected: params.get('selected') || null
+      selected: params.get('selected') || null,
+      embed: params.has('embed'),
     };
   },
   propagateStateToUiAndUrl: function() {
@@ -804,7 +861,7 @@ const CncfLandscapeApp = {
     }
     // no fields for certain filters yet
     for (let field of ['grouping', 'sort', 'selected', 'bestpractices', 'enduser', 'parent', 'language',
-      'fullscreen']) {
+      'fullscreen', 'embed']) {
       if (state[field] !== initialState[field]) {
         params[field] = state[field]
       }
@@ -879,6 +936,31 @@ const CncfLandscapeApp = {
       document.querySelector('.modal-prev').setAttribute('disabled', '');
     }
 
+    if (window.parentIFrame) {
+      window.parentIFrame.sendMessage({type: 'showModal'});
+      window.parentIFrame.getPageInfo(function(info) {
+        var offset = info.scrollTop - info.offsetTop;
+        var maxHeight = info.clientHeight * 0.9;
+        if (maxHeight > 640) {
+          maxHeight = 640;
+        }
+        var defaultTop = (info.windowHeight - maxHeight) / 2;
+        var top = defaultTop + offset;
+        if (top < 0 && info.iframeHeight <= 600) {
+          top = 10;
+        }
+        setTimeout(function() {
+          const modal = document.querySelector('.modal-body');
+          if (modal) {
+            modal.style.top = top + 'px';
+            modal.style.marginTop = 0;
+            modal.style.marginBottom = 0;
+            modal.style.bottom = '';
+            modal.style.maxHeight = maxHeight + 'px';
+          }
+        }, 10);
+      });
+    }
   },
   updateUrl: function() {
     const newUrl = CncfLandscapeApp.stringifyBrowserUrl(CncfLandscapeApp.state);
@@ -891,6 +973,9 @@ const CncfLandscapeApp = {
   hideSelectedItem: function() {
     document.querySelector('.modal').style.display="none";
     document.querySelector('body').style.overflow = '';
+    if (window.parentIFrame && this.state.embed) {
+      window.parentIFrame.sendMessage({type: 'hideModal'})
+    }
     this.updateUrl();
   },
   fetchApiData: async function() {
@@ -1025,8 +1110,9 @@ const CncfLandscapeApp = {
     }
     document.querySelector('.column-content').style.display= "";
 
-    document.querySelector('#footer').style.display = "";
-    document.querySelector('#embedded-footer').style.display = "none";
+    const isEmbed = this.state.embed;
+    document.querySelector('#footer').style.display = isEmbed ? "none" : "";
+    document.querySelector('#embedded-footer').style.display = isEmbed ? "" : "none";
     this.highlightActiveTab();
     this.manageZoomAndFullscreenButtons();
 
