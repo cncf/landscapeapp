@@ -14,14 +14,18 @@ const CncfLandscapeApp = {
 
     if (CncfLandscapeApp.state.embed) {
       document.querySelector('html').classList.add('embed');
-      setInterval(function() {
-        const realHeight = document.querySelector('.column-content').scrollHeight + 80;
-        window.parent.postMessage({
-          type: 'landscapeapp-resize',
-          height: realHeight
-        }, '*');
-      }, 1000);
-      document.querySelector('#embedded-footer a').href = this.stringifyBrowserUrl({...this.state, embed: false});
+      if (CncfLandscapeApp.state.showModal) {
+        document.querySelector('html').classList.add('modal-embed')
+      } else {
+        setInterval(function() {
+          const realHeight = document.querySelector('.column-content').scrollHeight + 80;
+          window.parent.postMessage({
+            type: 'landscapeapp-resize',
+            height: realHeight
+          }, '*');
+        }, 1000);
+        document.querySelector('#embedded-footer a').href = this.stringifyBrowserUrl({...this.state, embed: false});
+      }
     }
     if (CncfLandscapeApp.state.cardStyle === 'borderless') {
       document.querySelector('html').classList.add('borderless-mode');
@@ -676,6 +680,7 @@ const CncfLandscapeApp = {
       language: params.get('language') || '',
       selected: params.get('selected') || null,
       embed: params.has('embed'),
+      showModal: params.has('showmodal'),
     };
   },
   propagateStateToUiAndUrl: function() {
@@ -884,6 +889,18 @@ const CncfLandscapeApp = {
     return url;
   },
   showSelectedItem: async function(selectedItemId) {
+    if (this.state.embed && !this.state.showModal) {
+      window.parent.postMessage({
+        type: 'landscapeapp-show',
+        selected: selectedItemId,
+        location: {
+          search: window.location.search,
+          pathname: window.location.pathname
+        }
+      }, '*');
+      return;
+    }
+
     this.selectedItems = this.selectedItems || {};
     if (!this.selectedItems[selectedItemId]) {
       const result = await fetch(`${this.basePath}/data/items/info-${selectedItemId}.html`);
@@ -904,7 +921,7 @@ const CncfLandscapeApp = {
     let prevItem = null;
     let nextItem = null;
     if (this.state.mode === 'card') {
-      const items = this.groupedItems.flatMap( (x) => x.items);
+      const items = (this.groupedItems || []).flatMap( (x) => x.items);
       for (let i = 0; i < items.length; i++) {
         if (items[i].id === selectedItemId) {
           prevItem = (items[i - 1] || {}).id;
@@ -935,32 +952,6 @@ const CncfLandscapeApp = {
     } else {
       document.querySelector('.modal-prev').setAttribute('disabled', '');
     }
-
-    if (window.parentIFrame) {
-      window.parentIFrame.sendMessage({type: 'showModal'});
-      window.parentIFrame.getPageInfo(function(info) {
-        var offset = info.scrollTop - info.offsetTop;
-        var maxHeight = info.clientHeight * 0.9;
-        if (maxHeight > 640) {
-          maxHeight = 640;
-        }
-        var defaultTop = (info.windowHeight - maxHeight) / 2;
-        var top = defaultTop + offset;
-        if (top < 0 && info.iframeHeight <= 600) {
-          top = 10;
-        }
-        setTimeout(function() {
-          const modal = document.querySelector('.modal-body');
-          if (modal) {
-            modal.style.top = top + 'px';
-            modal.style.marginTop = 0;
-            modal.style.marginBottom = 0;
-            modal.style.bottom = '';
-            modal.style.maxHeight = maxHeight + 'px';
-          }
-        }, 10);
-      });
-    }
   },
   updateUrl: function() {
     const newUrl = CncfLandscapeApp.stringifyBrowserUrl(CncfLandscapeApp.state);
@@ -971,11 +962,12 @@ const CncfLandscapeApp = {
     }
   },
   hideSelectedItem: function() {
+    if (this.state.showModal) {
+      window.parent.postMessage({type: 'landscapeapp-hide'}, '*');
+      return;
+    }
     document.querySelector('.modal').style.display="none";
     document.querySelector('body').style.overflow = '';
-    if (window.parentIFrame && this.state.embed) {
-      window.parentIFrame.sendMessage({type: 'hideModal'})
-    }
     this.updateUrl();
   },
   fetchApiData: async function() {
@@ -1127,6 +1119,7 @@ const CncfLandscapeApp = {
         result[card.getAttribute('data-id')] = card;
       }
       this.cards = result;
+
     }
 
     const apiData = await this.fetchApiData();
@@ -1166,6 +1159,10 @@ const CncfLandscapeApp = {
     }
     document.querySelector('.column-content').replaceChildren(fragment);
     this.lastCards = JSON.stringify(this.groupedItems);
+
+    if (this.state.selected) {
+      this.propagateStateToUi();
+    }
   }
 }
 document.addEventListener('DOMContentLoaded', () => CncfLandscapeApp.init());

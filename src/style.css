@@ -1647,6 +1647,7 @@ html.ios.has-selected-item, html.ios.has-selected-item body {
     height: 180px;
     top: 0;
     left: 0;
+    user-select: none;
   }
 
   .modal-content .product-tags {
