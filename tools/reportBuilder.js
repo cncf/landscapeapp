@@ -7,7 +7,7 @@
 // messages are stored in /tmp/landscape.json
 // links results are stored in /tmp/links.json
 
-const anchorme = require('anchorme');
+const anchorme = require('anchorme').default;
 const run = function(x) {
   return (require('child_process').execSync(x).toString());
 }
