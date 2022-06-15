@@ -653,6 +653,7 @@ const CncfLandscapeApp = {
 
     const parseMode = (x) => (x || '').indexOf('-mode') !== -1 ? 'card' : (x || CncfLandscapeApp.initialMode);
     const parseCardStyle = (x) => (x || '').indexOf('-mode') !== -1 ? x.replace('-mode', '') : 'card';
+    const parseParamStyle = (x) => ['logo', 'borderless', 'flat'].indexOf(x) !== -1 ? x : '';
 
     return {
       zoom: +params.get('zoom') / 100 || 1,
@@ -661,7 +662,7 @@ const CncfLandscapeApp = {
       activeSection: hash,
 
       mode: parseMode(params.get('format') || pathname) || CncfLandscapeApp.initialMode,
-      cardStyle: params.get('style') || parseCardStyle(pathname),
+      cardStyle: parseParamStyle(params.get('style')) || parseCardStyle(pathname),
 
       grouping: params.get('grouping') || 'project',
       sort: params.get('sort') || 'name',
@@ -954,6 +955,9 @@ const CncfLandscapeApp = {
     }
   },
   updateUrl: function() {
+    if (CncfLandscapeApp.state.embed) {
+      return;
+    }
     const newUrl = CncfLandscapeApp.stringifyBrowserUrl(CncfLandscapeApp.state);
     if (newUrl !== this.previousUrl) {
       history.pushState(CncfLandscapeApp.state, '', newUrl);
