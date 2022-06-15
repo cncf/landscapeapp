@@ -46,7 +46,7 @@ module.exports.renderFlatCard = function renderFlatCard({item}) {
             <div data-id="${item.id}" class="mosaic-wrap">
               <div class="mosaic">
                 <img loading="lazy" src="${assetPath(item.href)}" class="logo" alt="${h(item.name)}" />
-                <div class="separator"/>
+                <div class="separator"></div>
                 <h5>${h(item.flatName)}</h5>
               </div>
             </div>
