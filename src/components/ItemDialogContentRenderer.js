@@ -393,9 +393,12 @@ module.exports.render = function({settings, tweetsCount, itemInfo}) {
 
   const linkToOrganization = closeUrl({ grouping: 'organization', filters: {organization: itemInfo.organization}});
 
-  const renderItemCategory = function(path) {
+  const renderItemCategory = function({path, itemInfo}) {
     var separator = `<span class="product-category-separator" key="product-category-separator">•</span>`;
     var subcategory = _.find(fields.landscape.values,{id: path});
+    if (!subcategory) {
+      throw new Error(`Failed to render ${itemInfo.name}, can not find a subcategory: ${path}, available paths are below: \n${fields.landscape.values.map( (x) => x.id).join('\n')}`);
+    }
     var category = _.find(fields.landscape.values, {id: subcategory.parentId});
     var categoryMarkup = `
       <a data-type="internal" href="${closeUrl({ grouping: 'landscape', filters: {landscape: category.id}})}">${h(category.label)}</a>
@@ -578,7 +581,7 @@ module.exports.render = function({settings, tweetsCount, itemInfo}) {
         <div class="product-parent"><a data-type=internal href="${linkToOrganization}">
           <span>${h(itemInfo.organization)}</span>${renderMemberTag(itemInfo)}</a></div>
         ${productPaths.map( (productPath) => `
-          <div class="product-category">${renderItemCategory(productPath)}</div>
+          <div class="product-category">${renderItemCategory({path: productPath, itemInfo})}</div>
         `).join('')}
         <div class="product-description">${h(itemInfo.description)}</div>
     </div>
