@@ -175,12 +175,12 @@ module.exports.render = function({settings, guidePayload, hasGuide, bigPictureKe
                   ${h(preset.label)}
                 </a> `
               ).join('')}
-              ${ (settings.ads || []).map( (entry) => `
-                  <a data-type="external" target="_blank" class="sidebar-event" href="${entry.url}" title="${h(entry.title)}">
-                    <img src="${assetPath(entry.image)}" alt="${entry.title}" />
-                  </a>
-              `).join('') }
             </div>
+            ${ (settings.ads || []).map( (entry) => `
+                <a data-type="external" target="_blank" class="sidebar-event" href="${entry.url}" title="${h(entry.title)}">
+                  <img src="${assetPath(entry.image)}" alt="${entry.title}" />
+                </a>
+            `).join('') }
 
           </div>
         </div>
@@ -189,7 +189,7 @@ module.exports.render = function({settings, guidePayload, hasGuide, bigPictureKe
         <div class="main">
           <div class="disclaimer">
             <span> ${settings.home.header} </span>
-            Please <a data-type="external" target="_blank" class="https://github.com/${settings.global.repo}">open</a> a pull request to
+            Please <a data-type="external" target="_blank" href="https://github.com/${settings.global.repo}">open</a> a pull request to
             correct any issues. Greyed logos are not open source. Last Updated: ${process.env.lastUpdated}
           </div>
           <h4 class="summary"></h4>

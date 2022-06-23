@@ -1,6 +1,6 @@
 const path = require('path');
 const fs = require('fs/promises');
-const { settings, distPath, basePath } = require('./settings.js');
+const { settings, distPath, basePath, projectPath } = require('./settings.js');
 const  { projects } = require('./loadData.js');
 const { processedLandscape } = require('./processedLandscape.js');
 const { render } = require('../src/components/ItemDialogContentRenderer.js');
@@ -14,6 +14,10 @@ const { getLandscapeItems, expandSecondPathItems } = require('../src/utils/items
 const { findLandscapeSettings } = require('../src/utils/landscapeSettings');
 
 async function main() {
+  const lastDateAsString = require('child_process').execSync(`git log -1 --format=%cd`, { cwd: projectPath}).toString();
+  process.env.lastUpdated = new Date(lastDateAsString).toISOString().substring(0, 20);
+
+
   await fs.mkdir(path.resolve(distPath, 'data/items'), { recursive: true});
   await fs.mkdir(path.resolve(distPath, 'fullscreen'), { recursive: true});
   const payload = {};
