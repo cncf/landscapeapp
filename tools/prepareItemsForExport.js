@@ -125,6 +125,36 @@ const fields = settings => [{
 }, {
   label: 'Github Contributors Link',
   value: 'github_data.contributors_link'
+}, {
+  label: 'Accepted',
+  value: 'extra.accepted'
+}, {
+  label: 'Incubation',
+  value: 'extra.incubation'
+}, {
+  label: 'Graduated',
+  value: 'extra.graduated'
+}, {
+  label: 'Dev Stats Url',
+  value: 'extra.dev_stats_url'
+}, {
+  label: 'Artwork Url',
+  value: 'extra.artwork_url'
+}, {
+  label: 'Blog Url',
+  value: 'extra.blog_url'
+}, {
+  label: 'Mailing List Url',
+  value: 'extra.mailing_list_url'
+}, {
+  label: 'Slack Url',
+  value: 'extra.slack_url'
+}, {
+  label: 'Youtube Url',
+  value: 'extra.youtube_url'
+}, {
+  label: 'Chat Channel',
+  value: 'extra.chat_channel'
 }]
 
 function formatDate(row, field) {
