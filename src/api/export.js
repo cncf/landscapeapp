@@ -44,6 +44,6 @@ module.exports.handler = async function(event) {
   return { statusCode: 200, body: body, headers }
 }
 if (__filename === process.argv[1]) {
-  console.info(JSON.stringify(processRequest(process.argv[2]), null, 4));
+  console.info(processRequest(process.argv[2]), null, 4);
 }
 
