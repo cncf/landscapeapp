@@ -40,7 +40,7 @@ module.exports.render = function({settings, items, guide}) {
         </div> ` : '' }
 
       <div class="items">
-        ${ orderedEntries.map(entry => renderItem(entry)).join('') }
+        ${ orderedEntries.map(entry => renderItem(entry, false)).join('') }
       </div>
       `;
   };
