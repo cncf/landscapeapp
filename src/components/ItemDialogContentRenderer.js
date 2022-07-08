@@ -514,6 +514,78 @@ module.exports.render = function({settings, tweetsCount, itemInfo}) {
     </div>
   ` : '';
 
+  const specialDates = ( function() {
+    let specialKeys = ['accepted', 'incubation', 'graduated', 'archived'];
+    const names = {
+      accepted: 'Accepted',
+      incubation: 'Incubation',
+      graduated: 'Graduated',
+      archived: 'Archived'
+    }
+    let result = {};
+    for (let key of specialKeys) {
+      if (itemInfo.extra && itemInfo.extra[key]) {
+        result[key] = itemInfo.extra[key];
+        delete itemInfo.extra[key];
+      }
+    }
+
+    const keys = Object.keys(result);
+    const values = Object.values(result);
+    if (keys.length === 0) {
+      return '';
+    }
+    if (keys.length === 1) {
+      return `
+        <div class="product-property row">
+          <div class="product-property-name col col-20">${names[keys[0]]}</div>
+          <div class="product-property-name col col-80">${values[0]}</div>
+        </div>
+      `
+    }
+    if (keys.length === 2) {
+      return `
+        <div class="row">
+          <div class="col col-50">
+            <div class="product-property row">
+              <div class="product-property-name col col-40">${names[keys[0]]}</div>
+              <div class="product-property-name col col-60">${values[0]}</div>
+            </div>
+          </div>
+          <div class="col col-50">
+            <div class="product-property row">
+              <div class="product-property-name col col-50">${names[keys[1]]}</div>
+              <div class="product-property-name col col-50">${values[1]}</div>
+            </div>
+          </div>
+        </div>
+      `
+    }
+    if (keys.length === 3) {
+      return `
+        <div class="row">
+          <div class="col col-50">
+            <div class="product-property row">
+              <div class="product-property-name col col-40">${names[keys[0]]}</div>
+              <div class="product-property-name col col-60">${values[0]}</div>
+            </div>
+          </div>
+          <div class="col col-50">
+            <div class="product-property row">
+              <div class="product-property-name col col-50">${names[keys[1]]}</div>
+              <div class="product-property-name col col-50">${values[1]}</div>
+            </div>
+          </div>
+        </div>
+        <div class="product-property row">
+          <div class="product-property-name col col-20">${names[keys[2]]}</div>
+          <div class="product-property-name col col-80">${values[2]}</div>
+        </div>
+      `;
+    }
+    return '';
+  })();
+
   const extraElement = ( function() {
     if (!itemInfo.extra) {
       return '';
@@ -649,14 +721,21 @@ module.exports.render = function({settings, tweetsCount, itemInfo}) {
           ${ twitterElement }
           ${ firstCommitDateElement }
           ${ contributorsCountElement }
-          ${ headquartersElement }
-          ${ amountElement }
-          ${ tickerElement }
         </div>
         <div class="col col-50">
           ${ latestTweetDateElement }
           ${ latestCommitDateElement }
           ${ releaseDateElement }
+        </div>
+      </div>
+      ${specialDates}
+      <div class="row">
+        <div class="col col-50">
+          ${ headquartersElement }
+          ${ amountElement }
+          ${ tickerElement }
+        </div>
+        <div class="col col-50">
           ${ crunchbaseEmployeesElement }
         </div>
       </div>
