@@ -14,6 +14,7 @@ async function main() {
 
   const allowedKeys = [
     'name',
+    'display_name',
     'second_path',
     'homepage_url',
     'logo',

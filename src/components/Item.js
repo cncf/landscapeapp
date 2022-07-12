@@ -8,7 +8,10 @@ const settings = readJsonFromDist('settings');
 const largeItem = function(item) {
   const relationInfo = fields.relation.valuesMap[item.relation]
   const color = relationInfo.big_picture_color;
-  const label = relationInfo.big_picture_label;
+  const label = (relationInfo.big_picture_label_type.toLowerCase() === "item")
+              ? item.display_name || item.name
+              : relationInfo.big_picture_label;
+  const label_color = relationInfo.big_picture_label_color || "white";
   const textHeight = label ? 10 : 0
   const padding = 2
 
@@ -31,7 +34,7 @@ const largeItem = function(item) {
             text-align: center;
             vertical-align: middle;
             background: ${color};
-            color: white;
+            color: ${label_color};
             font-size: 6.7px;
             line-height: ${isMultiline ? 9 : 13 }px;
       ">${ formattedLabel }</div>
