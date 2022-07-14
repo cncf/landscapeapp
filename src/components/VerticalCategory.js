@@ -10,7 +10,7 @@ const {
 const { renderSubcategoryInfo } = require( './SubcategoryInfo');
 const { renderCategoryHeader } = require('./CategoryHeader');
 
-module.exports.renderVerticalCategory = function({header, guideInfo, subcategories, top, left, width, height, color, href, fitWidth}) {
+module.exports.renderVerticalCategory = function({header, guideInfo, subcategories, top, left, width, height, color, href, fitWidth, renderIcons, index}) {
   const subcategoriesWithCalculations = calculateVerticalCategory({ subcategories, fitWidth, width });
   return `<div>
     <div style="
@@ -24,7 +24,7 @@ module.exports.renderVerticalCategory = function({header, guideInfo, subcategori
       padding: 0px;
       display: flex;
       flex-direction: column;
-    " class="big-picture-section">
+    " class="big-picture-section" data-category="${index}">
       <div style="height: ${categoryTitleHeight}px; width: 100%; display: flex;">
         ${renderCategoryHeader({href: href, label: header, guideAnchor: guideInfo && guideInfo[header], background: color})}
       </div>
@@ -55,8 +55,8 @@ module.exports.renderVerticalCategory = function({header, guideInfo, subcategori
                 <a data-type=internal href="${subcategory.href}">${h(name)}</a>
               </div>
             <div style="width: ${width}px; overflow: hidden; margin: 0 auto; ${style} ${extraStyle}">
-              ${subcategory.allItems.map(renderItem).join('')}
-              ${guideInfo ? renderSubcategoryInfo({label: name, anchor: guideInfo, column: columns}) : ''}
+              ${renderIcons ? subcategory.allItems.map(renderItem).join('') : ''}
+              ${renderIcons && guideInfo ? renderSubcategoryInfo({label: name, anchor: guideInfo, column: columns}) : ''}
             </div>
           </div>`
         }).join('')}

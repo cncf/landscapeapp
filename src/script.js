@@ -1051,6 +1051,22 @@ const CncfLandscapeApp = {
     this.highlightActiveTab();
     this.manageZoomAndFullscreenButtons();
 
+    const loadIconsOnFirstTime = async () => {
+      if (!CncfLandscapeApp[landscape + 'Ready']) {
+        const contentEl = document.querySelector(`.landscape-flex[data-mode=${landscape}]`);
+        const tabEl = document.querySelector(`a[data-mode=${landscape}]`);
+        const groups = [...contentEl.querySelectorAll('[data-category]')];
+        for (let group of groups) {
+          const id = group.getAttribute('data-category');
+          const url = `${this.basePath}/data/items/group-${tabEl.getAttribute('href')}-${id}.html`
+          const result = await fetch(url);
+          const text = await result.text();
+          group.outerHTML = text;
+        }
+        CncfLandscapeApp[landscape + 'Ready'] = true;
+      }
+    };
+
     // edge case: we just opened a tab without filters - then just display everything!
     if (this.state.mode === this.initialMode) {
       const allowedProps = ['bestpractices', 'enduser', 'parent', 'language'];
@@ -1068,8 +1084,11 @@ const CncfLandscapeApp = {
           itemEl.style.visibility = '';
         }
         contentEl.querySelector('.inner-landscape').style.display = "";
+        await loadIconsOnFirstTime();
       }
     }
+
+    //now - query the content one by one
 
     const apiData = await this.fetchApiData();
     const bigPictureItems = apiData.items;
@@ -1084,6 +1103,7 @@ const CncfLandscapeApp = {
       const result = await fetch(url);
       const text = await result.text();
       contentEl.querySelector('.inner-landscape').innerHTML = text;
+      await loadIconsOnFirstTime();
     }
 
     const itemElements = [...contentEl.querySelectorAll('[data-id]')];
@@ -1092,6 +1112,7 @@ const CncfLandscapeApp = {
     }
 
     contentEl.querySelector('.inner-landscape').style.display = "";
+
   },
   activateCardMode: async function() {
     const cardStyle = CncfLandscapeApp.state.cardStyle;

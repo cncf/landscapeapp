@@ -1,6 +1,9 @@
+const path = require('path');
+const fs = require('fs');
 const { assetPath }  = require('../utils/assetPath');
 const { fields } = require("../types/fields");
 const { h } = require('../utils/format');
+const { projectPath } = require('../../tools/settings');
 
 const { readJsonFromDist } = require('../utils/readJson');
 const settings = readJsonFromDist('settings');
@@ -12,9 +15,12 @@ const largeItem = function(item) {
   const textHeight = label ? 10 : 0
   const padding = 2
 
+  const filePath = path.join(projectPath, item.href.replace('logos', 'cached_logos'));
+  const fileContent = fs.readFileSync(filePath, 'base64');
+
   return `
     <div data-id="${item.id}" class="large-item item" style="background: ${color}">
-      <img loading="lazy" src="${assetPath(item.href)}" alt="${item.name}" style="
+      <img loading="lazy" src="data:image/svg+xml;base64,${fileContent}" style="
             width: calc(100% - ${2 * padding}px);
             height: calc(100% - ${2 * padding + textHeight}px);
             padding: 5px;
@@ -37,11 +43,13 @@ const largeItem = function(item) {
 
 const smallItem = function(item) {
   const isMember = item.category === settings.global.membership;
+  const filePath = path.join(projectPath, item.href.replace('logos', 'cached_logos'));
+  const fileContent = fs.readFileSync(filePath, 'base64');
   return `
     <img data-id="${item.id}"
           loading="lazy"
           class="item small-item"
-          src="${assetPath(item.href)}"
+          src="data:image/svg+xml;base64,${fileContent}"
           alt="${h(item.name)}"
           style="border-color: ${isMember ? 'white' : ''};"
     />`

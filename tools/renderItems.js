@@ -6,6 +6,7 @@ const { processedLandscape } = require('./processedLandscape.js');
 const { render } = require('../src/components/ItemDialogContentRenderer.js');
 const CardRenderer = require('../src/components/CardRenderer.js');
 const LandscapeContentRenderer = require('../src/components/LandscapeContentRenderer.js');
+const LandscapeSvgGroupsRenderer = require('../src/components/LandscapeSvgGroupsRenderer.js');
 const HomePageRenderer = require('../src/components/HomePageRenderer.js');
 const GuideRenderer = require('../src/components/GuideRenderer.js');
 const EmbedPageRenderer = require('../src/components/EmbedPageRenderer.js');
@@ -43,10 +44,24 @@ async function main() {
       landscapeSettings: landscapeSettings,
       guideIndex
     });
+
     const landscapeContent = LandscapeContentRenderer.render({
       landscapeItems: landscapeItems,
       landscapeSettings: landscapeSettings
     });
+
+    const landscapeSvgGroups = LandscapeSvgGroupsRenderer.render({
+      landscapeItems: landscapeItems,
+      landscapeSettings: landscapeSettings
+    });
+
+    for (let key in landscapeSvgGroups) {
+      await fs.writeFile(path.resolve(distPath, `data/items/group-${landscapeSettings.url}-${key}.html`),
+        landscapeSvgGroups[key]);
+    }
+
+
+
 
     const fullscreenContent = FullscreenLandscapeRenderer.render({
       landscapeSettings: landscapeSettings,
