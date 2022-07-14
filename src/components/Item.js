@@ -1,6 +1,5 @@
 const path = require('path');
 const fs = require('fs');
-const { assetPath }  = require('../utils/assetPath');
 const { fields } = require("../types/fields");
 const { h } = require('../utils/format');
 const { projectPath } = require('../../tools/settings');

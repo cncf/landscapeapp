@@ -4,8 +4,6 @@ const _ = require('lodash');
 
 const { renderHorizontalCategory  } = require('./HorizontalCategory');
 const { renderVerticalCategory } = require('./VerticalCategory');
-const { renderLandscapeInfo } = require('./LandscapeInfo');
-const { renderOtherLandscapeLink } = require('./OtherLandscapeLink');
 
 const extractKeys = (obj, keys) => {
   const attributes = _.pick(obj, keys)
@@ -35,7 +33,7 @@ module.exports.render = function({landscapeSettings, landscapeItems}) {
       }
 
       if (element.type === 'VerticalCategory') {
-        html = renderVerticalCategory({...category, index, ...attributes, renderIcons: true, subcategories: subcategories});
+        const html = renderVerticalCategory({...category, index, ...attributes, renderIcons: true, subcategories: subcategories});
         result[index] = html;
       }
     }
