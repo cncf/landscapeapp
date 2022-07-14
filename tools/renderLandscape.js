@@ -49,7 +49,6 @@ async function main() {
       const fullUrl = `${baseUrl}?version=${version}&scale=false&pdf`
       console.info(`visiting ${fullUrl}`);
       await page.goto(fullUrl, { waitUntil: 'networkidle0'});
-      await page.waitForSelector('[data-category] [data-id]');
       await page.screenshot({ path: path.resolve(distPath, 'images', fileName), fullPage: false });
       if (pdfFileName) {
         await page.emulateMediaType('screen');
