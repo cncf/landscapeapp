@@ -50,6 +50,12 @@ async function main() {
       landscapeSettings: landscapeSettings
     });
 
+    const landscapeContentWithIcons = LandscapeContentRenderer.render({
+      landscapeItems: landscapeItems,
+      landscapeSettings: landscapeSettings,
+      renderIcons: true,
+    });
+
     const landscapeSvgGroups = LandscapeSvgGroupsRenderer.render({
       landscapeItems: landscapeItems,
       landscapeSettings: landscapeSettings
@@ -65,7 +71,7 @@ async function main() {
 
     const fullscreenContent = FullscreenLandscapeRenderer.render({
       landscapeSettings: landscapeSettings,
-      landscapeContent: landscapeContent,
+      landscapeContent: landscapeContentWithIcons,
       version: '1.0'
     });
 
