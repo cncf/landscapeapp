@@ -10,6 +10,11 @@ const icons = require('../utils/icons');
 
 // guide is a guide index
 module.exports.render = function({settings, items, guide}) {
+  const currentBranch = require('child_process').execSync(`git rev-parse --abbrev-ref HEAD`, {
+    cwd: require('../../tools/settings').projectPath
+  }).toString().trim();
+
+
   const title = `<h1 className="title" style="margin-top: -5px;">${h(settings.global.short_name)} Landscape Guide</h1>`;
   const renderSubcategoryMetadata = ({ node, entries }) => {
     const orderedEntries = _.orderBy(entries,  (x) => !x.isLarge);
@@ -149,6 +154,17 @@ module.exports.render = function({settings, items, guide}) {
       <div class="main-content">
         <div class="container">
           <div class="content">
+            <div class="links">
+              <div>
+                ${icons.edit}
+                <a href="https://github.com/${settings.global.repo}/edit/${currentBranch}/guide.md" target="_blank">Edit this page</a>
+              </div>
+              <div style="height: 5px;"></div>
+                <div>
+                ${icons.github}
+                <a href="https://github.com/${settings.global.repo}/issues/new?title=Guide Issue" target="_blank">Report issue</a>
+              </div>
+            </div>
             ${renderContent({nodes: guide,enhancedEntries: enhancedEntries})}
           </div>
         </div>

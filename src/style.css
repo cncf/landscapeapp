@@ -249,6 +249,41 @@ a:hover svg {
   position: relative;
 }
 
+#guide-page .links {
+  position: absolute;
+  left: calc(100% + 20px);
+  top: 0px;
+  font-size: 12px;
+  width: 200px;
+}
+
+@media (max-width: var(--xl-screen)) {
+  #guide-page .links {
+    position: inherit;
+    width: 100%;
+    left: 0;
+    top: 0;
+  }
+  #guide-page .links > div {
+    display: inline-block;
+    padding-right: 100px;
+  }
+}
+
+#guide-page .links > div {
+  position: relative;
+}
+
+#guide-page .links svg {
+  position: relative;
+  top: 2px;
+  width: 12px;
+  height: 12px;
+  margin-top: 2px;
+}
+
+
+
 #guide-page h1 {
   font-size: 2.5em;
 }
@@ -542,6 +577,7 @@ a:hover svg {
 }
 
 #guide-page .content {
+  position: relative;
   max-width: 714px;
   margin: 0 auto;
 }
