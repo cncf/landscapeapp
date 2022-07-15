@@ -250,7 +250,7 @@ a:hover svg {
 }
 
 #guide-page .links {
-  position: absolute;
+  position: fixed;
   right: 10px;
   top: 100px;
   font-size: 16px;
