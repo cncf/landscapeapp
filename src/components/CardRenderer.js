@@ -22,7 +22,7 @@ module.exports.renderDefaultCard = function renderDefaultCard({item}) {
               <div class="mosaic-info">
                 <div class="mosaic-title">
                   <h5>${item.display_name ? h(item.display_name) : h(item.name)}</h5>
-                  ${h(item.organization)}
+                  ${item.organization ? h(item.organization) : ""}
                 </div>
                 <div class="mosaic-stars">
                   ${_.isNumber(item.stars) && item.stars ?

@@ -653,8 +653,8 @@ module.exports.render = function({settings, tweetsCount, itemInfo}) {
   const productInfo = `
     <div class="product-main">
         <div class="product-name">${h(itemInfo.name)}</div>
-        <div class="product-parent"><a data-type=internal href="${linkToOrganization}">
-          <span>${h(itemInfo.organization)}</span>${renderMemberTag(itemInfo)}</a></div>
+        ${itemInfo.organization ? `<div class="product-parent"><a data-type=internal href="${linkToOrganization}">
+          <span>${h(itemInfo.organization)}</span>${renderMemberTag(itemInfo)}</a></div>` : ""}
         ${productPaths.map( (productPath) => `
           <div class="product-category">${renderItemCategory({path: productPath, itemInfo})}</div>
         `).join('')}
