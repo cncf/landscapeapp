@@ -114,6 +114,19 @@ module.exports.render = function({settings, items, guide}) {
   }).filter( (x) => !!x);
 
   return `
+      <div class="links">
+        <div>
+          <a href="https://github.com/${settings.global.repo}/edit/${currentBranch}/guide.md" target="_blank">
+          ${icons.edit}
+          Edit this page</a>
+        </div>
+        <div style="height: 5px;"></div>
+          <div>
+          <a href="https://github.com/${settings.global.repo}/issues/new?title=Guide Issue" target="_blank">
+            ${icons.github}
+          Report issue</a>
+        </div>
+      </div>
       <div class="side-content">
         <span class="landscape-logo">
           <a class="nav-link" href="/">
@@ -154,17 +167,6 @@ module.exports.render = function({settings, items, guide}) {
       <div class="main-content">
         <div class="container">
           <div class="content">
-            <div class="links">
-              <div>
-                ${icons.edit}
-                <a href="https://github.com/${settings.global.repo}/edit/${currentBranch}/guide.md" target="_blank">Edit this page</a>
-              </div>
-              <div style="height: 5px;"></div>
-                <div>
-                ${icons.github}
-                <a href="https://github.com/${settings.global.repo}/issues/new?title=Guide Issue" target="_blank">Report issue</a>
-              </div>
-            </div>
             ${renderContent({nodes: guide,enhancedEntries: enhancedEntries})}
           </div>
         </div>
