@@ -50,6 +50,16 @@ const CncfLandscapeApp = {
         } else if (document.querySelector('.select-popup').style.display === '') {
           document.querySelector('.select-popup').style.display = "none";
         }
+      } else {
+        if (document.querySelector('.select-popup').style.display === '') {
+          if (e.key >= 'a' && e.key <= 'z') {
+            const items = [...document.querySelectorAll('.select-popup .pure-material-checkbox span')];
+            const first = items.find( (i) => i.innerText.toLowerCase().startsWith(e.key.toLowerCase()));
+            if (first) {
+              first.scrollIntoView();
+            }
+          }
+        }
       }
     });
 
