@@ -620,6 +620,13 @@ module.exports.render = function({settings, tweetsCount, itemInfo}) {
     if (!(sections)) {
       items = Object.keys(itemInfo.extra).filter(key=>itemInfo.extra[key]).map(renderExtraField);
     } else {
+      Object.keys(itemInfo.extra).forEach( key => {
+        if (sections.every( section => {
+          return !(section.children.includes(key));
+        })) {
+          throw new Error(`Failed to find key "${key}" in any section of the sections object`);
+        }
+      });
       items = sections.map( section => {
         const section_heading = `<div class="product-property row">
           <div class="product-property-name tight-col col-100" style="font-weight: bold;">${section.name}</div>
