@@ -118,15 +118,17 @@ async function main() {
   if (settings.global.skip_crunchbase) {
     console.info('This project does not fetch crunchbase entries');
     savedCrunchbaseEntries = [];
-  } else if (process.env.CRUNCHBASE_KEY_4) {
-    console.info('Fetching crunchbase entries');
-    savedCrunchbaseEntries = await extractSavedCrunchbaseEntries();
-    crunchbaseEntries = await fetchCrunchbaseEntries({
-      cache: savedCrunchbaseEntries,
-      preferCache: useCrunchbaseCache});
   } else {
-    console.info('CRUNCHBASE_KEY_4 is not set. Using processed_landscape.yml as a source for crunchbase info');
-    crunchbaseEntries = savedCrunchbaseEntries;
+    savedCrunchbaseEntries = await extractSavedCrunchbaseEntries();
+    if (process.env.CRUNCHBASE_KEY_4) {
+      console.info('Fetching crunchbase entries');
+      crunchbaseEntries = await fetchCrunchbaseEntries({
+        cache: savedCrunchbaseEntries,
+        preferCache: useCrunchbaseCache});
+    } else {
+      console.info('CRUNCHBASE_KEY_4 is not set. Using processed_landscape.yml as a source for crunchbase info');
+      crunchbaseEntries = savedCrunchbaseEntries;
+    }
   }
 
   if (!process.env.TWITTER_KEYS) {
