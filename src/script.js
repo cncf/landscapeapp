@@ -1146,7 +1146,12 @@ const CncfLandscapeApp = {
     }
 
     const itemsAndHeaders = this.groupedItems.flatMap(groupedItem => {
-      const items = groupedItem.items;
+      const itemsIncludingDuplicates = groupedItem.items;
+      const items = itemsIncludingDuplicates.filter((item, index) => {
+        return itemsIncludingDuplicates.findIndex((firstItem) => {
+          return item['id'] === firstItem['id']
+        }) === index;
+      });
       const cardElements = items.map( (item) => this.cards[item.id].cloneNode(true))
       const buildHeader = function({ header, count, href }) {
         const div = document.createElement('div');
