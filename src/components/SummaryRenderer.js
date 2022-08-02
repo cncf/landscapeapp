@@ -229,8 +229,16 @@ module.exports.render = function({items}) {
            Github
         </td>
           ${projects.map( (project) => project.repo_url ? `
-            <td><a href="https://github.com/${h((project.repo_url))}" target="_blank">${h(project.repo_url)}</a></td>
-          `: '').join('')}
+            <td><a href="${h(project.repo_url)}" target="_blank">${h(project.repo_url)}</a></td>
+          `: '<td></td>').join('')}
+      </tr>
+      <tr class="landscape">
+        <td class="sticky">
+           Youtube video
+        </td>
+          ${projects.map( (project) => project.extra && project.extra.youtube_url ? `
+            <td><a href="${h(project.extra.youtube_url)}" target="_blank">${h(project.extra.youtube_url)}</a></td>
+          `: '<td></td>').join('')}
       </tr>
     </table>
     </div>
