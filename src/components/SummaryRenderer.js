@@ -1,13 +1,39 @@
 const _ = require('lodash');
 const { h } = require('../utils/format');
+const { formatNumber } = require('../utils/formatNumber');
 
 const goodProjects = ['KubeEdge', 'Akri', 'CDK for Kubernetes (CDK8s)', 'Cloud Custodian', 'Metal3-io', 'OpenYurt', 'SuperEdge'];
 const extra = {
   KubeEdge: {
     personas: 'Platform Engineers',
-    tags: 'tag1, tag2, tag3'
+    tags: 'tag1, tag2, tag3',
+    useCase: `
+KubeEdge is an open source system for extending native containerized application orchestration capabilities to hosts at Edge.It is built upon kubernetes and provides fundamental infrastructure support for network, app. deployment and metadata synchronization between cloud and edge.
+Our goal is to make an open platform to enable Edge computing, extending native containerized application orchestration capabilities to hosts at Edge
+    `,
+    businessUse: 'TBD',
+    releaseRate: '3 months',
+    integrations: 'OpenEBS (CSI support), Calico, Cilium, SDN solutions?, Prometheus, Grafana etc.'
   }
 };
+
+const getLanguages = function(item) {
+  if (item.github_data && item.github_data.languages) {
+    const total = _.sum(item.github_data.languages.map( (x) => x.value));
+    const matching = item.github_data.languages.filter( (x) => x.value > total * 0.3).map( (x) => x.name);
+    return matching.join(', ');
+  } else {
+    return '';
+  }
+}
+
+const getDate = function(date) {
+  if (!date) {
+    return '';
+  }
+  return new Date(date).toISOString().substring(0, 10);
+}
+
 module.exports.render = function({items}) {
 
   const projects = goodProjects.map( (name) => items.filter( (x) => x.name === name)[0]);
@@ -125,6 +151,86 @@ module.exports.render = function({items}) {
           ${projects.map( (project) => `
             <td>${h((extra[project.name] || {}).tags || '').split(',').map( (tag) => `<div>- ${tag}</div>`).join('') }</td>
           `).join('')}
+      </tr>
+      <tr>
+        <td class="sticky">
+           Use Case
+        </td>
+          ${projects.map( (project) => `
+            <td>${h((extra[project.name] || {}).useCase) || ''}</td>
+          `).join('')}
+      </tr>
+      <tr>
+        <td class="sticky">
+           Business Use
+        </td>
+          ${projects.map( (project) => `
+            <td>${h((extra[project.name] || {}).businessUse) || ''}</td>
+          `).join('')}
+      </tr>
+      <tr class="landscape">
+        <td class="sticky">
+           Languages
+        </td>
+          ${projects.map( (project) => `
+            <td>${h(getLanguages(project))}</td>
+          `).join('')}
+      </tr>
+      <tr class="landscape">
+        <td class="sticky">
+           First Commit
+        </td>
+          ${projects.map( (project) => `
+            <td>${h(getDate((project.github_start_commit_data || {}).start_date))}</td>
+          `).join('')}
+      </tr>
+      <tr class="landscape">
+        <td class="sticky">
+           Last Commit
+        </td>
+          ${projects.map( (project) => `
+            <td>${h(getDate((project.github_data || {}).latest_commit_date))}</td>
+          `).join('')}
+      </tr>
+      <tr class="">
+        <td class="sticky">
+           Release Cadence
+        </td>
+          ${projects.map( (project) => `
+            <td>${h((extra[project.name] || {}).releaseRate) || ''}</td>
+          `).join('')}
+      </tr>
+      <tr class="landscape">
+        <td class="sticky">
+           Github Stars
+        </td>
+          ${projects.map( (project) => `
+            <td>${h(formatNumber((project.github_data || {}).stars))}</td>
+          `).join('')}
+      </tr>
+      <tr class="">
+        <td class="sticky">
+           Integrations
+        </td>
+          ${projects.map( (project) => `
+            <td>${h((extra[project.name] || {}).integrations) || ''}</td>
+          `).join('')}
+      </tr>
+      <tr class="landscape">
+        <td class="sticky">
+           Website
+        </td>
+          ${projects.map( (project) => `
+            <td><a href="${h((project.homepage_url))}" target="_blank">${h(project.homepage_url)}</a></td>
+          `).join('')}
+      </tr>
+      <tr class="landscape">
+        <td class="sticky">
+           Github
+        </td>
+          ${projects.map( (project) => project.repo_url ? `
+            <td><a href="https://github.com/${h((project.repo_url))}" target="_blank">${h(project.repo_url)}</a></td>
+          `: '').join('')}
       </tr>
     </table>
     </div>
