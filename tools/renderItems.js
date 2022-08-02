@@ -9,6 +9,7 @@ const LandscapeContentRenderer = require('../src/components/LandscapeContentRend
 const HomePageRenderer = require('../src/components/HomePageRenderer.js');
 const GuideRenderer = require('../src/components/GuideRenderer.js');
 const EmbedPageRenderer = require('../src/components/EmbedPageRenderer.js');
+const SummaryRenderer = require('../src/components/SummaryRenderer.js');
 const FullscreenLandscapeRenderer = require('../src/components/FullscreenLandscapeRenderer');
 const { getLandscapeItems, expandSecondPathItems } = require('../src/utils/itemsCalculator.js');
 const { findLandscapeSettings } = require('../src/utils/landscapeSettings');
@@ -20,6 +21,12 @@ async function main() {
 
   await fs.mkdir(path.resolve(distPath, 'data/items'), { recursive: true});
   await fs.mkdir(path.resolve(distPath, 'fullscreen'), { recursive: true});
+
+  if (settings.global.repo === 'cncf/landscape') {
+    const summary = SummaryRenderer.render({items: expandSecondPathItems(projects)});
+    await fs.writeFile(path.resolve(distPath, 'summary.html'), summary);
+  }
+
   const payload = {};
   const fullscreen = {};
 
