@@ -320,35 +320,38 @@ async function main () {
     });
   }
 
+  const duplicates = Boolean(settings.global.duplicates) || false;
+  if (!(duplicates)) {
 
-  // protect us from duplicates
-  var hasDuplicates = false;
-  await Promise.mapSeries(_.values(_.groupBy(itemsWithExtraFields, 'name')),async function(duplicates) {
-    if (duplicates.length > 1 && duplicates.find(({allow_duplicate_repo}) => !allow_duplicate_repo)) {
-      hasDuplicates = true;
-      await Promise.mapSeries(duplicates, async function(duplicate) {
-        await failOnMultipleErrors(`Duplicate item: ${duplicate.organization} ${duplicate.name} at path ${duplicate.path}`);
-      });
+    //protect us from duplicates
+    var hasDuplicates = false;
+    await Promise.mapSeries(_.values(_.groupBy(itemsWithExtraFields, 'name')),async function(duplicates) {
+     if (duplicates.length > 1 && duplicates.find(({allow_duplicate_repo}) => !allow_duplicate_repo)) {
+       hasDuplicates = true;
+       await Promise.mapSeries(duplicates, async function(duplicate) {
+         await failOnMultipleErrors(`Duplicate item: ${duplicate.organization} ${duplicate.name} at path ${duplicate.path}`);
+       });
     }
-  });
-  if (hasDuplicates) {
-    await reportFatalErrors();
-    require('process').exit(1);
-  }
+    });
+    if (hasDuplicates) {
+     await reportFatalErrors();
+     require('process').exit(1);
+    }
 
-  // protect us from duplicate repo_urls
-  var hasDuplicateRepos = false;
-  await Promise.mapSeries(_.values(_.groupBy(itemsWithExtraFields.filter( (x) => !!x.repo_url), 'repo_url')), async function(duplicates) {
-    if (duplicates.length > 1 && duplicates.find(({allow_duplicate_repo}) => !allow_duplicate_repo)) {
-      hasDuplicateRepos = true;
-      await Promise.mapSeries(duplicates, async function(duplicate) {
-        await failOnMultipleErrors(`Duplicate repo: ${duplicate.repo_url} on ${duplicate.name} at path ${duplicate.path}`);
-      });
+    // protect us from duplicate repo_urls
+    var hasDuplicateRepos = false;
+    await Promise.mapSeries(_.values(_.groupBy(itemsWithExtraFields.filter( (x) => !!x.repo_url), 'repo_url')), async function(duplicates) {
+     if (duplicates.length > 1 && duplicates.find(({allow_duplicate_repo}) => !allow_duplicate_repo)) {
+       hasDuplicateRepos = true;
+       await Promise.mapSeries(duplicates, async function(duplicate) {
+         await failOnMultipleErrors(`Duplicate repo: ${duplicate.repo_url} on ${duplicate.name} at path ${duplicate.path}`);
+       });
+     }
+    });
+    if (hasDuplicateRepos) {
+     await reportFatalErrors();
+     require('process').exit(1);
     }
-  });
-  if (hasDuplicateRepos) {
-    await reportFatalErrors();
-    require('process').exit(1);
   }
 
   var hasEmptyCrunchbase = false;
