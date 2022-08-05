@@ -2,8 +2,6 @@ const _ = require('lodash');
 const { h } = require('../utils/format');
 const { formatNumber } = require('../utils/formatNumber');
 
-const goodProjects = ['KubeEdge', 'Akri', 'CDK for Kubernetes (CDK8s)', 'Cloud Custodian', 'Metal3-io', 'OpenYurt', 'SuperEdge'];
-
 const getLanguages = function(item) {
   if (item.github_data && item.github_data.languages) {
     const total = _.sum(item.github_data.languages.map( (x) => x.value));
@@ -23,7 +21,13 @@ const getDate = function(date) {
 
 module.exports.render = function({items}) {
 
-  const projects = goodProjects.map( (name) => items.filter( (x) => x.name === name)[0]);
+  const projects = items.filter( (x) => !!x.relation && x.relation !== 'member');
+  const categories = _.uniq(projects.map( (x) => x.path.split(' / ')[0]));
+  const categoriesCount = {};
+  for (let k of categories) {
+    categoriesCount[k] = projects.filter( (x) => x.path.split(' / ')[0] === k).length;
+  }
+
 
   const columnWidth = 250;
 
@@ -32,6 +36,13 @@ module.exports.render = function({items}) {
       .category {
         font-size: 24px;
         font-weight: bold;
+      }
+      .categories button {
+        margin: 10px;
+        font-size: 16px;
+      }
+      .categories button.selected {
+        border: 3px solid #666;
       }
       table {
         width: ${columnWidth * projects.length}px;
@@ -69,10 +80,11 @@ module.exports.render = function({items}) {
       }
 
     </style>
-    <h1>CNCF Project Summary Table</h1>
+    <h1>CNCF Project Summary Table (${projects.length})</h1>
 
-    <div class="category">
-      <span>Provisioning</span> • <span>Automation and configuration</span>
+
+    <div class="categories">
+      ${categories.map( (name) => `<button>${name}: ${categoriesCount[name]}</button>`).join('')}
     </div>
 
     <div class="table-wrapper">
@@ -92,7 +104,7 @@ module.exports.render = function({items}) {
            Description
         </td>
           ${projects.map( (project) => `
-            <td>${h(project.description)}</td>
+            <td>${h((project.github_data || project)['description'])}</td>
           `).join('')}
       </tr>
       <tr class="landscape">
