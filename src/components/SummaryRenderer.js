@@ -3,19 +3,6 @@ const { h } = require('../utils/format');
 const { formatNumber } = require('../utils/formatNumber');
 
 const goodProjects = ['KubeEdge', 'Akri', 'CDK for Kubernetes (CDK8s)', 'Cloud Custodian', 'Metal3-io', 'OpenYurt', 'SuperEdge'];
-const extra = {
-  KubeEdge: {
-    personas: 'Platform Engineers',
-    tags: 'tag1, tag2, tag3',
-    useCase: `
-KubeEdge is an open source system for extending native containerized application orchestration capabilities to hosts at Edge.It is built upon kubernetes and provides fundamental infrastructure support for network, app. deployment and metadata synchronization between cloud and edge.
-Our goal is to make an open platform to enable Edge computing, extending native containerized application orchestration capabilities to hosts at Edge
-    `,
-    businessUse: 'TBD',
-    releaseRate: '3 months',
-    integrations: 'OpenEBS (CSI support), Calico, Cilium, SDN solutions?, Prometheus, Grafana etc.'
-  }
-};
 
 const getLanguages = function(item) {
   if (item.github_data && item.github_data.languages) {
@@ -81,31 +68,11 @@ module.exports.render = function({items}) {
         /*compensate for top border*/
       }
 
-      .landscape {
-        color: green;
-      }
-      .hardcoded {
-        color: black;
-      }
-      .info {
-        position: absolute;
-        left: 500px;
-        top: 10px;
-        border: 1px solid black;
-        border-radius: 10px;
-        padding: 10px;
-      }
-
     </style>
     <h1>CNCF Project Summary Table</h1>
 
     <div class="category">
       <span>Provisioning</span> • <span>Automation and configuration</span>
-    </div>
-
-    <div class="info">
-      <div class="landscape">Values from the landscape.yml</div>
-      <div class="hardcoded">Hardcoded values</div>
     </div>
 
     <div class="table-wrapper">
@@ -136,12 +103,12 @@ module.exports.render = function({items}) {
             <td>${h(project.relation)}</td>
           `).join('')}
       </tr>
-      <tr>
+      <tr class="landscape">
         <td class="sticky">
            Personas
         </td>
           ${projects.map( (project) => `
-            <td>${h((extra[project.name] || {}).personas) || ''}</td>
+            <td>${h((project.extra || {})['summary_personas']) || '&nbsp;'}</td>
           `).join('')}
       </tr>
       <tr>
@@ -149,7 +116,7 @@ module.exports.render = function({items}) {
            Tags
         </td>
           ${projects.map( (project) => `
-            <td>${h((extra[project.name] || {}).tags || '').split(',').map( (tag) => `<div>- ${tag}</div>`).join('') }</td>
+            <td>${h((project.extra || {})['summary_tags'] || '').split(',').map( (tag) => `<div>- ${tag.trim()}</div>`).join('') }</td>
           `).join('')}
       </tr>
       <tr>
@@ -157,7 +124,7 @@ module.exports.render = function({items}) {
            Use Case
         </td>
           ${projects.map( (project) => `
-            <td>${h((extra[project.name] || {}).useCase) || ''}</td>
+            <td>${h((project.extra || {})['summary_use_case']) || '&nbsp;'}</td>
           `).join('')}
       </tr>
       <tr>
@@ -165,7 +132,7 @@ module.exports.render = function({items}) {
            Business Use
         </td>
           ${projects.map( (project) => `
-            <td>${h((extra[project.name] || {}).businessUse) || ''}</td>
+            <td>${h((project.extra || {})['summary_business_use_case']) || '&nbsp;'}</td>
           `).join('')}
       </tr>
       <tr class="landscape">
@@ -197,7 +164,7 @@ module.exports.render = function({items}) {
            Release Cadence
         </td>
           ${projects.map( (project) => `
-            <td>${h((extra[project.name] || {}).releaseRate) || ''}</td>
+            <td>${h((project.extra || {})['summary_release_rate']) || '&nbsp;'}</td>
           `).join('')}
       </tr>
       <tr class="landscape">
@@ -213,7 +180,7 @@ module.exports.render = function({items}) {
            Integrations
         </td>
           ${projects.map( (project) => `
-            <td>${h((extra[project.name] || {}).integrations) || ''}</td>
+            <td>${h((project.extra || {})['summary_integrations']) || '&nbsp;'}</td>
           `).join('')}
       </tr>
       <tr class="landscape">
@@ -230,15 +197,15 @@ module.exports.render = function({items}) {
         </td>
           ${projects.map( (project) => project.repo_url ? `
             <td><a href="${h(project.repo_url)}" target="_blank">${h(project.repo_url)}</a></td>
-          `: '<td></td>').join('')}
+          `: '<td>&nbsp;</td>').join('')}
       </tr>
       <tr class="landscape">
         <td class="sticky">
            Youtube video
         </td>
-          ${projects.map( (project) => project.extra && project.extra.youtube_url ? `
-            <td><a href="${h(project.extra.youtube_url)}" target="_blank">${h(project.extra.youtube_url)}</a></td>
-          `: '<td></td>').join('')}
+          ${projects.map( (project) => project.extra && project.extra.summary_intro_url ? `
+            <td><a href="${h(project.extra.summary_intro_url)}" target="_blank">${h(project.extra.summary_intro_url)}</a></td>
+          `: '<td>&nbsp;</td>').join('')}
       </tr>
     </table>
     </div>

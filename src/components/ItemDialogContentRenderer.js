@@ -591,6 +591,9 @@ module.exports.render = function({settings, tweetsCount, itemInfo}) {
       return '';
     }
     const items = Object.keys(itemInfo.extra).map( function(key) {
+      if (key.indexOf('summary_') === 0) {
+        return '';
+      }
       const value = itemInfo.extra[key];
       const keyText = (function() {
         const step1 =  key.replace(/_url/g, '');

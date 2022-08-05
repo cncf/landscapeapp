@@ -21,6 +21,9 @@ module.exports.millify = function(value) {
 }
 
 module.exports.h = function(html) {
+  if (!html) {
+    return '';
+  }
   var entityMap = {
     '&': '&amp;',
     '<': '&lt;',
