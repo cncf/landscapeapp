@@ -40,11 +40,16 @@ module.exports.render = function({items}) {
         font-weight: bold;
       }
       .categories button {
-        margin: 10px;
-        font-size: 16px;
+        margin: 5px;
+        font-size: 14px;
+        cursor: pointer;
+        border: none;
+      }
+      .categories button:hover {
+        outline: 3px solid #eef;
       }
       .categories button.selected {
-        border: 3px solid #666;
+        outline: 3px solid #aaf;
       }
       table {
         width: ${columnWidth * projects.length}px;
@@ -60,6 +65,8 @@ module.exports.render = function({items}) {
         margin: 0;
         border: 1px solid grey;
         border-top-width: 0px;
+        height: 50px;
+        padding: 0 3px;
       }
 
       .table-wrapper {
@@ -91,7 +98,7 @@ module.exports.render = function({items}) {
     </div>
 
     <div class="table-wrapper">
-    <table id="original">
+    <table>
       <tr class="landscape">
         <td class="sticky">
           Project
@@ -221,10 +228,10 @@ module.exports.render = function({items}) {
           `: '<td>&nbsp;</td>').join('')}
       </tr>
     </table>
-    <table id="copy"></table>
     </div>
     <script>
       window.App = {
+        totalCount: ${projects.length},
         categories: ${JSON.stringify(categories)},
         categoryItems: ${JSON.stringify(categoryItems)}
       };
@@ -238,34 +245,18 @@ module.exports.render = function({items}) {
           categoryButton.classList.add('selected');
 
           if (!categoryId) {
-            document.querySelector('#copy').style.display = 'none';
-            document.querySelector('#original').style.display = '';
+            document.querySelector('table').style.width = '';
           } else {
-            document.querySelector('#copy').style.display = '';
-            document.querySelector('#original').style.display = 'none';
-
-            document.querySelector('#copy').innerHTML = '';
             const newWidth = ${columnWidth} * App.categoryItems[categoryId].length;
-            document.querySelector('#copy').style.width = newWidth + 'px';
-
-          for (let tr of [...document.querySelectorAll('#original tr')]) {
-            const copyTr = tr.cloneNode();
-            copyTr.innerHTML = '';
-            document.querySelector('#copy').appendChild(copyTr);
-            const header = tr.children[0].cloneNode();
-            header.innerHTML = tr.children[0].innerHTML;
-            copyTr.appendChild(header);
+            document.querySelector('table').style.width = newWidth + 'px';
+          }
+          for (let tr of [...document.querySelectorAll('tr')]) {
             let index = 0;
             for (let td of [...tr.querySelectorAll('td')].slice(1)) {
               const isVisible = categoryId ? App.categoryItems[categoryId].includes(index) : true;
-              if (isVisible) {
-                const copyTd = td.cloneNode();
-                copyTd.innerHTML = td.innerHTML;
-                copyTr.appendChild(copyTd);
-              }
+              td.style.display = isVisible ? '' : 'none';
               index += 1;
             }
-          }
           }
         }
       }, false);
