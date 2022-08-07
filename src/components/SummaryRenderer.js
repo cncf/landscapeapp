@@ -24,8 +24,10 @@ module.exports.render = function({items}) {
   const projects = items.filter( (x) => !!x.relation && x.relation !== 'member');
   const categories = _.uniq(projects.map( (x) => x.path.split(' / ')[0]));
   const categoriesCount = {};
+  const categoryItems = {};
   for (let k of categories) {
     categoriesCount[k] = projects.filter( (x) => x.path.split(' / ')[0] === k).length;
+    categoryItems[k] = projects.filter( (x) => x.path.split(' / ')[0] === k).map( (x) => projects.indexOf(x));
   }
 
 
@@ -84,21 +86,20 @@ module.exports.render = function({items}) {
 
 
     <div class="categories">
-      ${categories.map( (name) => `<button>${name}: ${categoriesCount[name]}</button>`).join('')}
+      <button>All: ${projects.length}</button>
+      ${categories.map( (name) => `<button data-id="${name}">${name}: ${categoriesCount[name]}</button>`).join('')}
     </div>
 
     <div class="table-wrapper">
-    <table>
-      <thead>
-        <tr class="landscape">
-          <td class="sticky">
-            Project
-          </td>
-          ${projects.map( (project) => `
-            <td>${h(project.name)}</td>
-          `).join('')}
-        </tr>
-      </thead>
+    <table id="original">
+      <tr class="landscape">
+        <td class="sticky">
+          Project
+        </td>
+        ${projects.map( (project, index) => `
+          <td data-project-index="${index}">${h(project.name)}</td>
+        `).join('')}
+      </tr>
       <tr class="landscape">
         <td class="sticky">
            Description
@@ -220,7 +221,55 @@ module.exports.render = function({items}) {
           `: '<td>&nbsp;</td>').join('')}
       </tr>
     </table>
+    <table id="copy"></table>
     </div>
+    <script>
+      window.App = {
+        categories: ${JSON.stringify(categories)},
+        categoryItems: ${JSON.stringify(categoryItems)}
+      };
+      document.body.addEventListener('click', function(e) {
+        const categoryButton = e.target.closest('.categories button');
+        if (categoryButton) {
+          const categoryId = categoryButton.getAttribute('data-id');
+          for (let otherButton of [...document.querySelectorAll('.categories button')]) {
+            otherButton.classList.remove('selected');
+          }
+          categoryButton.classList.add('selected');
+
+          if (!categoryId) {
+            document.querySelector('#copy').style.display = 'none';
+            document.querySelector('#original').style.display = '';
+          } else {
+            document.querySelector('#copy').style.display = '';
+            document.querySelector('#original').style.display = 'none';
+
+            document.querySelector('#copy').innerHTML = '';
+            const newWidth = ${columnWidth} * App.categoryItems[categoryId].length;
+            document.querySelector('#copy').style.width = newWidth + 'px';
+
+          for (let tr of [...document.querySelectorAll('#original tr')]) {
+            const copyTr = tr.cloneNode();
+            copyTr.innerHTML = '';
+            document.querySelector('#copy').appendChild(copyTr);
+            const header = tr.children[0].cloneNode();
+            header.innerHTML = tr.children[0].innerHTML;
+            copyTr.appendChild(header);
+            let index = 0;
+            for (let td of [...tr.querySelectorAll('td')].slice(1)) {
+              const isVisible = categoryId ? App.categoryItems[categoryId].includes(index) : true;
+              if (isVisible) {
+                const copyTd = td.cloneNode();
+                copyTd.innerHTML = td.innerHTML;
+                copyTr.appendChild(copyTd);
+              }
+              index += 1;
+            }
+          }
+          }
+        }
+      }, false);
+    </script>
 
   `
 }
