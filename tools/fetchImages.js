@@ -31,6 +31,7 @@ async function getLandscapeItems() {
     if (node.item !== null) {
       return;
     }
+    saneName(node.name);
     items.push({logo: node.logo, name: node.name, organization: node.organization});
   });
   _.each(items, function(item) {
