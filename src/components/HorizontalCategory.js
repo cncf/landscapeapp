@@ -27,7 +27,7 @@ const renderDivider = (color) => {
     "></div>`;
 }
 
-module.exports.renderHorizontalCategory = function({ header, guideInfo, subcategories, width, height, top, left, color, href, fitWidth }) {
+module.exports.renderHorizontalCategory = function({ header, guideInfo, subcategories, width, height, top, left, color, href, fitWidth, renderIcons, index }) {
   const addInfoIcon = !!guideInfo;
   const subcategoriesWithCalculations = calculateHorizontalCategory({ height, width, subcategories, fitWidth, addInfoIcon })
   const totalRows = Math.max(...subcategoriesWithCalculations.map(({ rows }) => rows))
@@ -39,7 +39,7 @@ module.exports.renderHorizontalCategory = function({ header, guideInfo, subcateg
       height: ${height}px;
       top: ${top}px;
       position: absolute;
-      " class="big-picture-section">
+      " class="big-picture-section" data-category="${index}">
       <div
         style="
           position: absolute;
@@ -107,8 +107,8 @@ module.exports.renderHorizontalCategory = function({ header, guideInfo, subcateg
                   <a data-type="internal" href="${href}" class="white-link">${h(name)}</a>
                 </div>
                 <div style="${style} ${extraStyle}">
-                  ${allItems.map(renderItem).join('')}
-                  ${guideInfo ? renderSubcategoryInfo({label: name, anchor: guideInfo,column: columns, row:totalRows}) : ''}
+                  ${renderIcons ? allItems.map(renderItem).join('') : ''}
+                  ${renderIcons && guideInfo ? renderSubcategoryInfo({label: name, anchor: guideInfo,column: columns, row:totalRows}) : ''}
                 </div>
               </div>
               ${lastSubcategory ? renderDivider(color) : ''}
