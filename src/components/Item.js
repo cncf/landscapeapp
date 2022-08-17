@@ -12,6 +12,9 @@ const largeItem = function(item) {
   const textHeight = label ? 10 : 0
   const padding = 2
 
+  const isMultiline = h(label).length > 20;
+  const formattedLabel = isMultiline ? h(label).replace(' - ', '<br>') : h(label);
+
   return `
     <div data-id="${item.id}" class="large-item item" style="background: ${color}">
       <img loading="lazy" src="${assetPath(item.href)}" alt="${item.name}" style="
@@ -24,14 +27,14 @@ const largeItem = function(item) {
             position: absolute;
             bottom: 0;
             width: 100%;
-            height: ${textHeight + padding}px;
+            height: ${textHeight + padding + (isMultiline ? 6 : 0) }px;
             text-align: center;
             vertical-align: middle;
             background: ${color};
             color: white;
             font-size: 6.7px;
-            line-height: 13px;
-      ">${h(label)}</div>
+            line-height: ${isMultiline ? 9 : 13 }px;
+      ">${ formattedLabel }</div>
     </div>`;
 }
 
