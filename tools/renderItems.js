@@ -173,7 +173,7 @@ async function main() {
   }
 
   for (let item of projects) {
-    const result = render({settings, itemInfo: item, tweetsCount: processedLandscape.twitter_options.count});
+    const result = render({settings, itemInfo: item, tweetsCount: (processedLandscape.twitter_options || {count: 0}).count});
     // console.info(`Rendering ${item.id}`);
     await fs.writeFile(path.resolve(distPath, `data/items/info-${item.id}.html`), result);
     await fs.writeFile(path.resolve(distPath, `data/items/full-${item.id}.html`), '<style>' + processedCss + '</style>' + result);
