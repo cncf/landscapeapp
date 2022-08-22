@@ -267,7 +267,7 @@ const makeRemoteBuildWithCache = async function() {
       rsync -az --chmod=a+r -p -e "ssh -i /tmp/buildbot  -o StrictHostKeyChecking=no " ${remote}:/root/builds/${outputFolder}/dist/* distRemote
     `
   ));
-  await runRemoteWithoutErrors(
+  await runRemote(
     `
       rm -rf /root/builds/${folder}
       rm -rf /root/builds/${outputFolder}
