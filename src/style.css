@@ -1879,6 +1879,30 @@ html.ios.has-selected-item, html.ios.has-selected-item body {
   height: 22px;
 }
 
+.twolines {
+  height: 22px !important;
+  width: 145px !important;
+  position: relative !important;
+}
+
+.twolines .tag-name {
+  position: absolute;
+  left: 0px;
+  top: -1px;
+  width: 145px;
+  padding: 0 !important;
+  margin: 0 !important;
+  text-align: center;
+
+}
+.twolines .tag-value {
+  position: absolute;
+  left: 0px;
+  width: 145px;
+  white-space: normal !important;
+  top: 5px;
+}
+
 .modal-content .single-column .product-property .col:nth-child(1) {
   display: inline-block;
   width: 40%;

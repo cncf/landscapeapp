@@ -48,8 +48,8 @@ module.exports.render = function({settings, tweetsCount, itemInfo}) {
   })();
 
 
-  const renderLinkTag = (label, { name, url = null, color = 'blue', multiline = false }) => {
-    return `<a data-type="internal" href="${url || '/'}" class="tag tag-${color} ${multiline ? 'multiline' : ''}">
+  const renderLinkTag = (label, { name, url = null, color = 'blue', multiline = false, twoLines = false }) => {
+    return `<a data-type="internal" href="${url || '/'}" class="tag tag-${color} ${multiline ? 'multiline' : ''} ${twoLines ? 'twolines' : ''}">
       ${(name ? `<span class="tag-name">${h(name)}</span>` : '')}
       <span class="tag-value">${h(label)}</span>
       </a>`
@@ -78,7 +78,7 @@ module.exports.render = function({settings, tweetsCount, itemInfo}) {
 
     if (prefix && tag) {
       const url = closeUrl({ filters: { relation: project }})
-      return renderLinkTag(tag, {name: prefix, url })
+      return renderLinkTag(tag, {name: prefix, url, twoLines: tag.indexOf(' - ') !== -1 || tag.length > 20 || prefix.length > 20 })
     }
 
     if (isSubsidiaryProject) {
