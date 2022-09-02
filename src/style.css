@@ -1901,6 +1901,7 @@ html.ios.has-selected-item, html.ios.has-selected-item body {
   width: 145px;
   white-space: normal !important;
   top: 5px;
+  text-align: center;
 }
 
 .modal-content .single-column .product-property .col:nth-child(1) {
