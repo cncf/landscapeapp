@@ -25,10 +25,19 @@ module.exports.render = function({items}) {
   const categories = _.uniq(projects.map( (x) => x.path.split(' / ')[0]));
   const categoriesCount = {};
   const categoryItems = {};
+  const subcategories = {};
   for (let k of categories) {
     categoriesCount[k] = projects.filter( (x) => x.path.split(' / ')[0] === k).length;
     categoryItems[k] = projects.filter( (x) => x.path.split(' / ')[0] === k).map( (x) => projects.indexOf(x));
+    const arr = _.uniq(projects.filter( (x) => x.path.split(' / ')[0] === k).map( (x) => x.path.split(' / ')[1]));
+    for (let subcategory of arr) {
+      categoryItems[k + ':' + subcategory] = projects.filter( (x) => x.path === k + ' / ' + subcategory).map( (x) => projects.indexOf(x));
+    }
+    subcategories[k] = arr;
   }
+  console.info(categoryItems);
+
+
 
 
   const columnWidth = 250;
@@ -39,18 +48,19 @@ module.exports.render = function({items}) {
         font-size: 24px;
         font-weight: bold;
       }
-      .categories button {
+
+      .categories {
+        display: inline-block;
         margin: 5px;
         font-size: 14px;
-        cursor: pointer;
-        border: none;
       }
-      .categories button:hover {
-        outline: 3px solid #eef;
+
+      .subcategories {
+        display: inline-block;
+        margin: 5px;
+        font-size: 14px;
       }
-      .categories button.selected {
-        outline: 3px solid #aaf;
-      }
+
       table {
         width: ${columnWidth * projects.length}px;
         table-layout: fixed;
@@ -93,9 +103,16 @@ module.exports.render = function({items}) {
 
 
     <div class="categories">
-      <button>All: ${projects.length}</button>
-      ${categories.map( (name) => `<button data-id="${name}">${name}: ${categoriesCount[name]}</button>`).join('')}
+      <select>
+        <option value="">All: ${projects.length}</option>
+        ${categories.map( (name) => `<option value="${name}">${name}: ${categoriesCount[name]}</option>`).join('')}
+      </select>
     </div>
+
+    <div class="subcategories" style="display: none">
+      <select></select>
+    </div>
+
 
     <div class="table-wrapper">
     <table>
@@ -233,33 +250,55 @@ module.exports.render = function({items}) {
       window.App = {
         totalCount: ${projects.length},
         categories: ${JSON.stringify(categories)},
-        categoryItems: ${JSON.stringify(categoryItems)}
+        categoryItems: ${JSON.stringify(categoryItems)},
+        subcategories: ${JSON.stringify(subcategories)}
       };
-      document.body.addEventListener('click', function(e) {
-        const categoryButton = e.target.closest('.categories button');
-        if (categoryButton) {
-          const categoryId = categoryButton.getAttribute('data-id');
-          for (let otherButton of [...document.querySelectorAll('.categories button')]) {
-            otherButton.classList.remove('selected');
-          }
-          categoryButton.classList.add('selected');
+      document.querySelector('.categories select').addEventListener('change', function(e) {
+        const selectedOption = Array.from(document.querySelectorAll('.categories option')).find( (x) => x.selected);
+        const categoryId = selectedOption.value;
+        if (!categoryId) {
+          document.querySelector('table').style.width = '';
+          document.querySelector('.subcategories').style.display = 'none';
+        } else {
+          document.querySelector('.subcategories').style.display = '';
+          const newWidth = ${columnWidth} * App.categoryItems[categoryId].length;
+          document.querySelector('table').style.width = newWidth + 'px';
 
-          if (!categoryId) {
-            document.querySelector('table').style.width = '';
-          } else {
-            const newWidth = ${columnWidth} * App.categoryItems[categoryId].length;
-            document.querySelector('table').style.width = newWidth + 'px';
-          }
-          for (let tr of [...document.querySelectorAll('tr')]) {
-            let index = 0;
-            for (let td of [...tr.querySelectorAll('td')].slice(1)) {
-              const isVisible = categoryId ? App.categoryItems[categoryId].includes(index) : true;
-              td.style.display = isVisible ? '' : 'none';
-              index += 1;
-            }
+          const subcategories = window.App.subcategories[categoryId];
+          const baseMarkup = '<option value="">All</option>';
+          const markup = subcategories.map( (s) => '<option value="' + s + '">' + s + '</option>').join('');
+          document.querySelector('.subcategories select').innerHTML = baseMarkup + markup;
+
+        }
+
+        for (let tr of [...document.querySelectorAll('tr')]) {
+          let index = 0;
+          for (let td of [...tr.querySelectorAll('td')].slice(1)) {
+            const isVisible = categoryId ? App.categoryItems[categoryId].includes(index) : true;
+            td.style.display = isVisible ? '' : 'none';
+            index += 1;
           }
         }
-      }, false);
+      });
+
+      document.querySelector('.subcategories select').addEventListener('change', function(e) {
+        const categoryId = Array.from(document.querySelectorAll('.categories option')).find( (x) => x.selected).value;
+        const subcategoryId = Array.from(document.querySelectorAll('.subcategories option')).find( (x) => x.selected).value;
+
+        let key = subcategoryId ? (categoryId + ':' + subcategoryId) : categoryId;
+
+        const newWidth = ${columnWidth} * App.categoryItems[key].length;
+        document.querySelector('table').style.width = newWidth + 'px';
+
+        for (let tr of [...document.querySelectorAll('tr')]) {
+          let index = 0;
+          for (let td of [...tr.querySelectorAll('td')].slice(1)) {
+            const isVisible = App.categoryItems[key].includes(index);
+            td.style.display = isVisible ? '' : 'none';
+            index += 1;
+          }
+        }
+      });
     </script>
 
   `
