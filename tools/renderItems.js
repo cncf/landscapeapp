@@ -128,6 +128,7 @@ async function main() {
       <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
       <title>${settings.global.meta.title}</title>
       <meta name="description" content="${description}" />
+      ${!settings.global.meta.extra ? `
       <meta property="og:locale" content="en_US"/>
       <meta property="og:type" content="website"/>
       <meta property="og:title" content="${settings.global.meta.title}"/>
@@ -140,7 +141,7 @@ async function main() {
       <meta name="twitter:card" content="summary"/>
       <meta name="twitter:site" content="${settings.global.meta.twitter}"/>
       <meta name="twitter:creator" content="${settings.global.meta.twitter}"/>
-      ${settings.global.meta.extra || ""}
+      ` : settings.global.meta.extra }
       <meta name="google-site-verification" content="${settings.global.meta.google_site_verification}"/>
       <meta name="msvalidate.01" content="${settings.global.meta.ms_validate}"/>
       <link rel="icon" type="image/png" href="/favicon.png" />
