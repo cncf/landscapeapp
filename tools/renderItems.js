@@ -148,7 +148,7 @@ async function main() {
   `
   const renderPage = ({homePage, mode}) => {
     let result = `
-    <!DOCTYPE html>
+    <!DOCTYPE html lang="en">
     ${headers}
     <script>${ga}</script>
     <style>

@@ -129,8 +129,8 @@ module.exports.render = function({settings, items, guide}) {
       </div>
       <div class="side-content">
         <span class="landscape-logo">
-          <a class="nav-link" href="/">
-            <img src="${assetPath("images/left-logo.svg")} ">
+          <a aria-label="reset filters" class="nav-link" href="/">
+            <img alt="landscape logo" src="${assetPath("images/left-logo.svg")} ">
           </a>
         </span>
         <div class="guide-sidebar">
@@ -146,10 +146,10 @@ module.exports.render = function({settings, items, guide}) {
       <div class="guide-header">
         <div class="container">
           <div class="content">
-            <button class="sidebar-show">${icons.sidebar}</button>
+            <button class="sidebar-show" role="none">${icons.sidebar}</button>
             <span class="landscape-logo">
-              <a class="nav-link" href="/">
-                <img src="${assetPath("/images/left-logo.svg")}">
+              <a aria-label="reset filters" class="nav-link" href="/">
+                <img alt="landscape logo" src="${assetPath("/images/left-logo.svg")}">
               </a>
             </span>
             ${title}

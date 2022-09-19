@@ -107,8 +107,8 @@ module.exports.render = function({settings, guidePayload, hasGuide, bigPictureKe
     <div id="guide-page" style="display: ${guidePayload ? "" : "none"};" data-loaded="${guidePayload ? "true" : ""}">
       ${ !guidePayload ? `<div class="side-content">
                             <span class="landscape-logo">
-                              <a class="nav-link" href="/">
-                                <img src="${assetPath("images/left-logo.svg")}" />
+                              <a aria-label="reset filters" class="nav-link" href="/">
+                                <img alt="landscape logo" src="${assetPath("images/left-logo.svg")}" />
                               </a>
                             </span>
                             <div class="guide-sidebar">
@@ -125,12 +125,12 @@ module.exports.render = function({settings, guidePayload, hasGuide, bigPictureKe
     <div id="home" style="display: ${guidePayload ? "none" : ""}" class="app">
       <div class="app-overlay"></div>
       <div class="main-parent">
-        <button class="sidebar-show">${icons.sidebar}</button>
+        <button class="sidebar-show" role="none">${icons.sidebar}</button>
         <div class="header_container">
           <div  class="header">
             <span class="landscape-logo">
-              <a class="nav-link" href="/">
-                <img src="${assetPath("images/left-logo.svg")}" />
+              <a aria-label="reset filters" class="nav-link" href="/">
+                <img alt="landscape logo" src="${assetPath("images/left-logo.svg")}" />
               </a>
             </span>
             <a rel="noopener noreferrer noopener noreferrer"

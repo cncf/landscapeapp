@@ -628,7 +628,7 @@ module.exports.render = function({settings, tweetsCount, itemInfo}) {
 
     const productLogoAndTagsAndCharts = `
       <div class="product-logo" style="${getRelationStyle(itemInfo.relation)}">
-        <img src="${assetPath(itemInfo.href)}" class="product-logo-img">
+        <img alt="product logo" src="${assetPath(itemInfo.href)}" class="product-logo-img">
       </div>
       <div class="product-tags">
         <div class="product-badges" style="width: 300px;" >
@@ -755,7 +755,7 @@ module.exports.render = function({settings, tweetsCount, itemInfo}) {
         ${renderParticipation(itemInfo)}
       </div>
       ${ itemInfo.twitter ? `<div class="twitter-timeline">
-          <a class="twitter-timeline" data-tweet-limit="5" href="${itemInfo.twitter}"></a>
+          <a class="twitter-timeline" aria-hidden="true" data-tweet-limit="5" href="${itemInfo.twitter}"></a>
         </div>` : '' }
     </div>
   </div>`;
