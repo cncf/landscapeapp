@@ -148,7 +148,9 @@ async function main() {
   `
   const renderPage = ({homePage, mode}) => {
     let result = `
-    <!DOCTYPE html lang="en">
+    <!DOCTYPE html>
+    <html lang="en">
+    <head>
     ${headers}
     <script>${ga}</script>
     <style>
@@ -164,9 +166,11 @@ async function main() {
       CncfLandscapeApp.initialMode = '${mode}';
       CncfLandscapeApp.basePath = '${basePath}';
     </script>
+    </head>
     <body style="opacity: 0;">
       ${homePage}
     </body>
+    </html>
     `;
     for(let key in payload) {
       result = result.replace( '$$' + key + '$$', payload[key]);

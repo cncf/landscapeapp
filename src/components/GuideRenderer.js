@@ -146,7 +146,7 @@ module.exports.render = function({settings, items, guide}) {
       <div class="guide-header">
         <div class="container">
           <div class="content">
-            <button class="sidebar-show" role="none">${icons.sidebar}</button>
+            <button class="sidebar-show" role="none" aria-label="show sidebar">${icons.sidebar}</button>
             <span class="landscape-logo">
               <a aria-label="reset filters" class="nav-link" href="/">
                 <img alt="landscape logo" src="${assetPath("/images/left-logo.svg")}">

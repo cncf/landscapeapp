@@ -125,7 +125,7 @@ module.exports.render = function({settings, guidePayload, hasGuide, bigPictureKe
     <div id="home" style="display: ${guidePayload ? "none" : ""}" class="app">
       <div class="app-overlay"></div>
       <div class="main-parent">
-        <button class="sidebar-show" role="none">${icons.sidebar}</button>
+        <button class="sidebar-show" role="none" aria-label="show sidebar">${icons.sidebar}</button>
         <div class="header_container">
           <div  class="header">
             <span class="landscape-logo">
