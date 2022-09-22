@@ -14,8 +14,8 @@ require('child_process').execSync(`cd '${projectPath}'; git remote add github ht
 console.info(require('child_process').execSync(`cd '${projectPath}'; git fetch github`).toString('utf-8'));
 
 function getFileFromHistory(days) {
-  const commit = getCommitFromHistory(days);
-  const content = require('child_process').execSync(`cd '${projectPath}'; git show ${commit}:processed_landscape.yml`, {
+  // const commit = getCommitFromHistory(days);
+  const content = require('child_process').execSync(`cd '${projectPath}'; git show HEAD~${days}:processed_landscape.yml`, {
     maxBuffer: 100 * 1024 * 1024
   }).toString('utf-8');
   const source = require('js-yaml').load(content);
