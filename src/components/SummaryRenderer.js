@@ -266,7 +266,7 @@ module.exports.render = function({items}) {
 
           const subcategories = window.App.subcategories[categoryId];
           const baseMarkup = '<option value="">All</option>';
-          const markup = subcategories.map( (s) => '<option value="' + s + '">' + s + '</option>').join('');
+          const markup = subcategories.map( (s) => '<option value="' + s + '">' + s + ':&nbsp;' + window.App.categoryItems[categoryId + ':' + s].length  + '</option>').join('');
           document.querySelector('.subcategories select').innerHTML = baseMarkup + markup;
 
         }
