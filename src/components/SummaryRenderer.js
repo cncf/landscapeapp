@@ -44,6 +44,24 @@ module.exports.render = function({items}) {
 
   return `
     <style>
+      ::root {
+        --navy: #38404a;
+        --navy-light: #696D70;
+        --blue: #2E67BF;
+        --blue-hover: #1D456B;
+        --spacing: 1em;
+      }
+      body {
+        color: rgba(0, 0, 0, 0.87);
+        margin: 0;
+        font-size: 0.875rem;
+        font-family: "Roboto", "Helvetica", "Arial", sans-serif;
+        font-weight: 400;
+        line-height: 1.43;
+        letter-spacing: 0.01071em;
+        background-color: #fafafa;
+      }
+
       .category {
         font-size: 24px;
         font-weight: bold;
@@ -77,6 +95,9 @@ module.exports.render = function({items}) {
         border-top-width: 0px;
         height: 50px;
         padding: 0 3px;
+        overflow: hidden;
+        font-size: 0.8em;
+        color: var(--navy);
       }
 
       .table-wrapper {
@@ -85,32 +106,193 @@ module.exports.render = function({items}) {
         margin-left: 150px;
         overflow-y: visible;
         padding: 0;
+        padding-left: 16px;
       }
 
       .sticky {
+        background-color: #fafafa;
         position: absolute;
-        width: 150px;
-        left: 0;
+        width: 142px;
+        left: 16px;
         top: auto;
         border-top-width: 1px;
         /*only relevant for first row*/
         margin-top: -1px;
         /*compensate for top border*/
+        font-size: 0.8em;
+        color: var(--navy);
+        font-weight: bold;
+      }
+      .sticky span {
+        white-space: nowrap;
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        transform: translate(-50%, -50%);
       }
 
+      h1 {
+        font-size: 2.1rem;
+        line-height: 30px;
+        display: block;
+        margin: 0 0 14px;
+        color: var(--navy);
+      }
+      .landscape-logo {
+        width: 160px;
+        height: 48px;
+        display: inline-block;
+      }
+      .main-header {
+        padding: 16px;
+      }
+
+      /* select starting stylings ------------------------------*/
+.select {
+  font-family: 'Roboto';
+	position: relative;
+	width: 240px;
+  margin-bottom: 10px;
+}
+.select-disabled {
+  opacity: 0.35;
+  pointer-events: none;
+}
+
+.select-text {
+	position: relative;
+	font-family: inherit;
+	background-color: transparent;
+	width: 100%;
+  font-size: 11px;
+	padding: 10px 22px 10px 0;
+	border-radius: 0;
+	border: none;
+	border-bottom: 1px solid rgba(0,0,0, 0.12);
+}
+
+/* Remove focus */
+.select-text:focus {
+	outline: none;
+	border-bottom: 1px solid rgba(0,0,0, 0);
+}
+
+	/* Use custom arrow */
+.select .select-text {
+	appearance: none;
+	-webkit-appearance:none
+}
+
+.select:after {
+	position: absolute;
+	top: 18px;
+	right: 10px;
+	/* Styling the down arrow */
+	width: 0;
+	height: 0;
+	padding: 0;
+	content: '';
+	border-left: 6px solid transparent;
+	border-right: 6px solid transparent;
+	border-top: 6px solid rgba(0, 0, 0, 0.12);
+	pointer-events: none;
+}
+
+
+/* LABEL ======================================= */
+.select-label {
+	color: rgb(105, 109, 112);
+	font-size: 10px;
+	font-weight: normal;
+	position: absolute;
+	pointer-events: none;
+	left: 0;
+	top: 10px;
+	transition: 0.2s ease all;
+}
+
+/* active state */
+.select-text:focus ~ .select-label, .select-text ~ .select-label {
+	top: -10px;
+	transition: 0.2s ease all;
+	font-size: 11px;
+}
+
+/* BOTTOM BARS ================================= */
+.select-bar {
+	position: relative;
+	display: block;
+	width: 100%;
+}
+
+.select-bar:before, .select-bar:after {
+	content: '';
+	height: 2px;
+	width: 0;
+	bottom: 1px;
+	position: absolute;
+	background: #2F80ED;
+	transition: 0.2s ease all;
+}
+
+.select-bar:before {
+	left: 50%;
+}
+
+.select-bar:after {
+	right: 50%;
+}
+
+/* active state */
+.select-text:focus ~ .select-bar:before, .select-text:focus ~ .select-bar:after {
+	width: 50%;
+}
+
+.select-highlight {
+	position: absolute;
+	height: 60%;
+	width: 100px;
+	top: 25%;
+	left: 0;
+	pointer-events: none;
+	opacity: 0.5;
+}
+
     </style>
-    <h1>CNCF Project Summary Table (${projects.length})</h1>
+    <div class="main-header">
+    <span class="landscape-logo">
+      <a aria-label="reset filters" class="nav-link" href="/">
+        <img alt="landscape logo" src="/images/left-logo.svg">
+      </a>
+    </span>
+    <span style="display: inline-block; position: relative; top: -8px; left: 20px;">
+      <h1>CNCF Project Summary Table (${projects.length})</h1>
+    </span>
+    </div>
 
-
+    <div style="padding: 16px; position: relative; top: -19px;">
     <div class="categories">
-      <select>
-        <option value="">All: ${projects.length}</option>
-        ${categories.map( (name) => `<option value="${name}">${name}: ${categoriesCount[name]}</option>`).join('')}
-      </select>
+      <div class="select">
+        <select class="select-text" required="">
+          <option value="" selected="">All: ${projects.length}</option>
+          ${categories.map( (name) => `<option value="${name}">${name}: ${categoriesCount[name]}</option>`).join('')}
+        </select>
+        <span class="select-highlight"></span>
+        <span class="select-bar"></span>
+        <label class="select-label">Category</label>
+      </div>
     </div>
 
     <div class="subcategories" style="display: none">
-      <select></select>
+      <div class="select">
+        <select class="select-text" required="">
+
+        </select>
+        <span class="select-highlight"></span>
+        <span class="select-bar"></span>
+        <label class="select-label">Subcategory</label>
+      </div>
+    </div>
     </div>
 
 
@@ -118,7 +300,7 @@ module.exports.render = function({items}) {
     <table>
       <tr class="landscape">
         <td class="sticky">
-          Project
+          <span> Project </span>
         </td>
         ${projects.map( (project, index) => `
           <td data-project-index="${index}">${h(project.name)}</td>
@@ -126,7 +308,7 @@ module.exports.render = function({items}) {
       </tr>
       <tr class="landscape">
         <td class="sticky">
-           Description
+           <span>Description</span>
         </td>
           ${projects.map( (project) => `
             <td>${h((project.github_data || project)['description'])}</td>
@@ -134,7 +316,7 @@ module.exports.render = function({items}) {
       </tr>
       <tr class="landscape">
         <td class="sticky">
-           Maturity
+           <span>Maturity</span>
         </td>
           ${projects.map( (project) => `
             <td>${h(project.relation)}</td>
@@ -142,7 +324,7 @@ module.exports.render = function({items}) {
       </tr>
       <tr class="landscape">
         <td class="sticky">
-           Personas
+           <span>Personas</span>
         </td>
           ${projects.map( (project) => `
             <td>${h((project.extra || {})['summary_personas']) || '&nbsp;'}</td>
@@ -150,7 +332,7 @@ module.exports.render = function({items}) {
       </tr>
       <tr>
         <td class="sticky">
-           Tags
+           <span>Tags</span>
         </td>
           ${projects.map( (project) => `
             <td>${h((project.extra || {})['summary_tags'] || '').split(',').map( (tag) => `<div>- ${tag.trim()}</div>`).join('') }</td>
@@ -158,7 +340,7 @@ module.exports.render = function({items}) {
       </tr>
       <tr>
         <td class="sticky">
-           Use Case
+           <span>Use Case</span>
         </td>
           ${projects.map( (project) => `
             <td>${h((project.extra || {})['summary_use_case']) || '&nbsp;'}</td>
@@ -166,7 +348,7 @@ module.exports.render = function({items}) {
       </tr>
       <tr>
         <td class="sticky">
-           Business Use
+           <span>Business Use</span>
         </td>
           ${projects.map( (project) => `
             <td>${h((project.extra || {})['summary_business_use_case']) || '&nbsp;'}</td>
@@ -174,7 +356,7 @@ module.exports.render = function({items}) {
       </tr>
       <tr class="landscape">
         <td class="sticky">
-           Languages
+           <span>Languages</span>
         </td>
           ${projects.map( (project) => `
             <td>${h(getLanguages(project))}</td>
@@ -182,7 +364,7 @@ module.exports.render = function({items}) {
       </tr>
       <tr class="landscape">
         <td class="sticky">
-           First Commit
+           <span>First Commit</span>
         </td>
           ${projects.map( (project) => `
             <td>${h(getDate((project.github_start_commit_data || {}).start_date))}</td>
@@ -190,7 +372,7 @@ module.exports.render = function({items}) {
       </tr>
       <tr class="landscape">
         <td class="sticky">
-           Last Commit
+           <span>Last Commit</span>
         </td>
           ${projects.map( (project) => `
             <td>${h(getDate((project.github_data || {}).latest_commit_date))}</td>
@@ -198,7 +380,7 @@ module.exports.render = function({items}) {
       </tr>
       <tr class="">
         <td class="sticky">
-           Release Cadence
+           <span>Release Cadence</span>
         </td>
           ${projects.map( (project) => `
             <td>${h((project.extra || {})['summary_release_rate']) || '&nbsp;'}</td>
@@ -206,7 +388,7 @@ module.exports.render = function({items}) {
       </tr>
       <tr class="landscape">
         <td class="sticky">
-           Github Stars
+           <span>Github Stars</span>
         </td>
           ${projects.map( (project) => `
             <td>${h(formatNumber((project.github_data || {}).stars))}</td>
@@ -214,7 +396,7 @@ module.exports.render = function({items}) {
       </tr>
       <tr class="">
         <td class="sticky">
-           Integrations
+           <span>Integrations</span>
         </td>
           ${projects.map( (project) => `
             <td>${h((project.extra || {})['summary_integrations']) || '&nbsp;'}</td>
@@ -222,7 +404,7 @@ module.exports.render = function({items}) {
       </tr>
       <tr class="landscape">
         <td class="sticky">
-           Website
+           <span>Website</span>
         </td>
           ${projects.map( (project) => `
             <td><a href="${h((project.homepage_url))}" target="_blank">${h(project.homepage_url)}</a></td>
@@ -230,7 +412,7 @@ module.exports.render = function({items}) {
       </tr>
       <tr class="landscape">
         <td class="sticky">
-           Github
+           <span>Github</span>
         </td>
           ${projects.map( (project) => project.repo_url ? `
             <td><a href="${h(project.repo_url)}" target="_blank">${h(project.repo_url)}</a></td>
@@ -238,7 +420,7 @@ module.exports.render = function({items}) {
       </tr>
       <tr class="landscape">
         <td class="sticky">
-           Youtube video
+           <span>Youtube video</span>
         </td>
           ${projects.map( (project) => project.extra && project.extra.summary_intro_url ? `
             <td><a href="${h(project.extra.summary_intro_url)}" target="_blank">${h(project.extra.summary_intro_url)}</a></td>
@@ -247,6 +429,15 @@ module.exports.render = function({items}) {
     </table>
     </div>
     <script>
+      function setHeight() {
+        const rows = [...document.querySelectorAll('tr')];
+        for (let row of rows) {
+          const headerEl = row.querySelector('td.sticky');
+          const firstEl = [...row.querySelectorAll('td')].filter((x) => x.style.display !== 'none')[1];
+          headerEl.style.height = firstEl.getBoundingClientRect().height + 'px';
+        }
+      }
+
       window.App = {
         totalCount: ${projects.length},
         categories: ${JSON.stringify(categories)},
@@ -279,6 +470,7 @@ module.exports.render = function({items}) {
             index += 1;
           }
         }
+        setHeight();
       });
 
       document.querySelector('.subcategories select').addEventListener('change', function(e) {
@@ -298,7 +490,9 @@ module.exports.render = function({items}) {
             index += 1;
           }
         }
+        setHeight();
       });
+      setHeight();
     </script>
 
   `
