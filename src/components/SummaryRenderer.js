@@ -94,16 +94,16 @@ module.exports.render = function({items}) {
         border: 1px solid grey;
         border-top-width: 0px;
         height: 50px;
-        padding: 0 3px;
+        padding: 5px;
         overflow: hidden;
         font-size: 0.8em;
         color: var(--navy);
       }
 
       .table-wrapper {
-        width: calc(100% - 150px);
+        width: calc(100% - 134px);
         overflow-x: scroll;
-        margin-left: 150px;
+        margin-left: 154px;
         overflow-y: visible;
         padding: 0;
         padding-left: 16px;
@@ -112,7 +112,7 @@ module.exports.render = function({items}) {
       .sticky {
         background-color: #fafafa;
         position: absolute;
-        width: 142px;
+        width: 152px;
         left: 16px;
         top: auto;
         border-top-width: 1px;
@@ -122,6 +122,7 @@ module.exports.render = function({items}) {
         font-size: 0.8em;
         color: var(--navy);
         font-weight: bold;
+        padding: 0px;
       }
       .sticky span {
         white-space: nowrap;
@@ -427,6 +428,7 @@ module.exports.render = function({items}) {
           `: '<td>&nbsp;</td>').join('')}
       </tr>
     </table>
+    <div style="height: 20px;"></div>
     </div>
     <script>
       function setHeight() {
