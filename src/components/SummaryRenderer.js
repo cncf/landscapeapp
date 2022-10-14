@@ -35,7 +35,6 @@ module.exports.render = function({items}) {
     }
     subcategories[k] = arr;
   }
-  console.info(categoryItems);
 
 
 
