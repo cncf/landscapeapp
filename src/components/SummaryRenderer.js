@@ -44,6 +44,7 @@ module.exports.render = function({items}) {
 
   return `
     <style>
+      ${require('fs').readFileSync('src/fonts.css', 'utf-8')}
       ::root {
         --navy: #38404a;
         --navy-light: #696D70;
@@ -84,20 +85,26 @@ module.exports.render = function({items}) {
         table-layout: fixed;
         border-collapse: separate;
         border-spacing: 0;
-        border-top: 1px solid grey;
+        border-top: 1px solid rgb(200, 200, 200, 0.4);
       }
 
       td,
       th {
         width: ${columnWidth}px;
         margin: 0;
-        border: 1px solid grey;
+        border: 1px solid rgb(200, 200, 200, 0.4);
         border-top-width: 0px;
         height: 50px;
         padding: 5px;
         overflow: hidden;
         font-size: 0.8em;
         color: var(--navy);
+      }
+
+      .project-name {
+        text-align: center;
+        font-size: 15px;
+        font-weight: bold;
       }
 
       .table-wrapper {
@@ -304,7 +311,7 @@ module.exports.render = function({items}) {
           <span> Project </span>
         </td>
         ${projects.map( (project, index) => `
-          <td data-project-index="${index}">${h(project.name)}</td>
+          <td class="project-name" data-project-index="${index}">${h(project.name)}</td>
         `).join('')}
       </tr>
       <tr class="landscape">
