@@ -123,6 +123,19 @@ async function main() {
          ga('create', '${process.env.GA}', 'auto');
          ga('send', 'pageview');
   `
+  let ga4 = '';
+  if (settings.global.repo === 'cncf/landscape') {
+    ga4 = `
+      <!-- Google tag (gtag.js) -->
+      <script async src="https://www.googletagmanager.com/gtag/js?id=G-T6VMPWFRDW"></script>
+      <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'G-T6VMPWFRDW');
+      </script>
+    `
+  }
 
   const headers = `
       <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
@@ -153,6 +166,7 @@ async function main() {
     <head>
     ${headers}
     <script>${ga}</script>
+    ${ga4}
     <style>
       ${fonts}
       ${processedCss}
