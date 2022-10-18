@@ -600,8 +600,20 @@ module.exports.render = function({settings, tweetsCount, itemInfo}) {
       if (!!(new Date(value).getTime()) && typeof value === 'string') {
         return h(relativeDate(new Date(value)));
       }
-      if (typeof value === 'string' && (value.indexOf('http://') === 0 || value.indexOf('https://') === 0)) {
-        return `<a data-type="external" target=_blank href="${h(value)}">${h(value)}</a>`;
+      if (typeof value === 'string') {
+        if (value.indexOf('http://') === 0 || value.indexOf('https://') === 0) {
+          return `<a data-type="external" target=_blank href="${h(value)}">${h(value)}</a>`;
+        }
+        const labelledLinks = value.match(/\<([\w\s\d]+)\>\(((http?:\/\/|https?:\/\/)[\w\d./?=#-~]+)\)/gmi);
+        if (labelledLinks) {
+          let valueWithLinks = value;
+          labelledLinks.forEach(link => {
+            const linkIndex = link.indexOf(">");
+            const htmlLink = `<a data-type="external" target=_blank href="${h(link.slice(linkIndex+2, link.length-1))}">${h(link.slice(1, linkIndex))}</a>`;
+            valueWithLinks = valueWithLinks.replace(link, htmlLink);
+          })
+          return valueWithLinks;
+        }
       }
       return h(value);
     })();
