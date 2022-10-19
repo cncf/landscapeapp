@@ -165,6 +165,16 @@ module.exports.render = function({items}) {
         height: 48px;
         display: inline-block;
       }
+      .landscapeapp-logo {
+        position: absolute;
+        right: 5px;
+        top: 14px;
+      }
+      .landscapeapp-logo img {
+        width: 200px;
+      }
+
+
       .main-header {
         padding: 16px;
       }
@@ -287,9 +297,14 @@ module.exports.render = function({items}) {
         <img alt="landscape logo" src="/images/left-logo.svg">
       </a>
     </span>
+
     <span style="display: inline-block; position: relative; top: -8px; left: 20px;">
-      <h1>CNCF Project Summary Table (${projects.length})</h1>
+      <h1>CNCF Project Summary Table</h1>
     </span>
+
+    <a rel="noopener noreferrer noopener noreferrer" class="landscapeapp-logo" title="CNCF" target="_blank" href="https://www.cncf.io">
+      <img src="/images/right-logo.svg" title="CNCF">
+    </a>
     </div>
 
     <div style="padding: 16px; position: relative; top: -19px;">
