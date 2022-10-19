@@ -1,5 +1,8 @@
 const _ = require('lodash');
 const { h } = require('../utils/format');
+const l = function(x) {
+  return h((x || "").replace("https://", ""));
+}
 const { formatNumber } = require('../utils/formatNumber');
 
 const getLanguages = function(item) {
@@ -62,6 +65,11 @@ module.exports.render = function({items}) {
         background-color: #fafafa;
       }
 
+      td a {
+        text-decoration: none;
+        color: #2E67BF;
+      }
+
       .category {
         font-size: 24px;
         font-weight: bold;
@@ -84,14 +92,14 @@ module.exports.render = function({items}) {
         table-layout: fixed;
         border-collapse: separate;
         border-spacing: 0;
-        border-top: 1px solid rgb(200, 200, 200, 0.4);
+        border-top: 1px solid white;
       }
 
       td,
       th {
         width: ${columnWidth}px;
         margin: 0;
-        border: 1px solid rgb(200, 200, 200, 0.4);
+        border: 1px solid white;
         border-top-width: 0px;
         height: 50px;
         padding: 5px;
@@ -116,7 +124,8 @@ module.exports.render = function({items}) {
       }
 
       .sticky {
-        background-color: #fafafa;
+        background-color: #1b446c;
+        color: white;
         position: absolute;
         width: 152px;
         left: 16px;
@@ -126,9 +135,15 @@ module.exports.render = function({items}) {
         margin-top: -1px;
         /*compensate for top border*/
         font-size: 0.8em;
-        color: var(--navy);
         font-weight: bold;
         padding: 0px;
+      }
+      .first-line {
+        background-color: #1b446c;
+        color: white;
+      }
+      .alternate-line {
+        background-color: #e5e5e5;
       }
       .sticky span {
         white-space: nowrap;
@@ -305,7 +320,7 @@ module.exports.render = function({items}) {
 
     <div class="table-wrapper">
     <table>
-      <tr class="landscape">
+      <tr class="landscape first-line">
         <td class="sticky">
           <span> Project </span>
         </td>
@@ -321,7 +336,7 @@ module.exports.render = function({items}) {
             <td>${h((project.github_data || project)['description'])}</td>
           `).join('')}
       </tr>
-      <tr class="landscape">
+      <tr class="landscape alternate-line">
         <td class="sticky">
            <span>Maturity</span>
         </td>
@@ -337,7 +352,7 @@ module.exports.render = function({items}) {
             <td>${h((project.extra || {})['summary_personas']) || '&nbsp;'}</td>
           `).join('')}
       </tr>
-      <tr>
+      <tr class="landscape alternate-line">
         <td class="sticky">
            <span>Tags</span>
         </td>
@@ -345,7 +360,7 @@ module.exports.render = function({items}) {
             <td>${h((project.extra || {})['summary_tags'] || '').split(',').map( (tag) => `<div>- ${tag.trim()}</div>`).join('') }</td>
           `).join('')}
       </tr>
-      <tr>
+      <tr class="landscape">
         <td class="sticky">
            <span>Use Case</span>
         </td>
@@ -353,7 +368,7 @@ module.exports.render = function({items}) {
             <td>${h((project.extra || {})['summary_use_case']) || '&nbsp;'}</td>
           `).join('')}
       </tr>
-      <tr>
+      <tr class="landscape alternate-line">
         <td class="sticky">
            <span>Business Use</span>
         </td>
@@ -369,7 +384,7 @@ module.exports.render = function({items}) {
             <td>${h(getLanguages(project))}</td>
           `).join('')}
       </tr>
-      <tr class="landscape">
+      <tr class="landscape alternate-line">
         <td class="sticky">
            <span>First Commit</span>
         </td>
@@ -385,7 +400,7 @@ module.exports.render = function({items}) {
             <td>${h(getDate((project.github_data || {}).latest_commit_date))}</td>
           `).join('')}
       </tr>
-      <tr class="">
+      <tr class="landscape alternate-line">
         <td class="sticky">
            <span>Release Cadence</span>
         </td>
@@ -401,7 +416,7 @@ module.exports.render = function({items}) {
             <td>${h(formatNumber((project.github_data || {}).stars))}</td>
           `).join('')}
       </tr>
-      <tr class="">
+      <tr class="landscape alternate-line">
         <td class="sticky">
            <span>Integrations</span>
         </td>
@@ -414,15 +429,15 @@ module.exports.render = function({items}) {
            <span>Website</span>
         </td>
           ${projects.map( (project) => `
-            <td><a href="${h((project.homepage_url))}" target="_blank">${h(project.homepage_url)}</a></td>
+            <td><a href="${h((project.homepage_url))}" target="_blank">${l(project.homepage_url)}</a></td>
           `).join('')}
       </tr>
-      <tr class="landscape">
+      <tr class="landscape alternate-line">
         <td class="sticky">
            <span>Github</span>
         </td>
           ${projects.map( (project) => project.repo_url ? `
-            <td><a href="${h(project.repo_url)}" target="_blank">${h(project.repo_url)}</a></td>
+            <td><a href="${h(project.repo_url)}" target="_blank">${l(project.repo_url)}</a></td>
           `: '<td>&nbsp;</td>').join('')}
       </tr>
       <tr class="landscape">
@@ -430,7 +445,7 @@ module.exports.render = function({items}) {
            <span>Youtube video</span>
         </td>
           ${projects.map( (project) => project.extra && project.extra.summary_intro_url ? `
-            <td><a href="${h(project.extra.summary_intro_url)}" target="_blank">${h(project.extra.summary_intro_url)}</a></td>
+            <td><a href="${h(project.extra.summary_intro_url)}" target="_blank">${l(project.extra.summary_intro_url)}</a></td>
           `: '<td>&nbsp;</td>').join('')}
       </tr>
     </table>
