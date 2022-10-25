@@ -361,7 +361,7 @@ module.exports.render = function({items}) {
       </tr>
       <tr class="landscape">
         <td class="sticky">
-           <span>Personas</span>
+           <span>Target Users</span>
         </td>
           ${projects.map( (project) => `
             <td>${h((project.extra || {})['summary_personas']) || '&nbsp;'}</td>
@@ -457,7 +457,7 @@ module.exports.render = function({items}) {
       </tr>
       <tr class="landscape">
         <td class="sticky">
-           <span>Youtube video</span>
+           <span>Overview Video</span>
         </td>
           ${projects.map( (project) => project.extra && project.extra.summary_intro_url ? `
             <td><a href="${h(project.extra.summary_intro_url)}" target="_blank">${l(project.extra.summary_intro_url)}</a></td>
