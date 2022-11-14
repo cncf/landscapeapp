@@ -233,6 +233,19 @@ const fields = {
     },
     values: [{id: true, label: 'Yes', url: 'yes'}, {id: false, label: 'No', url: 'no'}]
   },
+  specification: {
+    id: 'extra',
+    label: 'Specification',
+    url: 'specification',
+    filterFn: function(filter, value, item) {
+      if (filter === null) {
+        return true;
+      }
+      const isSpecification = item.extra && (item.extra.specification === true || item.extra.specification === 'yes' || item.extra.specification === 'true');
+      return filter === true ? isSpecification : !isSpecification;
+    },
+    values: [{id: true, label: 'Yes', url: 'yes'}, {id: false, label: 'No', url: 'no'}]
+  },
   parents: {
     id: 'parent',
     url: 'parent',

@@ -35,8 +35,9 @@ const getFilteredItems = module.exports.getFilteredItems = function({data, filte
     var filterByLanguage = filterFn({field: 'language', filters});
     var filterByCompanyType = filterFn({field: 'companyType', filters});
     var filterByIndustries = filterFn({field: 'industries', filters});
+    var filterBySpecification = filterFn({field: 'specification', filters});
     return data.filter(function(x) {
-      return filterHostedProject(x) && filterByLicense(x) && filterByOrganization(x) && filterByHeadquarters(x) && filterByLandscape(x) && filterByBestPractices(x) && filterByEnduser(x) && filterByParent(x) && filterByLanguage(x) && filterByCompanyType(x) && filterByIndustries(x);
+      return filterHostedProject(x) && filterByLicense(x) && filterByOrganization(x) && filterByHeadquarters(x) && filterByLandscape(x) && filterByBestPractices(x) && filterByEnduser(x) && filterByParent(x) && filterByLanguage(x) && filterByCompanyType(x) && filterByIndustries(x) && filterBySpecification(x);
     });
 }
 

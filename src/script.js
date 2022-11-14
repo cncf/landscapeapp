@@ -177,7 +177,7 @@ const CncfLandscapeApp = {
         const linkState = this.parseUrl({search: groupingInternalLinkEl.getAttribute('href'), pathname: '', hash: ''});
 
         const f = (name, x) => this.calculateFullSelection(name, x);
-        const allowedProps = ['grouping', 'sort', 'bestpractices', 'enduser', 'parent', 'language'];
+        const allowedProps = ['grouping', 'sort', 'bestpractices', 'enduser', 'parent', 'language', 'specification'];
         const otherProps = ['category', 'project', 'license', 'organization', 'headquarters', 'company-type', 'industries']
         for (let key of allowedProps) {
           newState[key] = linkState[key] || CncfLandscapeApp.initialState[key];
@@ -205,7 +205,7 @@ const CncfLandscapeApp = {
         // Only set certain properties: filterable + invisible filters
         // for visible filter we need to always expand a current selection
         const f = (name, x) => this.calculateFullSelection(name, x);
-        const allowedProps = ['grouping', 'sort', 'bestpractices', 'enduser', 'parent', 'language'];
+        const allowedProps = ['grouping', 'sort', 'bestpractices', 'enduser', 'parent', 'language', 'specification'];
         const otherProps = ['category', 'project', 'license', 'organization', 'headquarters', 'company-type', 'industries']
         for (let key of allowedProps) {
           newState[key] = linkState[key] || CncfLandscapeApp.initialState[key];
@@ -282,7 +282,7 @@ const CncfLandscapeApp = {
         const newState = {...CncfLandscapeApp.state };
 
         const f = (name, x) => this.calculateFullSelection(name, x);
-        const allowedProps = ['bestpractices', 'enduser', 'parent', 'language'];
+        const allowedProps = ['bestpractices', 'enduser', 'parent', 'language', 'specification'];
         const otherProps = ['category', 'project', 'license', 'organization', 'headquarters', 'company-type', 'industries']
         for (let key of allowedProps) {
           newState[key] = CncfLandscapeApp.initialState[key];
@@ -689,6 +689,7 @@ const CncfLandscapeApp = {
       enduser: params.get('enduser') || '',
       parent: params.get('parent') || '',
       language: params.get('language') || '',
+      specification: params.get('specification') || '',
       selected: params.get('selected') || null,
       embed: params.has('embed'),
       showModal: params.has('showmodal'),
@@ -843,7 +844,7 @@ const CncfLandscapeApp = {
       params[field] = CncfLandscapeApp.calculateShortSelection(field).url
     }
     // no fields for certain filters yet
-    for (let field of ['sort', 'grouping', 'bestpractices', 'enduser', 'parent', 'language']) {
+    for (let field of ['sort', 'grouping', 'bestpractices', 'enduser', 'parent', 'language', 'specification']) {
       params[field] = state[field]
     }
 
@@ -876,8 +877,7 @@ const CncfLandscapeApp = {
       }
     }
     // no fields for certain filters yet
-    for (let field of ['grouping', 'sort', 'selected', 'bestpractices', 'enduser', 'parent', 'language',
-      'fullscreen', 'embed']) {
+    for (let field of ['grouping', 'sort', 'selected', 'bestpractices', 'enduser', 'parent', 'language', 'specification', 'fullscreen', 'embed']) {
       if (state[field] !== initialState[field]) {
         params[field] = state[field]
       }
@@ -1063,7 +1063,7 @@ const CncfLandscapeApp = {
 
     // edge case: we just opened a tab without filters - then just display everything!
     if (this.state.mode === this.initialMode) {
-      const allowedProps = ['bestpractices', 'enduser', 'parent', 'language'];
+      const allowedProps = ['bestpractices', 'enduser', 'parent', 'language', 'specification'];
       const otherProps = ['project', 'license', 'organization', 'headquarters', 'company-type', 'industries']
       let same = true;
       for (let key of [...allowedProps, ...otherProps]) {
