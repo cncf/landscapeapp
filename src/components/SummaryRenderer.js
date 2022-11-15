@@ -45,6 +45,8 @@ module.exports.render = function({items}) {
   const columnWidth = 250;
 
   return `
+    <head>
+    <link rel="icon" type="image/png" href="/favicon.png" />
     <style>
       ${require('fs').readFileSync('src/fonts.css', 'utf-8')}
       ::root {
@@ -290,7 +292,18 @@ module.exports.render = function({items}) {
 	opacity: 0.5;
 }
 
+.info {
+    position: absolute;
+    top: 0px;
+    left: 540px;
+    font-size: 12px;
+    line-height: 1.2;
+    max-width: 500px;
+}
+
     </style>
+    </head>
+    <body>
     <div class="main-header">
     <span class="landscape-logo">
       <a aria-label="reset filters" class="nav-link" href="/">
@@ -329,6 +342,10 @@ module.exports.render = function({items}) {
         <span class="select-bar"></span>
         <label class="select-label">Subcategory</label>
       </div>
+    </div>
+    <div class="info">
+    The <i>CNCF Project Summary Table</i> provides a standardized, summary of CNCF projects.<br/>
+<b>The filters on the left side help refine your view.</b> Start by filtering by category (e.g., <i>orchestration and management</i>) and then subcategory (e.g., <i>service mesh</i> for an overview of all available CNCF service meshes)
     </div>
     </div>
 
@@ -532,6 +549,7 @@ module.exports.render = function({items}) {
       });
       setHeight();
     </script>
+    </body>
 
   `
 }
