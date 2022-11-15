@@ -344,8 +344,8 @@ module.exports.render = function({items}) {
       </div>
     </div>
     <div class="info">
-    The <i>CNCF Project Summary Table</i> provides a standardized, summary of CNCF projects.<br/>
-<b>The filters on the left side help refine your view.</b> Start by filtering by category (e.g., <i>orchestration and management</i>) and then subcategory (e.g., <i>service mesh</i> for an overview of all available CNCF service meshes)
+    The <i>CNCF Project Summary Table</i> provides a standardized, summary of CNCF projects.<br/><div style="height: 5px;"></div>
+<b>The filters on the left side help refine your view.</b> Start by filtering by category (e.g., <i>orchestration and management</i>) and then subcategory (e.g., <i>service mesh</i> for an overview of all available CNCF service meshes).
     </div>
     </div>
 
