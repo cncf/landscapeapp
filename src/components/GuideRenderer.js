@@ -116,13 +116,13 @@ module.exports.render = function({settings, items, guide}) {
   return `
       <div class="links">
         <div>
-          <a href="https://github.com/${settings.global.repo}/edit/${currentBranch}/guide.md" target="_blank">
+          <a href="${(settings.global.self_hosted_repo || false) ? "" : "https://github.com/"}${settings.global.repo}/edit/${currentBranch}/guide.md" target="_blank">
           ${icons.edit}
           Edit this page</a>
         </div>
         <div style="height: 5px;"></div>
           <div>
-          <a href="https://github.com/${settings.global.repo}/issues/new?title=Guide Issue" target="_blank">
+          <a href="${(settings.global.self_hosted_repo || false) ? "" : "https://github.com/"}${settings.global.repo}/issues/new?title=Guide Issue" target="_blank">
             ${icons.github}
           Report issue</a>
         </div>

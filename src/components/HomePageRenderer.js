@@ -189,7 +189,7 @@ module.exports.render = function({settings, guidePayload, hasGuide, bigPictureKe
         <div class="main">
           <div class="disclaimer">
             <span> ${settings.home.header} </span>
-            Please <a data-type="external" target="_blank" href="https://github.com/${settings.global.repo}">open</a> a pull request to
+            Please <a data-type="external" target="_blank" href="${(settings.global.self_hosted_repo || false) ? "" : "https://github.com/"}${settings.global.repo}">open</a> a pull request to
             correct any issues. Greyed logos are not open source. Last Updated: ${process.env.lastUpdated}
           </div>
           <h4 class="summary"></h4>
@@ -226,7 +226,7 @@ module.exports.render = function({settings, guidePayload, hasGuide, bigPictureKe
             width: 100%;
             text-align: center;">
               ${h(settings.home.footer)} For more information, please see the&nbsp;
-            <a data-type="external" target="_blank" eventLabel="crunchbase-terms" href="https://github.com/${settings.global.repo}/blob/HEAD/README.md#license">
+            <a data-type="external" target="_blank" eventLabel="crunchbase-terms" href="${(settings.global.self_hosted_repo || false) ? "" : "https://github.com/"}${settings.global.repo}/blob/HEAD/README.md#license">
                 license
               </a> info.
           </div>

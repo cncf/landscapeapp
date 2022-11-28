@@ -36,14 +36,18 @@ module.exports.render = function({settings, tweetsCount, itemInfo}) {
 
   const tweetButton = (function() {
     // locate zoom buttons
-  const twitterUrl = `https://twitter.com/intent/tweet`
 
-  return `<div class="tweet-button">
-    <a data-tweet="true" href="${h(twitterUrl)}">${icons.bird}<span>Tweet</span></a>
+    if (!process.env.TWITTER_KEYS) {
+      return ``
+    }
+    const twitterUrl = `https://twitter.com/intent/tweet`
+
+    return `<div class="tweet-button">
+      <a data-tweet="true" href="${h(twitterUrl)}">${icons.bird}<span>Tweet</span></a>
       <div class="tweet-count-wrapper">
         <div class="tweet-count">${tweetsCount}</div>
-    </div>
-  </div>`
+      </div>
+    </div>`
 
   })();
 
