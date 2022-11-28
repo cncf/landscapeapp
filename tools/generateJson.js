@@ -289,6 +289,7 @@ async function main () {
     }
   });
 
+  settings.global.flags = settings.global.flags || {};
   if (settings.global.flags.companies) {
     // Handle companies in a special way
     const hasCompanyCategory = (function() {
