@@ -17,7 +17,7 @@ const processRequest = module.exports.processRequest = query => {
   }
 
   const summary = getSummary({data: items, ...params});
-  const groupedItems = getGroupedItems({data: items, ...params})
+  const groupedItems = getGroupedItems({data: items, skipDuplicates: params.format === 'card', ...params })
     .map(group => {
       const items = group.items.map(({ id }) => ({ id } ))
       return { ...group, items }

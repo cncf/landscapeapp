@@ -21,7 +21,7 @@ const processRequest = module.exports.processRequest = query => {
   // extract alias - if params != card-mode (big_picture - always show)
   // i.e. make a copy to items here - to get a list of ids
 
-  const selectedItems = flattenItems(getGroupedItems({data: items, ...params}))
+  const selectedItems = flattenItems(getGroupedItems({data: items, skipDuplicates: params.format === 'card', ...params}))
     .reduce((acc, item) => ({ ...acc, [item.id]: true }), {})
 
   const fields = allItems[0].map(([label]) => label !== 'id' && label).filter(_ => _);

@@ -16,7 +16,7 @@ const processRequest = module.exports.processRequest = query => {
     items = expandSecondPathItems(items);
   }
 
-  const groupedItems = getGroupedItems({data: items, ...params})
+  const groupedItems = getGroupedItems({data: items, ...params, skipDuplicates: true})
     .map(group => {
       const items = group.items.map(({ id, name, href }) => ({ id, name, logo: `${settings.global.website}/${href}` }))
       return { ...group, items }

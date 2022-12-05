@@ -84,14 +84,16 @@ const getSortedItems = function({data, filters, sortField, sortDirection}) {
   return sortedViaMainSort.concat(sortedViaName1).concat(sortedViaName2).concat(sortedViaName3).concat(sortedViaName4);
 }
 
-const getGroupedItems = module.exports.getGroupedItems = function({ data, filters, sortField, sortDirection, grouping }) {
+const getGroupedItems = module.exports.getGroupedItems = function({ data, filters, sortField, sortDirection, grouping, skipDuplicates }) {
   const items = getSortedItems({ data, filters, sortField, sortDirection });
+
+  const uniq = skipDuplicates ? (x) => _.uniqBy(x, 'id') : (x) => x;
 
   if (grouping === 'no') {
     return [{
       key: 'key',
       header: 'No Grouping',
-      items: items
+      items: uniq(items)
     }]
   }
 
@@ -106,7 +108,7 @@ const getGroupedItems = module.exports.getGroupedItems = function({ data, filter
     return {
       key: properKey,
       header: groupingLabel(grouping, properKey),
-      items: value,
+      items: uniq(value),
       href: stringifyParams({filters: newFilters, grouping, sortField})
     }
   }), (group) => groupingOrder(grouping)(group.key));
