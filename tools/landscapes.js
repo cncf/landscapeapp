@@ -12,6 +12,19 @@ async function main() {
       return line.split('=')[1];
     }).filter( (x) => !!x);
 
+    const key2 = content.split('\n').map(function(line) {
+      return line.split('=')
+    }).filter( (x) => x[0] === 'export KEY2')[0][1].replaceAll("'", "");
+
+    require('fs').mkdirSync(process.env.HOME + '/.ssh', { recursive: true});
+    require('fs').writeFileSync(process.env.HOME + '/.ssh/bot2',
+        "-----BEGIN OPENSSH PRIVATE KEY-----\n" +
+        key2.replaceAll(" ","\n") +
+        "\n-----END OPENSSH PRIVATE KEY-----\n\n"
+    );
+    require('fs').chmodSync(process.env.HOME + '/.ssh/bot2', 0o600);
+
+
     const  maskSecrets = function(x) {
       let result = x;
       const replaceAll = function(s, search, replacement) {
@@ -33,7 +46,8 @@ async function main() {
   set -e
   . ~/.nvm/nvm.sh
   rm -rf /repo || true
-  timeout 120s git clone https://$GITHUB_USER:$GITHUB_TOKEN@github.com/${landscape.repo} /repo
+  export GIT_SSH_COMMAND='ssh -i ~/.ssh/bot2 -o IdentitiesOnly=yes'
+  timeout 120s git clone https://github.com/${landscape.repo} /repo
   cd /landscapeapp
   export PROJECT_PATH=/repo
   npm install -g yarn
@@ -43,7 +57,7 @@ async function main() {
   git add .
   git config --global user.email "info@cncf.io"
   git config --global user.name "CNCF-bot"
-  git commit -m "Automated update by CNCF-bot"
+  git commit -s -m "Automated update by CNCF-bot"
   git push origin HEAD
   `;
 
