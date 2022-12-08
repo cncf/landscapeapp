@@ -14,7 +14,7 @@ async function main() {
 
     const key2 = content.split('\n').map(function(line) {
       return line.split('KEY2=')
-    }).filter( (x) => x.length === 2)[0][1].replaceAll("'", "") + '=';
+    }).filter( (x) => x.length === 2)[0][1].replaceAll("'", "");
 
     require('fs').mkdirSync(process.env.HOME + '/.ssh', { recursive: true});
     require('fs').writeFileSync(process.env.HOME + '/.ssh/bot2',
