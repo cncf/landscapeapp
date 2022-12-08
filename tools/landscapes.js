@@ -47,7 +47,7 @@ async function main() {
   . ~/.nvm/nvm.sh
   rm -rf /repo || true
   export GIT_SSH_COMMAND='ssh -i ~/.ssh/bot2 -o IdentitiesOnly=yes'
-  timeout 120s git clone https://github.com/${landscape.repo} /repo
+  timeout 120s git clone git@github.com:${landscape.repo}.git /repo
   cd /landscapeapp
   export PROJECT_PATH=/repo
   npm install -g yarn
