@@ -13,8 +13,8 @@ async function main() {
     }).filter( (x) => !!x);
 
     const key2 = content.split('\n').map(function(line) {
-      return line.split('=')
-    }).filter( (x) => x[0] === 'export KEY2')[0][1].replaceAll("'", "");
+      return line.split('KEY2=')
+    }).filter( (x) => x.length === 2)[0][1].replaceAll("'", "") + '=';
 
     require('fs').mkdirSync(process.env.HOME + '/.ssh', { recursive: true});
     require('fs').writeFileSync(process.env.HOME + '/.ssh/bot2',
