@@ -5,6 +5,10 @@ landscapes:
   # netlify: full | skip - do we build it on a netlify build or not
   # hook: - id for a build hook, so it will be triggered after a default branch build
   - landscape:
+    name: dlt
+    repo: dltlandscape/dlt-landscape
+    hook: demo
+  - landscape:
     name: aswf-landscape
     repo: AcademySoftwareFoundation/aswf-landscape
     hook: 608aa68eb6e5723d5d8a7e00
@@ -82,7 +86,3 @@ landscapes:
     name: lfn
     repo: lfnetworking/member_landscape
     hook: 60788f5fa3cbd68181e3c209
-  - landscape:
-    name: dlt
-    repo: dltlandscape/dlt-landscape
-    hook: demo
