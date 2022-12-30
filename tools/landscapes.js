@@ -24,6 +24,18 @@ async function main() {
     );
     require('fs').chmodSync(process.env.HOME + '/.ssh/bot2', 0o600);
 
+    const key3 = content.split('\n').map(function(line) {
+      return line.split('KEY3=')
+    }).filter( (x) => x.length === 2)[0][1].replaceAll("'", "");
+
+    require('fs').mkdirSync(process.env.HOME + '/.ssh', { recursive: true});
+    require('fs').writeFileSync(process.env.HOME + '/.ssh/bot3',
+        "-----BEGIN RSA PRIVATE KEY-----\n" +
+        key3.replaceAll(" ","\n") +
+        "\n-----END RSA PRIVATE KEY-----\n\n"
+    );
+    require('fs').chmodSync(process.env.HOME + '/.ssh/bot3', 0o600);
+
 
     const  maskSecrets = function(x) {
       let result = x;
