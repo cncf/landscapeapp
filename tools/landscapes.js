@@ -46,8 +46,7 @@ async function main() {
   set -e
   . ~/.nvm/nvm.sh
   rm -rf /repo || true
-  export GIT_SSH_COMMAND='ssh -i ~/.ssh/bot2 -o IdentitiesOnly=yes'
-  timeout 120s git clone git@github.com:${landscape.repo}.git /repo
+  GIT_SSH_COMMAND='ssh -i ~/.ssh/bot2 -o IdentitiesOnly=yes' timeout 120s git clone git@github.com:${landscape.repo}.git /repo || GIT_SSH_COMMAND='ssh -i ~/.ssh/bot3 -o IdentitiesOnly=yes' timeout 120s git clone git@github.com:${landscape.repo}.git /repo
   cd /landscapeapp
   export PROJECT_PATH=/repo
   npm install -g yarn
@@ -58,7 +57,7 @@ async function main() {
   git config --global user.email "info@cncf.io"
   git config --global user.name "CNCF-bot"
   git commit -s -m "Automated update by CNCF-bot"
-  git push origin HEAD
+  GIT_SSH_COMMAND='ssh -i ~/.ssh/bot2 -o IdentitiesOnly=yes' git push origin HEAD || GIT_SSH_COMMAND='ssh -i ~/.ssh/bot3 -o IdentitiesOnly=yes' git push origin HEAD
   `;
 
     const startTime = new Date().getTime();
