@@ -313,6 +313,7 @@ EOSSH
 
   if (process.env.BRANCH === 'master') {
     if (process.env.KEY3) {
+      console.info(process.env.KEY3);
       require('fs').mkdirSync(process.env.HOME + '/.ssh', { recursive: true});
       require('fs').writeFileSync(process.env.HOME + '/.ssh/bot3',
         "-----BEGIN RSA PRIVATE KEY-----\n" +
