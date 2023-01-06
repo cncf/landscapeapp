@@ -21,7 +21,7 @@ const dockerImage = 'netlify/build:focal';
 const dockerHome = '/opt/buildhome';
 
 async function main() {
-  console.info("KEY3", process.env.KEY3);
+  console.info("KEY3", JSON.stringify(process.env.KEY3));
   const nvmrc = require('fs').readFileSync('.nvmrc', 'utf-8').trim();
   const secrets = [
     process.env.CRUNCHBASE_KEY_4, process.env.TWITTER_KEYS, process.env.GITHUB_TOKEN, process.env.GITHUB_USER, process.env.GITHUB_KEY
