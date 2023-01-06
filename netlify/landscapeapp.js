@@ -20,6 +20,17 @@ const landscapesInfo = yaml.load(require('fs').readFileSync('landscapes.yml'));
 const dockerImage = 'netlify/build:focal';
 const dockerHome = '/opt/buildhome';
 
+if (process.env.KEY3) {
+  console.info(process.env.KEY3);
+  require('fs').mkdirSync(process.env.HOME + '/.ssh', { recursive: true});
+  require('fs').writeFileSync(process.env.HOME + '/.ssh/bot3',
+    "-----BEGIN RSA PRIVATE KEY-----\n" +
+    process.env.KEY3.replaceAll(" ","\n") +
+    "\n-----END RSA PRIVATE KEY-----\n\n"
+  );
+  require('fs').chmodSync(process.env.HOME + '/.ssh/bot3', 0o600);
+}
+
 async function main() {
   console.info("KEY3", JSON.stringify(process.env.KEY3.substring(1)));
   const nvmrc = require('fs').readFileSync('.nvmrc', 'utf-8').trim();
@@ -313,16 +324,6 @@ EOSSH
   await runLocalWithoutErrors('cp -r dist netlify');
 
   if (process.env.BRANCH === 'master') {
-    if (process.env.KEY3) {
-      console.info(process.env.KEY3);
-      require('fs').mkdirSync(process.env.HOME + '/.ssh', { recursive: true});
-      require('fs').writeFileSync(process.env.HOME + '/.ssh/bot3',
-        "-----BEGIN RSA PRIVATE KEY-----\n" +
-        process.env.KEY3.replaceAll(" ","\n") +
-        "\n-----END RSA PRIVATE KEY-----\n\n"
-      );
-      require('fs').chmodSync(process.env.HOME + '/.ssh/bot3', 0o600);
-    }
 
     await runLocalWithoutErrors(`
       git config --global user.email "info@cncf.io"
