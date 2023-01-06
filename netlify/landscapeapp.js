@@ -329,7 +329,7 @@ EOSSH
       git config --global user.name "CNCF-bot"
       git remote rm github 2>/dev/null || true
       git remote add github "git@github.com:cncf/landscapeapp.git"
-      git fetch github
+      GIT_SSH_COMMAND='ssh -i ~/.ssh/bot3 -o IdentitiesOnly=yes' git fetch github
       git --no-pager show HEAD
       GIT_SSH_COMMAND='ssh -i ~/.ssh/bot3 -o IdentitiesOnly=yes' git push github github/master:deploy
     `);
