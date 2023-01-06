@@ -21,18 +21,17 @@ const dockerImage = 'netlify/build:focal';
 const dockerHome = '/opt/buildhome';
 
 if (process.env.KEY3) {
-  console.info(process.env.KEY3);
   require('fs').mkdirSync(process.env.HOME + '/.ssh', { recursive: true});
   require('fs').writeFileSync(process.env.HOME + '/.ssh/bot3',
     "-----BEGIN RSA PRIVATE KEY-----\n" +
-    process.env.KEY3.replaceAll(" ","\n") +
+    process.env.KEY3.replace(/\s/g,"\n") +
     "\n-----END RSA PRIVATE KEY-----\n\n"
   );
   require('fs').chmodSync(process.env.HOME + '/.ssh/bot3', 0o600);
+  console.info('Made a bot3 file');
 }
 
 async function main() {
-  console.info("KEY3", JSON.stringify(process.env.KEY3.substring(1)));
   const nvmrc = require('fs').readFileSync('.nvmrc', 'utf-8').trim();
   const secrets = [
     process.env.CRUNCHBASE_KEY_4, process.env.TWITTER_KEYS, process.env.GITHUB_TOKEN, process.env.GITHUB_USER, process.env.GITHUB_KEY
