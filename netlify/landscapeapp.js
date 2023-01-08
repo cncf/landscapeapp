@@ -20,17 +20,6 @@ const landscapesInfo = yaml.load(require('fs').readFileSync('landscapes.yml'));
 const dockerImage = 'netlify/build:focal';
 const dockerHome = '/opt/buildhome';
 
-if (process.env.KEY3) {
-  require('fs').mkdirSync(process.env.HOME + '/.ssh', { recursive: true});
-  require('fs').writeFileSync(process.env.HOME + '/.ssh/bot3',
-    "-----BEGIN RSA PRIVATE KEY-----\n" +
-    process.env.KEY3.replace(/\s/g,"\n") +
-    "\n-----END RSA PRIVATE KEY-----\n\n"
-  );
-  require('fs').chmodSync(process.env.HOME + '/.ssh/bot3', 0o600);
-  console.info('Made a bot3 file');
-}
-
 async function main() {
   const nvmrc = require('fs').readFileSync('.nvmrc', 'utf-8').trim();
   const secrets = [
@@ -323,15 +312,14 @@ EOSSH
   await runLocalWithoutErrors('cp -r dist netlify');
 
   if (process.env.BRANCH === 'master') {
-
     await runLocalWithoutErrors(`
       git config --global user.email "info@cncf.io"
       git config --global user.name "CNCF-bot"
       git remote rm github 2>/dev/null || true
-      git remote add github "git@github.com:cncf/landscapeapp.git"
-      GIT_SSH_COMMAND='ssh -i ~/.ssh/bot3 -o IdentitiesOnly=yes' git fetch github
+      git remote add github "https://$GITHUB_USER:$GITHUB_TOKEN@github.com/cncf/landscapeapp"
+      git fetch github
       git --no-pager show HEAD
-      GIT_SSH_COMMAND='ssh -i ~/.ssh/bot3 -o IdentitiesOnly=yes' git push github github/master:deploy
+      git push github github/master:deploy
     `);
     // just for debug purpose
     //now we have a different hash, because we updated a version, but for build purposes we have exactly same npm modules
