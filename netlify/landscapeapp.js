@@ -7,7 +7,6 @@ if (process.env.KEY3) {
   );
   require('fs').chmodSync(process.env.HOME + '/.ssh/bot3', 0o600);
   console.info('Made a bot3 file');
-  console.info(require('fs').readFileSync(process.env.HOME + '/.ssh/bot3', 'utf-8'));
 }
 
 const path = require('path')
