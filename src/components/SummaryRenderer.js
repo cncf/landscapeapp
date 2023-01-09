@@ -99,6 +99,7 @@ module.exports.render = function({items}) {
 
       td,
       th {
+        white-space: pre-wrap;
         width: ${columnWidth}px;
         margin: 0;
         border: 1px solid white;
