@@ -6,6 +6,9 @@ const l = function(x) {
 const { formatNumber } = require('../utils/formatNumber');
 
 const getLanguages = function(item) {
+  if (item.extra && item.extra.summary_languages) {
+    return item.extra.summary_languages;
+  }
   if (item.github_data && item.github_data.languages) {
     const total = _.sum(item.github_data.languages.map( (x) => x.value));
     const matching = item.github_data.languages.filter( (x) => x.value > total * 0.3).map( (x) => x.name);
