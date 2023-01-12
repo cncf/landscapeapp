@@ -18,6 +18,16 @@ const getLanguages = function(item) {
   }
 }
 
+function highlightLinks(s) {
+  if (!s) {
+    return '';
+  }
+  // markdown styles
+  s = s.replace(/\[(.*?)\]\((https?:.*?)\)/g, '<a target="_blank" href="$2">$1</a>')
+  s = s.replace(/(\s|^)(https?:.*?)(\s|$)/g, ' <a target="_blank" href="$2">$2</a> ')
+  return s;
+}
+
 const getDate = function(date) {
   if (!date) {
     return '';
@@ -457,7 +467,7 @@ module.exports.render = function({items}) {
            <span>Integrations</span>
         </td>
           ${projects.map( (project) => `
-            <td>${h((project.extra || {})['summary_integrations']) || '&nbsp;'}</td>
+            <td>${highlightLinks((project.extra || {})['summary_integrations']) || '&nbsp;'}</td>
           `).join('')}
       </tr>
       <tr class="landscape">
