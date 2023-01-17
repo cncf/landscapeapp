@@ -590,34 +590,72 @@ module.exports.render = function({settings, tweetsCount, itemInfo}) {
     return '';
   })();
 
+  const renderExtraField = function (key) {
+    if (key.indexOf('summary_') === 0) {
+      return '';
+    }
+    const value = itemInfo.extra[key];
+    const keyText = (function() {
+      const step1 =  key.replace(/_url/g, '');
+      const step2 = step1.split('_').map( (x) => x.charAt(0).toUpperCase() + x.substring(1)).join(' ');
+      return step2;
+    })();
+    const valueText = (function() {
+      if (!!(new Date(value).getTime()) && typeof value === 'string') {
+        return h(relativeDate(new Date(value)));
+      }
+      if (typeof value === 'string') {
+        if (value.indexOf('http://') === 0 || value.indexOf('https://') === 0) {
+          return `<a data-type="external" target=_blank href="${h(value)}">${h(value)}</a>`;
+        }
+        const labelledLinks = value.match(/\<([\w\s\d]+)\>\(((http?:\/\/|https?:\/\/)[\w\d./?=#-~]+)\)/gmi);
+        if (labelledLinks) {
+          let valueWithLinks = value;
+          labelledLinks.forEach(link => {
+            const linkIndex = link.indexOf(">");
+            const htmlLink = `<a data-type="external" target=_blank href="${h(link.slice(linkIndex+2, link.length-1))}">${h(link.slice(1, linkIndex))}</a>`;
+            valueWithLinks = valueWithLinks.replace(link, htmlLink);
+          })
+          return valueWithLinks;
+        }
+      }
+      return h(value);
+    })();
+    return `<div class="product-property row">
+      <div class="product-property-name tight-col col-20">${h(keyText)}</div>
+      <div class="product-proerty-value tight-col col-80">${valueText}</div>
+    </div>`;
+  }
+
   const extraElement = ( function() {
     if (!itemInfo.extra) {
       return '';
     }
-    const items = Object.keys(itemInfo.extra).map( function(key) {
-      if (key.indexOf('summary_') === 0) {
-        return '';
-      }
-      const value = itemInfo.extra[key];
-      const keyText = (function() {
-        const step1 =  key.replace(/_url/g, '');
-        const step2 = step1.split('_').map( (x) => x.charAt(0).toUpperCase() + x.substring(1)).join(' ');
-        return step2;
-      })();
-      const valueText = (function() {
-        if (!!(new Date(value).getTime()) && typeof value === 'string') {
-          return h(relativeDate(new Date(value)));
+    let items = [];
+    const sections = settings.big_picture.main.sections || false;
+    if (!(sections)) {
+      items = Object.keys(itemInfo.extra).filter(key=>itemInfo.extra[key]).map(renderExtraField);
+    } else {
+      Object.keys(itemInfo.extra).forEach( key => {
+        if (sections.every( section => {
+          return !(section.children.includes(key));
+        })) {
+          throw new Error(`Failed to find key "${key}" in any section of the sections object`);
         }
-        if (typeof value === 'string' && (value.indexOf('http://') === 0 || value.indexOf('https://') === 0)) {
-          return `<a data-type="external" target=_blank href="${h(value)}">${h(value)}</a>`;
-        }
-        return h(value);
-      })();
-      return `<div class="product-property row">
-        <div class="product-property-name tight-col col-20">${h(keyText)}</div>
-        <div class="product-proerty-value tight-col col-80">${valueText}</div>
-      </div>`;
-    });
+      });
+      items = sections.map( section => {
+        const section_heading = `<div class="product-property row">
+          <div class="product-property-name tight-col col-100" style="font-weight: bold;">${section.name}</div>
+        </div>`;
+        let rows = [section_heading];
+        section.children.forEach( key => {
+          if (itemInfo.extra[key]) {
+            rows.push(renderExtraField(key));
+          }
+        });
+        return rows.length === 1 ? '' : rows.join('');
+      });
+    }
     return items.join('');
   })();
 
