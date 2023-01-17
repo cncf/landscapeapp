@@ -62,8 +62,11 @@ const requestWithRetry = async ({ attempts = maxAttempts, resolveWithFullRespons
       const response = await axios(rest);
       return resolveWithFullResponse ? response : response.data
     } catch (ex) {
+
       const { response = {}, ...error } = ex
       const { status } = response
+
+      const isGithubIssue = (response?.data?.message || '').indexOf('is too large to list') !== -1;
 
       const message = [
         `Attempt #${maxAttempts - attempts + 1}`,
@@ -75,7 +78,7 @@ const requestWithRetry = async ({ attempts = maxAttempts, resolveWithFullRespons
       }
       const rateLimited = retryStatuses.includes(status)
       const dnsError = error.code === 'ENOTFOUND' && error.syscall === 'getaddrinfo'
-      if (attempts <= 0 || (!rateLimited && !dnsError)) {
+      if (attempts <= 0 || (!rateLimited && !dnsError) || isGithubIssue) {
         throw ex;
       }
       lastEx = ex;
