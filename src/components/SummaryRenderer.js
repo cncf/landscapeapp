@@ -110,6 +110,19 @@ module.exports.render = function({items}) {
         border-top: 1px solid white;
       }
 
+      #headers {
+        width: 152px;
+        position: sticky;
+        left: 0;
+      }
+
+      #data {
+        position: absolute;
+        left: 155px;
+        top: 0px;
+        z-index: -1;
+      }
+
       td,
       th {
         white-space: pre-wrap;
@@ -130,26 +143,32 @@ module.exports.render = function({items}) {
         font-weight: bold;
       }
 
-      .table-wrapper {
-        width: calc(100% - 134px);
-        overflow-x: scroll;
-        margin-left: 154px;
-        overflow-y: visible;
+      html, body {
+        height: 100%;
+        overflow: hidden;
         padding: 0;
-        padding-left: 16px;
+        margin: 0;
+        outline: 0;
+      }
+
+
+      .table-wrapper {
+        position: absolute;
+        top: 165px;
+        width: calc(100% - 16px);
+        bottom: 0;
+        overflow-x: scroll;
+        overflow-y: scroll;
+        padding: 0;
+        left: 16px;
       }
 
       .sticky {
+        position: relative;
         background-color: #1b446c;
         color: white;
-        position: absolute;
         width: 152px;
-        left: 16px;
         top: auto;
-        border-top-width: 1px;
-        /*only relevant for first row*/
-        margin-top: -1px;
-        /*compensate for top border*/
         font-size: 0.8em;
         font-weight: bold;
         padding: 0px;
@@ -365,131 +384,165 @@ module.exports.render = function({items}) {
 
 
     <div class="table-wrapper">
-    <table>
+    <table id="headers">
       <tr class="landscape first-line">
         <td class="sticky">
           <span> Project </span>
         </td>
-        ${projects.map( (project, index) => `
-          <td class="project-name" data-project-index="${index}">${h(project.name)}</td>
-        `).join('')}
       </tr>
       <tr class="landscape">
         <td class="sticky">
            <span>Description</span>
         </td>
-          ${projects.map( (project) => `
-            <td>${h((project.github_data || project)['description'])}</td>
-          `).join('')}
       </tr>
       <tr class="landscape alternate-line">
         <td class="sticky">
            <span>Maturity</span>
         </td>
-          ${projects.map( (project) => `
-            <td>${h(project.relation)}</td>
-          `).join('')}
       </tr>
       <tr class="landscape">
         <td class="sticky">
            <span>Target Users</span>
         </td>
-          ${projects.map( (project) => `
-            <td>${h((project.extra || {})['summary_personas']) || '&nbsp;'}</td>
-          `).join('')}
       </tr>
       <tr class="landscape alternate-line">
         <td class="sticky">
            <span>Tags</span>
         </td>
-          ${projects.map( (project) => `
-            <td>${h((project.extra || {})['summary_tags'] || '').split(',').map( (tag) => `<div>- ${tag.trim()}</div>`).join('') }</td>
-          `).join('')}
       </tr>
       <tr class="landscape">
         <td class="sticky">
            <span>Use Case</span>
         </td>
-          ${projects.map( (project) => `
-            <td>${h((project.extra || {})['summary_use_case']) || '&nbsp;'}</td>
-          `).join('')}
       </tr>
       <tr class="landscape alternate-line">
         <td class="sticky">
            <span>Business Use</span>
         </td>
-          ${projects.map( (project) => `
-            <td>${h((project.extra || {})['summary_business_use_case']) || '&nbsp;'}</td>
-          `).join('')}
       </tr>
       <tr class="landscape">
         <td class="sticky">
            <span>Languages</span>
         </td>
-          ${projects.map( (project) => `
-            <td>${h(getLanguages(project))}</td>
-          `).join('')}
       </tr>
       <tr class="landscape alternate-line">
         <td class="sticky">
            <span>First Commit</span>
         </td>
-          ${projects.map( (project) => `
-            <td>${h(getDate((project.github_start_commit_data || {}).start_date))}</td>
-          `).join('')}
       </tr>
       <tr class="landscape">
         <td class="sticky">
            <span>Last Commit</span>
         </td>
-          ${projects.map( (project) => `
-            <td>${h(getDate((project.github_data || {}).latest_commit_date))}</td>
-          `).join('')}
       </tr>
       <tr class="landscape alternate-line">
         <td class="sticky">
            <span>Release Cadence</span>
         </td>
-          ${projects.map( (project) => `
-            <td>${h((project.extra || {})['summary_release_rate']) || '&nbsp;'}</td>
-          `).join('')}
       </tr>
       <tr class="landscape">
         <td class="sticky">
            <span>Github Stars</span>
         </td>
-          ${projects.map( (project) => `
-            <td>${h(formatNumber((project.github_data || {}).stars))}</td>
-          `).join('')}
       </tr>
       <tr class="landscape alternate-line">
         <td class="sticky">
            <span>Integrations</span>
         </td>
-          ${projects.map( (project) => `
-            <td>${highlightLinks((project.extra || {})['summary_integrations']) || '&nbsp;'}</td>
-          `).join('')}
       </tr>
       <tr class="landscape">
         <td class="sticky">
            <span>Website</span>
         </td>
-          ${projects.map( (project) => `
-            <td><a href="${h((project.homepage_url))}" target="_blank">${l(project.homepage_url)}</a></td>
-          `).join('')}
       </tr>
       <tr class="landscape alternate-line">
         <td class="sticky">
            <span>Github</span>
         </td>
-          ${projects.map( (project) => project.repo_url ? `
-            <td><a href="${h(project.repo_url)}" target="_blank">${l(project.repo_url)}</a></td>
-          `: '<td>&nbsp;</td>').join('')}
       </tr>
       <tr class="landscape">
         <td class="sticky">
            <span>Overview Video</span>
         </td>
+      </tr>
+    </table>
+    <table id="data">
+      <tr class="landscape first-line">
+        ${projects.map( (project, index) => `
+          <td class="project-name" data-project-index="${index}">${h(project.name)}</td>
+        `).join('')}
+      </tr>
+      <tr class="landscape">
+          ${projects.map( (project) => `
+            <td>${h((project.github_data || project)['description'])}</td>
+          `).join('')}
+      </tr>
+      <tr class="landscape alternate-line">
+          ${projects.map( (project) => `
+            <td>${h(project.relation)}</td>
+          `).join('')}
+      </tr>
+      <tr class="landscape">
+          ${projects.map( (project) => `
+            <td>${h((project.extra || {})['summary_personas']) || '&nbsp;'}</td>
+          `).join('')}
+      </tr>
+      <tr class="landscape alternate-line">
+          ${projects.map( (project) => `
+            <td>${h((project.extra || {})['summary_tags'] || '').split(',').map( (tag) => `<div>- ${tag.trim()}</div>`).join('') }</td>
+          `).join('')}
+      </tr>
+      <tr class="landscape">
+          ${projects.map( (project) => `
+            <td>${h((project.extra || {})['summary_use_case']) || '&nbsp;'}</td>
+          `).join('')}
+      </tr>
+      <tr class="landscape alternate-line">
+          ${projects.map( (project) => `
+            <td>${h((project.extra || {})['summary_business_use_case']) || '&nbsp;'}</td>
+          `).join('')}
+      </tr>
+      <tr class="landscape">
+          ${projects.map( (project) => `
+            <td>${h(getLanguages(project))}</td>
+          `).join('')}
+      </tr>
+      <tr class="landscape alternate-line">
+          ${projects.map( (project) => `
+            <td>${h(getDate((project.github_start_commit_data || {}).start_date))}</td>
+          `).join('')}
+      </tr>
+      <tr class="landscape">
+          ${projects.map( (project) => `
+            <td>${h(getDate((project.github_data || {}).latest_commit_date))}</td>
+          `).join('')}
+      </tr>
+      <tr class="landscape alternate-line">
+          ${projects.map( (project) => `
+            <td>${h((project.extra || {})['summary_release_rate']) || '&nbsp;'}</td>
+          `).join('')}
+      </tr>
+      <tr class="landscape">
+          ${projects.map( (project) => `
+            <td>${h(formatNumber((project.github_data || {}).stars))}</td>
+          `).join('')}
+      </tr>
+      <tr class="landscape alternate-line">
+          ${projects.map( (project) => `
+            <td>${highlightLinks((project.extra || {})['summary_integrations']) || '&nbsp;'}</td>
+          `).join('')}
+      </tr>
+      <tr class="landscape">
+          ${projects.map( (project) => `
+            <td><a href="${h((project.homepage_url))}" target="_blank">${l(project.homepage_url)}</a></td>
+          `).join('')}
+      </tr>
+      <tr class="landscape alternate-line">
+          ${projects.map( (project) => project.repo_url ? `
+            <td><a href="${h(project.repo_url)}" target="_blank">${l(project.repo_url)}</a></td>
+          `: '<td>&nbsp;</td>').join('')}
+      </tr>
+      <tr class="landscape">
           ${projects.map( (project) => project.extra && project.extra.summary_intro_url ? `
             <td><a href="${h(project.extra.summary_intro_url)}" target="_blank">${l(project.extra.summary_intro_url)}</a></td>
           `: '<td>&nbsp;</td>').join('')}
@@ -499,11 +552,13 @@ module.exports.render = function({items}) {
     </div>
     <script>
       function setHeight() {
-        const rows = [...document.querySelectorAll('tr')];
+        const rows = [...document.querySelectorAll('#data tr')];
+        const headersRows = [...document.querySelectorAll('#headers tr')];
         for (let row of rows) {
-          const headerEl = row.querySelector('td.sticky');
-          const firstEl = [...row.querySelectorAll('td')].filter((x) => x.style.display !== 'none')[1];
-          headerEl.style.height = firstEl.getBoundingClientRect().height + 'px';
+          const index = rows.indexOf(row);
+          const headerEl = headersRows[index].querySelector('td');
+          const firstEl = [...row.querySelectorAll('td')].filter((x) => x.style.display !== 'none')[0];
+          headerEl.style.height = (firstEl.getBoundingClientRect().height - 2) + 'px';
         }
       }
 
