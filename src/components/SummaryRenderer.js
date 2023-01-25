@@ -130,7 +130,7 @@ module.exports.render = function({items}) {
         margin: 0;
         border: 1px solid white;
         border-top-width: 0px;
-        height: 50px;
+        height: 53px;
         padding: 5px;
         overflow: hidden;
         font-size: 0.8em;
@@ -558,7 +558,7 @@ module.exports.render = function({items}) {
           const index = rows.indexOf(row);
           const headerEl = headersRows[index].querySelector('td');
           const firstEl = [...row.querySelectorAll('td')].filter((x) => x.style.display !== 'none')[0];
-          headerEl.style.height = (firstEl.getBoundingClientRect().height - 2) + 'px';
+          headerEl.style.height = (firstEl.getBoundingClientRect().height) + 'px';
         }
       }
 
@@ -572,12 +572,12 @@ module.exports.render = function({items}) {
         const selectedOption = Array.from(document.querySelectorAll('.categories option')).find( (x) => x.selected);
         const categoryId = selectedOption.value;
         if (!categoryId) {
-          document.querySelector('table').style.width = '';
+          document.querySelector('#data').style.width = '';
           document.querySelector('.subcategories').style.display = 'none';
         } else {
           document.querySelector('.subcategories').style.display = '';
           const newWidth = ${columnWidth} * App.categoryItems[categoryId].length;
-          document.querySelector('table').style.width = newWidth + 'px';
+          document.querySelector('#data').style.width = newWidth + 'px';
 
           const subcategories = window.App.subcategories[categoryId];
           const baseMarkup = '<option value="">All</option>';
@@ -604,7 +604,7 @@ module.exports.render = function({items}) {
         let key = subcategoryId ? (categoryId + ':' + subcategoryId) : categoryId;
 
         const newWidth = ${columnWidth} * App.categoryItems[key].length;
-        document.querySelector('table').style.width = newWidth + 'px';
+        document.querySelector('#data').style.width = newWidth + 'px';
 
         for (let tr of [...document.querySelectorAll('tr')]) {
           let index = 0;
