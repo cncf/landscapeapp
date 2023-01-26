@@ -590,12 +590,25 @@ module.exports.render = function({settings, tweetsCount, itemInfo}) {
     return '';
   })();
 
+  const cloElement = ( function() {
+    if (!itemInfo.extra) {
+      return '';
+    }
+    if (!itemInfo.extra.clomonitor_svg) {
+      return '';
+    }
+    return itemInfo.extra.clomonitor_svg;
+  })();
+
   const extraElement = ( function() {
     if (!itemInfo.extra) {
       return '';
     }
     const items = Object.keys(itemInfo.extra).map( function(key) {
       if (key.indexOf('summary_') === 0) {
+        return '';
+      }
+      if (key === 'clomonitor_name' || key === 'clomonitor_svg') {
         return '';
       }
       const value = itemInfo.extra[key];
@@ -747,6 +760,7 @@ module.exports.render = function({settings, tweetsCount, itemInfo}) {
         </div>
       </div>
       ${extraElement}
+      ${cloElement}
       </div>
   `;
 

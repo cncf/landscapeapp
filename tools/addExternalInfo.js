@@ -12,6 +12,7 @@ const { extractSavedCrunchbaseEntries, fetchCrunchbaseEntries } = require('./cru
 const { fetchGithubEntries } = require('./fetchGithubStats');
 const { getProcessedRepos, getProcessedReposStartDates } = require('./repos');
 const { fetchStartDateEntries } = require('./fetchGithubStartDate');
+const { fetchCloEntries } = require('./fetchCloData');
 const { extractSavedTwitterEntries, fetchTwitterEntries } = require('./twitter');
 const {
   extractSavedBestPracticeEntries,
@@ -185,6 +186,9 @@ async function main() {
     preferCache: useBestPracticesCache
   });
 
+  console.info('Fetching CLOMonitor data');
+  const cloEntries = await fetchCloEntries();
+
   const tree = traverse(landscape);
   console.info('Processing the tree');
   const newProcessedLandscape = tree.map(function(node) {
@@ -320,6 +324,11 @@ async function main() {
         delete twitterEntry.url;
       }
 
+      const cloEntry = _.clone(_.find(cloEntries, { clomonitor_name: node.extra?.clomonitor_name }));
+      // svg clomonitor
+      if (cloEntry) {
+        node.extra.clomonitor_svg = cloEntry.svg
+      }
     }
   });
 
