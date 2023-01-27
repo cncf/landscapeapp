@@ -597,7 +597,11 @@ module.exports.render = function({settings, tweetsCount, itemInfo}) {
     if (!itemInfo.extra.clomonitor_svg) {
       return '';
     }
-    return itemInfo.extra.clomonitor_svg;
+    return `
+      <a href="https://clomonitor.io/projects/cncf/${itemInfo.extra.clomonitor_name}" target="_blank">
+        ${itemInfo.extra.clomonitor_svg}
+      </a>
+    `;
   })();
 
   const extraElement = ( function() {
