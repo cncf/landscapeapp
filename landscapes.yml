@@ -86,3 +86,7 @@ landscapes:
     name: lfn
     repo: lfnetworking/member_landscape
     hook: 60788f5fa3cbd68181e3c209
+  - landscape:
+    name: riscv
+    repo: riscv-admin/riscv-landscape
+    hook: demo
