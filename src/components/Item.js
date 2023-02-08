@@ -53,7 +53,7 @@ const smallItem = function(item) {
 module.exports.renderItem =  function (item) {
   const {isLarge, category, oss, categoryAttrs } = item;
   const isMember = category === settings.global.membership;
-  const ossClass = isMember || oss || (categoryAttrs.isLarge && !settings.global.flags.gray_large_items) ? 'oss' : 'nonoss';
+  const ossClass = isMember || oss || (categoryAttrs.isLarge && !settings.global.flags?.gray_large_items) ? 'oss' : 'nonoss';
   const isLargeClass = isLarge ? 'wrapper-large' : '';
 
   return `<div class="${isLargeClass + ' item-wrapper ' + ossClass}">
