@@ -30,28 +30,17 @@ const debug = function() {
   }
 }
 
-const runLocal = function(command, options = {}) {
-  const { assignFn, showOutputFn } = options;
+const runLocal = function(command) {
 
   // report the output once every 5 seconds
   let lastOutput = { s: '', time: new Date().getTime() };
   let displayIfRequired = function(text) {
     lastOutput.s = lastOutput.s + text;
-    if (showOutputFn && showOutputFn()) {
-      if (lastOutput.done || new Date().getTime() > lastOutput.time + 5 * 1000) {
-        console.info(lastOutput.s);
-        lastOutput.s = "";
-        lastOutput.time = new Date().getTime();
-      }
-    }
   }
 
   return new Promise(function(resolve) {
     var spawn = require('child_process').spawn;
     var child = spawn('bash', ['-lc',`set -e \n${command}`]);
-    if (assignFn) {
-      assignFn(child);
-    }
     let output = [];
     child.stdout.on('data', function(data) {
       const text = maskSecrets(data.toString('utf-8'));
