@@ -92,7 +92,7 @@ ${(process.env.BUILDBOT_KEY || '').replace(/\s/g,'\n')}
 require('fs').writeFileSync('/tmp/buildbot', key);
 require('fs').chmodSync('/tmp/buildbot', 0o600);
 
-const runRemote = async function(command, options) {
+const runRemote = async function(command, count = 3) {
   const bashCommand = `
     nocheck=" -o StrictHostKeyChecking=no "
     ssh -i /tmp/buildbot $nocheck ${remote} << 'EOSSH'
@@ -100,7 +100,12 @@ const runRemote = async function(command, options) {
     ${command}
 EOSSH
 `
-  return await runLocal(bashCommand, options);
+  const result = await runLocal(bashCommand, options);
+  if (result.exitCode === 255 && count > 0) {
+    console.info(`Attempts to retry more: ${count}`);
+    return await runRemote(command, count - 1);
+  }
+  return result;
 };
 
 const runRemoteWithoutErrors = async function(command) {
