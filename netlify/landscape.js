@@ -100,7 +100,7 @@ const runRemote = async function(command, count = 3) {
     ${command}
 EOSSH
 `
-  const result = await runLocal(bashCommand, options);
+  const result = await runLocal(bashCommand);
   if (result.exitCode === 255 && count > 0) {
     console.info(`Attempts to retry more: ${count}`);
     return await runRemote(command, count - 1);
