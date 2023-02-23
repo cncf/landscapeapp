@@ -65,7 +65,7 @@ ${process.env.BUILDBOT_KEY.replace(/\s/g,'\n')}
 
   // now our goal is to run this on a remote server. Step 1 - xcopy the repo
   const folder = new Date().getTime();
-  const remote = 'root@147.75.76.177';
+  const remote = 'root@147.75.199.15';
 
   const runRemote = async function(command) {
     const bashCommand = `
