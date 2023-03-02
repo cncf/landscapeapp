@@ -26,6 +26,10 @@ const processRequest = module.exports.processRequest = query => {
 // Netlify function
 module.exports.handler = async function(event) {
   const body = processRequest(event.queryStringParameters)
-  const headers = { 'Content-Type': 'application/json' }
+  const headers = {
+    'Content-Type': 'application/json',
+    'Access-Control-Allow-Origin': '*',
+    'Access-Control-Allow-Credentials': true
+  }
   return { statusCode: 200, body: JSON.stringify(body), headers }
 }
