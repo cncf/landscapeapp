@@ -17,12 +17,12 @@ module.exports.renderDefaultCard = function renderDefaultCard({item}) {
           <div data-id="${h(item.id)}" class="mosaic-wrap">
             <div class="mosaic ${item.oss ? '' : 'nonoss' }" style="${getRelationStyle(item.relation)}">
               <div class="logo_wrapper">
-                <img loading="lazy" src="${assetPath(item.href)}" class="logo" max-height="100%" max-width="100%" alt="${h(item.name)}" />
+                <img loading="lazy" src="${assetPath(item.href)}" class="logo" max-height="100%" max-width="100%" alt="${item.display_name ? h(item.display_name) : h(item.name)}" />
               </div>
               <div class="mosaic-info">
                 <div class="mosaic-title">
-                  <h5>${h(item.name)}</h5>
-                  ${h(item.organization)}
+                  <h5>${item.display_name ? h(item.display_name) : h(item.name)}</h5>
+                  ${item.organization ? h(item.organization) : ""}
                 </div>
                 <div class="mosaic-stars">
                   ${_.isNumber(item.stars) && item.stars ?

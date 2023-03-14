@@ -27,7 +27,7 @@ const renderDivider = (color) => {
     "></div>`;
 }
 
-module.exports.renderHorizontalCategory = function({ header, guideInfo, subcategories, width, height, top, left, color, href, fitWidth }) {
+module.exports.renderHorizontalCategory = function({ header, guideInfo, subcategories, width, height, top, left, color, href, fitWidth, alternativeLayout }) {
   const addInfoIcon = !!guideInfo;
   const subcategoriesWithCalculations = calculateHorizontalCategory({ height, width, subcategories, fitWidth, addInfoIcon })
   const totalRows = Math.max(...subcategoriesWithCalculations.map(({ rows }) => rows))
@@ -44,7 +44,7 @@ module.exports.renderHorizontalCategory = function({ header, guideInfo, subcateg
         style="
           position: absolute;
           background: ${color};
-          top: ${subcategoryTitleHeight}px;
+          top: ${alternativeLayout ? 0 : subcategoryTitleHeight+"px"};
           bottom: 0;
           left: 0;
           right: 0;
@@ -72,7 +72,7 @@ module.exports.renderHorizontalCategory = function({ header, guideInfo, subcateg
           height: 100%;
           display: flex;
           justify-content: space-evenly;
-          background: white;
+          background: ${alternativeLayout ? "rgba(100,100,100,0.6)" : "white"};
         ">
           ${subcategoriesWithCalculations.map((subcategory, index) => {
             const lastSubcategory = index !== subcategories.length - 1
@@ -80,9 +80,12 @@ module.exports.renderHorizontalCategory = function({ header, guideInfo, subcateg
             const padding = fitWidth ? 0 : `${subcategoryMargin}px 0`;
             const style = `
               display: grid;
-              height: 100%;
+              height: ${alternativeLayout ? "80%" : "100%"};
               grid-template-columns: repeat(${columns}, ${smallItemWidth}px);
               grid-auto-rows: ${smallItemHeight}px;
+              border-style: ${alternativeLayout ? "solid" : "none"};
+              background: ${alternativeLayout ? "white" : "none"};
+              margin: ${alternativeLayout ? "15px 2px 2px 2px" : 0};
             `;
             const extraStyle = fitWidth ? `justify-content: space-evenly; align-content: space-evenly;` : `grid-gap: ${itemMargin}px;`;
             return `
@@ -94,20 +97,21 @@ module.exports.renderHorizontalCategory = function({ header, guideInfo, subcateg
                 box-sizing: border-box;
               ">
                 <div style="
-                  position: absolute;
-                  top: ${-1 * categoryTitleHeight}px;
+                  position: ${alternativeLayout ? "relative" : "absolute"};
+                  top: ${alternativeLayout ? 12 : (-1*categoryTitleHeight)+"px"};
                   left: 0;
                   right: 0;
-                  height: ${categoryTitleHeight}px;
+                  height: ${alternativeLayout ? "25px" : categoryTitleHeight+"px"};
                   display: flex;
                   align-items: center;
                   justify-content: center;
                   text-align: center;
+                  font-style: ${alternativeLayout ? "italic" : "normal"};
                 ">
                   <a data-type="internal" href="${href}" class="white-link">${h(name)}</a>
                 </div>
                 <div style="${style} ${extraStyle}">
-                  ${allItems.map(renderItem).join('')}
+                  ${allItems.map(item => renderItem(item, alternativeLayout)).join('')}
                   ${guideInfo ? renderSubcategoryInfo({label: name, anchor: guideInfo,column: columns, row:totalRows}) : ''}
                 </div>
               </div>

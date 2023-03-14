@@ -15,6 +15,7 @@ const extractKeys = (obj, keys) => {
 
 
 module.exports.render = function({landscapeSettings, landscapeItems}) {
+  const alternativeLayout = landscapeSettings.alternative_layout || false;
   const elements = landscapeSettings.elements.map(element => {
     if (element.type === 'LandscapeLink') {
       return renderOtherLandscapeLink(element)
@@ -30,7 +31,7 @@ module.exports.render = function({landscapeSettings, landscapeItems}) {
     })
 
     if (element.type === 'HorizontalCategory') {
-      return renderHorizontalCategory({...category, ...attributes, subcategories: subcategories});
+      return renderHorizontalCategory({...category, ...attributes, subcategories: subcategories, alternativeLayout});
     }
     if (element.type === 'VerticalCategory') {
       return renderVerticalCategory({...category, ...attributes, subcategories: subcategories});
