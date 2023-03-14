@@ -7,8 +7,6 @@ const settings = readJsonFromDist('settings');
 const itemMargin = module.exports.itemMargin = 3;
 const smallItemWidth = module.exports.smallItemWidth = 34;
 const smallItemHeight = module.exports.smallItemHeight = 30;
-const largeItemWidth = module.exports.largeItemWidth = 2 * smallItemWidth + itemMargin;
-const largeItemHeight = module.exports.largeItemHeight = 2 * smallItemHeight + itemMargin;
 const subcategoryMargin = module.exports.subcategoryMargin = 6;
 const subcategoryTitleHeight = module.exports.subcategoryTitleHeight = 20;
 const dividerWidth = module.exports.dividerWidth = 2;
@@ -20,7 +18,13 @@ const headerHeight = module.exports.headerHeight = 40;
 
 // Check if item is large
 const isLargeFn = module.exports.isLargeFn = ({ relation, category, member, categoryAttrs }) => {
+  if (settings.global.flags?.only_large_items) {
+    return true;
+  }
   const relationInfo = fields.relation.valuesMap[relation]
+  if (!relationInfo) {
+    console.error(`No relation with name ${relation}`);
+  }
   if (category === settings.global.membership) {
     const membershipInfo = settings.membership[member];
     return membershipInfo && !!membershipInfo.is_large;

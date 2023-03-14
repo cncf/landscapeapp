@@ -7,6 +7,9 @@ const settings = readJsonFromDist('settings');
 
 const largeItem = function(item) {
   const relationInfo = fields.relation.valuesMap[item.relation]
+  if (!relationInfo) {
+    console.error(`no map for ${item.relation} on ${item.name}`);
+  }
   const color = relationInfo.big_picture_color;
   const label = relationInfo.big_picture_label;
   const textHeight = label ? 10 : 0
