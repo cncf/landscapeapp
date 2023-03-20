@@ -13,6 +13,7 @@ const SummaryRenderer = require('../src/components/SummaryRenderer.js');
 const FullscreenLandscapeRenderer = require('../src/components/FullscreenLandscapeRenderer');
 const { getLandscapeItems, expandSecondPathItems } = require('../src/utils/itemsCalculator.js');
 const { findLandscapeSettings } = require('../src/utils/landscapeSettings');
+const ObsoleteListRenderer = require('../src/components/ObsoleteListRenderer.js');
 
 async function main() {
   const lastDateAsString = require('child_process').execSync(`git log -1 --format=%cd`, { cwd: projectPath}).toString();
@@ -26,6 +27,9 @@ async function main() {
     const summary = SummaryRenderer.render({items: expandSecondPathItems(projects)});
     await fs.writeFile(path.resolve(distPath, 'summary.html'), summary);
   }
+
+  const obsolete = ObsoleteListRenderer.render({items: expandSecondPathItems(projects)});
+  await fs.writeFile(path.resolve(distPath, 'obsolete.html'), obsolete);
 
   const payload = {};
   const fullscreen = {};
