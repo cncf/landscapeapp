@@ -6,6 +6,7 @@ const { readJsonFromDist } = require('../utils/readJson');
 const settings = readJsonFromDist('settings');
 
 const largeItem = function(item) {
+  const isMember = item.category === settings.global.membership;
   const relationInfo = fields.relation.valuesMap[item.relation]
   if (!relationInfo) {
     console.error(`no map for ${item.relation} on ${item.name}`);
@@ -17,6 +18,18 @@ const largeItem = function(item) {
 
   const isMultiline = h(label).length > 20;
   const formattedLabel = isMultiline ? h(label).replace(' - ', '<br>') : h(label);
+
+  if (isMember) {
+    return `
+    <div data-id="${item.id}" class="large-item item">
+      <img loading="lazy" src="${assetPath(item.href)}" alt="${item.name}" style="
+            width: calc(100% - ${2 * padding}px);
+            height: calc(100% - ${2 * padding + textHeight}px);
+            padding: 5px;
+            margin: ${padding}px ${padding}px 0 ${padding}px;
+      "/>
+    </div>`;
+  }
 
   return `
     <div data-id="${item.id}" class="large-item item" style="background: ${color}">
