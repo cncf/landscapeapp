@@ -6,7 +6,7 @@ function calcLandscapeSettingsList(settingsObj) {
     .sort((a, b) => a.tab_index - b.tab_index)
     .map(({ url, ...rest }) => {
       const basePath = url === 'landscape' ? null : url
-      const isMain = settingsObj.big_picture.main.url === url
+      const isMain = !rest.category;
       return { url, basePath, isMain, ...rest }
     })
 
