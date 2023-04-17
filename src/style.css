@@ -1463,6 +1463,13 @@ html.ios.has-selected-item, html.ios.has-selected-item body {
   height: 63px;
 }
 
+.inner-landscape .large-item.large-item-16, .items .large-item.large-item-16 {
+  cursor: pointer;
+  position: relative;
+  width: 145px;
+  height: 128px;
+}
+
 .inner-landscape .small-item, .items .small-item {
   cursor: pointer;
   position: relative;
@@ -1481,9 +1488,14 @@ html.ios.has-selected-item, html.ios.has-selected-item body {
   grid-row-end: span 1;
 }
 
-.inner-landscape .item-wrapper.wrapper-large, .items .item-wrapper.wrapper-large {
+.inner-landscape .item-wrapper.wrapper-large-4, .items .item-wrapper.wrapper-large-4 {
   grid-column-end: span 2;
   grid-row-end: span 2;
+}
+
+.inner-landscape .item-wrapper.wrapper-large-16, .items .item-wrapper.wrapper-large-16 {
+  grid-column-end: span 4;
+  grid-row-end: span 4;
 }
 
 

@@ -1,6 +1,6 @@
 const _ = require('lodash');
 
-const { isLargeFn } = require('../utils/landscapeCalculations');
+const { sizeFn } = require('../utils/landscapeCalculations');
 const { renderItem } = require('./Item.js');
 const { h } = require('../utils/format');
 const { assetPath } = require('../utils/assetPath');
@@ -17,7 +17,7 @@ module.exports.render = function({settings, items, guide}) {
 
   const title = `<h1 className="title" style="margin-top: -5px;">${h(settings.global.short_name)} Landscape Guide</h1>`;
   const renderSubcategoryMetadata = ({ node, entries }) => {
-    const orderedEntries = _.orderBy(entries,  (x) => !x.isLarge);
+    const orderedEntries = _.orderBy(entries,  (x) => -x.size);
     const projectEntries = entries.filter(entry => entry.project)
     return `
       ${ (node.buzzwords.length > 0 || projectEntries.length > 0) ? `<div class="metadata">
@@ -110,7 +110,7 @@ module.exports.render = function({settings, items, guide}) {
       return null;
     }
     const enhanced = { ...entry, categoryAttrs }
-    return { ...enhanced, isLarge: isLargeFn(enhanced) }
+    return { ...enhanced, size: sizeFn(enhanced) }
   }).filter( (x) => !!x);
 
   return `

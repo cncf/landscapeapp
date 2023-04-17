@@ -21,7 +21,7 @@ const largeItem = function(item) {
 
   if (isMember) {
     return `
-    <div data-id="${item.id}" class="large-item item">
+    <div data-id="${item.id}" class="large-item large-item-${item.size} item">
       <img loading="lazy" src="${assetPath(item.href)}" alt="${item.name}" style="
             width: calc(100% - ${2 * padding}px);
             height: calc(100% - ${2 * padding + textHeight}px);
@@ -32,7 +32,7 @@ const largeItem = function(item) {
   }
 
   return `
-    <div data-id="${item.id}" class="large-item item" style="background: ${color}">
+    <div data-id="${item.id}" class="large-item large-item-${item.size} item" style="background: ${color}">
       <img loading="lazy" src="${assetPath(item.href)}" alt="${item.name}" style="
             width: calc(100% - ${2 * padding}px);
             height: calc(100% - ${2 * padding + textHeight}px);
@@ -67,12 +67,12 @@ const smallItem = function(item) {
 }
 
 module.exports.renderItem =  function (item) {
-  const {isLarge, category, oss, categoryAttrs } = item;
+  const {size, category, oss, categoryAttrs } = item;
   const isMember = category === settings.global.membership;
   const ossClass = isMember || oss || (categoryAttrs.isLarge && !settings.global.flags?.gray_large_items) ? 'oss' : 'nonoss';
-  const isLargeClass = isLarge ? 'wrapper-large' : '';
+  const isLargeClass = size > 1 ? `wrapper-large-${size}` : '';
 
   return `<div class="${isLargeClass + ' item-wrapper ' + ossClass}">
-    ${isLarge ? largeItem({isMember, ...item}) : smallItem({...item})}
+    ${size > 1 ? largeItem({isMember, ...item}) : smallItem({...item})}
   </div>`;
 }

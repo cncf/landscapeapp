@@ -17,19 +17,19 @@ const headerHeight = module.exports.headerHeight = 40;
 /* eslint-enable */
 
 // Check if item is large
-const isLargeFn = module.exports.isLargeFn = ({ relation, category, member, categoryAttrs }) => {
-  if (settings.global.flags?.only_large_items) {
-    return true;
-  }
+const sizeFn = module.exports.sizeFn = ({ relation, category, member, categoryAttrs }) => {
   const relationInfo = fields.relation.valuesMap[relation]
   if (!relationInfo) {
     console.error(`No relation with name ${relation}`);
   }
+  if (relationInfo.x4) {
+    return 16;
+  }
   if (category === settings.global.membership) {
     const membershipInfo = settings.membership[member];
-    return membershipInfo && !!membershipInfo.is_large;
+    return (membershipInfo && !!membershipInfo.is_large) ? 4 : 1;
   }
-  return !!categoryAttrs.isLarge || !!relationInfo.big_picture_order;
+  return (!!categoryAttrs.isLarge || !!relationInfo.big_picture_order) ? 4 : 1;
 }
 
 // Compute if items are large and/or visible.
@@ -38,10 +38,9 @@ const isLargeFn = module.exports.isLargeFn = ({ relation, category, member, cate
 const computeItems = (subcategories, addInfoIcon = false) => {
   return subcategories.map(subcategory => {
     const filteredItems = subcategory.items.reduce((acc, { id }) => ({ ...acc, [id]: true }), {})
-    const allItems = subcategory.allItems.map(item => ({ ...item, isLarge: isLargeFn(item), isVisible: filteredItems[item.id]  }))
-    const itemsCount = allItems.reduce((count, item) => count + (item.isLarge ? 4 : 1), 0) + (addInfoIcon ? 1 : 0)
-    const largeItemsCount = allItems.reduce((count, item) => count + (item.isLarge ? 1 : 0), 0)
-
+    const allItems = subcategory.allItems.map(item => ({ ...item, size: sizeFn(item), isVisible: filteredItems[item.id]  }))
+    const itemsCount = allItems.reduce((count, item) => count + item.size, 0) + (addInfoIcon ? 1 : 0)
+    const largeItemsCount = allItems.reduce((count, item) => count + (item.size === 16 ? 4 : item.size === 4 ? 1 : 0), 0)
     return { ...subcategory, allItems, itemsCount, largeItemsCount }
   })
 }
