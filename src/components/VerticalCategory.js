@@ -26,7 +26,7 @@ module.exports.renderVerticalCategory = function({header, guideInfo, subcategori
       flex-direction: column;
     " class="big-picture-section">
       <div style="height: ${categoryTitleHeight}px; width: 100%; display: flex;">
-        ${renderCategoryHeader({href: href, label: header, guideAnchor: guideInfo && guideInfo[header], background: color})}
+        ${renderCategoryHeader({href: href, label: header, guideAnchor: guideInfo, background: color})}
       </div>
       <div style="
         width: 100%;
