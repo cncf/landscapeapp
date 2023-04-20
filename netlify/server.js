@@ -54,14 +54,19 @@ function get(path) {
     return new Promise(function(resolve) {
         const base = process.env.DEBUG_SERVER ? 'http://localhost:3000' : 'https://weblandscapes.ddns.net';
         const http = require(base.indexOf('http://') === 0 ? 'http' : 'https');
-
+        const originalPath = path;
         path = `${base}/api/console/download/${path}`;
         const req = http.request(path, function(res) {
-            resolve({
+            const path1 = originalPath.replace('?', '.html?');
+            if (res.statusCode === 404 && path.indexOf('.html') === -1) {
+              get(path1).then( (x) => resolve(x));
+            } else {
+              resolve({
                 res: res,
                 headers: res.headers,
                 statusCode: res.statusCode
-            });
+              });
+            }
         });
         req.end();
     });
@@ -147,7 +152,9 @@ function server() {
             }
         } else {
             let filePath = request.url.split('?')[0];
-            const output = await get(path.join(currentPath, 'dist', filePath + '?' + request.url.split('?')[1]));
+            const url = path.join(currentPath, 'dist', filePath + '?' + request.url.split('?')[1]);
+            console.info(`Fetching ${url}`);
+            const output = await get(url);
             response.writeHead(output.statusCode, output.headers);
             output.res.pipe(response);
         }
