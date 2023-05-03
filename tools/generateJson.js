@@ -565,7 +565,7 @@ async function main () {
       if (item.member) {
         return {relation: 'member', isSubsidiaryProject: false};
       }
-      if (item.crunchbase === settings.global.self) {
+      if (item.crunchbase === settings.global.self && settings.global.self != null) {
         return {relation: 'member', isSubsidiaryProject: true};
       }
       return {relation: false, isSubsidiaryProject: false};
