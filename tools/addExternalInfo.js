@@ -165,11 +165,12 @@ async function main() {
 
   console.info('Fetching last tweet dates');
   const savedTwitterEntries = await extractSavedTwitterEntries();
-  const twitterEntries = await fetchTwitterEntries({
-    cache: savedTwitterEntries,
-    preferCache: useTwitterCache,
-    crunchbaseEntries: crunchbaseEntries
-  });
+
+  // const twitterEntries = await fetchTwitterEntries({
+    // cache: savedTwitterEntries,
+    // preferCache: useTwitterCache,
+    // crunchbaseEntries: crunchbaseEntries
+  // });
 
   if (hasFatalErrors()) {
     console.info('Reporting fatal errors');
@@ -313,10 +314,9 @@ async function main() {
       }
       node.best_practice_data = bestPracticeEntry;
       delete node.best_practice_data.repo_url;
-      // twitter
+      //twitter
       const twitter = actualTwitter(node, node.crunchbase_data);
-
-      const twitterEntry = _.clone(_.find(twitterEntries, {
+      const twitterEntry = _.clone(_.find(savedTwitterEntries, {
         url: twitter
       }));
       if (twitterEntry) {
