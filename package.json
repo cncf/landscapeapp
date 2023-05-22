@@ -16,7 +16,7 @@
     "update-github-colors": "curl https://raw.githubusercontent.com/Diastro/github-colors/master/github-colors.json > tools/githubColors.json",
     "fetch": "node tools/validateLandscape && node tools/checkWrongCharactersInFilenames && node tools/addExternalInfo.js && yarn yaml2json",
     "fetchAll": "LEVEL=complete yarn fetch",
-    "update": "(rm /tmp/landscape.json || true) && node tools/validateLandscape && yarn remove-quotes && LEVEL=medium node tools/addExternalInfo.js && yarn prune && yarn check-links && yarn yaml2json && node tools/calculateNumberOfTweets && node tools/updateTimestamps",
+    "update": "(rm /tmp/landscape.json || true) && node tools/validateLandscape && yarn remove-quotes && LEVEL=medium node tools/addExternalInfo.js && yarn prune && yarn check-links && yarn yaml2json && node tools/updateTimestamps",
     "yaml2json": "node tools/generateJson.js",
     "remove-quotes": "node tools/removeQuotes",
     "prune": "node tools/pruneExtraEntries",
