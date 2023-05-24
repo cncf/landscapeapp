@@ -100,7 +100,7 @@ async function main() {
 
     let returnCode;
     let logs;
-    for (var i = 0; i < 3; i ++) {
+    for (var i = 0; i < 1; i ++) {
       const result = await runIt();
       returnCode = result.returnCode;
       logs = result.logs;

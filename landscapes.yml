@@ -5,6 +5,18 @@ landscapes:
   # netlify: full | skip - do we build it on a netlify build or not
   # hook: - id for a build hook, so it will be triggered after a default branch build
   - landscape:
+    name: lfedge
+    repo: State-of-the-Edge/lfedge-landscape
+    hook: 5c80e31894c5c7758edb31e4
+  - landscape:
+    name: lfenergy
+    repo: lf-energy/lfenergy-landscape
+    hook: 606487bb9da603110d4b8139
+  - landscape:
+    name: lf
+    repo: jmertic/lf-landscape
+    hook: 606487123224e20fb8f3896e
+  - landscape:
     name: dlt
     repo: dltlandscape/dlt-landscape
     hook: demo
@@ -37,22 +49,10 @@ landscapes:
     hook: 5d5c7ccf64ecb5bd3d2592f7
     required: true
   - landscape:
-    name: lf
-    repo: jmertic/lf-landscape
-    hook: 606487123224e20fb8f3896e
-  - landscape:
     name: lfai
     repo: lfai/landscape
     hook: 60648e5b74c76017210a2f53
     required: true
-  - landscape:
-    name: lfedge
-    repo: State-of-the-Edge/lfedge-landscape
-    hook: 5c80e31894c5c7758edb31e4
-  - landscape:
-    name: lfenergy
-    repo: lf-energy/lfenergy-landscape
-    hook: 606487bb9da603110d4b8139
   - landscape:
     name: lfph
     repo: lfph/lfph-landscape
