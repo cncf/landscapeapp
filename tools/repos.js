@@ -80,16 +80,20 @@ const fetchGithubOrgs = async preferCache => {
       return { data: { url, repos, cached: true }, github_data, github_start_commit_data }
     }
     const orgName = url.split('/').pop()
-    const { description } = await GithubClient.request({ path: `orgs/${orgName}` })
-    const params = { type: 'public', per_page: 100 }
-    const path = `orgs/${orgName}/repos`
-    const response = await GithubClient.request({ path, params })
-    const repos = response.map(({ html_url, default_branch, size }) => {
-      if (size > 0) {
-        return { url: html_url, branch: default_branch, multiple: true }
-      }
-    }).filter(_ => _)
-    return { data: { url, repos }, github_data: { description } }
+    try {
+      const { description } = await GithubClient.request({ path: `orgs/${orgName}` })
+      const params = { type: 'public', per_page: 100 }
+      const path = `orgs/${orgName}/repos`
+      const response = await GithubClient.request({ path, params })
+      const repos = response.map(({ html_url, default_branch, size }) => {
+        if (size > 0) {
+          return { url: html_url, branch: default_branch, multiple: true }
+        }
+      }).filter(_ => _)
+      return { data: { url, repos }, github_data: { description } }
+    } catch(ex) {
+      console.info(`Failed to fetch org: ${orgName}`);
+    }
   }, { concurrency: 10 })
 }
 module.exports.fetchGithubOrgs = fetchGithubOrgs;

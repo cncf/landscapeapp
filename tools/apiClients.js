@@ -128,7 +128,7 @@ module.exports.CrunchbaseClient = ApiClient({
 
 module.exports.GithubClient = ApiClient({
   baseURL: 'https://api.github.com',
-  retryStatuses: [403], // Github returns 403 when rate limiting.
+  retryStatuses: [401, 403], // Github returns 403 when rate limiting.
   delayFn: error => {
     const rateLimitRemaining = parseInt(_.get(error, ['response', 'headers', 'x-ratelimit-remaining'], 1))
     const rateLimitReset = parseInt(_.get(error, ['response', 'headers', 'x-ratelimit-reset'], 1)) * 1000
