@@ -139,16 +139,20 @@ const fetchCrunchbaseOrganization = async id => {
 const fetchData = module.exports.fetchData = async function(name) {
   const result = await fetchCrunchbaseOrganization(name)
   const mapAcquisitions = function(a) {
-    const result = {
-      date: a.announced_on.value,
-      acquiree: a.acquiree_identifier.value,
-    }
-    if (a.price) {
-      result.price = a.price.value_usd
+    try {
+      const result = {
+        date: a.announced_on.value,
+        acquiree: a.acquiree_identifier.value,
+      }
+      if (a.price) {
+        result.price = a.price.value_usd
+      }
+    } catch(ex) {
+      return null;
     }
     return result;
   }
-  let acquisitions = result.cards.acquiree_acquisitions.map(mapAcquisitions);
+  let acquisitions = result.cards.acquiree_acquisitions.map(mapAcquisitions).filter( (x) => !!x);
   const limit = 100;
   let lastPage = result;
   while (lastPage.cards.acquiree_acquisitions.length === limit) {
@@ -179,6 +183,9 @@ const fetchData = module.exports.fetchData = async function(name) {
   const totalFunding = firstWithTotalFunding ? + firstWithTotalFunding.funding_total.value_usd.toFixed() : undefined;
 
   const getAddressPart = function(part) {
+    if (!result.cards.headquarters_address[0]) {
+      return " N/A";
+    }
     return (result.cards.headquarters_address[0].location_identifiers.filter( (x) => x.location_type === part)[0] || {}).value
   }
 
@@ -192,10 +199,6 @@ const fetchData = module.exports.fetchData = async function(name) {
       return { employeesMin: + parts[1], employeesMax: parts[2] === 'max' ? 1000000 : + parts[2] }
     }
   })();
-
-  if (!result.cards.headquarters_address[0]) {
-    return 'no address';
-  }
 
   return {
     name: result.properties.name,
@@ -238,11 +241,6 @@ module.exports.fetchCrunchbaseEntries = async function({cache, preferCache}) {
     }
     try {
       const result = await fetchData(c.name);
-      if (result === 'no address') {
-        fatalErrors.push(`no headquarter addresses for ${c.name} at ${c.crunchbase}`);
-        reporter.write(fatal("F"));
-        return null;
-      }
 
       const entry = {
         url: c.crunchbase,
@@ -268,6 +266,7 @@ module.exports.fetchCrunchbaseEntries = async function({cache, preferCache}) {
       return entry;
       // console.info(entry);
     } catch (ex) {
+      console.info(ex);
       if (cachedEntry) {
         errors.push(`Using cached entry, because can not fetch: ${c.name} ` +  ex.message.substring(0, 200));
         reporter.write(error("E"));

@@ -141,7 +141,7 @@ async function main () {
           result = formatCity(node.crunchbase_data);
         }
         if (!result) {
-          result = 'N/A';
+          result = ' N/A';
         }
         return result;
       };
