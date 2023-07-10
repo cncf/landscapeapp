@@ -139,8 +139,9 @@ const fetchCrunchbaseOrganization = async id => {
 const fetchData = module.exports.fetchData = async function(name) {
   const result = await fetchCrunchbaseOrganization(name)
   const mapAcquisitions = function(a) {
+    let result1;
     try {
-      const result = {
+      result1 = {
         date: a.announced_on.value,
         acquiree: a.acquiree_identifier.value,
       }
@@ -150,7 +151,7 @@ const fetchData = module.exports.fetchData = async function(name) {
     } catch(ex) {
       return null;
     }
-    return result;
+    return result1;
   }
   let acquisitions = result.cards.acquiree_acquisitions.map(mapAcquisitions).filter( (x) => !!x);
   const limit = 100;
