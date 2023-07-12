@@ -30,11 +30,14 @@ const debug = function() {
   }
 }
 
-const runLocal = function(command) {
+const runLocal = function(command, showProgress) {
 
   // report the output once every 5 seconds
   let lastOutput = { s: '', time: new Date().getTime() };
   let displayIfRequired = function(text) {
+    if (showProgress) {
+      console.info(text);
+    }
     lastOutput.s = lastOutput.s + text;
   }
 
@@ -89,7 +92,7 @@ const runRemote = async function(command, count = 3) {
     ${command}
 EOSSH
 `
-  const result = await runLocal(bashCommand);
+  const result = await runLocal(bashCommand, true);
   if (result.exitCode === 255 && count > 0) {
     console.info(`Attempts to retry more: ${count}`);
     return await runRemote(command, count - 1);
