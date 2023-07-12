@@ -75,6 +75,8 @@ const requestWithRetry = async ({ attempts = maxAttempts, resolveWithFullRespons
       ].join(' ')
       if (key === keys[keys.length - 1]) {
         console.info(message);
+      } else {
+        console.info(`Failed to use key #${keys.indexOf(key)} of ${keys.length}`);
       }
       const rateLimited = retryStatuses.includes(status)
       const dnsError = error.code === 'ENOTFOUND' && error.syscall === 'getaddrinfo'
