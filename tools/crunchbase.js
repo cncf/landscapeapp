@@ -256,8 +256,12 @@ module.exports.fetchCrunchbaseEntries = async function({cache, preferCache}) {
       if (!(c.ticker === null) && (entry.ticker || c.ticker)) {
         // console.info('need to get a ticker?');
         entry.effective_ticker = c.ticker || entry.ticker;
-        entry.market_cap = await getMarketCap(entry.effective_ticker, entry.stockExchange);
-        entry.kind = 'market_cap';
+        try {
+          entry.market_cap = await getMarketCap(entry.effective_ticker, entry.stockExchange);
+          entry.kind = 'market_cap';
+        } catch(ex) {
+          console.info(`Skipping market cap calculation`);
+        }
       } else if (entry.funding) {
         entry.kind = 'funding';
       } else {
