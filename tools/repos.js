@@ -73,7 +73,7 @@ module.exports.getOrganizations = getOrganizations;
 const fetchGithubOrgs = async preferCache => {
   const githubOrgs = getOrganizations()
   const processedGithubOrgs = getProcessedGithubOrgs()
-  return await Promise.map(githubOrgs, async ({ url }) => {
+  const result = await Promise.map(githubOrgs, async ({ url }) => {
     const processedOrg = processedGithubOrgs[url]
     if (processedOrg && preferCache) {
       const { github_data, github_start_commit_data, repos } = processedOrg
@@ -93,8 +93,10 @@ const fetchGithubOrgs = async preferCache => {
       return { data: { url, repos }, github_data: { description } }
     } catch(ex) {
       console.info(`Failed to fetch org: ${orgName}`);
+      return null
     }
   }, { concurrency: 10 })
+  return result.filter( (x) => !!x);
 }
 module.exports.fetchGithubOrgs = fetchGithubOrgs;
 

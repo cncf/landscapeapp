@@ -37,7 +37,7 @@ async function getLandscapeItems() {
 }
 
 async function fetchEntriesNoRetry() {
-  const maxNumber = 200;
+  const maxNumber = 300;
   const items = await Promise.map(_.range(1, maxNumber), async function(number) {
     const result = await requestWithRetry({
       url: `https://bestpractices.coreinfrastructure.org/en/projects.json?page=${number}`

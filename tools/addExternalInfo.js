@@ -44,6 +44,10 @@ function reportOptions() {
 }
 if (key.toLowerCase() === 'easy') {
   reportOptions();
+} else if (key.toLowerCase() === 'crunchbase') {
+
+  useCrunchbaseCache = false;
+  reportOptions();
 }
 else if (key.toLowerCase() === 'medium') {
   useTwitterCache=false;
@@ -186,6 +190,7 @@ async function main() {
     cache: savedBestPracticeEntries,
     preferCache: useBestPracticesCache
   });
+  require('fs').writeFileSync('/tmp/bp.json', JSON.stringify(bestPracticeEntries, null, 4));
 
   console.info('Fetching CLOMonitor data');
   const cloEntries = await fetchCloEntries();

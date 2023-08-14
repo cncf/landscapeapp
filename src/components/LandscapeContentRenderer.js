@@ -22,7 +22,11 @@ module.exports.render = function({landscapeSettings, landscapeItems}) {
     if (element.type === 'LandscapeInfo') {
       return renderLandscapeInfo(element)
     }
-    const category = landscapeItems.find(c => c.key === element.category) || {}
+    const category = landscapeItems.find(c => c.key === element.category);
+    if (!category) {
+      console.info(`Can not find the ${element.category}`);
+      console.info(`Valid values: ${landscapeItems.map( (x) => x.key).join('; ')}`);
+    }
     const attributes = extractKeys(element, ['width', 'height', 'top', 'left', 'color', 'fit_width', 'is_large'])
     const subcategories = category.subcategories.map(subcategory => {
       const allItems = subcategory.allItems.map(item => ({ ...item, categoryAttrs: attributes }))
