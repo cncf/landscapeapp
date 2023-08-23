@@ -619,7 +619,7 @@ module.exports.render = function({settings, tweetsCount, itemInfo}) {
         const value = itemInfo.extra[key];
         const lines = (value.map ? value : [value]).map( (auditInfo) => `
           <div>
-          <a href="${h(itemInfo.url)}" target="_blank">${h(itemInfo.type)} at ${itemInfo.date}</a>
+          <a href="${h(auditInfo.url)}" target="_blank">${h(auditInfo.type)} at ${auditInfo.date}</a>
           </div>
         `).join('');
         return `<div class="product-property row">
