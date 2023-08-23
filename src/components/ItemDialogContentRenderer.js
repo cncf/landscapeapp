@@ -615,6 +615,18 @@ module.exports.render = function({settings, tweetsCount, itemInfo}) {
       if (key === 'clomonitor_name' || key === 'clomonitor_svg') {
         return '';
       }
+      if (key === 'audits') {
+        const value = itemInfo.extra[key];
+        const lines = (value.map ? value : [value]).map( (auditInfo) => `
+          <div>
+          <a href="${h(itemInfo.url)}" target="_blank">${h(itemInfo.type)} at ${itemInfo.date}</a>
+          </div>
+        `).join('');
+        return `<div class="product-property row">
+          <div class="product-property-name tight-col col-20">Audits</div>
+          <div class="product-proerty-value tight-col col-80">${lines}</div>
+        </div>`;
+      }
       const value = itemInfo.extra[key];
       const keyText = (function() {
         const step1 =  key.replace(/_url/g, '');
