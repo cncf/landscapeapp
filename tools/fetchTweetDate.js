@@ -1,4 +1,4 @@
-const twitter = "https://twitter.com/Microsoft";
+const twitter = "https://twitter.com/vitessio";
 async function main() {
   const puppeteer = require('puppeteer');
   const browser = await puppeteer.launch({args: ['--no-sandbox', '--disable-setuid-sandbox', '--ignore-certificate-errors'], headless: false});
