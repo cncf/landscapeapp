@@ -153,7 +153,7 @@ const makeRemoteBuildWithCache = async function() {
       `nvm use ${nvmrc}`,
       `echo 1`,
       `npm install -g agentkeepalive --save`,
-      `npm install -g npm --no-progress`,
+      `npm install -g npm@9 --no-progress`,
       `npm install -g yarn@latest`,
       `cd /opt/repo/packageRemote`,
       `yarn >/dev/null`,
