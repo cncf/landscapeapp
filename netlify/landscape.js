@@ -155,8 +155,10 @@ const makeRemoteBuildWithCache = async function() {
       `npm install -g agentkeepalive --save`,
       `npm install -g npm --no-progress`,
       `npm install -g yarn@latest`,
+      `echo 2`,
       `cd /opt/repo/packageRemote`,
-      `yarn >/dev/null`
+      `yarn`,
+      `echo 3`
     ].join(' && ');
     const npmInstallCommand = `
       mkdir -p /root/builds/node_cache
