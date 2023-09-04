@@ -161,6 +161,7 @@ const makeRemoteBuildWithCache = async function() {
     `cd /opt/repo/packageRemote`,
     "(ls . ~/.nvm/nvm.sh || (curl -s -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.35.3/install.sh | bash >/dev/null))",
     `. ~/.nvm/nvm.sh`,
+    `cat .nvmrc`,
     `nvm install ${nvmrc}`,
     `nvm use ${nvmrc}`,
     `npm install -g agentkeepalive --save`,
