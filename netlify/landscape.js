@@ -177,7 +177,6 @@ const makeRemoteBuildWithCache = async function() {
       mkdir -p /root/builds/${outputFolder}
       chmod -R 777 /root/builds/${outputFolder}
       chmod -R 777 /root/builds/${folder}
-      chmod -R 777 /root/builds/node_cache/${hash}
 
       docker run --shm-size 1G --rm -t \
         ${vars.map( (v) => ` -e ${v}="${process.env[v]}" `).join(' ')} \
@@ -243,7 +242,6 @@ async function main() {
   await runLocal('rm package*.json');
 
   const cleanPromise = runRemoteWithoutErrors(`
-    find builds/node_cache -maxdepth 1 -mtime +1 -exec rm -rf {} +;
     find builds/ -maxdepth 1 -not -path "builds/node_cache" -mtime +1 -exec rm -rf {} +;
   `).catch(function() {
     console.info('Failed to clean up a builds folder');
