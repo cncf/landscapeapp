@@ -437,7 +437,7 @@ module.exports.render = function({settings, tweetsCount, itemInfo}) {
     <div class="product-property row">
       <div class="product-property-name col col-40">First Commit</div>
       <div class="product-property-value tight-col col-60">
-        <a data-type="external" target=_blank href=${h(itemInfo.firstCommitLink)}">${formatDate(itemInfo.firstCommitDate)}</a>
+        <a data-type="external" target=_blank href="${h(itemInfo.firstCommitLink)}">${formatDate(itemInfo.firstCommitDate)}</a>
       </div>
     </div>
   ` : '';
