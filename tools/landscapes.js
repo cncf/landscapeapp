@@ -62,13 +62,23 @@ async function main() {
   cd /landscapeapp
   export PROJECT_PATH=/repo
   npm install -g yarn
+  NETLIFY=1 yarn run light-update
+  cp files/landscape.netlify.toml /repo/netlify.toml
+  cd /repo
+  git add .
+  git config --global user.email "info@cncf.io"
+  git config --global user.name "CNCF-bot"
+  git commit -s -m "Automated crunchbase update by CNCF-bot"
+  GIT_SSH_COMMAND='ssh -i ~/.ssh/bot2 -o IdentitiesOnly=yes' git push origin HEAD || GIT_SSH_COMMAND='ssh -i ~/.ssh/bot3 -o IdentitiesOnly=yes' git push origin HEAD
+  cd /landscapeapp
+  export PROJECT_PATH=/repo
   NETLIFY=1 yarn run update
   cp files/landscape.netlify.toml /repo/netlify.toml
   cd /repo
   git add .
   git config --global user.email "info@cncf.io"
   git config --global user.name "CNCF-bot"
-  git commit -s -m "Automated update by CNCF-bot"
+  git commit -s -m "Automated full update by CNCF-bot"
   GIT_SSH_COMMAND='ssh -i ~/.ssh/bot2 -o IdentitiesOnly=yes' git push origin HEAD || GIT_SSH_COMMAND='ssh -i ~/.ssh/bot3 -o IdentitiesOnly=yes' git push origin HEAD
   `;
 

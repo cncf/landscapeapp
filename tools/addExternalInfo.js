@@ -52,7 +52,7 @@ if (key.toLowerCase() === 'easy') {
 else if (key.toLowerCase() === 'medium') {
   useTwitterCache=false;
   useGithubCache=false;
-  useCrunchbaseCache=false;
+  useCrunchbaseCache=true;
   useBestPracticesCache=false;
   reportOptions();
 }
