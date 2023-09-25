@@ -7,6 +7,6 @@ const requestWithRetry = async function(args) {
     const response = await axios(config)
     return response.data
   }
-  return await retry(() => request(rest), 5, 30000, retryStatuses, delayFn);
+  return await retry(() => request(rest), 3, 30000, retryStatuses, delayFn);
 }
 module.exports.requestWithRetry = requestWithRetry;
