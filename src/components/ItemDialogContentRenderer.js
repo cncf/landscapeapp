@@ -134,6 +134,9 @@ module.exports.render = function({settings, tweetsCount, itemInfo}) {
       return '';
     }
     if (!itemInfo.bestPracticeBadgeId) {
+      if (settings.global.hide_no_best_practices) {
+        return '';
+      }
       if (itemInfo.oss) {
         const emptyUrl="https://bestpractices.coreinfrastructure.org/";
         return `<a data-type="external" target="_blank" href=${emptyUrl} class="tag tag-grass">
