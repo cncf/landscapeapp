@@ -20,6 +20,16 @@ module.exports.render = function({settings, tweetsCount, itemInfo}) {
     return relativeDate(new Date(x));
   };
 
+  function getLinkedIn(itemInfo) {
+    if (itemInfo.extra && itemInfo.extra.override_linked_in) {
+      return itemInfo.extra.override_linked_in;
+    }
+    if (itemInfo.crunchbaseData && itemInfo.crunchbaseData.linkedin) {
+      return itemInfo.crunchbaseData.linkedin;
+    }
+    return '';
+  }
+
   function getRelationStyle(relation) {
     const relationInfo = fields.relation.valuesMap[relation]
     if (relationInfo && relationInfo.color) {
@@ -625,6 +635,9 @@ module.exports.render = function({settings, tweetsCount, itemInfo}) {
       if (key === 'hide_license') {
         return '';
       }
+      if (key === 'override_linked_in') {
+        return '';
+      }
       if (key === 'audits') {
         const value = itemInfo.extra[key];
         const lines = (value.map ? value : [value]).map( (auditInfo) => `
@@ -752,12 +765,12 @@ module.exports.render = function({settings, tweetsCount, itemInfo}) {
             </div>
           </div> ` : ''
       }
-      ${itemInfo.crunchbaseData && itemInfo.crunchbaseData.linkedin ? `
+      ${getLinkedIn(itemInfo) ? `
           <div class="product-property row">
             <div class="product-property-name col col-20">LinkedIn</div>
             <div class="product-property-value col col-80">
-              <a data-type=external target=_blank href="${itemInfo.crunchbaseData.linkedin}">
-                ${shortenUrl(itemInfo.crunchbaseData.linkedin)}
+              <a data-type=external target=_blank href="${getLinkedIn(itemInfo)}">
+                ${shortenUrl(getLinkedIn(itemInfo))}
               </a>
             </div>
           </div> ` : ''
