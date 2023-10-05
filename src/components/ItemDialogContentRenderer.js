@@ -118,8 +118,12 @@ module.exports.render = function({settings, tweetsCount, itemInfo}) {
     }
   };
 
-  const renderLicenseTag = function({relation, license, hideLicense}) {
+  const renderLicenseTag = function({relation, license, hideLicense, extra}) {
     const { label } = _.find(fields.license.values, {id: license});
+
+    if (extra && extra.hide_license) {
+      return '';
+    }
 
     if (relation === 'company' || hideLicense) {
       return '';
@@ -616,6 +620,9 @@ module.exports.render = function({settings, tweetsCount, itemInfo}) {
         return '';
       }
       if (key === 'clomonitor_name' || key === 'clomonitor_svg') {
+        return '';
+      }
+      if (key === 'hide_license') {
         return '';
       }
       if (key === 'audits') {
