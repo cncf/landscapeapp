@@ -126,8 +126,6 @@ const makeLocalBuild = async function() {
       echo 3
       npm install -g npm --no-progress
       echo 4
-      npm install -g yarn@latest
-      echo 5
       yarn >/dev/null
       export NODE_OPTIONS="--unhandled-rejections=strict"
       export JEST_OPTIONS="-i"
