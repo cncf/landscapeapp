@@ -26,11 +26,6 @@ landscapes:
     hook: 608aa68eb6e5723d5d8a7e00
     required: true
   - landscape:
-    name: cncf
-    repo: cncf/landscape
-    hook: 5c1bd968fdd72a78a54bdcd1
-    required: true
-  - landscape:
     name: cdf
     repo: cdfoundation/cdf-landscape
     hook: 5d8e8ecbeb12d77369f06dba
