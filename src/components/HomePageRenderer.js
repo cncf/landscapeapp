@@ -163,11 +163,6 @@ module.exports.render = function({settings, guidePayload, hasGuide, bigPictureKe
             ${renderFilterCompanyType()}
             ${renderFilterIndustries()}
 
-            <a class="filters-action export">
-              ${icons.export}
-              <span>Download as CSV</span>
-            </a>
-
             <div class="sidebar-presets">
               <h4>Example filters</h4>
               ${ (settings.presets || []).map(preset => `
