@@ -171,7 +171,8 @@ const fetchData = module.exports.fetchData = async function(name) {
     const parentOrganization = lastOrganization.cards.parent_organization[0].identifier.permalink
     if (parents.map(p => p.identifier.permalink).includes(parentOrganization)) {
       const { permalink } = lastOrganization.properties.identifier
-      throw new Error(`Circular dependency detected: ${permalink} and ${parentOrganization} are parents of each other`)
+      console.info(`Circular dependency detected: ${permalink} and ${parentOrganization} are parents of each other`)
+      break;
     }
     lastOrganization = await fetchCrunchbaseOrganization(parentOrganization)
     parents.push({ ...lastOrganization.properties, delisted: isDelisted(lastOrganization) })
