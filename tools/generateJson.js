@@ -406,7 +406,7 @@ async function main () {
     if (item.twitter && item.twitter.split('/').slice(-1)[0] === '') {
       item.twitter = item.twitter.slice(0, item.twitter.length - 1);
     }
-    if (item.twitter && ( item.twitter.startsWith('https://mobile.twitter.com') || item.twitter.startsWith('http://mobile.twitter.com') ) {
+    if (item.twitter && ( item.twitter.startsWith('https://mobile.twitter.com') || item.twitter.startsWith('http://mobile.twitter.com') )) {
       item.twitter = 'https://twitter.com'+item.twitter.slice(item.twitter.lastIndexOf('/'),item.twitter.length-1)
     }
     if (item.twitter && item.twitter.indexOf('https://twitter.com/') !== 0 && item.twitter.indexOf('http://twitter.com/') !== 0 && item.twitter.indexOf('https://x.com/') !== 0 && item.twitter.indexOf('http://x.com/') !== 0) {
