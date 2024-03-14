@@ -115,7 +115,7 @@ async function main() {
   }
 
   const fonts = await fs.readFile('src/fonts.css', 'utf-8');
-  const resizerScript = await fs.readFile(require.resolve('iframe-resizer/js/iframeResizer.contentWindow.min.js'), 'utf-8');
+  const resizerScript = await fs.readFile(require.resolve('iframe-resizer/js/iframeResizer.contentWindow.js'), 'utf-8');
   const description = `${settings.global.meta.description}. Updated: ${process.env.lastUpdated}`;
   const favicon = '/favicon.png';
 

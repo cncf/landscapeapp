@@ -28,7 +28,8 @@ jest.setTimeout(process.env.SHOW_BROWSER ? 30000 : 30000);
 
 async function makePage(initialUrl) {
   try {
-    browser = await puppeteer.launch({args: ['--no-sandbox', '--disable-setuid-sandbox'], headless: !process.env.SHOW_BROWSER});
+    const headlessParam = process.env.SHOW_BROWSER ? false: "new";
+    browser = await puppeteer.launch({args: ['--no-sandbox', '--disable-setuid-sandbox'], headless: headlessParam});
     const page = await browser.newPage();
     await page.goto(initialUrl);
     await page.setViewport({ width, height });
