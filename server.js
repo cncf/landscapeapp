@@ -39,7 +39,7 @@ http.createServer(function (request, response) {
     if (!process.env.INLINE_API) {
       require('child_process').exec(`node ${fnFile("export.js")} '${query}'`, {}, function(e, output, err) {
         response.writeHead(200, {
-          'Content-Type': 'text/css',
+          'Content-Type': 'text/csv',
           'Content-Disposition': 'attachment; filename=interactive-landscape.csv'
         });
         response.end(output);
@@ -47,7 +47,7 @@ http.createServer(function (request, response) {
     } else {
       const output = require('./src/api/export.js').processRequest(query);
       response.writeHead(200, {
-        'Content-Type': 'text/css',
+        'Content-Type': 'text/csv',
         'Content-Disposition': 'attachment; filename=interactive-landscape.csv'
       });
       response.end(output);
