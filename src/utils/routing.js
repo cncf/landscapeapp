@@ -1,4 +1,4 @@
-const qs = require('query-string');
+const qs = require('querystring');
 
 const { fields, sortOptions } = require('../types/fields');
 const { isArray } = require('lodash');

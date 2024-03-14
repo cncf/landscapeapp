@@ -1,6 +1,6 @@
 const path = require('path');
 const fs = require('fs/promises');
-const qs = require('query-string');
+const qs = require('querystring');
 const { execSync } = require('child_process');
 
 const { loadGuide } = require('./loadGuide');
