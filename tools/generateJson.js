@@ -162,14 +162,14 @@ async function main () {
       };
       const getLicense = function() {
         if (node.license) {
-          return node.license;
+          return node.license || 'Unknown License';
         }
         if ((node.hasOwnProperty('open_source') && !node.open_source) || (!node.github_data && !node.other_repo_url)) {
           return 'NotOpenSource';
         }
 
         if (node.github_data) {
-          return node.github_data.license;
+          return node.github_data.license || 'Unknown License';
         }
 
         return 'Unknown License';
