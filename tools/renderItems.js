@@ -104,7 +104,7 @@ async function main() {
   const js = await fs.readFile('src/script.js', 'utf-8');
   const css = await fs.readFile('src/style.css', 'utf-8');
   // preprocess css media queries
-  let processedCss = css;
+  let processedCss = css.concat("\n\n"+settings.global.extra_css || "");
   const match = css.match(/(--\w+-screen:\s\d+px)/g);
   for(let cssVar of match) {
     const value = cssVar.match(/(\d+px)/)[0];
