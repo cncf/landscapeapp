@@ -1,3 +1,4 @@
+const _ = require('lodash');
 // Render only for an export
 const { saneName } = require('../utils/saneName');
 const { h } = require('../utils/format');
@@ -38,12 +39,13 @@ module.exports.render = function({items, exportUrl}) {
           <div class="cards-section">
             <div class="column-content" >
               ${ groupedItems.map( (groupedItem) => {
-                const cardElements = groupedItem.items.map( (item) => cardFn({item}));
+                const uniqItems = _.uniqBy(groupedItem.items, (x) => x.name + x.logo);
+                const cardElements = uniqItems.map( (item) => cardFn({item}));
                 const header = items.length > 0 ? `
                   <div class="sh_wrapper" data-wrapper-id="${h(saneName(groupedItem.header))}">
                     <div style="font-size: 24px; padding-left: 16px; line-height: 48px; font-weight: 500;">
                       <span>${h(groupedItem.header)}</span>
-                      <span class="items-cont">&nbsp;(${groupedItem.items.length})</span>
+                      <span class="items-cont">&nbsp;(${uniqItems.length})</span>
                     </div>
                   </div>` : '';
                 return [ header, `<div data-section-id="${h(saneName(groupedItem.header))}">${cardElements.join('')}</div>`].join('');
