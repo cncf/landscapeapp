@@ -62,10 +62,6 @@ landscapes:
     repo: ossf/ossf-landscape
     hook: 613768338a16cb9182b21c3d
   - landscape:
-    name: ospo
-    repo: todogroup/ospolandscape
-    hook: 6033b43a2572da242aee6a92
-  - landscape:
     name: presto
     repo: prestodb/presto-landscape
     hook: 5ecd46d9f5ea8819a9d610a6
