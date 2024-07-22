@@ -153,22 +153,22 @@ const fetchData = module.exports.fetchData = async function(name) {
     }
     return result1;
   }
-  let acquisitions = result.cards.acquiree_acquisitions.map(mapAcquisitions).filter( (x) => !!x);
+  let acquisitions = _.get(result, 'cards.acquiree_acquisitions', []).map(mapAcquisitions).filter( (x) => !!x);
   const limit = 100;
   let lastPage = result;
-  while (lastPage.cards.acquiree_acquisitions.length === limit) {
+  while (_.get(lastPage, 'cards.acquiree_acquisitions', []).length === limit) {
      lastPage = await CrunchbaseClient.request({
         path: `entities/organizations/${name}/cards/acquiree_acquisitions`,
-        params: {after_id: lastPage.cards.acquiree_acquisitions[limit - 1].identifier.uuid}
+        params: {after_id: _.get(lastPage, 'cards.acquiree_acquisitions', [])[limit - 1].identifier.uuid}
       });
-      acquisitions = acquisitions.concat(lastPage.cards.acquiree_acquisitions.map(mapAcquisitions));
+      acquisitions = acquisitions.concat(_.get(lastPage, 'cards.acquiree_acquisitions', []).map(mapAcquisitions));
   }
   acquisitions = _.orderBy(acquisitions, ['date', 'acquiree']);
 
   let parents = [];
   let lastOrganization = result;
-  while (lastOrganization.cards.parent_organization[0]) {
-    const parentOrganization = lastOrganization.cards.parent_organization[0].identifier.permalink
+  while (_.get(lastOrganization, 'cards.parent_organization', [])[0]) {
+    const parentOrganization = _.get(lastOrganization, 'cards.parent_organization', [])[0].identifier.permalink
     if (parents.map(p => p.identifier.permalink).includes(parentOrganization)) {
       const { permalink } = lastOrganization.properties.identifier
       console.info(`Circular dependency detected: ${permalink} and ${parentOrganization} are parents of each other`)
@@ -185,10 +185,10 @@ const fetchData = module.exports.fetchData = async function(name) {
   const totalFunding = firstWithTotalFunding ? + firstWithTotalFunding.funding_total.value_usd.toFixed() : undefined;
 
   const getAddressPart = function(part) {
-    if (!result.cards.headquarters_address[0]) {
+    if (!_.get(result, 'cards.headquarters_address', [])[0]) {
       return " N/A";
     }
-    return (result.cards.headquarters_address[0].location_identifiers.filter( (x) => x.location_type === part)[0] || {}).value
+    return (_.get(result, 'cards.headquarters_address', [])[0].location_identifiers.filter( (x) => x.location_type === part)[0] || {}).value
   }
 
 
