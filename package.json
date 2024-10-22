@@ -93,5 +93,5 @@
     "type": "git",
     "url": "https://github.com/cncf/landscapeapp"
   },
-  "packageManager": "yarn@3.2.1"
+  "packageManager": "yarn@3.2.2"
 }
