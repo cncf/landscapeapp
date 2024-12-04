@@ -12,6 +12,7 @@ const icons = require('../utils/icons');
 module.exports.render = function({settings, tweetsCount, itemInfo}) {
 
   const closeUrl = stringifyParams;
+  const wideBadges = settings.big_picture.main.wide_badges || false;
 
   const formatDate = function(x) {
     if (x.text) {
@@ -166,6 +167,17 @@ module.exports.render = function({settings, tweetsCount, itemInfo}) {
       <span class="tag-name">OpenSSF Best Practices</span>
       <span class="tag-value">${label}</span>
       </a>`);
+  }
+
+  const renderAllTags = function(itemInfo, tweetButton) {
+    const projectTag = renderProjectTag(itemInfo);
+    const parentTag = renderParentTag(itemInfo);
+    const openSourceTag = renderOpenSourceTag(itemInfo.oss);
+    const licenseTag = renderLicenseTag(itemInfo);
+    const badgeTag = renderBadgeTag(itemInfo);
+    return [projectTag, parentTag, openSourceTag, licenseTag, badgeTag, tweetButton].filter(Boolean).map(tag => {
+        return `<div style="${cellStyle}">${tag}</div>`
+    }).join("\n");
   }
 
   const renderChart = function() {
@@ -674,7 +686,7 @@ module.exports.render = function({settings, tweetsCount, itemInfo}) {
   })();
 
   const cellStyle = `
-    width: 146px;
+    width: ${wideBadges ? "296px" : "146px"};
     marginRight: 4px;
     height: 26px;
     display: inline-block;
@@ -688,12 +700,7 @@ module.exports.render = function({settings, tweetsCount, itemInfo}) {
       </div>
       <div class="product-tags">
         <div class="product-badges" style="width: 300px;" >
-          <div style="${cellStyle}">${renderProjectTag(itemInfo)}</div>
-          <div style="${cellStyle}">${renderParentTag(itemInfo)}</div>
-          <div style="${cellStyle}">${renderOpenSourceTag(itemInfo.oss)}</div>
-          <div style="${cellStyle}">${renderLicenseTag(itemInfo)}</div>
-          <div style="${cellStyle}">${renderBadgeTag(itemInfo)}</div>
-          <div style="${cellStyle}">${tweetButton}</div>
+          ${renderAllTags(itemInfo, tweetButton)}
           <div class="charts-desktop">
             ${renderChart(itemInfo)}
             ${renderParticipation(itemInfo)}
